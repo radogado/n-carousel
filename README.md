@@ -28,4 +28,4 @@
 </div>
 ```
 
-[Demo](https://radogado.github.io/scroll-carousel/)
+[Demo](https://radogado.github.io/n-carousel/)
