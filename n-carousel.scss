@@ -1,5 +1,6 @@
 .n-carousel--content {
-
+	
+	overflow: hidden;
 	overflow-x: auto;
 	display: flex;
 	padding: var(--peek, 0);
