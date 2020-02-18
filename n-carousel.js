@@ -10,6 +10,13 @@ let scrollBy = (el, distanceX, distanceY, duration = 500) => {
 			
 		}
 	
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			
+			el.scrollTo(getScroll(el).x + distanceX, getScroll(el).y + distanceY)
+			return;
+
+		}
+
 		el.dataset.sliding = true;
 	
 	    var initialX = getScroll(el).x;

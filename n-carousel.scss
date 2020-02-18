@@ -6,6 +6,13 @@
 	will-change: scroll;
 	box-sizing: content-box;
 	transition: height .2s ease-in-out;
+	
+	@media (prefers-reduced-motion: reduce) {
+	
+		transition: none;
+	
+	}
+
 
 	scrollbar-width: none; /* Firefox */
 
