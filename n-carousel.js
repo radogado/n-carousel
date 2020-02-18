@@ -109,21 +109,27 @@ let fixControls = el => {
 
 // Setup isScrolling variable
 var isScrolling;
+var lastScroll;
 var isResizing;
 
 let scrollStopped = e => {
 
 	// Clear our timeout throughout the scroll
 	clearTimeout( isScrolling );
+	lastScroll = e.target.scrollLeft;
 
 	// Set a timeout to run after scrolling ends
 	isScrolling = setTimeout(function() {
 		
-		fixControls(e.target);
-		// Run the callback
-		console.log( 'Scrolling has stopped.', e.target);
+		if (lastScroll === e.target.scrollLeft) {
+		
+			console.log( 'Scrolling has stopped.', e.target, e.target.scrollLeft, lastScroll);
+			fixControls(e.target);
+			// Run the callback
+		
+		}
 
-	}, 66);
+	}, 200); // 66 was too low and got double results, confusing the auto resizing on scroll end.
 
 };
 
