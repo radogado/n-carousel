@@ -86,17 +86,50 @@ let getControl = (carousel, control) => {
 
 let fixControls = el => {
 
+	console.log('fixControls');
+let transition = false;
+	carouselResizeObserver.unobserve(el);
+	el.removeEventListener('scroll', scrollStopped);
+
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
+	
+	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 
-	el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
+	if (el.classList.contains('n-carousel__auto')) {
+	
+		if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__vertical')) {
+			
+			let scrollTop = el.scrollTop;
+			el.children[active].style.height = `auto`;
+			el.style.height = `${el.children[active].scrollHeight}px`;
+			el.children[active].style.height = ``;
+			
+	/* 		el.scrollTo(0, 320); */
+			
+			if (!!el.parentNode.dataset.ready) { // Scroll by the real 
+			
+				el.scrollTo(0, 320);
+				
+			}
+			
+			transition = true;
+
+		} else {
+			
+			el.style.height = `${el.children[active].scrollHeight}px`;
+			
+		}
+		
+	}
 
 	if (el.querySelector('[data-active]')) {
 
 		delete el.querySelector('[data-active]').dataset.active;
 	
 	}
-	el.children[el.dataset.x].dataset.active = true;
+	
+	el.children[active].dataset.active = true;
 
 	// Fix buttons.
 	let wrapper = el.closest('.n-carousel')
@@ -106,12 +139,27 @@ let fixControls = el => {
 		index.querySelector('[disabled]').disabled = false;
 		
 	}
-	index.children[el.dataset.x].disabled = true;
+	index.children[active].disabled = true;
 	
-	// To do: get the buttons properly, minding embedded carousels
-	getControl(wrapper, '.n-carousel--previous').disabled = !el.scrollLeft ? true : false;;
-	getControl(wrapper, '.n-carousel--next').disabled = (el.scrollWidth - el.offsetWidth - el.scrollLeft < el.offsetWidth - paddingX(el)) ? true : false;
+	if (!el.classList.contains('n-carousel__vertical')) {
+		
+		getControl(wrapper, '.n-carousel--previous').disabled = !el.scrollLeft ? true : false;;
+		getControl(wrapper, '.n-carousel--next').disabled = (el.scrollWidth - el.offsetWidth - el.scrollLeft < el.offsetWidth - paddingX(el)) ? true : false;
 	
+	} else {
+		
+		getControl(wrapper, '.n-carousel--previous').disabled = !el.scrollTop ? true : false;;
+		getControl(wrapper, '.n-carousel--next').disabled = (el.scrollHeight - el.offsetHeight - el.scrollTop < el.offsetHeight - paddingY(el)) ? true : false;
+	
+	}
+	
+	if (!transition) {
+	
+		el.addEventListener('scroll', scrollStopped, false);
+		carouselResizeObserver.observe(el);
+	
+	}
+
 };
 
 // Setup isScrolling variable
@@ -140,13 +188,13 @@ let scrollStopped = e => {
 
 };
 
-let slide = (el, offset) => {
+let slide = (el, offsetX, offsetY) => {
 	
 	if (!el.dataset.sliding) {
 		
-		scrollBy(el, offset, 0).then(response => {
+		scrollBy(el, offsetX, offsetY).then(response => {
 			
-// 			fixControls(el);
+// 			fixControls(el); // Handled by scroll end
 	
 		});
 	
@@ -156,22 +204,73 @@ let slide = (el, offset) => {
 
 let slideNext = (el) => {
 
-	slide(el, el.offsetWidth - paddingX(el));
+	slide(el, el.offsetWidth - paddingX(el), 0);
 
 };
 
 let slidePrevious = (el) => {
 
-	slide(el, -1*(el.offsetWidth - paddingX(el)));
+	slide(el, -1*(el.offsetWidth - paddingX(el)), 0);
 
 };
 
 let slideTo = (el, index) => {
 
-	slide(el, (el.offsetWidth - paddingX(el)) * index - el.scrollLeft);
+	if (!el.classList.contains('n-carousel__vertical')) {
+
+		slide(el, (el.offsetWidth - paddingX(el)) * index - el.scrollLeft, 0);
+	
+	} else {
+		
+		slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop);
+		
+	}
 	
 };
 
+if (typeof ResizeObserver === 'function') {
+
+	var carouselResizeObserver = new ResizeObserver(entries => {
+		return;
+		entries.forEach(e => {
+			
+			let el = e.target;
+			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
+			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y);
+// 				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
+			
+		});
+	
+	});
+
+} else { // Fallback
+	
+	window.addEventListener('resize', e => {
+		
+		document.querySelectorAll('.n-carousel--content').forEach(el => {
+			
+			// Clear our timeout throughout the scroll
+			clearTimeout( isResizing );
+		
+			// Set a timeout to run after scrolling ends
+			isResizing = setTimeout(function() {
+				
+				el.scrollTo(el.offsetWidth*el.dataset.x - paddingX(el), el.offsetHeight*el.dataset.y + paddingY(el));
+/*
+				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
+			
+*/
+				// Run the callback
+				console.log( 'Resizing has stopped.', e.target);
+		
+			}, 66);
+
+		});
+					
+	});
+			
+}
+	
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	// To do: get the buttons properly, minding embedded carousels
@@ -226,6 +325,20 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 				
 				}; 
 				
+				case 'ArrowUp': {
+					
+					slidePrevious(el);
+					break;
+				
+				}; 
+	
+				case 'ArrowDown': {
+					
+					slideNext(el);
+					break;
+				
+				}; 
+				
 				case 'Home': {
 					
 					slideTo(el, 0);
@@ -249,54 +362,12 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 	let content = el.querySelector('.n-carousel--content');
 	content.tabIndex = 0;
 	// Listen for scroll events
+
 	content.addEventListener('scroll', scrollStopped, false);
 	fixControls(content);
-
-	if (typeof ResizeObserver === 'function') {
-	
-		let ro = new ResizeObserver(entries => {
-			
-			entries.forEach(e => {
-				
-				let el = e.target;
-				console.log('Resized', el, e.contentRect.width, e.contentRect.height);
-				el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetWidth*el.dataset.y);
-// 				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
-				
-			});
-		
-		});
-	
-		ro.observe(content);
-
-	} else { // Fallback
-		
-		window.addEventListener('resize', e => {
-			
-			document.querySelectorAll('.n-carousel--content').forEach(el => {
-				
-				// Clear our timeout throughout the scroll
-				clearTimeout( isResizing );
-			
-				// Set a timeout to run after scrolling ends
-				isResizing = setTimeout(function() {
-					
-					el.scrollTo(el.offsetWidth*el.dataset.x - paddingX(el), el.offsetWidth*el.dataset.y + paddingY(el));
-/*
-					el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
-				
-*/
-					// Run the callback
-					console.log( 'Resizing has stopped.', e.target);
-			
-				}, 66);
-
-			});
-						
-		});
-				
-	}
-	
 	el.dataset.ready = true;
-	
+	carouselResizeObserver.observe(content);
+
+	content.addEventListener('transitionend', e => { console.log(e);});
+
 });
