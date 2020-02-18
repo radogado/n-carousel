@@ -5,6 +5,7 @@
 	padding: var(--peek, 0);
 	will-change: scroll;
 	box-sizing: content-box;
+	transition: height .2s ease-in-out;
 
 	scrollbar-width: none; /* Firefox */
 
@@ -40,15 +41,15 @@
 
 	}
 	
-	transition: height .2s ease-in-out;
-
 }
 
-.n-carousel--index, .n-carousel--previous, .n-carousel--next {
+.n-carousel--index button, button.n-carousel--previous, button.n-carousel--next {
 
 	-webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;		
+	-webkit-appearance: none;
+	appearance: none;
 
 }
 
