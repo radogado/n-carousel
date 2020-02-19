@@ -82,6 +82,8 @@ let getControl = (carousel, control) => {
 		
 	}
 	
+	return false;
+	
 }
 
 let fixControls = el => {
@@ -94,7 +96,7 @@ let transition = false;
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 	
-	let active_old =  el.querySelector('[data-active]'); // To do: But only from children, not grandchildren
+	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 
 	if (el.classList.contains('n-carousel__auto')) {
 	
@@ -131,9 +133,9 @@ let transition = false;
 		
 	}
 
-	if (el.querySelector('[data-active]')) {
+	if (getControl(el, '[data-active]')) {
 
-		delete el.querySelector('[data-active]').dataset.active;
+		delete getControl(el, '[data-active]').dataset.active;
 	
 	}
 	
