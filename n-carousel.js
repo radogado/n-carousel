@@ -94,27 +94,35 @@ let transition = false;
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 	
-	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
+	let active_old =  el.querySelector('[data-active]'); // To do: But only from children, not grandchildren
 
 	if (el.classList.contains('n-carousel__auto')) {
 	
 		if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__vertical')) {
 			
-			let scrollTop = el.scrollTop;
+			transition = true;
+
+/*
 			el.children[active].style.height = `auto`;
-			el.style.height = `${el.children[active].scrollHeight}px`;
+			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
 			el.children[active].style.height = ``;
+			el.style.scrollSnapType = 'none';
+			el.scrollTo(0, el.children[active].scrollHeight * active);
+			el.style.scrollSnapType = '';
+*/
+			el.children[active].style.height = 'auto';
+			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
+			el.children[active].style.height = '';
+			el.scrollTo(0, el.children[active].scrollHeight * active);
+			el.style.height = `${el.children[active].scrollHeight}px`;
 			
 	/* 		el.scrollTo(0, 320); */
 			
-			if (!!el.parentNode.dataset.ready) { // Scroll by the real 
+/* 			if (!!el.parentNode.dataset.ready) { // Scroll by the real  */
 			
-				el.scrollTo(0, 320);
 				
-			}
+/* 			} */
 			
-			transition = true;
-
 		} else {
 			
 			el.style.height = `${el.children[active].scrollHeight}px`;
@@ -164,21 +172,23 @@ let transition = false;
 
 // Setup isScrolling variable
 var isScrolling;
-var lastScroll;
+var lastScrollX;
+var lastScrollY;
 var isResizing;
 
 let scrollStopped = e => {
 
 	// Clear our timeout throughout the scroll
 	clearTimeout( isScrolling );
-	lastScroll = e.target.scrollLeft;
+	lastScrollX = e.target.scrollLeft;
+	lastScrollY = e.target.scrollTop;
 
 	// Set a timeout to run after scrolling ends
 	isScrolling = setTimeout(function() {
 		
-		if (lastScroll === e.target.scrollLeft) {
+		if (lastScrollX === e.target.scrollLeft && lastScrollY === e.target.scrollTop) {
 		
-			console.log( 'Scrolling has stopped.', e.target, e.target.scrollLeft, lastScroll);
+			console.log( 'Scrolling has stopped.', e.target, e.target.scrollLeft, lastScrollX, e.target.scrollTop, lastScrollY);
 			fixControls(e.target);
 			// Run the callback
 		
@@ -368,6 +378,13 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 	el.dataset.ready = true;
 	carouselResizeObserver.observe(content);
 
-	content.addEventListener('transitionend', e => { console.log(e);});
+	content.addEventListener('transitionend', e => {
+		
+		console.log(e);
+		let el = e.target;
+		el.addEventListener('scroll', scrollStopped, false);
+		carouselResizeObserver.observe(el);
+		
+	});
 
 });

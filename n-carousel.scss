@@ -43,10 +43,24 @@
 		
 		> * {
 			
-			height: inherit;
+			height: var(--height, inherit);
 			overflow: hidden;
 
+/*
+		    display: flex;
+		    justify-content: flex-end;
+		    flex-direction: column;
+*/
+    
 		}
+	
+/*
+		> [data-active], > [data-active] + * {
+			
+		    display: block;
+    
+		}
+*/
 	
 	}
 	
