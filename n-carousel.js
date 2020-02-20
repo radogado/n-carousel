@@ -12,6 +12,7 @@ let observersOn = el => {
 
 	}
 	el.addEventListener('scroll', scrollStopped);
+	delete el.dataset.sliding;
 	
 }
 
@@ -69,8 +70,6 @@ let scrollBy = (el, distanceX, distanceY, duration = 500) => {
 		        window.requestAnimationFrame(step);
 		        
 		    } else {
-			    
-				delete el.dataset.sliding;
 				
 				if (!navigator.userAgent.match('Firefox')) { // Safari bug fix, which breaks Firefox
 				
@@ -122,7 +121,7 @@ let getControl = (carousel, control) => {
 	
 }
 
-let updateCarousel = el => {
+let updateCarousel = el => { // Called on init and scroll end
 
 	console.log('updateCarousel', el);
 
@@ -145,25 +144,10 @@ let updateCarousel = el => {
 	
 		if (el.classList.contains('n-carousel__vertical')) {
 			
-/*
-			el.children[active].style.height = `auto`;
-			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
-			el.children[active].style.height = ``;
-			el.style.scrollSnapType = 'none';
-			el.scrollTo(0, el.children[active].scrollHeight * active);
-			el.style.scrollSnapType = '';
-*/
 			el.children[active].style.height = 'auto';
 			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
 			el.children[active].style.height = '';
 			el.scrollTo(0, el.children[active].scrollHeight * active);
-			
-	/* 		el.scrollTo(0, 320); */
-			
-/* 			if (!!el.parentNode.dataset.ready) { // Scroll by the real  */
-			
-				
-/* 			} */
 			
 		}
 
@@ -199,17 +183,8 @@ let updateCarousel = el => {
 	}
 	index.children[active].disabled = true;
 	
-	if (!el.classList.contains('n-carousel__vertical')) {
-		
-		getControl(wrapper, '.n-carousel--previous').disabled = !el.scrollLeft ? true : false;;
-		getControl(wrapper, '.n-carousel--next').disabled = (el.scrollWidth - el.offsetWidth - el.scrollLeft < el.offsetWidth - paddingX(el)) ? true : false;
-	
-	} else {
-		
-		getControl(wrapper, '.n-carousel--previous').disabled = !el.scrollTop ? true : false;;
-		getControl(wrapper, '.n-carousel--next').disabled = (el.scrollHeight - el.offsetHeight - el.scrollTop < el.offsetHeight - paddingY(el)) ? true : false;
-	
-	}
+	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
+	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
 	
 };
 
