@@ -1,5 +1,35 @@
 let getScroll = el => { return el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop} };
 
+let observersOn = el => {
+	
+	if (typeof ResizeObserver === 'function') {
+	
+		carouselResizeObserver.observe(el);
+		
+	} else {
+
+		window.addEventListener('resize', resizeObserverFallback);
+
+	}
+	el.addEventListener('scroll', scrollStopped);
+	
+}
+
+let observersOff = el => {
+	
+	if (typeof ResizeObserver === 'function') {
+	
+		carouselResizeObserver.unobserve(el);
+		
+	} else {
+
+		window.removeEventListener('resize', resizeObserverFallback);
+
+	}
+	el.removeEventListener('scroll', scrollStopped);
+
+}
+
 let scrollBy = (el, distanceX, distanceY, duration = 500) => {
 
 	return new Promise(function(resolve, reject) {
@@ -41,7 +71,13 @@ let scrollBy = (el, distanceX, distanceY, duration = 500) => {
 		    } else {
 			    
 				delete el.dataset.sliding;
-				el.scrollTo(x, y); // Safari bug fix
+				
+				if (!navigator.userAgent.match('Firefox')) { // Safari bug fix, which breaks Firefox
+				
+					el.scrollTo(x, y);
+				
+				}
+
 				resolve(el);
 						    
 		    }
@@ -86,24 +122,29 @@ let getControl = (carousel, control) => {
 	
 }
 
-let fixControls = el => {
+let updateCarousel = el => {
 
-	console.log('fixControls');
-let transition = false;
-	carouselResizeObserver.unobserve(el);
-	el.removeEventListener('scroll', scrollStopped);
+	console.log('updateCarousel', el);
 
+	let transition = false;
+	
+	observersOff(el);
+	
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 	
 	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 
-	if (el.classList.contains('n-carousel__auto')) {
+	if (!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
+		
+		el.style.height = `${el.offsetHeight - paddingY(el)}px`;
 	
-		if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__vertical')) {
-			
-			transition = true;
+	}
 
+	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
+	
+		if (el.classList.contains('n-carousel__vertical')) {
+			
 /*
 			el.children[active].style.height = `auto`;
 			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
@@ -116,7 +157,6 @@ let transition = false;
 			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
 			el.children[active].style.height = '';
 			el.scrollTo(0, el.children[active].scrollHeight * active);
-			el.style.height = `${el.children[active].scrollHeight}px`;
 			
 	/* 		el.scrollTo(0, 320); */
 			
@@ -125,11 +165,19 @@ let transition = false;
 				
 /* 			} */
 			
-		} else {
+		}
+
+		if (getComputedStyle(el).transition.match('none') || el.offsetHeight === el.children[active].scrollHeight) { // Reduced motion or no change in height
 			
-			el.style.height = `${el.children[active].scrollHeight}px`;
+			observersOn(el);
 			
 		}
+		
+		el.style.height = `${el.children[active].scrollHeight}px`;
+		
+	} else {
+		
+		observersOn(el);
 		
 	}
 
@@ -163,13 +211,6 @@ let transition = false;
 	
 	}
 	
-	if (!transition) {
-	
-		el.addEventListener('scroll', scrollStopped, false);
-		carouselResizeObserver.observe(el);
-	
-	}
-
 };
 
 // Setup isScrolling variable
@@ -191,7 +232,7 @@ let scrollStopped = e => {
 		if (lastScrollX === e.target.scrollLeft && lastScrollY === e.target.scrollTop) {
 		
 			console.log( 'Scrolling has stopped.', e.target, e.target.scrollLeft, lastScrollX, e.target.scrollTop, lastScrollY);
-			fixControls(e.target);
+			updateCarousel(e.target);
 			// Run the callback
 		
 		}
@@ -206,7 +247,7 @@ let slide = (el, offsetX, offsetY) => {
 		
 		scrollBy(el, offsetX, offsetY).then(response => {
 			
-// 			fixControls(el); // Handled by scroll end
+// 			updateCarousel(el); // Handled by scroll end
 	
 		});
 	
@@ -240,26 +281,9 @@ let slideTo = (el, index) => {
 	
 };
 
-if (typeof ResizeObserver === 'function') {
-
-	var carouselResizeObserver = new ResizeObserver(entries => {
-		return;
-		entries.forEach(e => {
-			
-			let el = e.target;
-			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
-			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y);
-// 				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
-			
-		});
+let resizeObserverFallback = e => {
 	
-	});
-
-} else { // Fallback
-	
-	window.addEventListener('resize', e => {
-		
-		document.querySelectorAll('.n-carousel--content').forEach(el => {
+	document.querySelectorAll('.n-carousel--content').forEach(el => {
 			
 			// Clear our timeout throughout the scroll
 			clearTimeout( isResizing );
@@ -278,11 +302,87 @@ if (typeof ResizeObserver === 'function') {
 			}, 66);
 
 		});
-					
-	});
+
+};
+
+if (typeof ResizeObserver === 'function') {
+
+	var carouselResizeObserver = new ResizeObserver(entries => {
+
+		entries.forEach(e => {
 			
+			let el = e.target;
+			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
+			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y);
+// 				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
+			
+		});
+	
+	});
+
 }
 	
+let carouselKeys = e => {
+	
+	let keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+	let keys_vertical = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+	let keys_2d = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+	
+	console.log(e);
+	let el = e.target;
+	if (el.classList.contains('n-carousel--content') && keys.includes(e.key)) { // Capture relevant keys
+		
+		e.preventDefault();
+		switch (e.key) {
+			
+			case 'ArrowLeft': {
+				
+				slidePrevious(el);
+				break;
+			
+			}; 
+
+			case 'ArrowRight': {
+				
+				slideNext(el);
+				break;
+			
+			}; 
+			
+			case 'ArrowUp': {
+				
+				slidePrevious(el);
+				break;
+			
+			}; 
+
+			case 'ArrowDown': {
+				
+				slideNext(el);
+				break;
+			
+			}; 
+			
+			case 'Home': {
+				
+				slideTo(el, 0);
+				break;
+			
+			}; 
+			
+			case 'End': {
+			
+				slideTo(el, el.children.length-1);
+				break;
+			
+			}; 
+			
+		}
+		
+	}
+
+};
+		
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	// To do: get the buttons properly, minding embedded carousels
@@ -309,84 +409,23 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 		}
 
 	};
-		
-	el.querySelector('.n-carousel--content').onkeydown = e => {
-		
-		let keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
-		let keys_vertical = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
-		let keys_2d = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
-		
-		console.log(e);
-		let el = e.target;
-		if (el.classList.contains('n-carousel--content') && keys.includes(e.key)) { // Capture relevant keys
-			
-			e.preventDefault();
-			switch (e.key) {
-				
-				case 'ArrowLeft': {
-					
-					slidePrevious(el);
-					break;
-				
-				}; 
-	
-				case 'ArrowRight': {
-					
-					slideNext(el);
-					break;
-				
-				}; 
-				
-				case 'ArrowUp': {
-					
-					slidePrevious(el);
-					break;
-				
-				}; 
-	
-				case 'ArrowDown': {
-					
-					slideNext(el);
-					break;
-				
-				}; 
-				
-				case 'Home': {
-					
-					slideTo(el, 0);
-					break;
-				
-				}; 
-				
-				case 'End': {
-				
-					slideTo(el, el.children.length-1);
-					break;
-				
-				}; 
-				
-			}
-			
-		}
 
-	}
-		
-	let content = el.querySelector('.n-carousel--content');
+	el.querySelector('.n-carousel--content').onkeydown = carouselKeys;
+			
+	let content = el.querySelector(':scope > .n-carousel--content');
 	content.tabIndex = 0;
-	// Listen for scroll events
 
-	content.addEventListener('scroll', scrollStopped, false);
-	fixControls(content);
-	el.dataset.ready = true;
-	carouselResizeObserver.observe(content);
+	updateCarousel(content);
 
 	content.addEventListener('transitionend', e => {
 		
 		console.log(e);
 		let el = e.target;
-		el.addEventListener('scroll', scrollStopped, false);
-		carouselResizeObserver.observe(el);
+		
+		observersOn(el);
 		
 	});
+
+	el.dataset.ready = true;
 
 });
