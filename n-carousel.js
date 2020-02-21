@@ -2,6 +2,8 @@ let getScroll = el => { return el === window ? {x: el.scrollX, y: el.scrollY} : 
 
 let observersOn = el => {
 	
+	el.addEventListener('scroll', scrollStopped);
+
 	if (typeof ResizeObserver === 'function') {
 	
 		carouselResizeObserver.observe(el);
@@ -11,13 +13,15 @@ let observersOn = el => {
 		window.addEventListener('resize', resizeObserverFallback);
 
 	}
-	el.addEventListener('scroll', scrollStopped);
 	delete el.dataset.sliding;
-	
+	console.log('Observers On');	
+
 }
 
 let observersOff = el => {
 	
+// 	el.removeEventListener('scroll', scrollStopped);
+
 	if (typeof ResizeObserver === 'function') {
 	
 		carouselResizeObserver.unobserve(el);
@@ -27,7 +31,8 @@ let observersOff = el => {
 		window.removeEventListener('resize', resizeObserverFallback);
 
 	}
-	el.removeEventListener('scroll', scrollStopped);
+
+	console.log('Observers Off');	
 
 }
 
@@ -133,6 +138,12 @@ let updateCarousel = el => { // Called on init and scroll end
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 	
 	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
+	
+	if (active >= el.children.length) {
+		
+		active = el.children.length - 1;
+
+	}
 
 	if (!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 		
@@ -142,22 +153,30 @@ let updateCarousel = el => { // Called on init and scroll end
 
 	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 	
+		let old_height = el.children[active].scrollHeight;
+		let new_height = 0;
+
 		if (el.classList.contains('n-carousel__vertical')) {
 			
 			el.children[active].style.height = 'auto';
-			el.style.setProperty('--height', `${el.children[active].scrollHeight}px`);
-			el.children[active].style.height = '';
-			el.scrollTo(0, el.children[active].scrollHeight * active);
+			new_height = el.children[active].scrollHeight;
+			el.style.setProperty('--height', `${new_height}px`);
+			el.children[active].style.height = `${old_height}px`;
+			el.scrollTo(0, new_height * active);
+			
+		} else {
+			
+			new_height = el.children[active].scrollHeight;
 			
 		}
 
-		if (getComputedStyle(el).transition.match('none') || el.offsetHeight === el.children[active].scrollHeight) { // Reduced motion or no change in height
+		if (getComputedStyle(el).transition.match('none') || el.offsetHeight === new_height) { // Reduced motion or no change in height
 			
 			observersOn(el);
 			
 		}
 		
-		el.style.height = `${el.children[active].scrollHeight}px`;
+		el.style.height = `${new_height}px`;
 		
 	} else {
 		
@@ -287,8 +306,10 @@ if (typeof ResizeObserver === 'function') {
 		entries.forEach(e => {
 			
 			let el = e.target;
+/*
 			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
 			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y);
+*/
 // 				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
 			
 		});
@@ -397,10 +418,12 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 		console.log(e);
 		let el = e.target;
 		
+		getControl(el, '[data-active]').style.height = '';
 		observersOn(el);
 		
 	});
 
 	el.dataset.ready = true;
+	el.addEventListener('scroll', scrollStopped);
 
 });
