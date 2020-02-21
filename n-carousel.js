@@ -36,7 +36,7 @@ let observersOff = el => {
 
 }
 
-let scrollBy = (el, distanceX, distanceY, duration = 500) => {
+let scrollBy = (el, distanceX, distanceY, duration = 300) => {
 
 	return new Promise(function(resolve, reject) {
 	
@@ -137,6 +137,14 @@ let updateCarousel = el => { // Called on init and scroll end
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 	
+	let current_active = el.querySelector(':scope > [data-active]');
+	
+	if (current_active) {
+
+		delete current_active.dataset.active;
+	
+	}
+	
 	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 	
 	if (active >= el.children.length) {
@@ -184,12 +192,6 @@ let updateCarousel = el => { // Called on init and scroll end
 		
 	}
 
-	if (getControl(el, '[data-active]')) {
-
-		delete getControl(el, '[data-active]').dataset.active;
-	
-	}
-	
 	el.children[active].dataset.active = true;
 
 	// Fix buttons.

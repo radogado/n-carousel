@@ -3,7 +3,7 @@
   padding: var(--peek, 0);
   will-change: scroll;
   box-sizing: content-box;
-  transition: height 0.5s ease-in-out;
+  transition: height 0.3s ease-in-out;
   scrollbar-width: none;
   /* Firefox */ }
   @media (prefers-reduced-motion: reduce) {
