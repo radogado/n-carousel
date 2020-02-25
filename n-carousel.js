@@ -161,15 +161,14 @@ let updateCarousel = el => { // Called on init and scroll end
 
 	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 	
-		let old_height = el.children[active].scrollHeight;
+		let old_height = current_active.offsetHeight;
 		let new_height = 0;
 
 		if (el.classList.contains('n-carousel__vertical')) {
-			
-			el.children[active].style.height = 'auto';
+
 			new_height = el.children[active].scrollHeight;
 			el.style.setProperty('--height', `${new_height}px`);
-			el.children[active].style.height = `${old_height}px`;
+			current_active.style.height = `${old_height}px`;
 			
 		} else {
 			
@@ -244,7 +243,7 @@ let scrollStopped = e => {
 		
 		}
 
-	}, 200); // 66 was too low and got double results, confusing the auto resizing on scroll end.
+	}, 166); // 66 was too low and got double results, confusing the auto resizing on scroll end.
 
 };
 
@@ -269,7 +268,7 @@ let slide = (el, offsetX, offsetY) => {
 			
 			// Run end code here when sliding by keyboard/butons. Run end code at scrollStopped when sliding by swipe/scroll
 			
-			delete el.dataset.sliding;
+// 			delete el.dataset.sliding;
 /*
 		getComputedStyle(el);
 		el.style.scrollSnapType = '';
@@ -453,7 +452,7 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 	updateCarousel(content);
 
 	content.addEventListener('transitionend', e => {
-
+return;
 		console.log(e);
 		let el = e.target;
 		
