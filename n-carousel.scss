@@ -4,16 +4,16 @@
 	padding: var(--peek, 0);
 // 	will-change: scroll;
 	box-sizing: content-box;
-// 	transition: height .3s ease-in-out;
-	transition: none;
+	transition: height .3s ease-in-out;
+// 	transition: none;
 	
 	@media (prefers-reduced-motion: reduce) {
 	
 		transition: none;
 	
 	}
-
-	&:not([data-sliding]) {
+	
+// 	&:not([data-sliding]) {
 
 		scroll-snap-type: both mandatory;
 		
@@ -22,8 +22,8 @@
 			scroll-snap-align: center;
 			
 		}
-
-	}
+	
+// 	}
 
 	&:not(.n-carousel__vertical) {
 		
@@ -91,6 +91,18 @@
 		pointer-events: none;
 
 	}
+	
+}
+
+.n-carousel--content[data-sliding] {
+	
+	scroll-snap-type: none;
+	
+}
+
+_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] { // To do: eeh.
+	
+	scroll-snap-type: both mandatory;
 	
 }
 

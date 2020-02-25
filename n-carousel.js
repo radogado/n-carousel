@@ -78,7 +78,7 @@ let scrollBy = (el, distanceX, distanceY, duration = 300) => {
 				
 				if (!navigator.userAgent.match('Firefox')) { // Safari bug fix, which breaks Firefox
 				
-					el.scrollTo(x, y);
+// 					el.scrollTo(x, y);
 				
 				}
 
@@ -254,6 +254,7 @@ let slide = (el, offsetX, offsetY) => {
 	
 	if (!el.dataset.sliding) {
 		
+/*
 		getComputedStyle(el);
 		el.style.scrollSnapType = 'none';
 		[...el.children].forEach(el => {
@@ -262,12 +263,14 @@ let slide = (el, offsetX, offsetY) => {
 			
 		});
 		getComputedStyle(el);
+*/
 		
 		scrollBy(el, offsetX, offsetY).then(response => {
 			
 			// Run end code here when sliding by keyboard/butons. Run end code at scrollStopped when sliding by swipe/scroll
 			
 			delete el.dataset.sliding;
+/*
 		getComputedStyle(el);
 		el.style.scrollSnapType = '';
 		[...el.children].forEach(el => {
@@ -276,7 +279,8 @@ let slide = (el, offsetX, offsetY) => {
 			
 		});
 		getComputedStyle(el);
-// 			updateCarousel(el); // 
+*/
+			updateCarousel(el);
 	
 		});
 	
@@ -450,8 +454,6 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	content.addEventListener('transitionend', e => {
 
-		return;
-		
 		console.log(e);
 		let el = e.target;
 		
