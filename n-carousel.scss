@@ -100,7 +100,7 @@
 	
 }
 
-_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] { // To do: eeh.
+_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] { // To do: Safari detection, how does it work
 	
 	scroll-snap-type: both mandatory;
 	

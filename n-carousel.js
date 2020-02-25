@@ -217,7 +217,7 @@ var lastScrollY;
 var isResizing;
 
 let scrollStopped = e => {
-return;
+
 	let el = e.target;
 	
 	if (!!el.dataset.sliding) {
