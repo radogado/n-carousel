@@ -20,8 +20,6 @@
   .n-carousel--content.n-carousel__vertical {
     overflow-y: auto;
     flex-direction: column; }
-    .n-carousel--content.n-carousel__vertical > :last-child {
-      padding-block-end: var(--peek, 0); }
     .n-carousel--content.n-carousel__vertical > * {
       height: var(--height, inherit);
       overflow: hidden; }

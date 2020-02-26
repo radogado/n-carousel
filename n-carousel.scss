@@ -42,12 +42,6 @@
 		overflow-y: auto;
 		flex-direction: column;
 		
-		> :last-child { // Peeking support
-			
-			padding-block-end: var(--peek, 0);
-	
-		}
-		
 		> * {
 			
 			height: var(--height, inherit);
