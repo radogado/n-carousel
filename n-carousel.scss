@@ -2,9 +2,9 @@
 	
 	display: flex;
 	padding: var(--peek, 0);
-// 	will-change: scroll;
+	will-change: scroll;
 	box-sizing: content-box;
-	transition: height 1s ease-in-out;
+	transition: height .2s ease-in-out;
 // 	transition: none;
 	
 	@media (prefers-reduced-motion: reduce) {
@@ -13,7 +13,7 @@
 	
 	}
 	
-// 	&:not([data-sliding]) {
+	&:not([data-sliding]) {
 
 		scroll-snap-type: both mandatory;
 		
@@ -23,7 +23,7 @@
 			
 		}
 	
-// 	}
+	}
 
 	&:not(.n-carousel__vertical) {
 		
@@ -53,21 +53,7 @@
 			height: var(--height, inherit);
 			overflow: hidden;
 
-/*
-		    display: flex;
-		    justify-content: flex-end;
-		    flex-direction: column;
-*/
-    
 		}
-	
-/*
-		> [data-active], > [data-active] + * {
-			
-		    display: block;
-    
-		}
-*/
 	
 	}
 	
@@ -91,18 +77,6 @@
 		pointer-events: none;
 
 	}
-	
-}
-
-.n-carousel--content[data-sliding] {
-	
-	scroll-snap-type: none;
-	
-}
-
-_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] { // To do: Safari detection, how does it work
-	
-	scroll-snap-type: both mandatory;
 	
 }
 
