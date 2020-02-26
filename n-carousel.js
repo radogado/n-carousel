@@ -36,7 +36,7 @@ let observersOff = el => {
 
 }
 
-let scrollBy = (el, distanceX, distanceY, duration = 300) => {
+let scrollBy = (el, distanceX, distanceY, duration = 1000) => {
 
 	return new Promise(function(resolve, reject) {
 	
@@ -161,23 +161,22 @@ let updateCarousel = el => { // Called on init and scroll end
 
 	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 	
+		el.style.removeProperty('--height');
 		let old_height = current_active.offsetHeight;
-		let new_height = 0;
+		let new_height = el.children[active].scrollHeight;
 
 		if (el.classList.contains('n-carousel__vertical')) {
-
+			
+			el.children[active].style.height = 'auto';
 			new_height = el.children[active].scrollHeight;
+			el.children[active].style.height = '';
 			el.style.setProperty('--height', `${new_height}px`);
-			current_active.style.height = `${old_height}px`;
-			
-		} else {
-			
-			new_height = el.children[active].scrollHeight;
+			el.scrollTo(0, new_height*active);
 			
 		}
-
+			
 		el.style.height = `${new_height}px`;
-		
+
 		if (getComputedStyle(el).transition.match('none') || el.offsetHeight === new_height) { // Reduced motion or no change in height
 			
 			observersOn(el);
@@ -216,7 +215,7 @@ var lastScrollY;
 var isResizing;
 
 let scrollStopped = e => {
-
+return;
 	let el = e.target;
 	
 	if (!!el.dataset.sliding) {
@@ -452,12 +451,16 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 	updateCarousel(content);
 
 	content.addEventListener('transitionend', e => {
-return;
+
 		console.log(e);
 		let el = e.target;
 		
-		getControl(el, '[data-active]').style.height = '';
-		setTimeout(() => { observersOn(el); }, 200);
+		if (el.classList.contains('n-carousel--content')) {
+
+			getControl(el, '[data-active]').style.height = '';
+			setTimeout(() => { observersOn(el); }, 200);
+		
+		}
 		
 	});
 
