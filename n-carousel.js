@@ -407,33 +407,45 @@ let carouselKeys = e => {
 	}
 
 };
+
+let closestCarousel = el => {
+	
+	return el.closest('.n-carousel').querySelector('.n-carousel--content');
+	
+};
+
+let slidePreviousEvent = e => {
+	
+	slidePrevious(closestCarousel(e.target));
+	
+}
+		
+let slideNextEvent = e => {
+	
+	slideNext(closestCarousel(e.target));
+
+}
+
+let slideIndexEvent = e => {
+
+	let el = e.target;
+	if (el.tagName === 'BUTTON') {
+
+		slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
+
+	}
+
+}
 		
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	// To do: get the buttons properly, minding embedded carousels
 
-	getControl(el, '.n-carousel--previous').onclick = e => {
-		
-		slidePrevious(e.target.closest('.n-carousel').querySelector('.n-carousel--content'));
-	
-	};
+	getControl(el, '.n-carousel--previous').onclick = slidePreviousEvent;
 
-	getControl(el, '.n-carousel--next').onclick = e => {
-		
-		slideNext(e.target.closest('.n-carousel').querySelector('.n-carousel--content'));
-	
-	};
+	getControl(el, '.n-carousel--next').onclick = slideNextEvent;
 
-	getControl(el, '.n-carousel--index').onclick = e => {
-		
-		let el = e.target;
-		if (el.tagName === 'BUTTON') {
-	
-			slideTo(el.closest('.n-carousel').querySelector('.n-carousel--content'), [...el.parentNode.children].indexOf(el));
-
-		}
-
-	};
+	getControl(el, '.n-carousel--index').onclick = slideIndexEvent;
 
 	el.querySelector('.n-carousel--content').onkeydown = carouselKeys;
 			
