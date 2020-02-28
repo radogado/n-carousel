@@ -42,7 +42,7 @@ let observersOff = el => {
 
 }
 
-let scrollBy = (el, distanceX, distanceY, duration = 300) => {
+let scrollBy = (el, distanceX, distanceY, duration = 1000) => {
 
 	return new Promise(function(resolve, reject) {
 	
@@ -148,6 +148,7 @@ let updateCarousel = el => { // Called on init and scroll end
 	if (current_active) {
 
 		delete current_active.dataset.active;
+		current_active.style.height = '';
 	
 	}
 	
@@ -418,13 +419,13 @@ let slidePreviousEvent = e => {
 	
 	slidePrevious(closestCarousel(e.target));
 	
-}
+};
 		
 let slideNextEvent = e => {
 	
 	slideNext(closestCarousel(e.target));
 
-}
+};
 
 let slideIndexEvent = e => {
 
@@ -435,6 +436,16 @@ let slideIndexEvent = e => {
 
 	}
 
+};
+
+let carouselTransition = e => {
+	
+	console.log(e);
+	let el = e.target;
+	
+	getControl(el, '[data-active]').style.height = '';
+	observersOn(el);
+	
 }
 		
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
@@ -454,15 +465,7 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	updateCarousel(content);
 
-	content.addEventListener('transitionend', e => {
-
-		console.log(e);
-		let el = e.target;
-		
-		getControl(el, '[data-active]').style.height = '';
-		observersOn(el);
-		
-	});
+	content.addEventListener('transitionend', carouselTransition);
 
 	el.dataset.ready = true;
 	observersOn(el);
