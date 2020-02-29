@@ -1,8 +1,7 @@
 let getScroll = el => { return el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop} };
 
 let observersOn = el => {
-	
-	el.addEventListener('scroll', scrollStopped);
+
 
 	if (typeof ResizeObserver === 'function') {
 	
@@ -26,7 +25,7 @@ let observersOn = el => {
 
 let observersOff = el => {
 	
-	el.removeEventListener('scroll', scrollStopped);
+// 	el.removeEventListener('scroll', scrollStopped);
 
 	if (typeof ResizeObserver === 'function') {
 	
@@ -469,5 +468,6 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	el.dataset.ready = true;
 	observersOn(el);
+	el.querySelector('.n-carousel--content').addEventListener('scroll', scrollStopped);
 
 });
