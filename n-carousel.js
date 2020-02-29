@@ -2,7 +2,6 @@ let getScroll = el => { return el === window ? {x: el.scrollX, y: el.scrollY} : 
 
 let observersOn = el => {
 
-
 	if (typeof ResizeObserver === 'function') {
 	
 		carouselResizeObserver.observe(el);
@@ -17,16 +16,14 @@ let observersOn = el => {
 	let left = el.scrollLeft;
 	let top = el.scrollTop;
 	
-	delete el.dataset.sliding;
 	el.scrollTo(left,top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
+	delete el.dataset.sliding;
 	console.log('Observers On');	
 
 }
 
 let observersOff = el => {
 	
-// 	el.removeEventListener('scroll', scrollStopped);
-
 	if (typeof ResizeObserver === 'function') {
 	
 		carouselResizeObserver.unobserve(el);
@@ -135,21 +132,10 @@ let updateCarousel = el => { // Called on init and scroll end
 
 	console.log('updateCarousel', el);
 
-	let transition = false;
-	
 	observersOff(el);
 	
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
-	
-	let current_active = el.querySelector(':scope > [data-active]');
-	
-	if (current_active) {
-
-		delete current_active.dataset.active;
-		current_active.style.height = '';
-	
-	}
 	
 	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 	
@@ -158,7 +144,23 @@ let updateCarousel = el => { // Called on init and scroll end
 		active = el.children.length - 1;
 
 	}
+	
+	let current_active = el.querySelector(':scope > [data-active]');
+	
+	if (current_active) {
 
+		if (el.children[active] === current_active) { // Scroll snapping back to the same slide. Nothing to do here.
+			
+			observersOn(el);
+			return;
+			
+		}
+
+		delete current_active.dataset.active;
+		current_active.style.height = '';
+	
+	}
+	
 	if (!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 		
 		el.style.height = `${el.offsetHeight - paddingY(el)}px`;
@@ -190,6 +192,10 @@ let updateCarousel = el => { // Called on init and scroll end
 			
 			observersOn(el);
 			
+		} else {
+			
+			el.dataset.sliding = true;
+	
 		}
 		
 		el.style.height = `${new_height}px`;
@@ -226,17 +232,23 @@ var isResizing;
 let scrollStopped = e => {
 
 	// Clear our timeout throughout the scroll
+	let el = e.target;
+	if (!!el.dataset.sliding) {
+		
+		return;
+
+	}
 	clearTimeout( isScrolling );
-	lastScrollX = e.target.scrollLeft;
-	lastScrollY = e.target.scrollTop;
+	lastScrollX = el.scrollLeft;
+	lastScrollY = el.scrollTop;
 
 	// Set a timeout to run after scrolling ends
 	isScrolling = setTimeout(function() {
 		
-		if (lastScrollX === e.target.scrollLeft && lastScrollY === e.target.scrollTop) {
+		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop) {
 		
-			console.log( 'Scrolling has stopped.', e.target, e.target.scrollLeft, lastScrollX, e.target.scrollTop, lastScrollY);
-			updateCarousel(e.target);
+			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
+			updateCarousel(el);
 			// Run the callback
 		
 		}
