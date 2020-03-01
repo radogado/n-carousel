@@ -12,11 +12,11 @@ let observersOn = el => {
 
 	}
 
-	console.log(el.scrollLeft,el.scrollTop);
+	console.log('observersOn', el.scrollLeft, el.scrollTop);
 	let left = el.scrollLeft;
 	let top = el.scrollTop;
 	
-	el.scrollTo(left,top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
+	el.scrollTo(left, top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
 	delete el.dataset.sliding;
 	console.log('Observers On');	
 
@@ -134,8 +134,14 @@ let updateCarousel = el => { // Called on init and scroll end
 
 	observersOff(el);
 	
+// 	el.dataset.sliding = true;
+// 	getComputedStyle(el);
+	
+	
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
+	
+	console.log('updateCarousel', el.scrollLeft);
 	
 	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 	
@@ -245,10 +251,12 @@ let scrollStopped = e => {
 	// Set a timeout to run after scrolling ends
 	isScrolling = setTimeout(function() {
 		
-		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop) {
-		
+		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop && el.scrollLeft % (el.offsetWidth - paddingX(el)) === 0 && el.scrollTop % (el.offsetHeight - paddingY(el)) === 0) { // Also if scroll is in snap position
+			
+			console.log('position modulus x', el.scrollLeft % (el.offsetWidth - paddingX(el)));
+			console.log('position modulus y', el.scrollTop % (el.offsetHeight - paddingY(el)));
 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
-			updateCarousel(el);
+// 			updateCarousel(el);
 			// Run the callback
 		
 		}
@@ -262,7 +270,8 @@ let slide = (el, offsetX, offsetY) => {
 	observersOff(el);
 	
 	if (!el.dataset.sliding) {
-				
+		el.removeEventListener('scroll', scrollStopped);
+
 		scrollBy(el, offsetX, offsetY).then(response => {
 			
 // 			observersOn(el);
@@ -450,12 +459,16 @@ let slideIndexEvent = e => {
 };
 
 let carouselTransition = e => {
-	
+
 	console.log(e);
 	let el = e.target;
 	
 	getControl(el, '[data-active]').style.height = '';
-	observersOn(el);
+	getComputedStyle(el);
+    window.requestAnimationFrame(() => { 
+	    observersOn(el); 
+		setTimeout(() => { el.addEventListener('scroll', scrollStopped); }, 100); // Why is this necessary, why is scroll firing without scrolling?
+	    });
 	
 }
 		
