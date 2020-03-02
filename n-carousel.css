@@ -27,8 +27,7 @@
     display: none; }
   .n-carousel--content > * {
     flex: 1 0 auto;
-    width: 100%;
-    box-sizing: border-box; }
+    width: 100%; }
   .n-carousel--content[data-sliding] {
     pointer-events: none; }
 

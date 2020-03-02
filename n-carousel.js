@@ -256,12 +256,12 @@ let scrollStopped = e => {
 			console.log('position modulus x', el.scrollLeft % (el.offsetWidth - paddingX(el)));
 			console.log('position modulus y', el.scrollTop % (el.offsetHeight - paddingY(el)));
 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
-// 			updateCarousel(el);
+			updateCarousel(el);
 			// Run the callback
 		
 		}
 
-	}, 200); // 66 was too low and got double results, confusing the auto resizing on scroll end.
+	}, 66); // 66 was too low and got double results, confusing the auto resizing on scroll end.
 
 };
 
