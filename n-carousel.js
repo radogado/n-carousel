@@ -16,9 +16,12 @@ let observersOn = el => {
 	let left = el.scrollLeft;
 	let top = el.scrollTop;
 	
-	el.scrollTo(left, top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
+
+// 	el.scrollTo(left, top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
 	delete el.dataset.sliding;
-	console.log('Observers On');	
+	el.addEventListener('scroll', scrollStopped);
+// 	el.scrollTo(left, top);
+// 	console.log('Observers On');	
 
 }
 
@@ -34,7 +37,7 @@ let observersOff = el => {
 
 	}
 
-	console.log('Observers Off');	
+// 	console.log('Observers Off');	
 
 }
 
@@ -130,7 +133,7 @@ let getControl = (carousel, control) => {
 
 let updateCarousel = el => { // Called on init and scroll end
 
-	console.log('updateCarousel', el);
+// 	console.log('updateCarousel', el);
 
 	observersOff(el);
 	
@@ -141,7 +144,7 @@ let updateCarousel = el => { // Called on init and scroll end
 	el.dataset.x = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
 	el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 	
-	console.log('updateCarousel', el.scrollLeft);
+// 	console.log('updateCarousel', el.scrollLeft);
 	
 	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
 	
@@ -184,7 +187,7 @@ let updateCarousel = el => { // Called on init and scroll end
 			new_height = el.children[active].scrollHeight;
 			el.style.setProperty('--height', `${new_height}px`);
 			el.children[active].style.height = `${old_height}px`;
-			console.log(new_height * active);
+// 			console.log(new_height * active);
 	
 			el.scrollTo(0, new_height * active);
 			
@@ -236,7 +239,7 @@ var lastScrollY;
 var isResizing;
 
 let scrollStopped = e => {
-
+// return;
 	// Clear our timeout throughout the scroll
 	let el = e.target;
 	if (!!el.dataset.sliding) {
@@ -252,9 +255,7 @@ let scrollStopped = e => {
 	isScrolling = setTimeout(function() {
 		
 		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop && el.scrollLeft % (el.offsetWidth - paddingX(el)) === 0 && el.scrollTop % (el.offsetHeight - paddingY(el)) === 0) { // Also if scroll is in snap position
-			
-			console.log('position modulus x', el.scrollLeft % (el.offsetWidth - paddingX(el)));
-			console.log('position modulus y', el.scrollTop % (el.offsetHeight - paddingY(el)));
+// 			console.log(lastScrollX, el.scrollLeft);
 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
 			updateCarousel(el);
 			// Run the callback
@@ -374,7 +375,7 @@ let carouselKeys = e => {
 	let keys_vertical = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
 	let keys_2d = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
 	
-	console.log(e);
+// 	console.log(e);
 	let el = e.target;
 	if (el.classList.contains('n-carousel--content') && keys.includes(e.key)) { // Capture relevant keys
 		
@@ -460,15 +461,17 @@ let slideIndexEvent = e => {
 
 let carouselTransition = e => {
 
-	console.log(e);
+// 	console.log(e);
 	let el = e.target;
 	
 	getControl(el, '[data-active]').style.height = '';
 	getComputedStyle(el);
-    window.requestAnimationFrame(() => { 
-	    observersOn(el); 
-		setTimeout(() => { el.addEventListener('scroll', scrollStopped); }, 100); // Why is this necessary, why is scroll firing without scrolling?
-	    });
+    window.requestAnimationFrame(() => {
+		setTimeout(() => { 
+			observersOn(el); 
+			
+		}, 100); // Why is this necessary, why is scroll firing without scrolling?
+    });
 	
 }
 		

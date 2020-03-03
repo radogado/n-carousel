@@ -31,11 +31,23 @@
   .n-carousel--content[data-sliding] {
     pointer-events: none; }
 
+_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
+  scroll-snap-type: both mandatory; }
+  _::-webkit-full-page-media > *, _:future > *, :root .n-carousel--content[data-sliding] > * {
+    scroll-snap-align: center; }
+
+_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] > * {
+  scroll-snap-align: center; }
+
 .n-carousel--index button, button.n-carousel--previous, button.n-carousel--next {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  all: revert; }
+  all: revert;
+  border: none;
+  background: #eee; }
+  .n-carousel--index button[disabled], button.n-carousel--previous[disabled], button.n-carousel--next[disabled] {
+    opacity: .5; }
 
 .n-carousel--content.n-carousel__auto {
   overflow: hidden;
