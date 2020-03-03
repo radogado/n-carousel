@@ -33,11 +33,12 @@
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
   scroll-snap-type: both mandatory; }
-  _::-webkit-full-page-media > *, _:future > *, :root .n-carousel--content[data-sliding] > * {
-    scroll-snap-align: center; }
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] > * {
   scroll-snap-align: center; }
+
+_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
+  pointer-events: all; }
 
 .n-carousel--index button, button.n-carousel--previous, button.n-carousel--next {
   -webkit-touch-callout: none;
