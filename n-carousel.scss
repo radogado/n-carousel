@@ -89,14 +89,38 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
-// Because Safari Mac can't swipe backwards when pointer events have been re-enabled.
- 
+// Because macOS Safari can't swipe backwards when pointer events re-enabled.
+
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
 
 	pointer-events: all;
 
 }
 
+// Undo the above Safari hack on i(Pad)OS
+
+@media (orientation: portrait), (orientation: landscape) {
+
+	:root .n-carousel--content[data-sliding] {
+	
+		pointer-events: none;
+	
+	}
+	
+}
+ 
+/*
+@media (orientation: landscape) {
+	
+	_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
+	
+		pointer-events: none;
+	
+	}
+	
+}
+*/
+ 
 .n-carousel--index button, button.n-carousel--previous, button.n-carousel--next {
 
 	-webkit-touch-callout: none;

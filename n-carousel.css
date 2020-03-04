@@ -40,6 +40,21 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
   pointer-events: all; }
 
+@media (orientation: portrait), (orientation: landscape) {
+  :root .n-carousel--content[data-sliding] {
+    pointer-events: none; } }
+
+/*
+@media (orientation: landscape) {
+	
+	_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
+	
+		pointer-events: none;
+	
+	}
+	
+}
+*/
 .n-carousel--index button, button.n-carousel--previous, button.n-carousel--next {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
