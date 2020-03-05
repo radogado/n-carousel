@@ -178,7 +178,7 @@ let updateCarousel = el => { // Called on init and scroll end
 
 	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 	
-		let old_height = el.children[active].scrollHeight;
+		let old_height = current_active.scrollHeight;
 		let new_height = 0;
 
 		if (el.classList.contains('n-carousel__vertical')) {
