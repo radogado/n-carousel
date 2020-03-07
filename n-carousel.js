@@ -41,40 +41,38 @@ let observersOff = el => {
 
 }
 
-let scrollBy = (el, distanceX, distanceY, duration = 1000) => {
+let scrollBy = (el, distanceX, distanceY, new_height, new_slide) => {
 
 	return new Promise(function(resolve, reject) {
 	
-		if (!!el.dataset.sliding) {
-			
-			resolve('Already animating'); // Already animating
-			
-		}
-	
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			
-			el.scrollTo(getScroll(el).x + distanceX, getScroll(el).y + distanceY)
+			el.scrollTo(getScroll(el).x + distanceX, getScroll(el).y + distanceY);
+			el.style.height = `${new_height}px`;
 			return;
 
 		}
 
-		el.dataset.sliding = true;
-	
 	    var initialX = getScroll(el).x;
 	    var initialY = getScroll(el).y;
+	    var initialH = parseInt(el.style.height);
 	    var x = initialX + distanceX;
 	    var y = initialY + distanceY;
+	    var h = new_height;
 	    var baseX = (initialX + x) * 0.5;
 	    var baseY = (initialY + y) * 0.5;
+	    var baseH = (initialH + h) * 0.5;
 	    var differenceX = initialX - baseX;
 	    var differenceY = initialY - baseY;
+	    var differenceH = initialH - baseH;
 	    var startTime = performance.now();
 	
 	    function step() {
-	        var normalizedTime = (performance.now() - startTime) / duration;
+	        var normalizedTime = (performance.now() - startTime) / 2000;
 	        if (normalizedTime > 1) normalizedTime = 1;
 	
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
+	        el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`;
 	        if (normalizedTime < 1) {
 		        
 		        window.requestAnimationFrame(step);
@@ -86,7 +84,8 @@ let scrollBy = (el, distanceX, distanceY, duration = 1000) => {
 					el.scrollTo(x, y);
 				
 				}
-
+				
+				console.log('Height after animation:', el.style.height);
 				resolve(el);
 						    
 		    }
@@ -135,7 +134,7 @@ let updateCarousel = el => { // Called on init and scroll end
 
 // 	console.log('updateCarousel', el);
 
-	observersOff(el);
+// 	observersOff(el);
 	
 // 	el.dataset.sliding = true;
 // 	getComputedStyle(el);
@@ -176,6 +175,7 @@ let updateCarousel = el => { // Called on init and scroll end
 	
 	}
 
+/*
 	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 	
 		let old_height = current_active.scrollHeight;
@@ -214,8 +214,11 @@ let updateCarousel = el => { // Called on init and scroll end
 		observersOn(el);
 		
 	}
+*/
 
 	el.children[active].dataset.active = true;
+	el.style.setProperty('--height', el.children[active].style.height);
+	el.children[active].style.height = '';
 
 	// Fix buttons.
 	let wrapper = el.closest('.n-carousel')
@@ -230,6 +233,8 @@ let updateCarousel = el => { // Called on init and scroll end
 	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
 	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
 	
+	observersOn(el);
+
 };
 
 // Setup isScrolling variable
@@ -266,19 +271,43 @@ let scrollStopped = e => {
 
 };
 
-let slide = (el, offsetX, offsetY) => {
+let slide = (el, offsetX, offsetY, index) => {
 	
 	observersOff(el);
 	
 	if (!el.dataset.sliding) {
-		el.removeEventListener('scroll', scrollStopped);
 
-		scrollBy(el, offsetX, offsetY).then(response => {
-			
-// 			observersOn(el);
-			updateCarousel(el); // Handled by scroll end
+		el.removeEventListener('scroll', scrollStopped);
+		el.dataset.sliding = true;
 	
-		});
+		el.children[index].style.height = 'auto';
+		let new_height = el.children[index].scrollHeight;
+		el.children[index].style.height = '';
+		console.log('New height:', new_height);
+		
+		el.style.removeProperty('--height');
+
+		if (el.classList.contains('n-carousel__vertical') && index < el.dataset.y) {
+			
+			el.scrollTo(0, el.children[index].scrollHeight * el.children.length);
+			
+			scrollBy(el, offsetX, -1*el.children[index].scrollHeight, new_height, el.children[index]).then(response => {
+				
+	// 			observersOn(el);
+				updateCarousel(el); // Handled by scroll end
+		
+			});
+
+		} else {
+
+			scrollBy(el, offsetX, new_height, new_height, el.children[index]).then(response => {
+				
+	// 			observersOn(el);
+				updateCarousel(el); // Handled by scroll end
+		
+			});
+		
+		}
 	
 	}
 	
@@ -286,13 +315,13 @@ let slide = (el, offsetX, offsetY) => {
 
 let slideNext = (el) => {
 
-	if (!el.classList.contains('n-carousel__vertical')) {
+	if (el.classList.contains('n-carousel__vertical')) {
 
-		slide(el, el.offsetWidth - paddingX(el), 0);
+		slide(el, 0, el.offsetHeight - paddingY(el));
 	
 	} else {
 		
-		slide(el, 0, el.offsetHeight - paddingY(el));
+		slide(el, el.offsetWidth - paddingX(el), 0);
 		
 	}
 
@@ -300,13 +329,13 @@ let slideNext = (el) => {
 
 let slidePrevious = (el) => {
 
-	if (!el.classList.contains('n-carousel__vertical')) {
+	if (el.classList.contains('n-carousel__vertical')) {
 
-		slide(el, -1*(el.offsetWidth - paddingX(el)), 0);
+		slide(el, 0, -1*(el.offsetHeight - paddingY(el)));
 	
 	} else {
 		
-		slide(el, 0, -1*(el.offsetHeight - paddingY(el)));
+		slide(el, -1*(el.offsetWidth - paddingX(el)), 0);
 		
 	}
 
@@ -314,13 +343,13 @@ let slidePrevious = (el) => {
 
 let slideTo = (el, index) => {
 
-	if (!el.classList.contains('n-carousel__vertical')) {
+	if (el.classList.contains('n-carousel__vertical')) {
 
-		slide(el, (el.offsetWidth - paddingX(el)) * index - el.scrollLeft, 0);
+		slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop, index);
 	
 	} else {
 		
-		slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop);
+		slide(el, (el.offsetWidth - paddingX(el)) * index - el.scrollLeft, 0, index);
 		
 	}
 	
@@ -489,6 +518,7 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 			
 	let content = el.querySelector(':scope > .n-carousel--content');
 	content.tabIndex = 0;
+	content.style.setProperty('--height', `${content.children[0].offsetHeight}px`);
 
 	updateCarousel(content);
 
