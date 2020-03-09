@@ -43,6 +43,8 @@ let observersOff = el => {
 
 let scrollBy = (el, distanceX, distanceY, new_height, new_slide) => {
 
+console.log('Srolling by', distanceY, ' from ', el.scrollTop);
+
 	return new Promise(function(resolve, reject) {
 	
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -70,7 +72,7 @@ let scrollBy = (el, distanceX, distanceY, new_height, new_slide) => {
 	    function step() {
 	        var normalizedTime = (performance.now() - startTime) / 2000;
 	        if (normalizedTime > 1) normalizedTime = 1;
-	
+
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`;
 	        if (normalizedTime < 1) {
@@ -282,7 +284,8 @@ let slide = (el, offsetX, offsetY, index) => {
 		let old_height = el.children[el.dataset.y].scrollHeight;
 		el.children[index].style.height = 'auto';
 		let new_height = el.children[index].scrollHeight;
-		el.children[index].style.height = `${el.children[index].scrollHeight}px`;
+// 		el.children[index].style.height = `${el.children[index].scrollHeight}px`;
+		el.children[index].style.height = '';
 		console.log('New height:', new_height);
 		
 		el.style.removeProperty('--height');
@@ -290,9 +293,10 @@ let slide = (el, offsetX, offsetY, index) => {
 		if (el.classList.contains('n-carousel__vertical') && index < el.dataset.y) {
 			
 			
-			el.scrollTo(0, index * old_height + new_height);
+			el.scrollTo(0, old_height + index*old_height);
+			console.log('Jumping to', index*old_height);
 			
-			scrollBy(el, offsetX, -1*old_height, new_height, el.children[index]).then(response => {
+			scrollBy(el, offsetX, -1*old_height - index*(old_height - new_height), new_height, el.children[index]).then(response => {
 				
 	// 			observersOn(el);
 				updateCarousel(el); // Handled by scroll end
