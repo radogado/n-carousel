@@ -279,19 +279,20 @@ let slide = (el, offsetX, offsetY, index) => {
 
 		el.removeEventListener('scroll', scrollStopped);
 		el.dataset.sliding = true;
-	
+		let old_height = el.children[el.dataset.y].scrollHeight;
 		el.children[index].style.height = 'auto';
 		let new_height = el.children[index].scrollHeight;
-		el.children[index].style.height = '';
+		el.children[index].style.height = `${el.children[index].scrollHeight}px`;
 		console.log('New height:', new_height);
 		
 		el.style.removeProperty('--height');
 
 		if (el.classList.contains('n-carousel__vertical') && index < el.dataset.y) {
 			
-			el.scrollTo(0, el.children[index].scrollHeight * el.children.length);
 			
-			scrollBy(el, offsetX, -1*el.children[index].scrollHeight, new_height, el.children[index]).then(response => {
+			el.scrollTo(0, index * old_height + new_height);
+			
+			scrollBy(el, offsetX, -1*old_height, new_height, el.children[index]).then(response => {
 				
 	// 			observersOn(el);
 				updateCarousel(el); // Handled by scroll end
@@ -300,7 +301,7 @@ let slide = (el, offsetX, offsetY, index) => {
 
 		} else {
 
-			scrollBy(el, offsetX, new_height, new_height, el.children[index]).then(response => {
+			scrollBy(el, offsetX, new_height * index, new_height, el.children[index]).then(response => {
 				
 	// 			observersOn(el);
 				updateCarousel(el); // Handled by scroll end
