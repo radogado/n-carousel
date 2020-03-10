@@ -293,10 +293,10 @@ let slide = (el, offsetX, offsetY, index) => {
 		if (el.classList.contains('n-carousel__vertical') && index < el.dataset.y) {
 			
 			
-			el.scrollTo(0, old_height + index*old_height);
-			console.log('Jumping to', index*old_height);
+			el.scrollTo(0, el.dataset.y*old_height);
+			console.log('Jumping to', el.dataset.y*old_height);
 			
-			scrollBy(el, offsetX, -1*old_height - index*(old_height - new_height), new_height, el.children[index]).then(response => {
+			scrollBy(el, offsetX, -1*old_height - el.dataset.y*(old_height - new_height), new_height, el.children[index]).then(response => {
 				
 	// 			observersOn(el);
 				updateCarousel(el); // Handled by scroll end
