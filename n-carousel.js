@@ -281,38 +281,22 @@ let slide = (el, offsetX, offsetY, index) => {
 
 		el.removeEventListener('scroll', scrollStopped);
 		el.dataset.sliding = true;
+
 		let old_height = el.children[el.dataset.y].scrollHeight;
 		el.children[index].style.height = 'auto';
 		let new_height = el.children[index].scrollHeight;
-// 		el.children[index].style.height = `${el.children[index].scrollHeight}px`;
 		el.children[index].style.height = '';
-		console.log('New height:', new_height);
 		
 		el.style.removeProperty('--height');
 
-		if (el.classList.contains('n-carousel__vertical') && index < el.dataset.y) {
-			
-			
-			el.scrollTo(0, el.dataset.y*old_height);
-			console.log('Jumping to', el.dataset.y*old_height);
-			
-			scrollBy(el, offsetX, -1*old_height - el.dataset.y*(old_height - new_height), new_height, el.children[index]).then(response => {
-				
-	// 			observersOn(el);
-				updateCarousel(el); // Handled by scroll end
+		el.scrollTo(0, el.dataset.y*old_height);
 		
-			});
-
-		} else {
-
-			scrollBy(el, offsetX, new_height * index, new_height, el.children[index]).then(response => {
-				
-	// 			observersOn(el);
-				updateCarousel(el); // Handled by scroll end
-		
-			});
-		
-		}
+		scrollBy(el, offsetX, -1*(el.dataset.y*old_height - index*new_height), new_height, el.children[index]).then(response => {
+			
+// 			observersOn(el);
+			updateCarousel(el); // Handled by scroll end
+	
+		});
 	
 	}
 	
