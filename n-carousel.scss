@@ -31,7 +31,16 @@
 
 		> :last-child { // Peeking support
 			
-			padding-inline-end: var(--peek, 0);
+// 			padding-inline-end: var(--peek, 0); // Browsers don't respect the end padding of the carousel
+			position: relative;
+
+			&:after {
+			    content: '';
+			    position: absolute;
+			    left: 100%;
+			    width: var(--peek, 0);
+			    height: 1px;
+			}
 	
 		}
 	
@@ -40,7 +49,7 @@
 	&.n-carousel__vertical {
 		
 		overflow-y: auto;
-		flex-direction: column;
+		display: block;
 		
 		> * {
 			
@@ -48,7 +57,8 @@
 			overflow: hidden;
 
 		}
-	
+		
+
 	}
 	
 	scrollbar-width: none; /* Firefox */
@@ -138,4 +148,19 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 	
 	height: 0;
 	
+}
+
+@-moz-document url-prefix() {
+
+	.n-carousel--content.n-carousel__vertical {
+		
+		> :last-child {
+			
+			margin-block-end: var(--peek, 0); // FF doesn't respect the end padding of the vertical carousel
+
+		}
+
+	}
+	
+
 }

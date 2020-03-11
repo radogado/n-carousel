@@ -73,13 +73,13 @@
 	
 	<div class="n-carousel--content n-carousel__auto" style="--peek: 50px; ">
 		
-		<section>
+		<section style="background: lightblue">
 			One
 			<input type="text">
 			<span>Span</span><a href=#>Draggable link</a>
 		</section>
 	
-		<section>
+		<section style="background: lightgreen">
 
 			Two<br>
 			2
@@ -127,7 +127,7 @@
 			
 		</section>
 	
-		<section>
+		<section style="background: coral">
 			Three<br>
 			_
 		</section>
@@ -140,7 +140,16 @@
 
 <div class="n-carousel">
 
-	<div class="n-carousel--content n-carousel__auto n-carousel__vertical" style="--peek: 50px; line-height: 100px; background: lightblue-;">
+	<div class="n-carousel--index">
+	
+		<button>1</button>
+		<button>2</button>
+		<button>3</button>
+		<button>4</button>
+	
+	</div>
+	
+	<div class="n-carousel--content n-carousel__auto n-carousel__vertical" style="--peek: 50px; line-height: 100px; background: lightgoldenrodyellow;">
 		
 		<section style="background: lightblue">
 			<div>
@@ -228,18 +237,16 @@
 	
 	</div>
 	
-	<div class="n-carousel--index">
-	
-		<button>1</button>
-		<button>2</button>
-		<button>3</button>
-		<button>4</button>
-	
-	</div>
-	
 </div>
 
 <p>Control by scroll, swipe, arrow keys, direction buttons, index buttons.</p>
+
+<div style="height: 300px; overflow: scroll; padding: 50px; background: lightblue; align-content: flex-start; display: flex; flex-direction: column;">
+
+	<div style="height: inherit; background: lightcoral;">1</div>
+	<div style="height: inherit; background: lightgreen;">2</div>
+	
+</div>
 
 <h2>Code</h2>
 
