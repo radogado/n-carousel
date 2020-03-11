@@ -292,7 +292,7 @@ let slide = (el, offsetX, offsetY, index) => {
 		el.scrollTo(0, el.dataset.y*old_height);
 		
 		scrollBy(el, offsetX, -1*(el.dataset.y*old_height - index*new_height), new_height, el.children[index]).then(response => {
-			
+
 // 			observersOn(el);
 			updateCarousel(el); // Handled by scroll end
 	
