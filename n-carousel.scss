@@ -29,9 +29,8 @@
 		
 		overflow-x: auto;
 
-		> :last-child { // Peeking support
+		> :last-child { // Peeking support // Browsers don't respect the end padding of horizontal carousel
 			
-// 			padding-inline-end: var(--peek, 0); // Browsers don't respect the end padding of the carousel
 			position: relative;
 
 			&:after {
@@ -49,7 +48,7 @@
 	&.n-carousel__vertical {
 		
 		overflow-y: auto;
-		display: block;
+		flex-direction: column;
 		
 		> * {
 			
@@ -99,7 +98,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
-// Because macOS-only Safari can't swipe backwards when pointer events re-enabled.
+// Because macOS-only Safari can't swipe backwards when pointer events are re-enabled.
 
 @supports not (-webkit-touch-callout: none) {
 
@@ -152,15 +151,16 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 @-moz-document url-prefix() {
 
-	.n-carousel--content.n-carousel__vertical {
+	.n-carousel--content.n-carousel__vertical { // FF doesn't respect the end padding of the vertical carousel
 		
+		display: block;
+
 		> :last-child {
 			
-			margin-block-end: var(--peek, 0); // FF doesn't respect the end padding of the vertical carousel
+			margin-block-end: var(--peek, 0);
 
 		}
 
 	}
 	
-
 }
