@@ -1,4 +1,14 @@
-let getScroll = el => { return el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop} };
+let isSafari = () => {
+	
+	return navigator.userAgent.match('Safari') && navigator.vendor.match('Apple')
+
+};
+
+let getScroll = el => {
+	
+	return el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop}
+
+};
 
 let observersOn = el => {
 
@@ -72,9 +82,19 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 	    function step() {
 	        var normalizedTime = (performance.now() - startTime) / 2000;
 	        if (normalizedTime > 1) normalizedTime = 1;
-
+console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
-	        el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`;
+	        
+	        if (isSafari()) {
+		        
+		        setTimeout(() => {el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`}, 1); // Timeout bc Safari can't do scroll and height at once
+		        
+	        } else {
+		        
+		        el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`;
+		        
+	        }
+
 	        if (normalizedTime < 1) {
 		        
 		        window.requestAnimationFrame(step);
