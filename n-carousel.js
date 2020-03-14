@@ -309,9 +309,14 @@ let slide = (el, offsetX, offsetY, index) => {
 		
 		el.style.removeProperty('--height');
 
-		el.scrollTo(0, el.dataset.y*old_height);
+		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
 		
-		scrollBy(el, offsetX, -1*(el.dataset.y*old_height - index*new_height), new_height, el.children[index]).then(response => {
+		let scroll_to_y = isSafari() ?
+			-1*(el.dataset.y*old_height - index*new_height) 
+			: 
+			-1*(el.dataset.y*old_height - index*new_height);
+		
+		scrollBy(el, offsetX, scroll_to_y, new_height, el.children[index]).then(response => {
 
 // 			observersOn(el);
 			updateCarousel(el); // Handled by scroll end
