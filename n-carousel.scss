@@ -52,7 +52,8 @@
 		
 		> * {
 			
-			height: var(--height, inherit);
+// 			height: var(--height, inherit); // Fallback not working in Safari
+			height: inherit; // Fallback not working in Safari
 			overflow: hidden;
 
 		}

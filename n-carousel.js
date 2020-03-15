@@ -82,7 +82,7 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 	    function step() {
 	        var normalizedTime = (performance.now() - startTime) / 2000;
 	        if (normalizedTime > 1) normalizedTime = 1;
-console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
+// console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        
 	        if (isSafari()) {
@@ -239,7 +239,7 @@ let updateCarousel = el => { // Called on init and scroll end
 */
 
 	el.children[active].dataset.active = true;
-	el.style.setProperty('--height', el.children[active].style.height);
+// 	el.style.setProperty('--height', el.children[active].style.height);
 	el.children[active].style.height = '';
 
 	// Fix buttons.
@@ -307,12 +307,14 @@ let slide = (el, offsetX, offsetY, index) => {
 		let new_height = el.children[index].scrollHeight;
 		el.children[index].style.height = '';
 		
-		el.style.removeProperty('--height');
+// 		el.style.removeProperty('--height');
 
 		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
 		
 		let scroll_to_y = isSafari() ?
-			-1*(el.dataset.y*old_height - index*new_height) 
+// 			-1*(el.dataset.y*new_height - index*old_height) 
+			-1*(el.dataset.y*old_height - index*new_height)
+// 			200
 			: 
 			-1*(el.dataset.y*old_height - index*new_height);
 		
@@ -532,7 +534,7 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 			
 	let content = el.querySelector(':scope > .n-carousel--content');
 	content.tabIndex = 0;
-	content.style.setProperty('--height', `${content.children[0].offsetHeight}px`);
+// 	content.style.setProperty('--height', `${content.children[0].offsetHeight}px`);
 
 	updateCarousel(content);
 
