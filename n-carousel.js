@@ -103,7 +103,7 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 				
 				if (!navigator.userAgent.match('Firefox')) { // Safari bug fix, which breaks Firefox
 				
-					el.scrollTo(x, y);
+// 					el.scrollTo(x, y);
 				
 				}
 				
