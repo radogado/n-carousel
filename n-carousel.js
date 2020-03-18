@@ -1,9 +1,3 @@
-let isSafari = () => {
-	
-	return navigator.userAgent.match('Safari') && navigator.vendor.match('Apple')
-
-};
-
 let getScroll = el => {
 	
 	return el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop}
@@ -85,15 +79,11 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 // console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        
-	        if (isSafari()) {
+	        window.requestAnimationFrame(() => {
 		        
-		        setTimeout(() => {el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`}, 1); // Timeout bc Safari can't do scroll and height at once
-		        
-	        } else {
-		        
-		        el.style.height = new_slide.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`;
-		        
-	        }
+		        el.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`; // Setting both breaks Safari
+		    
+		    }); // Timeout because Safari can't do scroll and height at once
 
 	        if (normalizedTime < 1) {
 		        
@@ -101,11 +91,13 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 		        
 		    } else {
 				
+/*
 				if (!navigator.userAgent.match('Firefox')) { // Safari bug fix, which breaks Firefox
 				
 // 					el.scrollTo(x, y);
 				
 				}
+*/
 				
 				console.log('Height after animation:', el.style.height);
 				resolve(el);
@@ -311,12 +303,7 @@ let slide = (el, offsetX, offsetY, index) => {
 
 		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
 		
-		let scroll_to_y = isSafari() ?
-// 			-1*(el.dataset.y*new_height - index*old_height) 
-			-1*(el.dataset.y*old_height - index*new_height)
-// 			200
-			: 
-			-1*(el.dataset.y*old_height - index*new_height);
+		let scroll_to_y = -1*(el.dataset.y*old_height - index*new_height);
 		
 		scrollBy(el, offsetX, scroll_to_y, new_height, el.children[index]).then(response => {
 
