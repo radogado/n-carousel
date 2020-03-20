@@ -45,7 +45,7 @@ let observersOff = el => {
 
 }
 
-let scrollBy = (el, distanceX, distanceY, new_height, new_slide) => {
+let scrollBy = (el, distanceX, distanceY, new_height) => {
 
 console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 
@@ -299,13 +299,11 @@ let slide = (el, offsetX, offsetY, index) => {
 		let new_height = el.children[index].scrollHeight;
 		el.children[index].style.height = '';
 		
-// 		el.style.removeProperty('--height');
-
 		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
 		
 		let scroll_to_y = -1*(el.dataset.y*old_height - index*new_height);
 		
-		scrollBy(el, offsetX, scroll_to_y, new_height, el.children[index]).then(response => {
+		scrollBy(el, offsetX, scroll_to_y, new_height).then(response => {
 
 // 			observersOn(el);
 			updateCarousel(el); // Handled by scroll end
@@ -320,11 +318,11 @@ let slideNext = (el) => {
 
 	if (el.classList.contains('n-carousel__vertical')) {
 
-		slide(el, 0, el.offsetHeight - paddingY(el));
+		slide(el, 0, el.offsetHeight - paddingY(el), el.dataset.y >= el.children.length-1 ? 0 : parseInt(el.dataset.y) + 1);
 	
 	} else {
 		
-		slide(el, el.offsetWidth - paddingX(el), 0);
+		slide(el, el.offsetWidth - paddingX(el), 0, el.dataset.x >= el.children.length-1 ? 0 : parseInt(el.dataset.x) + 1);
 		
 	}
 
@@ -334,11 +332,11 @@ let slidePrevious = (el) => {
 
 	if (el.classList.contains('n-carousel__vertical')) {
 
-		slide(el, 0, -1*(el.offsetHeight - paddingY(el)));
+		slide(el, 0, -1*(el.offsetHeight - paddingY(el)), parseInt(el.dataset.y) === 0 ? el.children.length-1 : parseInt(el.dataset.y) - 1);
 	
 	} else {
 		
-		slide(el, -1*(el.offsetWidth - paddingX(el)), 0);
+		slide(el, -1*(el.offsetWidth - paddingX(el)), 0, parseInt(el.dataset.x) === 0 ? el.children.length-1 : parseInt(el.dataset.x) - 1);
 		
 	}
 
