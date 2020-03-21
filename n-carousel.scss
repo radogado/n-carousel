@@ -144,7 +144,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
-.n-carousel[data-ready] > .n-carousel__auto:not(.n-carousel__vertical) > :not([data-active]), .n-carousel:not([data-ready]) > .n-carousel__auto > :not(:first-child) {
+/* .n-carousel[data-ready] > .n-carousel__auto:not(.n-carousel__vertical) > :not([data-active]), */ .n-carousel:not([data-ready]) > .n-carousel__auto > :not(:first-child) {
 	
 	height: 0;
 	

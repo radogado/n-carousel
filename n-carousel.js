@@ -296,10 +296,10 @@ let slide = (el, offsetX, offsetY, index) => {
 
 		let old_height = el.children[el.dataset.y].scrollHeight;
 		el.children[index].style.height = 'auto';
-		let new_height = el.children[index].scrollHeight;
+		let new_height = el.children[index].scrollHeight; // Wrong on horizontal
 		el.children[index].style.height = '';
 		
-		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
+// 		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
 		
 		let scroll_to_y = -1*(el.dataset.y*old_height - index*new_height);
 		
