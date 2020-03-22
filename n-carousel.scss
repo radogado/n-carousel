@@ -34,11 +34,13 @@
 			position: relative;
 
 			&:after {
+
 			    content: '';
 			    position: absolute;
 			    left: 100%;
 			    width: var(--peek, 0);
 			    height: 1px;
+
 			}
 	
 		}
@@ -75,7 +77,7 @@
 		width: 100%;
 // 		transition: height .2s ease-in-out;
 
-		&:not([data-active]) {
+		&:not([data-active]):not(:last-child) {
 			
 			overflow: hidden;
 
@@ -87,7 +89,7 @@
 
 		pointer-events: none;
 		
-		> * {
+		> *:not(:last-child) {
 			
 			overflow: hidden;
 			

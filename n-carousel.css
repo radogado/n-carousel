@@ -33,11 +33,11 @@
   .n-carousel--content > * {
     flex: 1 0 auto;
     width: 100%; }
-    .n-carousel--content > *:not([data-active]) {
+    .n-carousel--content > *:not([data-active]):not(:last-child) {
       overflow: hidden; }
   .n-carousel--content[data-sliding] {
     pointer-events: none; }
-    .n-carousel--content[data-sliding] > * {
+    .n-carousel--content[data-sliding] > *:not(:last-child) {
       overflow: hidden; }
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
