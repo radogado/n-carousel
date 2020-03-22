@@ -37,6 +37,8 @@
       overflow: hidden; }
   .n-carousel--content[data-sliding] {
     pointer-events: none; }
+    .n-carousel--content[data-sliding] > * {
+      overflow: hidden; }
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
   scroll-snap-type: both mandatory; }
