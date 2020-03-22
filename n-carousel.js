@@ -295,9 +295,23 @@ let slide = (el, offsetX, offsetY, index) => {
 		el.dataset.sliding = true;
 
 		let old_height = el.children[el.dataset.y].scrollHeight;
-		el.children[index].style.height = 'auto';
-		let new_height = el.children[index].scrollHeight; // Wrong on horizontal
-		el.children[index].style.height = '';
+		let old_scroll_left = el.scrollLeft;
+		let old_scroll_top = el.scrollTop;
+		
+		if (el.classList.contains('n-carousel__vertical')) {
+
+			el.children[index].style.height = 'auto';
+			
+		} else {
+			
+			el.children[index].style.position = 'absolute';
+			el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
+
+		}
+		let new_height = el.children[index].scrollHeight;
+		el.children[index].style.position = el.children[index].style.width = el.children[index].style.height = '';
+
+		el.scrollTo(old_scroll_left, old_scroll_top);
 		
 // 		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
 		

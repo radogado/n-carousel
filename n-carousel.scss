@@ -74,6 +74,12 @@
 		flex: 1 0 auto;
 		width: 100%;
 // 		transition: height .2s ease-in-out;
+
+		&:not([data-active]) {
+			
+			overflow: hidden;
+
+		}
   	
 	}
 
