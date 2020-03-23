@@ -311,9 +311,8 @@ let slide = (el, offsetX, offsetY, index) => {
 		let new_height = el.children[index].scrollHeight;
 		el.children[index].style.position = el.children[index].style.width = el.children[index].style.height = '';
 
-		el.scrollTo(old_scroll_left, old_scroll_top);
-		
-// 		el.scrollTo(0, el.dataset.y*old_height); // Makes Safari blink
+		el.scrollTo(old_scroll_left + paddingX(el)/2, old_scroll_top); // iPad bug
+		el.scrollTo(old_scroll_left , old_scroll_top);
 		
 		let scroll_to_y = -1*(el.dataset.y*old_height - index*new_height);
 		
