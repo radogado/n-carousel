@@ -13,15 +13,28 @@
     .n-carousel--content:not([data-sliding]) > * {
       scroll-snap-align: center; }
   .n-carousel--content:not(.n-carousel__vertical) {
-    overflow-x: auto; }
-    .n-carousel--content:not(.n-carousel__vertical) > :last-child {
-      position: relative; }
-      .n-carousel--content:not(.n-carousel__vertical) > :last-child:after {
-        content: '';
-        position: absolute;
-        left: 100%;
-        width: var(--peek, 0);
-        height: 1px; }
+    overflow-x: auto;
+    /*
+		> :last-child { // Peeking support // Browsers don't respect the end padding of horizontal carousel
+			
+			position: relative;
+
+			&:after {
+
+			    content: '';
+			    position: absolute;
+			    left: 100%;
+			    width: var(--peek, 0);
+			    height: 1px;
+
+			}
+	
+		}
+*/ }
+    .n-carousel--content:not(.n-carousel__vertical):after {
+      content: '';
+      width: var(--peek, 0);
+      flex-shrink: 0; }
   .n-carousel--content.n-carousel__vertical {
     overflow-y: auto;
     flex-direction: column; }
@@ -32,7 +45,8 @@
     display: none; }
   .n-carousel--content > * {
     flex: 1 0 auto;
-    width: 100%; }
+    width: 100%;
+    box-sizing: border-box; }
   .n-carousel--content[data-sliding] {
     pointer-events: none; }
   .n-carousel--content,
@@ -41,6 +55,8 @@
   .n-carousel--content > :not([data-active]):last-child, .n-carousel--content[data-sliding] > *:last-child {
     -webkit-mask: linear-gradient(0, #000, #000);
     mask: linear-gradient(0, #000, #000); }
+  .n-carousel--content:not(.n-carousel__auto) > * {
+    overflow: auto; }
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
   scroll-snap-type: both mandatory; }

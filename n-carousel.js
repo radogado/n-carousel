@@ -79,25 +79,21 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 // console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        
-	        window.requestAnimationFrame(() => {
+	        if (new_height) {
 		        
-		        el.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`; // Setting both breaks Safari
+		        window.requestAnimationFrame(() => {
+			        
+			        el.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`; // Setting both breaks Safari
+			    
+			    }); // Timeout because Safari can't do scroll and height at once
 		    
-		    }); // Timeout because Safari can't do scroll and height at once
+		    }
 
 	        if (normalizedTime < 1) {
 		        
 		        window.requestAnimationFrame(step);
 		        
 		    } else {
-				
-/*
-				if (!navigator.userAgent.match('Firefox')) { // Safari bug fix, which breaks Firefox
-				
-// 					el.scrollTo(x, y);
-				
-				}
-*/
 				
 				console.log('Height after animation:', el.style.height);
 				resolve(el);
@@ -295,28 +291,35 @@ let slide = (el, offsetX, offsetY, index) => {
 		el.dataset.sliding = true;
 
 		let old_height = el.children[el.dataset.y].scrollHeight;
-		let old_scroll_left = el.scrollLeft;
-		let old_scroll_top = el.scrollTop;
 		
-		if (el.classList.contains('n-carousel__vertical')) {
+		let new_height = old_height;
+		
+		if (el.classList.contains('n-carousel__auto')) {
+		
+			let old_scroll_left = el.scrollLeft;
+			let old_scroll_top = el.scrollTop;
 
-			el.children[index].style.height = 'auto';
-			
-		} else {
-			
-			el.children[index].style.position = 'absolute';
-			el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
-
+			if (el.classList.contains('n-carousel__vertical')) {
+	
+				el.children[index].style.height = 'auto';
+				
+			} else {
+				
+				el.children[index].style.position = 'absolute';
+				el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
+	
+			}
+			new_height = el.children[index].scrollHeight;
+			el.children[index].style.position = el.children[index].style.width = el.children[index].style.height = '';
+	
+			el.scrollTo(old_scroll_left + paddingX(el)/2, old_scroll_top); // iPad bug
+			el.scrollTo(old_scroll_left , old_scroll_top);
+		
 		}
-		let new_height = el.children[index].scrollHeight;
-		el.children[index].style.position = el.children[index].style.width = el.children[index].style.height = '';
-
-		el.scrollTo(old_scroll_left + paddingX(el)/2, old_scroll_top); // iPad bug
-		el.scrollTo(old_scroll_left , old_scroll_top);
 		
 		let scroll_to_y = -1*(el.dataset.y*old_height - index*new_height);
 		
-		scrollBy(el, offsetX, scroll_to_y, new_height).then(response => {
+		scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 
 // 			observersOn(el);
 			updateCarousel(el); // Handled by scroll end

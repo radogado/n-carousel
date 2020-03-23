@@ -29,6 +29,7 @@
 		
 		overflow-x: auto;
 
+/*
 		> :last-child { // Peeking support // Browsers don't respect the end padding of horizontal carousel
 			
 			position: relative;
@@ -43,6 +44,15 @@
 
 			}
 	
+		}
+*/
+
+		&:after {
+
+		    content: '';
+		    width: var(--peek, 0);
+	        flex-shrink: 0;
+
 		}
 	
 	}
@@ -75,6 +85,7 @@
 
 		flex: 1 0 auto;
 		width: 100%;
+		box-sizing: border-box;
 // 		transition: height .2s ease-in-out;
 
 	}
@@ -99,6 +110,12 @@
 	    -webkit-mask: linear-gradient(0, #000, #000);
 	    mask: linear-gradient(0, #000, #000);
 
+	}
+	
+	&:not(.n-carousel__auto) > * {
+		
+		overflow: auto;
+		
 	}
 
 }

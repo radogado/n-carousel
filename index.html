@@ -52,7 +52,175 @@
 	
 <h1>Scroll Snap Carousel</h1>
 
-<h2>Default Demo</h2>
+<h2>Default</h2>
+
+<div class="n-carousel">
+
+	<div>
+	
+		<button class="n-carousel--previous">◀</button>
+		<button class="n-carousel--next">▶</button>
+	
+	</div>
+	
+	<div class="n-carousel--index">
+	
+		<button>1</button>
+		<button>2</button>
+		<button>3</button>
+	
+	</div>
+	
+	<div class="n-carousel--content" style="--peek: 50px; max-width: 1000px; margin: auto; background: pink;">
+		
+		<section style="background: lightblue">
+			One
+			<input type="text">
+			<span>Span</span><a href=#>Draggable link</a>
+		</section>
+	
+		<section style="background: lightgreen">
+
+			Two<br>
+			2
+			<div class="n-carousel">
+			
+				<div class="n-carousel--content" style="--peek: 1em;">
+					
+					<section>
+						
+						Inner One
+						
+					</section>
+				
+					<section>
+						
+						Inner Two
+						
+					</section>
+				
+					<section>
+						
+						Inner Three<br>
+						_
+						
+					</section>
+				
+				</div>
+				
+				<div>
+				
+					<button class="n-carousel--previous">◀</button>
+					<button class="n-carousel--next">▶</button>
+				
+				</div>
+				
+				<div class="n-carousel--index">
+				
+					<button>1</button>
+					<button>2</button>
+					<button>3</button>
+				
+				</div>
+				
+			</div>
+			
+		</section>
+	
+		<section style="background: coral">
+			Three<br>
+			_
+		</section>
+	
+	</div>
+	
+</div>
+
+<h2>Fixed height</h2>
+
+<div class="n-carousel">
+
+	<div>
+	
+		<button class="n-carousel--previous">◀</button>
+		<button class="n-carousel--next">▶</button>
+	
+	</div>
+	
+	<div class="n-carousel--index">
+	
+		<button>1</button>
+		<button>2</button>
+		<button>3</button>
+	
+	</div>
+	
+	<div class="n-carousel--content" style="--peek: 50px; max-width: 1000px; margin: auto; background: pink; height: 100px;">
+		
+		<section style="background: lightblue">
+			One
+			<input type="text">
+			<span>Span</span><a href=#>Draggable link</a>
+		</section>
+	
+		<section style="background: lightgreen">
+
+			Two<br>
+			2
+			<div class="n-carousel">
+			
+				<div class="n-carousel--content" style="--peek: 1em;">
+					
+					<section>
+						
+						Inner One
+						
+					</section>
+				
+					<section>
+						
+						Inner Two
+						
+					</section>
+				
+					<section>
+						
+						Inner Three<br>
+						_
+						
+					</section>
+				
+				</div>
+				
+				<div>
+				
+					<button class="n-carousel--previous">◀</button>
+					<button class="n-carousel--next">▶</button>
+				
+				</div>
+				
+				<div class="n-carousel--index">
+				
+					<button>1</button>
+					<button>2</button>
+					<button>3</button>
+				
+				</div>
+				
+			</div>
+			
+		</section>
+	
+		<section style="background: coral">
+			Three<br>
+			_
+		</section>
+	
+	</div>
+	
+</div>
+
+<h2>Auto height</h2>
 
 <div class="n-carousel">
 
@@ -136,7 +304,110 @@
 	
 </div>
 
-<h2 id="vertical">Vertical Demo</h2>
+<h2 id="vertical">Vertical fixed height</h2>
+
+<div class="n-carousel">
+
+	<div class="n-carousel--index">
+	
+		<button>1</button>
+		<button>2</button>
+		<button>3</button>
+		<button>4</button>
+	
+	</div>
+	
+	<div class="n-carousel--content n-carousel__vertical" style="--peek: 50px; line-height: 100px; background: lightgoldenrodyellow; height: 200px;">
+		
+		<section style="background: lightblue">
+			<div>
+				One
+				<input type="text">
+				<span>Span</span>
+			</div>
+		</section>
+	
+		<section style="background: lightgreen">
+			
+			<div >
+				Two<br>
+				2
+			</div>
+<!--
+			<div class="n-carousel">
+			
+				<div class="n-carousel--content" style="--peek: 1em;">
+					
+					<section>
+						
+						Inner One
+						
+					</section>
+				
+					<section>
+						
+						Inner Two
+						
+					</section>
+				
+					<section>
+						
+						Inner Three<br>
+						_
+						
+					</section>
+				
+				</div>
+				
+				<div>
+				
+					<button class="n-carousel--previous">◀</button>
+					<button class="n-carousel--next">▶</button>
+				
+				</div>
+				
+				<div class="n-carousel--index">
+				
+					<button>1</button>
+					<button>2</button>
+					<button>3</button>
+				
+				</div>
+				
+			</div>
+-->
+			
+		</section>
+	
+		<section style="background: coral">
+			<div >
+				Three<br>
+				_<br>
+				_<br>
+				_
+			</div>
+		</section>
+	
+		<section style="background: lightcoral">
+			<div >
+				Four<br>
+				_<br>
+				_
+			</div>
+		</section>
+	
+	</div>
+	
+	<div>
+	
+		<button class="n-carousel--previous">🔼</button>
+		<button class="n-carousel--next">🔽</button>
+	
+	</div>
+	
+</div>
+
+<h2 id="vertical">Vertical auto height</h2>
 
 <div class="n-carousel">
 
