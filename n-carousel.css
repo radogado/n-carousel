@@ -33,12 +33,14 @@
   .n-carousel--content > * {
     flex: 1 0 auto;
     width: 100%; }
-    .n-carousel--content > *:not([data-active]):not(:last-child) {
-      overflow: hidden; }
   .n-carousel--content[data-sliding] {
     pointer-events: none; }
-    .n-carousel--content[data-sliding] > *:not(:last-child) {
-      overflow: hidden; }
+  .n-carousel--content,
+  .n-carousel--content > :not([data-active]):not(:last-child), .n-carousel--content[data-sliding] > *:not(:last-child) {
+    overflow: hidden; }
+  .n-carousel--content > :not([data-active]):last-child, .n-carousel--content[data-sliding] > *:last-child {
+    -webkit-mask: linear-gradient(0, #000, #000);
+    mask: linear-gradient(0, #000, #000); }
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
   scroll-snap-type: both mandatory; }
