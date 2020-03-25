@@ -35,6 +35,8 @@
       content: '';
       width: var(--peek, 0);
       flex-shrink: 0; }
+    .n-carousel--content:not(.n-carousel__vertical):not(.n-carousel__auto) > * {
+      overflow: auto; }
   .n-carousel--content.n-carousel__vertical {
     overflow-y: auto;
     flex-direction: column; }
@@ -55,8 +57,6 @@
   .n-carousel--content > :not([data-active]):last-child, .n-carousel--content[data-sliding] > *:last-child {
     -webkit-mask: linear-gradient(0, #000, #000);
     mask: linear-gradient(0, #000, #000); }
-  .n-carousel--content:not(.n-carousel__auto) > * {
-    overflow: auto; }
 
 _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
   scroll-snap-type: both mandatory; }

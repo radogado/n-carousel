@@ -55,6 +55,12 @@
 
 		}
 	
+		&:not(.n-carousel__auto) > * {
+			
+			overflow: auto;
+			
+		}
+
 	}
 	
 	&.n-carousel__vertical {
@@ -112,12 +118,6 @@
 
 	}
 	
-	&:not(.n-carousel__auto) > * {
-		
-		overflow: auto;
-		
-	}
-
 }
 
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
