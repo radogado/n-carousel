@@ -290,7 +290,7 @@ let slide = (el, offsetX, offsetY, index) => {
 		el.removeEventListener('scroll', scrollStopped);
 		el.dataset.sliding = true;
 
-		let old_height = el.children[el.dataset.y].scrollHeight;
+		let old_height = el.children[el.dataset.y].clientHeight;
 		
 		let new_height = old_height;
 		
