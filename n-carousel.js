@@ -41,6 +41,8 @@ let observersOff = el => {
 
 	}
 
+	el.removeEventListener('scroll', scrollStopped);
+
 // 	console.log('Observers Off');	
 
 }
@@ -144,7 +146,7 @@ let updateCarousel = el => { // Called on init and scroll end
 
 // 	console.log('updateCarousel', el);
 
-// 	observersOff(el);
+	observersOff(el);
 	
 // 	el.dataset.sliding = true;
 // 	getComputedStyle(el);
@@ -185,50 +187,12 @@ let updateCarousel = el => { // Called on init and scroll end
 	
 	}
 
-/*
-	if (!!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
-	
-		let old_height = current_active.scrollHeight;
-		let new_height = 0;
-
-		if (el.classList.contains('n-carousel__vertical')) {
-			
-			el.children[active].style.height = 'auto';
-			new_height = el.children[active].scrollHeight;
-			el.style.setProperty('--height', `${new_height}px`);
-			el.children[active].style.height = `${old_height}px`;
-// 			console.log(new_height * active);
-	
-			el.scrollTo(0, new_height * active);
-			
-		} else {
-			
-			new_height = el.children[active].scrollHeight;
-			
-		}
-
-		if (getComputedStyle(el).transition.match('none') || el.offsetHeight === new_height) { // Reduced motion or no change in height
-			
-			observersOn(el);
-			
-		} else {
-			
-			el.dataset.sliding = true;
-	
-		}
-		
-		el.style.height = `${new_height}px`;
-		
-	} else {
-		
-		observersOn(el);
-		
-	}
-*/
 
 	el.children[active].dataset.active = true;
 // 	el.style.setProperty('--height', el.children[active].style.height);
 	el.children[active].style.height = '';
+	
+	// If auto height and active height !== carousel height, change (animate) carousel height to active height (.scrollHeight)
 
 	// Fix buttons.
 	let wrapper = el.closest('.n-carousel')
@@ -243,7 +207,11 @@ let updateCarousel = el => { // Called on init and scroll end
 	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
 	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
 	
-	observersOn(el);
+		setTimeout(() => { 
+
+			observersOn(el); 
+			
+		}, 66); // Why is this necessary, why is scroll firing without scrolling?
 
 };
 
@@ -272,8 +240,24 @@ let scrollStopped = e => {
 		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop && el.scrollLeft % (el.offsetWidth - paddingX(el)) === 0 && el.scrollTop % (el.offsetHeight - paddingY(el)) === 0) { // Also if scroll is in snap position
 // 			console.log(lastScrollX, el.scrollLeft);
 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
-			updateCarousel(el);
-			// Run the callback
+// 			updateCarousel(el);
+			
+			observersOff(el);
+			
+			if (el.classList.contains('n-carousel__auto')) {
+
+				scrollBy(el, 0, 100, 200).then(response => { // Scroll by old height * index, last param is new height - old height?
+					
+					setTimeout(() => { updateCarousel(el); }, 66);
+		// 			updateCarousel(el); // Handled by scroll end
+			
+				});
+
+			} else {
+				
+				updateCarousel(el);
+
+			}
 		
 		}
 
@@ -505,7 +489,7 @@ let slideIndexEvent = e => {
 
 };
 
-let carouselTransition = e => {
+let carouselTransition = e => { // To do: obsolete
 
 // 	console.log(e);
 	let el = e.target;
@@ -514,9 +498,10 @@ let carouselTransition = e => {
 	getComputedStyle(el);
     window.requestAnimationFrame(() => {
 		setTimeout(() => { 
+
 			observersOn(el); 
 			
-		}, 100); // Why is this necessary, why is scroll firing without scrolling?
+		}, 66); // Why is this necessary, why is scroll firing without scrolling?
     });
 	
 }
