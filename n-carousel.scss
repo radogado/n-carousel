@@ -154,6 +154,12 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 	all: revert;
 	border: none;
 	background: #eee;
+	min-width: 42px;
+	min-height: 42px;
+	border-radius: 42px;
+	cursor: pointer;
+	margin: .25em;
+    font: inherit;
 	
 	&[disabled] {
 		
