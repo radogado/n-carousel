@@ -245,8 +245,17 @@ let scrollStopped = e => {
 			observersOff(el);
 			
 			if (el.classList.contains('n-carousel__auto')) {
+				
+				let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
+				el.children[new_index].style.height = 'auto';
+				let new_height = el.children[new_index].scrollHeight;
+				el.children[new_index].style.height = '';
+				let old_height = el.offsetHeight - paddingY(el);
+				let old_index = parseInt(el.dataset.y);
+				
+				console.log('Old index', old_index,'Old height: ', old_height, 'New index', new_index, 'New height: ', new_height);
 
-				scrollBy(el, 0, 100, 200).then(response => { // Scroll by old height * index, last param is new height - old height?
+				scrollBy(el, 0, old_index * new_height, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 					
 					setTimeout(() => { updateCarousel(el); }, 66);
 		// 			updateCarousel(el); // Handled by scroll end
