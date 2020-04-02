@@ -16,7 +16,7 @@ let observersOn = el => {
 
 	}
 
-	console.log('observersOn', el.scrollLeft, el.scrollTop);
+// 	console.log('observersOn', el.scrollLeft, el.scrollTop);
 	let left = el.scrollLeft;
 	let top = el.scrollTop;
 	
@@ -49,7 +49,7 @@ let observersOff = el => {
 
 let scrollBy = (el, distanceX, distanceY, new_height) => {
 
-console.log('Srolling by', distanceY, ' from ', el.scrollTop);
+// console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 
 	return new Promise(function(resolve, reject) {
 	
@@ -76,7 +76,7 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 	    var startTime = performance.now();
 	
 	    function step() {
-	        var normalizedTime = (performance.now() - startTime) / 2000;
+	        var normalizedTime = (performance.now() - startTime) / 200;
 	        if (normalizedTime > 1) normalizedTime = 1;
 // console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
 	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
@@ -97,7 +97,7 @@ console.log('Srolling by', distanceY, ' from ', el.scrollTop);
 		        
 		    } else {
 				
-				console.log('Height after animation:', el.style.height);
+// 				console.log('Height after animation:', el.style.height);
 				resolve(el);
 						    
 		    }
@@ -239,7 +239,7 @@ let scrollStopped = e => {
 		
 		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop && el.scrollLeft % (el.offsetWidth - paddingX(el)) === 0 && el.scrollTop % (el.offsetHeight - paddingY(el)) === 0) { // Also if scroll is in snap position
 // 			console.log(lastScrollX, el.scrollLeft);
-			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
+// 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
 // 			updateCarousel(el);
 			
 			observersOff(el);
@@ -398,7 +398,7 @@ let resizeObserverFallback = e => {
 			
 */
 				// Run the callback
-				console.log( 'Resizing has stopped.', e.target);
+// 				console.log( 'Resizing has stopped.', e.target);
 		
 			}, 66);
 
