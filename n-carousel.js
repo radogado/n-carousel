@@ -248,22 +248,27 @@ let scrollStopped = e => {
 				
 				el.dataset.sliding = true;
 				
-				let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
-				el.children[new_index].style.height = 'auto';
-				let new_height = el.children[new_index].scrollHeight;
-				el.children[new_index].style.height = '';
-				let old_height = el.offsetHeight - paddingY(el);
-				let old_index = parseInt(el.dataset.y);
+				if (el.classList.contains('n-carousel__vertical')) {
 				
-				console.log('Old index', old_index,'Old height ', old_height, 'New index', new_index, 'New height: ', new_height, 'Scroll by');
-
-/*
-				1 (height 100, offset 0) → 2 (height 200, offset 200) = 100
-				1 (height 100, offset 0) → 3 (height 400, offset 800) = 600
-				formula?
-*/
-
-				scrollBy(el, 0, new_index * new_height - el.scrollTop, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
+					let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
+					el.children[new_index].style.height = 'auto';
+					var new_height = el.children[new_index].scrollHeight;
+					el.children[new_index].style.height = '';
+					var offset_y = new_index * new_height - el.scrollTop;
+					
+				} else {
+					
+					let new_index = Math.round(el.scrollLeft / (el.offsetWidth - paddingX(el)));
+					el.children[new_index].style.height = 'auto';
+					el.children[new_index].style.position = 'absolute';
+					var new_height = el.children[new_index].scrollHeight;
+					el.children[new_index].style.position = el.children[new_index].style.height = '';
+					el.scrollTo(lastScrollX, lastScrollY);
+					var offset_y = 0;
+					
+				}
+				
+				scrollBy(el, 0, offset_y, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 					
 					setTimeout(() => { 
 						
@@ -271,10 +276,9 @@ let scrollStopped = e => {
 						delete el.dataset.sliding;
 						
 					}, 66);
-		// 			updateCarousel(el); // Handled by scroll end
 			
 				});
-
+				
 			} else {
 				
 				updateCarousel(el);
@@ -283,7 +287,7 @@ let scrollStopped = e => {
 		
 		}
 
-	}, 66); // 66 was too low and got double results, confusing the auto resizing on scroll end.
+	}, 66);
 
 };
 
