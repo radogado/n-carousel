@@ -206,12 +206,12 @@ let updateCarousel = el => { // Called on init and scroll end
 	
 	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
 	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
-	
-		setTimeout(() => { 
 
-			observersOn(el); 
-			
-		}, 66); // Why is this necessary, why is scroll firing without scrolling?
+	setTimeout(() => { 
+
+		observersOn(el); 
+		
+	}, 66); // Why is this necessary, why is scroll firing without scrolling?
 
 };
 
@@ -230,7 +230,10 @@ let scrollStopped = e => {
 		return;
 
 	}
-	clearTimeout( isScrolling );
+
+	clearTimeout(isScrolling);
+// 	clearTimeout(el.nCarouselTimeout);
+	
 	lastScrollX = el.scrollLeft;
 	lastScrollY = el.scrollTop;
 
@@ -293,6 +296,8 @@ let scrollStopped = e => {
 
 let slide = (el, offsetX, offsetY, index) => {
 	
+	clearTimeout(el.nCarouselTimeout);
+	
 	observersOff(el);
 	
 	if (!el.dataset.sliding) {
@@ -331,7 +336,6 @@ let slide = (el, offsetX, offsetY, index) => {
 		
 		scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 
-// 			observersOn(el);
 			updateCarousel(el); // Handled by scroll end
 	
 		});
@@ -348,7 +352,17 @@ let slideNext = (el) => {
 	
 	} else {
 		
-		slide(el, el.offsetWidth - paddingX(el), 0, el.dataset.x >= el.children.length-1 ? 0 : parseInt(el.dataset.x) + 1);
+		console.log('slide next');
+
+		if (el.dataset.x >= el.children.length-1) {
+			
+			slide(el, el.offsetWidth - paddingX(el) - (el.scrollWidth - paddingX(el)), 0, el.dataset.x >= el.children.length-1 ? 0 : parseInt(el.dataset.x) + 1);
+			
+		} else {
+
+			slide(el, el.offsetWidth - paddingX(el), 0, el.dataset.x >= el.children.length-1 ? 0 : parseInt(el.dataset.x) + 1);
+		
+		}
 		
 	}
 
@@ -514,23 +528,6 @@ let slideIndexEvent = e => {
 	}
 
 };
-
-let carouselTransition = e => { // To do: obsolete
-
-// 	console.log(e);
-	let el = e.target;
-	
-	getControl(el, '[data-active]').style.height = '';
-	getComputedStyle(el);
-    window.requestAnimationFrame(() => {
-		setTimeout(() => { 
-
-			observersOn(el); 
-			
-		}, 66); // Why is this necessary, why is scroll firing without scrolling?
-    });
-	
-}
 		
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
@@ -546,14 +543,24 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 			
 	let content = el.querySelector(':scope > .n-carousel--content');
 	content.tabIndex = 0;
-// 	content.style.setProperty('--height', `${content.children[0].offsetHeight}px`);
 
 	updateCarousel(content);
 
-	content.addEventListener('transitionend', carouselTransition);
-
 	el.dataset.ready = true;
-	observersOn(el);
-	el.querySelector('.n-carousel--content').addEventListener('scroll', scrollStopped);
+	observersOn(content);
+	content.addEventListener('scroll', scrollStopped);
+	
+	if (content.classList.contains('n-carousel--auto-slide')) {
+		
+		let carouselTimeout = () => {
+				
+			slideNext(content); 
+			content.nCarouselTimeout = setTimeout(carouselTimeout, 2000);
+			
+		}
+		
+		content.nCarouselTimeout = setTimeout(carouselTimeout, 2000);
+	
+	}
 
 });
