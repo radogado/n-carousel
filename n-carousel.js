@@ -6,14 +6,18 @@ let getScroll = el => {
 
 let observersOn = el => {
 
-	if (typeof ResizeObserver === 'function') {
+	if (!el.classList.contains('n-carousel__vertical')) {
 	
-		carouselResizeObserver.observe(el);
+		if (typeof ResizeObserver === 'function') {
 		
-	} else {
-
-		window.addEventListener('resize', resizeObserverFallback);
-
+			carouselResizeObserver.observe(el);
+			
+		} else {
+	
+			window.addEventListener('resize', resizeObserverFallback);
+	
+		}
+		
 	}
 
 // 	console.log('observersOn', el.scrollLeft, el.scrollTop);
@@ -76,16 +80,18 @@ let scrollBy = (el, distanceX, distanceY, new_height) => {
 	    var startTime = performance.now();
 	
 	    function step() {
-	        var normalizedTime = (performance.now() - startTime) / 200;
+
+	        var normalizedTime = (performance.now() - startTime) / 200; // Animation time = 200 ms
 	        if (normalizedTime > 1) normalizedTime = 1;
-// console.log(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
-	        el.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
+			let coef = Math.cos(normalizedTime * Math.PI);
+			console.log(baseX + differenceX * coef);
+	        el.scrollTo(baseX + differenceX * coef, baseY + differenceY * coef);
 	        
 	        if (new_height) {
 		        
 		        window.requestAnimationFrame(() => {
 			        
-			        el.style.height = `${baseH + differenceH * Math.cos(normalizedTime * Math.PI)}px`; // Setting both breaks Safari
+			        el.style.height = `${baseH + differenceH * coef}px`;
 			    
 			    }); // Timeout because Safari can't do scroll and height at once
 		    
@@ -97,10 +103,10 @@ let scrollBy = (el, distanceX, distanceY, new_height) => {
 		        
 		    } else {
 				
-// 				console.log('Height after animation:', el.style.height);
 				resolve(el);
 						    
 		    }
+
 	    }
 	    window.requestAnimationFrame(step);
 	
@@ -346,39 +352,17 @@ let slide = (el, offsetX, offsetY, index) => {
 
 let slideNext = (el) => {
 
-	if (el.classList.contains('n-carousel__vertical')) {
+	let index = 1 * (el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x);
 
-		slide(el, 0, el.offsetHeight - paddingY(el), el.dataset.y >= el.children.length-1 ? 0 : parseInt(el.dataset.y) + 1);
-	
-	} else {
-		
-		console.log('slide next');
-
-		if (el.dataset.x >= el.children.length-1) {
-			
-			slide(el, el.offsetWidth - paddingX(el) - (el.scrollWidth - paddingX(el)), 0, el.dataset.x >= el.children.length-1 ? 0 : parseInt(el.dataset.x) + 1);
-			
-		} else {
-
-			slide(el, el.offsetWidth - paddingX(el), 0, el.dataset.x >= el.children.length-1 ? 0 : parseInt(el.dataset.x) + 1);
-		
-		}
-		
-	}
+	slideTo(el, index >= el.children.length-1 ? 0 : index + 1);
 
 };
 
 let slidePrevious = (el) => {
 
-	if (el.classList.contains('n-carousel__vertical')) {
+	let index = 1 * (el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x);
 
-		slide(el, 0, -1*(el.offsetHeight - paddingY(el)), parseInt(el.dataset.y) === 0 ? el.children.length-1 : parseInt(el.dataset.y) - 1);
-	
-	} else {
-		
-		slide(el, -1*(el.offsetWidth - paddingX(el)), 0, parseInt(el.dataset.x) === 0 ? el.children.length-1 : parseInt(el.dataset.x) - 1);
-		
-	}
+	slideTo(el, index === 0 ? el.children.length-1 : index - 1);
 
 };
 
@@ -427,11 +411,29 @@ if (typeof ResizeObserver === 'function') {
 		entries.forEach(e => {
 			
 			let el = e.target;
-/*
+			
+			if (!!el.dataset.sliding) {
+				
+				return;
+
+			}
+			
 			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
 			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y);
-*/
-// 				el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
+			
+			if (el.classList.contains('n-carousel__auto')) {
+			
+				if (el.classList.contains('n-carousel__vertical')) {
+	
+					el.style.height = `${el.children[el.dataset.y].scrollHeight}px`;
+					
+				} else {
+					
+					el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
+					
+				}
+			
+			}
 			
 		});
 	
@@ -560,6 +562,8 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 		}
 		
 		content.nCarouselTimeout = setTimeout(carouselTimeout, 2000);
+		
+		content.addEventListener('pointerenter', e => clearTimeout(e.target.nCarouselTimeout));
 	
 	}
 
