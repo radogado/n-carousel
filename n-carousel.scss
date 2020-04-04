@@ -1,11 +1,9 @@
 .n-carousel--content {
 	
 	display: flex;
-	padding: var(--peek, 0);
+	padding: var(--peek-y, 0) var(--peek-x, 0);
 	will-change: scroll;
 	box-sizing: content-box;
-// 	transition: height 1s ease-in-out;
-// 	transition: none;
 	
 	@media (prefers-reduced-motion: reduce) {
 	
@@ -29,28 +27,10 @@
 		
 		overflow-x: auto;
 
-/*
-		> :last-child { // Peeking support // Browsers don't respect the end padding of horizontal carousel
-			
-			position: relative;
-
-			&:after {
-
-			    content: '';
-			    position: absolute;
-			    left: 100%;
-			    width: var(--peek, 0);
-			    height: 1px;
-
-			}
-	
-		}
-*/
-
 		&:after {
 
 		    content: '';
-		    width: var(--peek, 0);
+		    width: var(--peek-x, 0);
 	        flex-shrink: 0;
 
 		}
@@ -192,15 +172,21 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 	
 }
 
+.n-carousel:not([data-ready]) > .n-carousel--content > :not([data-active]):not(:last-child) {
+	
+	overflow: auto;
+	
+}
+
 @-moz-document url-prefix() {
 
-	.n-carousel--content.n-carousel__vertical { // FF doesn't respect the end padding of the vertical carousel
+	.n-carousel--content.n-carousel__vertical { // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari 
 		
 		display: block;
 
 		> :last-child {
 			
-			margin-block-end: var(--peek, 0);
+			margin-block-end: var(--peek-y, 0);
 
 		}
 

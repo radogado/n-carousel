@@ -189,13 +189,16 @@ let updateCarousel = el => { // Called on init and scroll end
 	
 	if (!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
 		
-		el.style.height = `${el.offsetHeight - paddingY(el)}px`;
+		window.requestAnimationFrame(() => {
+
+			el.style.height = `${el.offsetHeight - paddingY(el)}px`;
+			
+		});
 	
 	}
 
 
 	el.children[active].dataset.active = true;
-// 	el.style.setProperty('--height', el.children[active].style.height);
 	el.children[active].style.height = '';
 	
 	// If auto height and active height !== carousel height, change (animate) carousel height to active height (.scrollHeight)
@@ -548,7 +551,12 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	updateCarousel(content);
 
-	el.dataset.ready = true;
+	window.requestAnimationFrame(() => {
+
+		el.dataset.ready = true;
+		
+	});
+
 	observersOn(content);
 	content.addEventListener('scroll', scrollStopped);
 	
