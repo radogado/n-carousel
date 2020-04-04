@@ -1,14 +1,12 @@
-let getScroll = el => {
-	
-	return el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop}
+let resize_observer_support = typeof ResizeObserver === 'function';
 
-};
+let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop}
 
 let observersOn = el => {
 
 	if (!el.classList.contains('n-carousel__vertical')) {
 	
-		if (typeof ResizeObserver === 'function') {
+		if (resize_observer_support) {
 		
 			carouselResizeObserver.observe(el);
 			
@@ -35,7 +33,7 @@ let observersOn = el => {
 
 let observersOff = el => {
 	
-	if (typeof ResizeObserver === 'function') {
+	if (resize_observer_support) {
 	
 		carouselResizeObserver.unobserve(el);
 		
@@ -51,80 +49,68 @@ let observersOff = el => {
 
 }
 
-let scrollBy = (el, distanceX, distanceY, new_height) => {
+let inOutSine = n => (1 - Math.cos(Math.PI * n))/2;
 
-// console.log('Srolling by', distanceY, ' from ', el.scrollTop);
+let scrollBy = (el, distanceX, distanceY, new_height) => new Promise((resolve, reject) => { // Thanks https://stackoverflow.com/posts/46604409/revisions
 
-	return new Promise(function(resolve, reject) {
-	
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			
-			el.scrollTo(getScroll(el).x + distanceX, getScroll(el).y + distanceY);
-			el.style.height = `${new_height}px`;
-			return;
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		
+		el.scrollTo(getScroll(el).x + distanceX, getScroll(el).y + distanceY);
+		el.style.height = `${new_height}px`;
+		resolve(el);
+		return;
 
-		}
+	}
 
-	    var initialX = getScroll(el).x;
-	    var initialY = getScroll(el).y;
-	    var initialH = parseInt(el.style.height);
-	    var x = initialX + distanceX;
-	    var y = initialY + distanceY;
-	    var h = new_height;
-	    var baseX = (initialX + x) * 0.5;
-	    var baseY = (initialY + y) * 0.5;
-	    var baseH = (initialH + h) * 0.5;
-	    var differenceX = initialX - baseX;
-	    var differenceY = initialY - baseY;
-	    var differenceH = initialH - baseH;
-	    var startTime = performance.now();
-	
-	    function step() {
+    var stop = false;
 
-	        var normalizedTime = (performance.now() - startTime) / 200; // Animation time = 200 ms
-	        if (normalizedTime > 1) normalizedTime = 1;
-			let coef = Math.cos(normalizedTime * Math.PI);
-			console.log(baseX + differenceX * coef);
-	        el.scrollTo(baseX + differenceX * coef, baseY + differenceY * coef);
+    var startx = getScroll(el).x;
+    var starty = getScroll(el).y;
+    var starth = parseInt(el.style.height);
+    var distanceH = new_height - starth;
+    var duration = 500;
+    var start = null;
+    var end = null;
+
+    let startAnim = timeStamp => {
+
+        start = timeStamp;
+        end = start + duration;
+        draw(timeStamp);
+
+    };
+
+    let draw = now => {
+
+        if (stop) { resolve(el); return; }
+        if (now - start >= duration) stop = true;
+        var p = (now - start) / duration;
+        var val = inOutSine(p);
+        var x = startx + distanceX * val;
+        var y = starty + distanceY * val;
+        el.scrollTo(x, y);
+
+        if (new_height) {
 	        
-	        if (new_height) {
+	        window.requestAnimationFrame(() => {
 		        
-		        window.requestAnimationFrame(() => {
-			        
-			        el.style.height = `${baseH + differenceH * coef}px`;
-			    
-			    }); // Timeout because Safari can't do scroll and height at once
+		        el.style.height = `${starth + distanceH * val}px`;
 		    
-		    }
-
-	        if (normalizedTime < 1) {
-		        
-		        window.requestAnimationFrame(step);
-		        
-		    } else {
-				
-				resolve(el);
-						    
-		    }
-
+		    }); // Timeout because Safari can't do scroll and height at once
+	    
 	    }
-	    window.requestAnimationFrame(step);
-	
-	});
 
-};
+        requestAnimationFrame(draw);
 
-let paddingX = el => {
-	
-	return parseInt(getComputedStyle(el).paddingInlineStart)*2;
+    };
 
-}
+    requestAnimationFrame(startAnim);
 
-let paddingY = el => {
+});
 
-	return parseInt(getComputedStyle(el).paddingBlockStart)*2;
+let paddingX = el => parseInt(getComputedStyle(el).paddingInlineStart)*2;
 
-}
+let paddingY = el => parseInt(getComputedStyle(el).paddingBlockStart)*2;
 
 let getControl = (carousel, control) => {
 	
@@ -143,8 +129,6 @@ let getControl = (carousel, control) => {
 		}
 		
 	}
-	
-	return false;
 	
 }
 
@@ -197,7 +181,6 @@ let updateCarousel = el => { // Called on init and scroll end
 	
 	}
 
-
 	el.children[active].dataset.active = true;
 	el.children[active].style.height = '';
 	
@@ -216,11 +199,7 @@ let updateCarousel = el => { // Called on init and scroll end
 	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
 	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
 
-	setTimeout(() => { 
-
-		observersOn(el); 
-		
-	}, 66); // Why is this necessary, why is scroll firing without scrolling?
+	setTimeout(() => observersOn(el), 66);
 
 };
 
@@ -356,7 +335,6 @@ let slide = (el, offsetX, offsetY, index) => {
 let slideNext = (el) => {
 
 	let index = 1 * (el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x);
-
 	slideTo(el, index >= el.children.length-1 ? 0 : index + 1);
 
 };
@@ -364,7 +342,6 @@ let slideNext = (el) => {
 let slidePrevious = (el) => {
 
 	let index = 1 * (el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x);
-
 	slideTo(el, index === 0 ? el.children.length-1 : index - 1);
 
 };
@@ -407,7 +384,7 @@ let resizeObserverFallback = e => {
 
 };
 
-if (typeof ResizeObserver === 'function') {
+if (resize_observer_support) {
 
 	var carouselResizeObserver = new ResizeObserver(entries => {
 
@@ -505,23 +482,11 @@ let carouselKeys = e => {
 
 };
 
-let closestCarousel = el => {
-	
-	return el.closest('.n-carousel').querySelector('.n-carousel--content');
-	
-};
+let closestCarousel = el => el.closest('.n-carousel').querySelector('.n-carousel--content');
 
-let slidePreviousEvent = e => {
-	
-	slidePrevious(closestCarousel(e.target));
-	
-};
+let slidePreviousEvent = e => slidePrevious(closestCarousel(e.target));
 		
-let slideNextEvent = e => {
-	
-	slideNext(closestCarousel(e.target));
-
-};
+let slideNextEvent = e => slideNext(closestCarousel(e.target));
 
 let slideIndexEvent = e => {
 
@@ -535,8 +500,6 @@ let slideIndexEvent = e => {
 };
 		
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
-
-	// To do: get the buttons properly, minding embedded carousels
 
 	getControl(el, '.n-carousel--previous').onclick = slidePreviousEvent;
 
