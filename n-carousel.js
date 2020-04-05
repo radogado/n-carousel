@@ -399,7 +399,7 @@ if (resize_observer_support) {
 			}
 			
 			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
-			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y);
+// 			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y); // To do: Fix Safari glitch
 			
 			if (el.classList.contains('n-carousel__auto')) {
 			

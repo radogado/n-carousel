@@ -1,9 +1,9 @@
 .n-carousel--content {
 	
 	display: flex;
-	padding: var(--peek-y, 0) var(--peek-x, 0);
 	will-change: scroll;
 	box-sizing: content-box;
+	padding: var(--peek-y, 0) var(--peek-x, 0);
 	
 	@media (prefers-reduced-motion: reduce) {
 	
@@ -30,8 +30,8 @@
 		&:after {
 
 		    content: '';
-		    width: var(--peek-x, 0);
 	        flex-shrink: 0;
+	        padding-inline-end: inherit;
 
 		}
 	
