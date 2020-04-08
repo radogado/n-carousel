@@ -24,7 +24,9 @@ let observersOn = el => {
 	
 
 // 	el.scrollTo(left, top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
-	delete el.dataset.sliding;
+	setTimeout(() => {
+		delete el.dataset.sliding;
+	}, 1);
 	el.addEventListener('scroll', scrollStopped);
 // 	el.scrollTo(left, top);
 // 	console.log('Observers On');	
@@ -199,7 +201,9 @@ let updateCarousel = el => { // Called on init and scroll end
 	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
 	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
 
-	setTimeout(() => observersOn(el), 66);
+/* 	setTimeout(() =>  */
+	observersOn(el);
+/* 	, 66); */
 
 };
 
@@ -230,7 +234,7 @@ let scrollStopped = e => {
 		
 		if (lastScrollX === el.scrollLeft && lastScrollY === el.scrollTop && el.scrollLeft % (el.offsetWidth - paddingX(el)) === 0 && el.scrollTop % (el.offsetHeight - paddingY(el)) === 0) { // Also if scroll is in snap position
 // 			console.log(lastScrollX, el.scrollLeft);
-// 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
+			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
 // 			updateCarousel(el);
 			
 			observersOff(el);
@@ -389,7 +393,7 @@ if (resize_observer_support) {
 	var carouselResizeObserver = new ResizeObserver(entries => {
 
 		entries.forEach(e => {
-			
+// 			return;
 			let el = e.target;
 			
 			if (!!el.dataset.sliding) {
@@ -399,8 +403,15 @@ if (resize_observer_support) {
 			}
 			
 			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
-// 			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y); // To do: Fix Safari glitch
 			
+/* 			observersOff(el); */
+			
+			el.removeEventListener('scroll', scrollStopped);
+
+			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y); // To do: Fix Safari glitch
+						
+			setTimeout(() => el.addEventListener('scroll', scrollStopped), 66);
+
 			if (el.classList.contains('n-carousel__auto')) {
 			
 				if (el.classList.contains('n-carousel__vertical')) {
@@ -415,6 +426,8 @@ if (resize_observer_support) {
 			
 			}
 			
+/* 			observersOn(el); */
+
 		});
 	
 	});
@@ -517,10 +530,10 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 	window.requestAnimationFrame(() => {
 
 		el.dataset.ready = true;
-		
+		observersOn(content);
+
 	});
 
-	observersOn(content);
 	content.addEventListener('scroll', scrollStopped);
 	
 	if (content.classList.contains('n-carousel--auto-slide')) {
