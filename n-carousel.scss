@@ -33,10 +33,10 @@
 	        flex-shrink: 0;
 // 	        padding-inline-end: inherit;
 		    width: var(--peek-x, 0); // Fixed value option
-		    width: calc(100% - var(--peek-x)*2); // Percentage option
+
 
 		}
-	
+
 		&:not(.n-carousel__auto) > * {
 			
 			overflow: auto;

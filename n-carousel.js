@@ -4,6 +4,7 @@ let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.sc
 
 let observersOn = el => {
 
+/*
 	if (!el.classList.contains('n-carousel__vertical')) {
 	
 		if (resize_observer_support) {
@@ -17,17 +18,20 @@ let observersOn = el => {
 		}
 		
 	}
+*/
 
 // 	console.log('observersOn', el.scrollLeft, el.scrollTop);
+/*
 	let left = el.scrollLeft;
 	let top = el.scrollTop;
+*/
 	
 
 // 	el.scrollTo(left, top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points 
 	setTimeout(() => {
 		delete el.dataset.sliding;
+		el.addEventListener('scroll', scrollStopped);
 	}, 1);
-	el.addEventListener('scroll', scrollStopped);
 // 	el.scrollTo(left, top);
 // 	console.log('Observers On');	
 
@@ -35,6 +39,7 @@ let observersOn = el => {
 
 let observersOff = el => {
 	
+/*
 	if (resize_observer_support) {
 	
 		carouselResizeObserver.unobserve(el);
@@ -44,6 +49,7 @@ let observersOff = el => {
 		window.removeEventListener('resize', resizeObserverFallback);
 
 	}
+*/
 
 	el.removeEventListener('scroll', scrollStopped);
 
@@ -237,6 +243,7 @@ let scrollStopped = e => {
 			console.log( 'Scrolling has stopped.', el, e.target.scrollLeft, lastScrollX, el.scrollTop, lastScrollY);
 // 			updateCarousel(el);
 			
+			el.dataset.sliding = true;
 			observersOff(el);
 			
 			if (el.classList.contains('n-carousel__auto')) {
@@ -265,9 +272,9 @@ let scrollStopped = e => {
 				
 				scrollBy(el, 0, offset_y, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 					
+					updateCarousel(el);
 					setTimeout(() => { 
 						
-						updateCarousel(el);
 						delete el.dataset.sliding;
 						
 					}, 66);
@@ -277,7 +284,12 @@ let scrollStopped = e => {
 			} else {
 				
 				updateCarousel(el);
-
+				setTimeout(() => { 
+					
+					delete el.dataset.sliding;
+					
+				}, 66);
+			
 			}
 		
 		}
@@ -388,6 +400,7 @@ let resizeObserverFallback = e => {
 
 };
 
+/*
 if (resize_observer_support) {
 
 	var carouselResizeObserver = new ResizeObserver(entries => {
@@ -404,14 +417,12 @@ if (resize_observer_support) {
 			
 			console.log('Resized', el, e.contentRect.width, e.contentRect.height);
 			
-/* 			observersOff(el); */
+			el.dataset.sliding = true;
 			
 			el.removeEventListener('scroll', scrollStopped);
 
 			el.scrollTo(el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y); // To do: Fix Safari glitch
 						
-			setTimeout(() => el.addEventListener('scroll', scrollStopped), 66);
-
 			if (el.classList.contains('n-carousel__auto')) {
 			
 				if (el.classList.contains('n-carousel__vertical')) {
@@ -426,13 +437,14 @@ if (resize_observer_support) {
 			
 			}
 			
-/* 			observersOn(el); */
+			setTimeout(() => el.addEventListener('scroll', scrollStopped), 66);
 
 		});
 	
 	});
 
 }
+*/
 	
 let carouselKeys = e => {
 	
@@ -534,8 +546,6 @@ document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
 	});
 
-	content.addEventListener('scroll', scrollStopped);
-	
 	if (content.classList.contains('n-carousel--auto-slide')) {
 		
 		let carouselTimeout = () => {
