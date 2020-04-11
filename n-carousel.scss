@@ -237,6 +237,36 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 	
 	}
 
+	&.n-carousel__controls-outside {
+		
+		grid-template-rows: 1fr auto;
+	
+		> .n-carousel--content {
+			
+			grid-row: 1/-2;
+			grid-column: 2/-2;
+    			
+		}
+		
+		> .n-carousel--previous, > .n-carousel--next {
+			
+			grid-row: 1/2;
+			align-self: center;
+			    
+		}
+	
+		&.n-carousel__controls-top > {
+			
+			.n-carousel--content, .n-carousel--previous, .n-carousel--next {
+				
+				grid-row: 2/3;
+				    
+			}
+	
+		}
+
+	}
+
 }
 
 @-moz-document url-prefix() {
