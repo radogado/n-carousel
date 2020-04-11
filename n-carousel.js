@@ -204,8 +204,8 @@ let updateCarousel = el => { // Called on init and scroll end
 	}
 	index.children[active].disabled = true;
 	
-	getControl(wrapper, '.n-carousel--previous').disabled = active === '0' ? true : false;
-	getControl(wrapper, '.n-carousel--next').disabled = (active >= el.children.length-1) ? true : false;
+	getControl(wrapper, '.n-carousel--previous button').disabled = active === '0' ? true : false;
+	getControl(wrapper, '.n-carousel--next button').disabled = (active >= el.children.length-1) ? true : false;
 
 /* 	setTimeout(() =>  */
 	observersOn(el);
@@ -526,9 +526,9 @@ let slideIndexEvent = e => {
 		
 document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 
-	getControl(el, '.n-carousel--previous').onclick = slidePreviousEvent;
+	getControl(el, '.n-carousel--previous button').onclick = slidePreviousEvent;
 
-	getControl(el, '.n-carousel--next').onclick = slideNextEvent;
+	getControl(el, '.n-carousel--next button').onclick = slideNextEvent;
 
 	getControl(el, '.n-carousel--index').onclick = slideIndexEvent;
 
