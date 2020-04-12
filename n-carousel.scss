@@ -281,6 +281,12 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
     	    
 		}
 		
+		&.n-carousel__controls-right > .n-carousel--index {
+	
+		    grid-column: -1/-2;
+    	    
+		}
+		
 		> .n-carousel--previous {
 			
 		    grid-row: 1/2;
