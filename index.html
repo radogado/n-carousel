@@ -51,6 +51,12 @@
 
 	}
 	
+	section {
+		
+		padding: 1em;
+
+	}
+	
 </style>	
 
 <body>
@@ -438,7 +444,7 @@
 
 <h2 id="vertical">Vertical fixed height</h2>
 
-<div class="n-carousel">
+<div class="n-carousel n-carousel__vertical">
 
 	<div class="n-carousel--index">
 	
@@ -449,7 +455,7 @@
 	
 	</div>
 	
-	<div class="n-carousel--content n-carousel__vertical" style="--peek-y: 50px; line-height: 100px; background: lightgrey; height: 200px;">
+	<div class="n-carousel--content" style="--peek-y: 50px; line-height: 100px; background: lightgrey; height: 200px;">
 		
 		<section style="background: lightblue">
 			<div>
@@ -537,13 +543,13 @@
 	
 	<div class="n-carousel--previous">
 	
-		<button>⬅</button>
+		<button>⬆</button>
 	
 	</div>
 	
 	<div class="n-carousel--next">
 	
-		<button>➡</button>
+		<button>⬇</button>
 	
 	</div>
 	
@@ -551,7 +557,7 @@
 
 <h2 id="vertical">Vertical auto height</h2>
 
-<div class="n-carousel">
+<div class="n-carousel n-carousel__vertical">
 
 	<div class="n-carousel--index">
 	
@@ -562,7 +568,7 @@
 	
 	</div>
 	
-	<div class="n-carousel--content n-carousel__auto n-carousel__vertical n-carousel--auto-slide-" style="--peek-y: 50px; line-height: 100px; background: lightgrey;">
+	<div class="n-carousel--content n-carousel__auto n-carousel--auto-slide-" style="--peek-y: 50px; --peek-x: 50px; line-height: 100px; background: lightgrey;">
 		
 		<section style="background: lightblue">
 			<div>
@@ -650,13 +656,126 @@
 	
 	<div class="n-carousel--previous">
 	
-		<button>⬅</button>
+		<button>⬆</button>
 	
 	</div>
 	
 	<div class="n-carousel--next">
 	
-		<button>➡</button>
+		<button>⬇</button>
+	
+	</div>
+	
+</div>
+
+<h2 id="vertical">Vertical auto height with outside controls</h2>
+
+<div class="n-carousel n-carousel__vertical n-carousel__controls-outside">
+
+	<div class="n-carousel--index">
+	
+		<button>1</button>
+		<button>2</button>
+		<button>3</button>
+		<button>4</button>
+	
+	</div>
+	
+	<div class="n-carousel--content n-carousel__auto n-carousel--auto-slide-" style="line-height: 100px; background: lightgrey;">
+		
+		<section style="background: lightblue">
+			<div>
+				One
+				<input type="text">
+				<span>Span</span>
+			</div>
+		</section>
+	
+		<section style="background: lightgreen">
+			
+			<div >
+				Two<br>
+				2
+			</div>
+<!--
+			<div class="n-carousel">
+			
+				<div class="n-carousel--content" style="--peek: 1em;">
+					
+					<section>
+						
+						Inner One
+						
+					</section>
+				
+					<section>
+						
+						Inner Two
+						
+					</section>
+				
+					<section>
+						
+						Inner Three<br>
+						_
+						
+					</section>
+				
+				</div>
+				
+				<div class="n-carousel--previous">
+				
+					<button>⬅</button>
+				
+				</div>
+				
+				<div class="n-carousel--next">
+				
+					<button>➡</button>
+				
+				</div>
+				
+				<div class="n-carousel--index">
+				
+					<button>1</button>
+					<button>2</button>
+					<button>3</button>
+				
+				</div>
+				
+			</div>
+-->
+			
+		</section>
+	
+		<section style="background: coral">
+			<div >
+				Three<br>
+				_<br>
+				_<br>
+				_
+			</div>
+		</section>
+	
+		<section style="background: lightcoral">
+			<div >
+				Four<br>
+				_<br>
+				_
+			</div>
+		</section>
+	
+	</div>
+	
+	<div class="n-carousel--previous">
+	
+		<button>⬆</button>
+	
+	</div>
+	
+	<div class="n-carousel--next">
+	
+		<button>⬇</button>
 	
 	</div>
 	

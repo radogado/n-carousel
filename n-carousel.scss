@@ -23,44 +23,6 @@
 	
 	}
 
-	&:not(.n-carousel__vertical) {
-		
-		overflow-x: auto;
-
-		&:after {
-
-		    content: '';
-	        flex-shrink: 0;
-// 	        padding-inline-end: inherit;
-		    width: var(--peek-x, 0); // Fixed value option
-
-
-		}
-
-		&:not(.n-carousel__auto) > * {
-			
-			overflow: auto;
-			
-		}
-
-	}
-	
-	&.n-carousel__vertical {
-		
-		overflow-y: auto;
-		flex-direction: column;
-		
-		> * {
-			
-// 			height: var(--height, inherit); // Fallback not working in Safari
-			height: inherit; // Fallback not working in Safari
-			overflow: hidden;
-
-		}
-		
-
-	}
-	
 	scrollbar-width: none; /* Firefox */
 
 	&::-webkit-scrollbar {
@@ -102,6 +64,44 @@
 
 	}
 	
+}
+
+:not(.n-carousel__vertical) > .n-carousel--content {
+	
+	overflow-x: auto;
+
+	&:after {
+
+	    content: '';
+        flex-shrink: 0;
+// 	        padding-inline-end: inherit;
+	    width: var(--peek-x, 0); // Fixed value option
+
+
+	}
+
+	&:not(.n-carousel__auto) > * {
+		
+		overflow: auto;
+		
+	}
+
+}
+
+.n-carousel__vertical > .n-carousel--content {
+	
+	overflow-y: auto;
+	flex-direction: column;
+	
+	> * {
+		
+// 			height: var(--height, inherit); // Fallback not working in Safari
+		height: inherit; // Fallback not working in Safari
+		overflow: hidden;
+
+	}
+	
+
 }
 
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
@@ -166,7 +166,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
-.n-carousel--content.n-carousel__auto.n-carousel__vertical {
+.n-carousel__vertical > .n-carousel--content.n-carousel__auto {
 	
 	overflow: hidden;
 	overflow-y: auto;
@@ -266,12 +266,56 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 		}
 
 	}
+	
+	&.n-carousel__vertical {
+		
+// 	 	grid-template: 1fr auto 1fr/auto 1fr auto 1fr 50px; // Where 50px should be the width of the index
+		
+		> .n-carousel--index {
+	
+			grid-row: 1/-1;
+		    grid-column: 1/2;
+	        align-self: center;
+		    display: flex;
+		    flex-direction: column;
+    	    
+		}
+		
+		> .n-carousel--previous {
+			
+		    grid-row: 1/2;
+		    grid-column: 3/4;
+	        align-self: start;
+    			
+		}
+		
+		> .n-carousel--next {
 
+		    grid-row: -1/-2;
+		    grid-column: 3/4;
+		    align-self: end;
+        			
+		}
+		
+	}
+
+	&.n-carousel__vertical.n-carousel__controls-outside {
+		
+	    grid-template-rows: auto 1fr auto;
+		
+		> .n-carousel--content {
+		
+			grid-row: 2/-2;
+	
+		}		
+	
+	}
+	
 }
 
 @-moz-document url-prefix() {
 
-	.n-carousel--content.n-carousel__vertical { // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari 
+	.n-carousel__vertical > .n-carousel--content { // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari 
 		
 		display: block;
 

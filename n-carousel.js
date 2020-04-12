@@ -2,10 +2,16 @@ let resize_observer_support = typeof ResizeObserver === 'function';
 
 let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: el.scrollLeft, y: el.scrollTop}
 
+let isVertical = el => {
+
+	return el.closest('.n-carousel').classList.contains('n-carousel__vertical');
+	
+};
+
 let observersOn = el => {
 
 /*
-	if (!el.classList.contains('n-carousel__vertical')) {
+	if (!isVertical(el)) {
 	
 		if (resize_observer_support) {
 		
@@ -155,7 +161,7 @@ let updateCarousel = el => { // Called on init and scroll end
 	
 // 	console.log('updateCarousel', el.scrollLeft);
 	
-	let active = el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x;
+	let active = isVertical(el) ? el.dataset.y : el.dataset.x;
 	
 	if (active >= el.children.length) {
 		
@@ -250,7 +256,7 @@ let scrollStopped = e => {
 				
 				el.dataset.sliding = true;
 				
-				if (el.classList.contains('n-carousel__vertical')) {
+				if (isVertical(el)) {
 				
 					let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 					el.children[new_index].style.height = 'auto';
@@ -318,7 +324,7 @@ let slide = (el, offsetX, offsetY, index) => {
 			let old_scroll_left = el.scrollLeft;
 			let old_scroll_top = el.scrollTop;
 
-			if (el.classList.contains('n-carousel__vertical')) {
+			if (isVertical(el)) {
 	
 				el.children[index].style.height = 'auto';
 				
@@ -350,21 +356,21 @@ let slide = (el, offsetX, offsetY, index) => {
 
 let slideNext = (el) => {
 
-	let index = 1 * (el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x);
+	let index = 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
 	slideTo(el, index >= el.children.length-1 ? 0 : index + 1);
 
 };
 
 let slidePrevious = (el) => {
 
-	let index = 1 * (el.classList.contains('n-carousel__vertical') ? el.dataset.y : el.dataset.x);
+	let index = 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
 	slideTo(el, index === 0 ? el.children.length-1 : index - 1);
 
 };
 
 let slideTo = (el, index) => {
 
-	if (el.classList.contains('n-carousel__vertical')) {
+	if (isVertical(el)) {
 
 		slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop, index);
 	
@@ -425,7 +431,7 @@ if (resize_observer_support) {
 						
 			if (el.classList.contains('n-carousel__auto')) {
 			
-				if (el.classList.contains('n-carousel__vertical')) {
+				if (isVertical(el)) {
 	
 					el.style.height = `${el.children[el.dataset.y].scrollHeight}px`;
 					
