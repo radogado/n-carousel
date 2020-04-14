@@ -158,11 +158,25 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
-.n-carousel--content.n-carousel__auto {
-	
-	overflow: hidden;
-	overflow-x: auto;
+// LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
+:not(.n-carousel__vertical) > .n-carousel--previous, [dir="rtl"] :not(.n-carousel__vertical) > .n-carousel--next, [dir="rtl"]:not(.n-carousel__vertical) > .n-carousel--next {
+
+	button:before {
+		 
+		 content: '⬅';
+	
+	}
+
+}
+
+:not(.n-carousel__vertical) > .n-carousel--next, [dir="rtl"] :not(.n-carousel__vertical) > .n-carousel--previous, [dir="rtl"]:not(.n-carousel__vertical) > .n-carousel--previous {
+
+	button:before {
+		 
+		 content: '➡';
+	
+	}
 
 }
 

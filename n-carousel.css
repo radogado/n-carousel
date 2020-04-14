@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .n-carousel--content {
   display: flex;
   will-change: scroll;
@@ -87,9 +88,12 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
   opacity: 0.5;
 }
 
-.n-carousel--content.n-carousel__auto {
-  overflow: hidden;
-  overflow-x: auto;
+:not(.n-carousel__vertical) > .n-carousel--previous button:before, [dir=rtl] :not(.n-carousel__vertical) > .n-carousel--next button:before, [dir=rtl]:not(.n-carousel__vertical) > .n-carousel--next button:before {
+  content: "⬅";
+}
+
+:not(.n-carousel__vertical) > .n-carousel--next button:before, [dir=rtl] :not(.n-carousel__vertical) > .n-carousel--previous button:before, [dir=rtl]:not(.n-carousel__vertical) > .n-carousel--previous button:before {
+  content: "➡";
 }
 
 .n-carousel__vertical > .n-carousel--content.n-carousel__auto {
