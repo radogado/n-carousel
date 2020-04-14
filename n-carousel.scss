@@ -160,7 +160,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
-:not(.n-carousel__vertical) > .n-carousel--previous, [dir="rtl"] :not(.n-carousel__vertical) > .n-carousel--next, [dir="rtl"]:not(.n-carousel__vertical) > .n-carousel--next {
+.n-carousel--previous, [dir="rtl"] .n-carousel--next {
 
 	button:before {
 		 
@@ -170,7 +170,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
-:not(.n-carousel__vertical) > .n-carousel--next, [dir="rtl"] :not(.n-carousel__vertical) > .n-carousel--previous, [dir="rtl"]:not(.n-carousel__vertical) > .n-carousel--previous {
+.n-carousel--next, [dir="rtl"] .n-carousel--previous {
 
 	button:before {
 		 
@@ -178,6 +178,16 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 	
 	}
 
+}
+
+.n-carousel__vertical > .n-carousel--next, .n-carousel__vertical > .n-carousel--previous {
+	
+	button:before {
+		
+		content: '';
+
+	}	
+	
 }
 
 .n-carousel__vertical > .n-carousel--content.n-carousel__auto {

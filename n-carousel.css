@@ -88,12 +88,16 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
   opacity: 0.5;
 }
 
-:not(.n-carousel__vertical) > .n-carousel--previous button:before, [dir=rtl] :not(.n-carousel__vertical) > .n-carousel--next button:before, [dir=rtl]:not(.n-carousel__vertical) > .n-carousel--next button:before {
+.n-carousel--previous button:before, [dir=rtl] .n-carousel--next button:before {
   content: "⬅";
 }
 
-:not(.n-carousel__vertical) > .n-carousel--next button:before, [dir=rtl] :not(.n-carousel__vertical) > .n-carousel--previous button:before, [dir=rtl]:not(.n-carousel__vertical) > .n-carousel--previous button:before {
+.n-carousel--next button:before, [dir=rtl] .n-carousel--previous button:before {
   content: "➡";
+}
+
+.n-carousel__vertical > .n-carousel--next button:before, .n-carousel__vertical > .n-carousel--previous button:before {
+  content: "";
 }
 
 .n-carousel__vertical > .n-carousel--content.n-carousel__auto {

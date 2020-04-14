@@ -1,10 +1,14 @@
-(function (){ 
+(function (){
+	
+	let isChrome = () => !!navigator.userAgent.match('Chrome');
+	
+	let isRTL = el => getComputedStyle(el).direction === 'rtl';
 
 	let resize_observer_support = typeof ResizeObserver === 'function';
 	
-	let scrollStart = el => getComputedStyle(el).direction === 'rtl' ? el.scrollWidth - el.scrollLeft - el.offsetWidth : el.scrollLeft; // Get correct start scroll position for LTR and RTL
+	let scrollStart = el => isRTL(el) && isChrome() ? el.scrollWidth - el.scrollLeft - el.offsetWidth : el.scrollLeft; // Get correct start scroll position for LTR and RTL
 	
-	let scrollToAuto = (el, x, y) => el.scrollTo(getComputedStyle(el).direction === 'rtl' ? el.scrollWidth - x - el.offsetWidth : x, y);    // Scroll to correct scroll position for LTR and RTL
+	let scrollToAuto = (el, x, y) => el.scrollTo(isRTL(el) && isChrome() ? el.scrollWidth - x - el.offsetWidth : x, y);    // Scroll to correct scroll position for LTR and RTL
 	
 	let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: scrollStart(el), y: el.scrollTop}
 	
