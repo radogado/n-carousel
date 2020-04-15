@@ -477,14 +477,14 @@
 				
 				case 'ArrowLeft': {
 					
-					slidePrevious(el);
+					isRTL(el) ? slideNext(el) : slidePrevious(el);
 					break;
 				
 				}; 
 	
 				case 'ArrowRight': {
 					
-					slideNext(el);
+					isRTL(el) ? slidePrevious(el) : slideNext(el);
 					break;
 				
 				}; 

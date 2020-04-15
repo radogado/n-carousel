@@ -186,6 +186,16 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
 .n-carousel.n-carousel__vertical.n-carousel__controls-outside > .n-carousel--content {
   grid-row: 2/-2;
 }
+.n-carousel.n-carousel__tabs > .n-carousel--index {
+  display: flex;
+}
+.n-carousel.n-carousel__tabs > .n-carousel--index button {
+  border-radius: 0;
+  margin: 0;
+}
+.n-carousel.n-carousel__tabs > .n-carousel--index button:focus {
+  z-index: 0;
+}
 
 @-moz-document url-prefix() {
   .n-carousel__vertical > .n-carousel--content {

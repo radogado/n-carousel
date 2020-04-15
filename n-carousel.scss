@@ -349,6 +349,30 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	
 	}
 	
+	&.n-carousel__tabs {
+		
+		> .n-carousel--index {
+			
+			display: flex;
+			flex-wrap: wrap;
+			
+			button {
+				
+				border-radius: 0;
+				margin: 0;
+				
+				&:focus {
+					
+					z-index: 0;
+
+				}
+
+			}
+
+		}
+		
+	}
+	
 }
 
 @-moz-document url-prefix() {
