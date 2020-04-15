@@ -64,6 +64,10 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
   scroll-snap-align: center;
 }
 
+_::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical) > .n-carousel--content {
+  scroll-snap-type: none;
+}
+
 @supports not (-webkit-touch-callout: none) {
   _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
     pointer-events: all;

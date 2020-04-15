@@ -118,6 +118,14 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 }
 
+// No snapping in Safari when RTL (?!) To do: polyfill
+
+_::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertical) > .n-carousel--content {
+
+	scroll-snap-type: none;
+	
+}
+
 // Because macOS-only Safari can't swipe backwards when pointer events are re-enabled.
 
 @supports not (-webkit-touch-callout: none) {

@@ -6,9 +6,9 @@
 
 	let resize_observer_support = typeof ResizeObserver === 'function';
 	
-	let scrollStart = el => isRTL(el) && isChrome() ? el.scrollWidth - el.scrollLeft - el.offsetWidth : el.scrollLeft; // Get correct start scroll position for LTR and RTL
+	let scrollStart = el => isRTL(el) && isChrome() ? el.scrollWidth - el.scrollLeft - el.offsetWidth : (isRTL(el) && !isChrome() ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
 	
-	let scrollToAuto = (el, x, y) => el.scrollTo(isRTL(el) && isChrome() ? el.scrollWidth - x - el.offsetWidth : x, y);    // Scroll to correct scroll position for LTR and RTL
+	let scrollToAuto = (el, x, y) => el.scrollTo(isRTL(el) && isChrome() ? el.scrollWidth - x - el.offsetWidth : (isRTL(el) && !isChrome() ? -1 : 1) * x, y);    // Scroll to correct scroll position for LTR and RTL
 	
 	let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: scrollStart(el), y: el.scrollTop}
 	
@@ -164,7 +164,7 @@
 	// 	getComputedStyle(el);
 		
 		
-		el.dataset.x = Math.round(scrollStart(el) / (el.offsetWidth - paddingX(el)));
+		el.dataset.x = Math.round(scrollStart(el) / (el.offsetWidth - paddingX(el))); 
 		el.dataset.y = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 		
 	// 	console.log('updateCarousel', scrollStart(el));
