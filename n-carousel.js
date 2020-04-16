@@ -77,7 +77,7 @@
 	
 	let scrollBy = (el, distanceX, distanceY, new_height) => new Promise((resolve, reject) => { // Thanks https://stackoverflow.com/posts/46604409/revisions
 	
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || el.closest('.n-carousel').classList.contains('n-carousel__instant')) {
 			
 			scrollToAuto(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
 			el.style.height = `${new_height}px`;
