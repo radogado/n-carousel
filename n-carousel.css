@@ -121,73 +121,65 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
 .n-carousel {
   display: grid;
   grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
+  grid-template-areas: "a1 	a2 a2 		a2 	a3" "prev 	a2 a2 		a2 	next" "a4 	a4 index 	a5 	a5";
 }
 .n-carousel > .n-carousel--content {
   grid-row: 1/-1;
   grid-column: 1/-1;
+  align-self: center;
 }
 .n-carousel > :not(.n-carousel--content) {
   z-index: 1;
 }
 .n-carousel > .n-carousel--previous {
-  grid-row: 2/3;
-  grid-column: 1/2;
+  grid-area: prev;
 }
 .n-carousel > .n-carousel--next {
-  grid-row: 2/3;
-  grid-column: -2/-1;
+  grid-area: next;
 }
 .n-carousel > .n-carousel--index {
-  grid-row: -2/-1;
-  grid-column: 3/4;
+  grid-area: index;
   align-self: end;
 }
-.n-carousel.n-carousel__controls-top > .n-carousel--index {
-  grid-row: 1/2;
-  align-self: start;
+.n-carousel.n-carousel__controls-top {
+  grid-template-areas: "a1 	a1 	index 	a2 	a2" "prev 	a3 	a3 		a3 	next" "a4 	a4 	a4	 	a4 	a4";
 }
 .n-carousel.n-carousel__controls-outside {
-  grid-template-rows: 1fr auto;
+  grid-template-areas: "a1 	a1 			a1" "prev 	content  	next" "a2 	index	 	a3";
+  grid-template-columns: auto 1fr auto;
 }
 .n-carousel.n-carousel__controls-outside > .n-carousel--content {
-  grid-row: 1/-2;
-  grid-column: 2/-2;
+  grid-area: content;
 }
-.n-carousel.n-carousel__controls-outside > .n-carousel--previous, .n-carousel.n-carousel__controls-outside > .n-carousel--next {
-  grid-row: 1/2;
-  align-self: center;
+.n-carousel.n-carousel__controls-outside.n-carousel__controls-top {
+  grid-template-areas: "a1 	index 		a2" "prev 	content  	next" "a3 	a3	 		a3";
 }
-.n-carousel.n-carousel__controls-outside.n-carousel__controls-top > .n-carousel--content, .n-carousel.n-carousel__controls-outside.n-carousel__controls-top > .n-carousel--previous, .n-carousel.n-carousel__controls-outside.n-carousel__controls-top > .n-carousel--next {
-  grid-row: 2/3;
+.n-carousel.n-carousel__vertical {
+  grid-template-areas: "a1 	a1 	prev 	a2 	a2" "index	a3 	a3 		a3 	a3" "a4 	a4 	next	a5 	a5";
 }
 .n-carousel.n-carousel__vertical > .n-carousel--index {
-  grid-row: 1/-1;
-  grid-column: 1/2;
   align-self: center;
   display: flex;
   flex-direction: column;
 }
-.n-carousel.n-carousel__vertical.n-carousel__controls-right > .n-carousel--index {
-  grid-column: -1/-2;
+.n-carousel.n-carousel__vertical.n-carousel__controls-right {
+  grid-template-areas: "a1 	a1 	prev	a2 	a2" "a3		a3 	a3 		a3 	index" "a4 	a4 	next 	a5 	a5";
 }
 .n-carousel.n-carousel__vertical > .n-carousel--previous {
-  grid-row: 1/2;
-  grid-column: 3/4;
   align-self: start;
 }
 .n-carousel.n-carousel__vertical > .n-carousel--next {
-  grid-row: -1/-2;
-  grid-column: 3/4;
   align-self: end;
 }
 .n-carousel.n-carousel__vertical.n-carousel__controls-outside {
-  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "a1 		prev		a2" "index 		content  	a2" "a3 		next	 	a2";
 }
-.n-carousel.n-carousel__vertical.n-carousel__controls-outside > .n-carousel--content {
-  grid-row: 2/-2;
+.n-carousel.n-carousel__vertical.n-carousel__controls-outside.n-carousel__controls-right {
+  grid-template-areas: "a1 		prev		a2" "a1 		content  	index" "a1 		next	 	a3";
 }
 .n-carousel.n-carousel__tabs > .n-carousel--index {
   display: flex;
+  flex-wrap: wrap;
 }
 .n-carousel.n-carousel__tabs > .n-carousel--index button {
   border-radius: 0;
