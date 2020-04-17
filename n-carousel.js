@@ -92,7 +92,7 @@
 	    var starty = getScroll(el).y;
 	    var starth = parseInt(el.style.height);
 	    var distanceH = new_height - starth;
-	    var duration = 500;
+	    var duration = 1500;
 	    var start = null;
 	    var end = null;
 	
@@ -352,7 +352,7 @@
 			
 			}
 			
-			let scroll_to_y = -1*(el.dataset.y*old_height - index*new_height);
+			let scroll_to_y = (el.closest('.n-carousel').classList.contains('n-carousel__vertical')) ? -1*(el.dataset.y*old_height - index*new_height) : 0;
 			
 			scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 	

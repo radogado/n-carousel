@@ -126,7 +126,6 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
 .n-carousel > .n-carousel--content {
   grid-row: 1/-1;
   grid-column: 1/-1;
-  align-self: center;
 }
 .n-carousel > :not(.n-carousel--content) {
   z-index: 1;
@@ -177,6 +176,9 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
 .n-carousel.n-carousel__vertical.n-carousel__controls-outside.n-carousel__controls-right {
   grid-template-areas: "a1 		prev		a2" "a1 		content  	index" "a1 		next	 	a3";
 }
+.n-carousel.n-carousel__tabs {
+  grid-template-rows: auto 1fr;
+}
 .n-carousel.n-carousel__tabs > .n-carousel--index {
   display: flex;
   flex-wrap: wrap;
@@ -187,6 +189,9 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
 }
 .n-carousel.n-carousel__tabs > .n-carousel--index button:focus {
   z-index: 0;
+}
+.n-carousel.n-carousel__tabs > .n-carousel--previous, .n-carousel.n-carousel__tabs > .n-carousel--next {
+  display: none;
 }
 
 @-moz-document url-prefix() {

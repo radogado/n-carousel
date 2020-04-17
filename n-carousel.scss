@@ -220,6 +220,8 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 .n-carousel {
 	
+	
+		
 	display: grid;
 	grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
 
@@ -232,7 +234,6 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 		
 	    grid-row: 1/-1;
 	    grid-column: 1/-1;
-        align-self: center;
     		
 	}
 	
@@ -354,6 +355,8 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	
 	&.n-carousel__tabs {
 		
+		grid-template-rows: auto 1fr;
+		
 		> .n-carousel--index {
 			
 			display: flex;
@@ -372,6 +375,12 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 			}
 
+		}
+		
+		> .n-carousel--previous, > .n-carousel--next {
+			
+			display: none;
+			
 		}
 		
 	}
