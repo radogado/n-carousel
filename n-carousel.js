@@ -12,11 +12,9 @@
 	
 	let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: scrollStart(el), y: el.scrollTop}
 	
-	let isVertical = el => {
+	let isVertical = el => el.closest('.n-carousel').classList.contains('n-carousel__vertical');
 	
-		return el.closest('.n-carousel').classList.contains('n-carousel__vertical');
-		
-	};
+	let isAuto = el => el.classList.contains('n-carousel__auto');
 	
 	let observersOn = el => {
 	
@@ -195,7 +193,7 @@
 		
 		}
 		
-		if (!el.parentNode.dataset.ready && el.classList.contains('n-carousel__auto')) {
+		if (!el.parentNode.dataset.ready && isAuto(el)) {
 			
 			window.requestAnimationFrame(() => {
 	
@@ -262,7 +260,7 @@
 				el.dataset.sliding = true;
 				observersOff(el);
 				
-				if (el.classList.contains('n-carousel__auto')) {
+				if (isAuto(el)) {
 					
 					el.dataset.sliding = true;
 					
@@ -329,7 +327,7 @@
 			
 			let new_height = old_height;
 			
-			if (el.classList.contains('n-carousel__auto')) {
+			if (isAuto(el)) {
 			
 				let old_scroll_left = scrollStart(el);
 				let old_scroll_top = el.scrollTop;
@@ -352,7 +350,7 @@
 			
 			}
 			
-			let scroll_to_y = (el.closest('.n-carousel').classList.contains('n-carousel__vertical')) ? -1*(el.dataset.y*old_height - index*new_height) : 0;
+			let scroll_to_y = (isVertical(el)) ? -1*(el.dataset.y*old_height - index*new_height) : 0;
 			
 			scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 	
