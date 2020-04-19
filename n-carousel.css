@@ -120,8 +120,8 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
 
 .n-carousel {
   display: grid;
-  grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
-  grid-template-areas: "a1 	a2 a2 		a2 	a3" "prev 	a2 a2 		a2 	next" "a4 	a4 index 	a5 	a5";
+  grid-template: auto 1fr/auto 1fr auto 1fr auto;
+  grid-template-areas: "prev 	a2 		a2 		a2 		next" "index 	index 	index 	index 	index";
 }
 .n-carousel > .n-carousel--content {
   grid-row: 1/-1;
@@ -141,20 +141,20 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
   align-self: end;
 }
 .n-carousel.n-carousel__controls-top {
-  grid-template-areas: "a1 	a1 	index 	a2 	a2" "prev 	a3 	a3 		a3 	next" "a4 	a4 	a4	 	a4 	a4";
+  grid-template-areas: "index 	index 	index 	index 	index" "prev 	a3 		a3 		a3 		next";
 }
 .n-carousel.n-carousel__controls-outside {
-  grid-template-areas: "a1 	a1 			a1" "prev 	content  	next" "a2 	index	 	a3";
+  grid-template-areas: "a1 	a1 			a1" "prev 	content  	next" "index 	index	 	index";
   grid-template-columns: auto 1fr auto;
 }
 .n-carousel.n-carousel__controls-outside > .n-carousel--content {
   grid-area: content;
 }
 .n-carousel.n-carousel__controls-outside.n-carousel__controls-top {
-  grid-template-areas: "a1 	index 		a2" "prev 	content  	next" "a3 	a3	 		a3";
+  grid-template-areas: "index 	index 		index" "prev 	content  	next" "a3 	a3	 		a3";
 }
 .n-carousel.n-carousel__vertical {
-  grid-template-areas: "a1 	a1 	prev 	a2 	a2" "index	a3 	a3 		a3 	a3" "a4 	a4 	next	a5 	a5";
+  grid-template-areas: "index 	a1 	prev 	a2 	a2" "index	a3 	a3 		a3 	a3" "index 	a4 	next	a5 	a5";
 }
 .n-carousel.n-carousel__vertical > .n-carousel--index {
   align-self: center;
@@ -162,7 +162,7 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
   flex-direction: column;
 }
 .n-carousel.n-carousel__vertical.n-carousel__controls-right {
-  grid-template-areas: "a1 	a1 	prev	a2 	a2" "a3		a3 	a3 		a3 	index" "a4 	a4 	next 	a5 	a5";
+  grid-template-areas: "a1 	a1 	prev	a2 	index" "a3		a3 	a3 		a3 	index" "a4 	a4 	next 	a5 	index";
 }
 .n-carousel.n-carousel__vertical > .n-carousel--previous {
   align-self: start;
@@ -171,10 +171,10 @@ _::-webkit-full-page-media, _:future, :root [dir=rtl] :not(.n-carousel__vertical
   align-self: end;
 }
 .n-carousel.n-carousel__vertical.n-carousel__controls-outside {
-  grid-template-areas: "a1 		prev		a2" "index 		content  	a2" "a3 		next	 	a2";
+  grid-template-areas: "index 		prev		a2" "index 		content  	a2" "index 		next	 	a2";
 }
 .n-carousel.n-carousel__vertical.n-carousel__controls-outside.n-carousel__controls-right {
-  grid-template-areas: "a1 		prev		a2" "a1 		content  	index" "a1 		next	 	a3";
+  grid-template-areas: "a1 		prev		index" "a1 		content  	index" "a1 		next	 	index";
 }
 .n-carousel.n-carousel__tabs {
   grid-template-rows: auto 1fr;

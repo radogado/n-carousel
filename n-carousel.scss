@@ -219,16 +219,13 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 }
 
 .n-carousel {
-	
-	
 		
 	display: grid;
-	grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
+	grid-template: auto 1fr/auto 1fr auto 1fr auto;
 
     grid-template-areas:
-        "a1 	a2 a2 		a2 	a3"
-        "prev 	a2 a2 		a2 	next"
-        "a4 	a4 index 	a5 	a5";
+        "prev 	a2 		a2 		a2 		next"
+        "index 	index 	index 	index 	index";
 	
 	> .n-carousel--content { // To do: support intermediate container, while not affecting nested carousels
 		
@@ -265,9 +262,8 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	&.n-carousel__controls-top {
 		
 	    grid-template-areas:
-	        "a1 	a1 	index 	a2 	a2"
-	        "prev 	a3 	a3 		a3 	next"
-	        "a4 	a4 	a4	 	a4 	a4";
+	        "index 	index 	index 	index 	index"
+	        "prev 	a3 		a3 		a3 		next";
 	
 	}
 
@@ -276,7 +272,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	    grid-template-areas:
 	        "a1 	a1 			a1"
 	        "prev 	content  	next"
-	        "a2 	index	 	a3";
+	        "index 	index	 	index";
 
 		grid-template-columns: auto 1fr auto;
 
@@ -289,7 +285,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 		&.n-carousel__controls-top {
 			
 		    grid-template-areas:
-		        "a1 	index 		a2"
+		        "index 	index 		index"
 		        "prev 	content  	next"
 		        "a3 	a3	 		a3";
 	
@@ -300,9 +296,9 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	&.n-carousel__vertical {
 		
 	    grid-template-areas:
-	        "a1 	a1 	prev 	a2 	a2"
+	        "index 	a1 	prev 	a2 	a2"
 	        "index	a3 	a3 		a3 	a3"
-	        "a4 	a4 	next	a5 	a5";
+	        "index 	a4 	next	a5 	a5";
 		
 		> .n-carousel--index {
 	
@@ -315,9 +311,9 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 		&.n-carousel__controls-right {
 	
 		    grid-template-areas:
-		        "a1 	a1 	prev	a2 	a2"
+		        "a1 	a1 	prev	a2 	index"
 		        "a3		a3 	a3 		a3 	index"
-		        "a4 	a4 	next 	a5 	a5";
+		        "a4 	a4 	next 	a5 	index";
     	    
 		}
 		
@@ -338,16 +334,16 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	&.n-carousel__vertical.n-carousel__controls-outside {
 		
 	    grid-template-areas:
-	        "a1 		prev		a2"
+	        "index 		prev		a2"
 	        "index 		content  	a2"
-	        "a3 		next	 	a2";
+	        "index 		next	 	a2";
 
 		&.n-carousel__controls-right {
 			
 		    grid-template-areas:
-		        "a1 		prev		a2"
+		        "a1 		prev		index"
 		        "a1 		content  	index"
-		        "a1 		next	 	a3";
+		        "a1 		next	 	index";
 	
 		}
 
