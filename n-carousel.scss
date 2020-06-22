@@ -1,4 +1,4 @@
-.n-carousel--content {
+.n-carousel__content {
 	
 	display: flex;
 	will-change: scroll;
@@ -66,7 +66,7 @@
 	
 }
 
-:not(.n-carousel__vertical) > .n-carousel--content {
+:not(.n-carousel--vertical) > .n-carousel__content {
 	
 	overflow-x: auto;
 
@@ -80,7 +80,7 @@
 
 	}
 
-	&:not(.n-carousel__auto) > * {
+	&:not(.n-carousel--auto) > * {
 		
 		overflow: auto;
 		
@@ -88,7 +88,7 @@
 
 }
 
-.n-carousel__vertical > .n-carousel--content {
+.n-carousel--vertical > .n-carousel__content {
 	
 	overflow-y: auto;
 	flex-direction: column;
@@ -106,13 +106,13 @@
 
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
 
-_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
+_::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] {
 
 	scroll-snap-type: both mandatory;
 	
 }
 
-_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] > * {
+_::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] > * {
 
 	scroll-snap-align: center;
 
@@ -120,7 +120,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] >
 
 // No snapping in Safari when RTL (?!) To do: polyfill
 
-_::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertical) > .n-carousel--content {
+_::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel--vertical) > .n-carousel__content {
 
 	scroll-snap-type: none;
 	
@@ -130,7 +130,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 @supports not (-webkit-touch-callout: none) {
 
-	_::-webkit-full-page-media, _:future, :root .n-carousel--content[data-sliding] {
+	_::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] {
 	
 		pointer-events: all;
 	
@@ -138,7 +138,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 }
 
-.n-carousel--index, .n-carousel--previous, .n-carousel--next {
+.n-carousel__index, .n-carousel__previous, .n-carousel__next {
 
 	 button {
 
@@ -168,7 +168,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
-.n-carousel--previous, [dir="rtl"] .n-carousel--next {
+.n-carousel__previous, [dir="rtl"] .n-carousel__next {
 
 	button:before {
 		 
@@ -178,7 +178,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 }
 
-.n-carousel--next, [dir="rtl"] .n-carousel--previous {
+.n-carousel__next, [dir="rtl"] .n-carousel__previous {
 
 	button:before {
 		 
@@ -188,7 +188,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 }
 
-.n-carousel__vertical > .n-carousel--next, .n-carousel__vertical > .n-carousel--previous {
+.n-carousel--vertical > .n-carousel__next, .n-carousel--vertical > .n-carousel__previous {
 	
 	button:before {
 		
@@ -198,7 +198,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	
 }
 
-.n-carousel__vertical > .n-carousel--content.n-carousel__auto {
+.n-carousel--vertical > .n-carousel__content.n-carousel--auto {
 	
 	overflow: hidden;
 	overflow-y: auto;
@@ -206,13 +206,13 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 }
 
-/* .n-carousel[data-ready] > .n-carousel__auto:not(.n-carousel__vertical) > :not([data-active]), */ .n-carousel:not([data-ready]) > .n-carousel__auto > :not(:first-child) {
+/* .n-carousel[data-ready] > .n-carousel--auto:not(.n-carousel--vertical) > :not([data-active]), */ .n-carousel:not([data-ready]) > .n-carousel--auto > :not(:first-child) {
 	
 	height: 0;
 	
 }
 
-.n-carousel:not([data-ready]) > .n-carousel--content > :not([data-active]):not(:last-child) {
+.n-carousel:not([data-ready]) > .n-carousel__content > :not([data-active]):not(:last-child) {
 	
 	overflow: auto;
 	
@@ -227,39 +227,39 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
         "prev 	a2 		a2 		a2 		next"
         "index 	index 	index 	index 	index";
 	
-	> .n-carousel--content { // To do: support intermediate container, while not affecting nested carousels
+	> .n-carousel__content { // To do: support intermediate container, while not affecting nested carousels
 		
 	    grid-row: 1/-1;
 	    grid-column: 1/-1;
     		
 	}
 	
-	> :not(.n-carousel--content) {
+	> :not(.n-carousel__content) {
 		
 	    z-index: 1;
     		
 	}
 	
-	> .n-carousel--previous {
+	> .n-carousel__previous {
 		
 		grid-area: prev;
     		
 	}
     
-	> .n-carousel--next {
+	> .n-carousel__next {
 
 		grid-area: next;
 
 	}
 
-	> .n-carousel--index {
+	> .n-carousel__index {
 
 		grid-area: index;
 		align-self: end;
     
 	}
 	
-	&.n-carousel__controls-top {
+	&.n-carousel--controls-top {
 		
 	    grid-template-areas:
 	        "index 	index 	index 	index 	index"
@@ -267,7 +267,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 	
 	}
 
-	&.n-carousel__controls-outside {
+	&.n-carousel--controls-outside {
 		
 	    grid-template-areas:
 	        "a1 	a1 			a1"
@@ -276,13 +276,13 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 		grid-template-columns: auto 1fr auto;
 
-		> .n-carousel--content {
+		> .n-carousel__content {
 			
 			grid-area: content;
     			
 		}
 		
-		&.n-carousel__controls-top {
+		&.n-carousel--controls-top {
 			
 		    grid-template-areas:
 		        "index 	index 		index"
@@ -293,14 +293,14 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 	}
 	
-	&.n-carousel__vertical {
+	&.n-carousel--vertical {
 		
 	    grid-template-areas:
 	        "index 	a1 	prev 	a2 	a2"
 	        "index	a3 	a3 		a3 	a3"
 	        "index 	a4 	next	a5 	a5";
 		
-		> .n-carousel--index {
+		> .n-carousel__index {
 	
 	        align-self: center;
 		    display: flex;
@@ -308,7 +308,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
     	    
 		}
 		
-		&.n-carousel__controls-right {
+		&.n-carousel--controls-right {
 	
 		    grid-template-areas:
 		        "a1 	a1 	prev	a2 	index"
@@ -317,13 +317,13 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
     	    
 		}
 		
-		> .n-carousel--previous {
+		> .n-carousel__previous {
 			
 	        align-self: start;
     			
 		}
 		
-		> .n-carousel--next {
+		> .n-carousel__next {
 
 		    align-self: end;
         			
@@ -331,14 +331,14 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 		
 	}
 
-	&.n-carousel__vertical.n-carousel__controls-outside {
+	&.n-carousel--vertical.n-carousel--controls-outside {
 		
 	    grid-template-areas:
 	        "index 		prev		a2"
 	        "index 		content  	a2"
 	        "index 		next	 	a2";
 
-		&.n-carousel__controls-right {
+		&.n-carousel--controls-right {
 			
 		    grid-template-areas:
 		        "a1 		prev		index"
@@ -349,11 +349,11 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 	}
 	
-	&.n-carousel__tabs {
+	&.n-carousel--tabs {
 		
 		grid-template-rows: auto 1fr;
 		
-		> .n-carousel--index {
+		> .n-carousel__index {
 			
 			display: flex;
 			flex-wrap: wrap;
@@ -373,7 +373,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 		}
 		
-		> .n-carousel--previous, > .n-carousel--next {
+		> .n-carousel__previous, > .n-carousel__next {
 			
 			display: none;
 			
@@ -385,7 +385,7 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel__vertic
 
 @-moz-document url-prefix() {
 
-	.n-carousel__vertical > .n-carousel--content { // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari 
+	.n-carousel--vertical > .n-carousel__content { // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari 
 		
 		display: block;
 

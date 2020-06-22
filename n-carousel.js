@@ -12,9 +12,9 @@
 	
 	let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: scrollStart(el), y: el.scrollTop}
 	
-	let isVertical = el => el.closest('.n-carousel').classList.contains('n-carousel__vertical');
+	let isVertical = el => el.closest('.n-carousel').classList.contains('n-carousel--vertical');
 	
-	let isAuto = el => el.classList.contains('n-carousel__auto');
+	let isAuto = el => el.classList.contains('n-carousel--auto');
 	
 	let observersOn = el => {
 	
@@ -75,7 +75,7 @@
 	
 	let scrollBy = (el, distanceX, distanceY, new_height) => new Promise((resolve, reject) => { // Thanks https://stackoverflow.com/posts/46604409/revisions
 	
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || el.closest('.n-carousel').classList.contains('n-carousel__instant')) {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || el.closest('.n-carousel').classList.contains('n-carousel--instant')) {
 			
 			scrollToAuto(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
 			el.style.height = `${new_height}px`;
@@ -144,7 +144,7 @@
 	
 			}
 			
-			if (!el.matches('.n-carousel--content') && el.querySelector(control)) {
+			if (!el.matches('.n-carousel__content') && el.querySelector(control)) {
 				
 				return el.querySelector(control);
 				
@@ -210,7 +210,7 @@
 	
 		// Fix buttons.
 		let wrapper = el.closest('.n-carousel')
-		let index = getControl(wrapper, '.n-carousel--index');
+		let index = getControl(wrapper, '.n-carousel__index');
 		if (index.querySelector('[disabled]')) {
 			
 			index.querySelector('[disabled]').disabled = false;
@@ -218,8 +218,8 @@
 		}
 		index.children[active].disabled = true;
 		
-		getControl(wrapper, '.n-carousel--previous button').disabled = active === '0' ? true : false;
-		getControl(wrapper, '.n-carousel--next button').disabled = (active >= el.children.length-1) ? true : false;
+		getControl(wrapper, '.n-carousel__previous button').disabled = active === '0' ? true : false;
+		getControl(wrapper, '.n-carousel__next button').disabled = (active >= el.children.length-1) ? true : false;
 	
 	/* 	setTimeout(() =>  */
 		observersOn(el);
@@ -392,7 +392,7 @@
 	
 	let resizeObserverFallback = e => {
 		
-		document.querySelectorAll('.n-carousel--content').forEach(el => {
+		document.querySelectorAll('.n-carousel__content').forEach(el => {
 				
 				// Clear our timeout throughout the scroll
 				clearTimeout( isResizing );
@@ -437,7 +437,7 @@
 	
 				scrollToAuto(el, el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y); // To do: Fix Safari glitch
 							
-				if (el.classList.contains('n-carousel__auto')) {
+				if (el.classList.contains('n-carousel--auto')) {
 				
 					if (isVertical(el)) {
 		
@@ -468,7 +468,7 @@
 		
 	// 	console.log(e);
 		let el = e.target;
-		if (el.classList.contains('n-carousel--content') && keys.includes(e.key)) { // Capture relevant keys
+		if (el.classList.contains('n-carousel__content') && keys.includes(e.key)) { // Capture relevant keys
 			
 			e.preventDefault();
 			switch (e.key) {
@@ -521,7 +521,7 @@
 	
 	};
 	
-	let closestCarousel = el => el.closest('.n-carousel').querySelector('.n-carousel--content');
+	let closestCarousel = el => el.closest('.n-carousel').querySelector('.n-carousel__content');
 	
 	let slidePreviousEvent = e => slidePrevious(closestCarousel(e.target));
 			
@@ -540,15 +540,15 @@
 			
 	document.querySelectorAll('.n-carousel:not([data-ready])').forEach(el => {
 	
-		getControl(el, '.n-carousel--previous button').onclick = slidePreviousEvent;
+		getControl(el, '.n-carousel__previous button').onclick = slidePreviousEvent;
 	
-		getControl(el, '.n-carousel--next button').onclick = slideNextEvent;
+		getControl(el, '.n-carousel__next button').onclick = slideNextEvent;
 	
-		getControl(el, '.n-carousel--index').onclick = slideIndexEvent;
+		getControl(el, '.n-carousel__index').onclick = slideIndexEvent;
 	
-		el.querySelector('.n-carousel--content').onkeydown = carouselKeys;
+		el.querySelector('.n-carousel__content').onkeydown = carouselKeys;
 				
-		let content = el.querySelector(':scope > .n-carousel--content');
+		let content = el.querySelector(':scope > .n-carousel__content');
 		content.tabIndex = 0;
 	
 		updateCarousel(content);
