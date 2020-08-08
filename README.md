@@ -1,8 +1,8 @@
 # Native Carousel
 
 ```
-<link rel="styleSheet" href="scroll-carousel.css">
-<script src="scroll-carousel.js" type="module" async></script>
+<link rel="styleSheet" href="n-carousel.css">
+<script src="n-carousel.js" type="module" async></script>
 	
 <div class="n-carousel">
 
