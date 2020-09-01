@@ -46,9 +46,6 @@
 		
 	}
 	
-	&, 
-	
-	
 /*
 	> :not([data-active]):not(:last-child), &[data-sliding] > *:not(:last-child) {
 			
@@ -256,7 +253,28 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel--vertic
 
 		grid-area: index;
 		align-self: end;
+		justify-content: center;
     
+	}
+
+	&.n-carousel--controls-start {
+	
+		.n-carousel__index {
+			
+			justify-content: flex-start;
+			
+		}	
+
+	}
+	
+	&.n-carousel--controls-end {
+	
+		.n-carousel__index {
+			
+			justify-content: flex-end;
+			
+		}	
+
 	}
 	
 	&.n-carousel--controls-top {
