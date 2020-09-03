@@ -263,7 +263,7 @@
 				let new_y = Math.round(el.scrollTop 	/ (el.offsetHeight 	- paddingY(el)));
 				console.log('stuck', new_x, new_y);
 // 				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
-				slideTo(el, new_x); // To do: also vertical
+				slideTo(el, isVertical(el) ? new_y : new_x);
 				
 			}
 			
@@ -365,7 +365,7 @@
 			
 			}
 			
-			let scroll_to_y = (isVertical(el)) ? -1*(el.dataset.y*old_height - index*new_height) : 0;
+			let scroll_to_y = isVertical(el) ? offsetY - index*old_height + index*new_height : 0;
 			
 			scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 	
