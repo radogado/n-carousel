@@ -254,14 +254,20 @@
 
 			console.log('scrollStopped check');
 			
-			if (isChrome && (scrollStartX(el) % (el.offsetWidth - paddingX(el)) !== 0 || el.scrollTop % (el.offsetHeight - paddingY(el)) !== 0)) { // Stuck bc of Chrome bug when you scroll in both directions during snapping
+			let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
+			let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
+			
+			if (isChrome && (mod_x !== 0 || mod_y !== 0)) { // Stuck bc of Chrome bug when you scroll in both directions during snapping
 				
-				console.log('stuck');
-				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
+				let new_x = Math.round(scrollStartX(el) / (el.offsetWidth 	- paddingX(el)));
+				let new_y = Math.round(el.scrollTop 	/ (el.offsetHeight 	- paddingY(el)));
+				console.log('stuck', new_x, new_y);
+// 				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
+				slideTo(el, new_x); // To do: also vertical
 				
 			}
 			
-			if (lastScrollX === scrollStartX(el) && lastScrollY === el.scrollTop && scrollStartX(el) % (el.offsetWidth - paddingX(el)) === 0 && el.scrollTop % (el.offsetHeight - paddingY(el)) === 0) { // Also if scroll is in snap position
+			if (lastScrollX === scrollStartX(el) && lastScrollY === el.scrollTop && mod_x === 0 && mod_y === 0) { // Also if scroll is in snap position
 	// 			console.log(lastScrollX, scrollStartX(el));
 				console.log( 'Scrolling has stopped.', el, scrollStartX(e.target), lastScrollX, el.scrollTop, lastScrollY);
 	// 			updateCarousel(el);
