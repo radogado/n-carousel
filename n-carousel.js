@@ -90,7 +90,7 @@
 	    var starty = getScroll(el).y;
 	    var starth = parseInt(el.style.height);
 	    var distanceH = new_height - starth;
-	    var duration = 1500;
+	    var duration = 300;
 	    var start = null;
 	    var end = null;
 	
@@ -577,14 +577,16 @@
 	
 		if (content.classList.contains('n-carousel--auto-slide')) {
 			
+			let auto_delay = 2000;
+			
 			let carouselTimeout = () => {
 					
 				slideNext(content); 
-				content.nCarouselTimeout = setTimeout(carouselTimeout, 2000);
+				content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
 				
 			}
 			
-			content.nCarouselTimeout = setTimeout(carouselTimeout, 2000);
+			content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
 			
 			content.addEventListener('pointerenter', e => clearTimeout(e.target.nCarouselTimeout));
 		
