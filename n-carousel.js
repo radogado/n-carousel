@@ -196,9 +196,11 @@
 		if (!el.parentNode.dataset.ready && isAuto(el)) {
 			
 			window.requestAnimationFrame(() => {
-	
-				el.style.height = `${el.offsetHeight - paddingY(el)}px`;
 				
+				el.style.position = 'absolute';
+				el.style.height = `${el.offsetHeight - paddingY(el)}px`;
+				el.style.position = '';
+					
 			});
 		
 		}
