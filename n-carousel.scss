@@ -370,8 +370,6 @@ _::-webkit-full-page-media, _:future, :root [dir="rtl"] :not(.n-carousel--vertic
 	
 	&.n-carousel--tabs {
 		
-		grid-template-rows: auto 1fr;
-		
 		> .n-carousel__index {
 			
 			display: flex;
