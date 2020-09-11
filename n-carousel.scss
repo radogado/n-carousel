@@ -36,7 +36,6 @@
 		flex: 1 0 auto;
 		width: 100%;
 		box-sizing: border-box;
-// 		transition: height .2s ease-in-out;
 		overflow: auto;
 
 	}
@@ -47,14 +46,6 @@
 		
 	}
 	
-/*
-	> :not([data-active]):not(:last-child), &[data-sliding] > *:not(:last-child) {
-			
-		overflow: hidden;
-
-	}
-*/
-
 	> :not([data-active]):last-child, &[data-sliding] > *:last-child {
 			
 	    -webkit-mask: linear-gradient(0, #000, #000);
@@ -81,6 +72,21 @@
 	&:not(.n-carousel--auto) > * {
 		
 		overflow: auto;
+		
+	}
+	
+}
+
+[data-ready]:not(.n-carousel--vertical) > .n-carousel__content {
+	
+	&.n-carousel--auto {
+		
+		> :not([data-active]) {
+			
+			height: 0;
+			overflow: visible;
+			
+		}	
 		
 	}
 
@@ -192,7 +198,6 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 	
 	overflow: hidden;
 	overflow-y: auto;
-
 
 }
 

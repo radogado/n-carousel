@@ -51,7 +51,7 @@
 
 	}
 	
-	section {
+	section > * {
 		
 		padding: 1em;
 
@@ -290,68 +290,84 @@
 	
 	<div class="n-carousel__content n-carousel--auto" style="--peek-x: 50px; background: lightgrey;">
 		
-		<section style="background: lightblue">
-			One
-			<input type="text">
-			<span>Span</span><a href=#>Draggable link</a>
+		<section>
+			
+			<div  style="background: lightblue">
+				
+				One
+				<input type="text">
+				<span>Span</span><a href=#>Draggable link</a>
+			
+			</div>
+
 		</section>
 	
-		<section style="background: lightgreen">
-
-			Two<br>
-			2
-			<div class="n-carousel">
+		<section>
 			
-				<div class="n-carousel__content" style="--peek-x: 1em;">
+			<div  style="background: lightgreen">
+			
+				Two<br>
+				2
+				<div class="n-carousel">
+				
+					<div class="n-carousel__content" style="--peek-x: 1em;">
+						
+						<section>
+							
+							Inner One
+							
+						</section>
 					
-					<section>
-						
-						Inner One
-						
-					</section>
-				
-					<section>
-						
-						Inner Two
-						
-					</section>
-				
-					<section>
-						
-						Inner Three<br>
-						_
-						
-					</section>
-				
+						<section>
+							
+							Inner Two
+							
+						</section>
+					
+						<section>
+							
+							Inner Three<br>
+							_
+							
+						</section>
+					
+					</div>
+					
+					<div class="n-carousel__previous">
+					
+						<button></button>
+					
+					</div>
+					
+					<div class="n-carousel__next">
+					
+						<button></button>
+					
+					</div>
+					
+					<div class="n-carousel__index">
+					
+						<button>1</button>
+						<button>2</button>
+						<button>3</button>
+					
+					</div>
+					
 				</div>
-				
-				<div class="n-carousel__previous">
-				
-					<button></button>
-				
-				</div>
-				
-				<div class="n-carousel__next">
-				
-					<button></button>
-				
-				</div>
-				
-				<div class="n-carousel__index">
-				
-					<button>1</button>
-					<button>2</button>
-					<button>3</button>
-				
-				</div>
-				
+			
 			</div>
 			
 		</section>
 	
-		<section style="background: coral">
-			Three<br>
-			_
+		<section>
+			
+			<div style="background: coral">
+				
+				Three<br>
+				_
+			
+			</div>
+			
 		</section>
 	
 	</div>

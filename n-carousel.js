@@ -281,9 +281,11 @@
 					
 					el.dataset.sliding = true;
 					
+					let new_index;
+					
 					if (isVertical(el)) {
 					
-						let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
+						new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 						el.children[new_index].style.height = 'auto';
 						var new_height = el.children[new_index].scrollHeight;
 						el.children[new_index].style.height = '';
@@ -291,7 +293,7 @@
 						
 					} else {
 						
-						let new_index = Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)));
+						new_index = Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)));
 						el.children[new_index].style.height = 'auto';
 						el.children[new_index].style.position = 'absolute';
 						var new_height = el.children[new_index].scrollHeight;
@@ -300,6 +302,8 @@
 						var offset_y = 0;
 						
 					}
+					
+					console.log(new_height);
 					
 					scrollBy(el, 0, offset_y, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 						
@@ -368,6 +372,12 @@
 			}
 			
 			let scroll_to_y = isVertical(el) ? offsetY - index*old_height + index*new_height : 0;
+			
+			if (!isVertical(el) && isAuto(el)) {
+				
+				new_height += paddingY(el.children[index])/2;
+				
+			}
 			
 			scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 	
