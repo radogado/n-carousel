@@ -6,9 +6,14 @@
 
 	let resize_observer_support = typeof ResizeObserver === 'function';
 	
-	let scrollStartX = el => isRTL(el) && isChrome ? el.scrollWidth - el.scrollLeft - el.offsetWidth : (isRTL(el) && !isChrome ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
+	let scrollStartX = el => isRTL(el) && isChrome ? el.scrollLeft : (isRTL(el) && !isChrome ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
 	
-	let scrollToAuto = (el, x, y) => el.scrollTo(isRTL(el) && isChrome ? el.scrollWidth - x - el.offsetWidth : (isRTL(el) && !isChrome ? -1 : 1) * x, y);    // Scroll to correct scroll position for LTR and RTL
+	let scrollToAuto = (el, x, y) => {
+
+		console.log(el, (isRTL(el) ? -1 : 1) * x, y);
+		el.scrollTo((isRTL(el) ? -1 : 1) * x, y);    // Scroll to correct scroll position for LTR and RTL
+	
+	};
 	
 	let getScroll = el => el === window ? {x: el.scrollX, y: el.scrollY} : {x: scrollStartX(el), y: el.scrollTop}
 	
@@ -88,9 +93,9 @@
 	
 	    var startx = getScroll(el).x;
 	    var starty = getScroll(el).y;
-	    var starth = parseFloat(getComputedStyle(el).height);
+	    var starth = parseInt(el.style.height);
 	    var distanceH = new_height - starth;
-	    var duration = 1300;
+	    var duration = 300;
 	    var start = null;
 	    var end = null;
 	
@@ -101,37 +106,22 @@
 	        draw(timeStamp);
 	
 	    };
-	    
-	    el.style.height = getComputedStyle(el).height;
 	
 	    let draw = now => {
 	
-	        if (stop) { 
-		        
-		        resolve(el); 
-		        
-		        if (!isVertical(el)) {
-
-			        el.style.height = '';
-		        
-		        }
-
-				return; 
-			
-			}
-
+	        if (stop) { resolve(el); return; }
 	        if (now - start >= duration) stop = true;
 	        var p = (now - start) / duration;
 	        var val = inOutSine(p);
 	        var x = startx + distanceX * val;
 	        var y = starty + distanceY * val;
 	        scrollToAuto(el, x, y);
+	        
 	
-	        if (!!new_height) { // For vertical or horizontal auto
+	        if (new_height) {
 		        
 		        window.requestAnimationFrame(() => {
 			        
-			        console.log(starth + distanceH * val);
 			        el.style.height = `${starth + distanceH * val}px`;
 			    
 			    }); // Timeout because Safari can't do scroll and height at once
@@ -146,9 +136,9 @@
 	
 	});
 	
-	let paddingX = el => parseFloat(getComputedStyle(el).paddingInlineStart)*2;
+	let paddingX = el => parseInt(getComputedStyle(el).paddingInlineStart)*2;
 	
-	let paddingY = el => parseFloat(getComputedStyle(el).paddingBlockStart)*2;
+	let paddingY = el => parseInt(getComputedStyle(el).paddingBlockStart)*2;
 	
 	let getControl = (carousel, control) => {
 		
@@ -178,8 +168,8 @@
 	// 	getComputedStyle(el);
 		
 		
-		el.dataset.x = Math.round(scrollStartX(el) / parseFloat(getComputedStyle(el).width)); 
-		el.dataset.y = Math.round(el.scrollTop / parseFloat(getComputedStyle(el).height));
+		el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el))));
+		el.dataset.y = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
 		
 	// 	console.log('updateCarousel', scrollStartX(el));
 		
@@ -209,14 +199,12 @@
 		
 		}
 		
-		if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
+		if (!el.parentNode.dataset.ready && isAuto(el)) {
 			
 			window.requestAnimationFrame(() => {
+	
+				el.style.height = `${el.offsetHeight - paddingY(el)}px`;
 				
-				el.style.position = 'absolute';
-				el.style.height = getComputedStyle(el).height;
-				el.style.position = '';
-					
 			});
 		
 		}
@@ -272,13 +260,13 @@
 
 			console.log('scrollStopped check');
 			
-			let mod_x = scrollStartX(el) % parseFloat(getComputedStyle(el).width);
-			let mod_y = el.scrollTop % parseFloat(getComputedStyle(el).height);
+			let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
+			let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
 			
-			if (isChrome && (mod_x !== 0 || mod_y !== 0)) { // Stuck bc of Chrome bug when you scroll in both directions during snapping
+			if (/* isChrome && */ (mod_x !== 0 || mod_y !== 0)) { // Stuck bc of Chrome bug when you scroll in both directions during snapping
 				
-				let new_x = Math.round(scrollStartX(el) / parseFloat(getComputedStyle(el).width));
-				let new_y = Math.round(el.scrollTop 	/ parseFloat(getComputedStyle(el).height));
+				let new_x = Math.round(scrollStartX(el) / (el.offsetWidth 	- paddingX(el)));
+				let new_y = Math.round(el.scrollTop 	/ (el.offsetHeight 	- paddingY(el)));
 				console.log('stuck', new_x, new_y);
 // 				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
 				slideTo(el, isVertical(el) ? new_y : new_x);
@@ -297,29 +285,25 @@
 					
 					el.dataset.sliding = true;
 					
-					let new_index;
-					
 					if (isVertical(el)) {
 					
-						new_index = Math.round(el.scrollTop / parseFloat(getComputedStyle(el).height));
+						let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 						el.children[new_index].style.height = 'auto';
-						var new_height = parseFloat(getComputedStyle(el.children[new_index]).height);
+						var new_height = el.children[new_index].scrollHeight;
 						el.children[new_index].style.height = '';
 						var offset_y = new_index * new_height - el.scrollTop;
 						
 					} else {
 						
-						new_index = Math.round(scrollStartX(el) / parseFloat(getComputedStyle(el).width));
+						let new_index = Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)));
 						el.children[new_index].style.height = 'auto';
 						el.children[new_index].style.position = 'absolute';
-						var new_height = parseFloat(getComputedStyle(el.children[new_index]).height);
+						var new_height = el.children[new_index].scrollHeight;
 						el.children[new_index].style.position = el.children[new_index].style.height = '';
 						scrollToAuto(el, lastScrollX, lastScrollY);
 						var offset_y = 0;
 						
 					}
-					
-					console.log(new_height);
 					
 					scrollBy(el, 0, offset_y, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 						
@@ -360,9 +344,7 @@
 			el.removeEventListener('scroll', scrollStopped);
 			el.dataset.sliding = true;
 	
-// 			let old_height = el.children[el.dataset.y].clientHeight;
-					
-			let old_height = parseFloat(getComputedStyle(el.children[el.dataset.y]).height) + paddingY(el.children[el.dataset.y]);
+			let old_height = el.children[el.dataset.y].clientHeight;
 			
 			let new_height = old_height;
 			
@@ -371,16 +353,17 @@
 				let old_scroll_left = scrollStartX(el);
 				let old_scroll_top = el.scrollTop;
 	
-				el.children[index].style.height = 'auto';
-
-				if (!isVertical(el)) {
+				if (isVertical(el)) {
+		
+					el.children[index].style.height = 'auto';
+					
+				} else {
 					
 					el.children[index].style.position = 'absolute';
-					el.children[index].style.width = parseFloat(getComputedStyle(el).width);
+					el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
 		
 				}
-
-				new_height = parseFloat(getComputedStyle(el.children[index]).height);
+				new_height = el.children[index].scrollHeight;
 				el.children[index].style.position = el.children[index].style.width = el.children[index].style.height = '';
 		
 				scrollToAuto(el, old_scroll_left + paddingX(el)/2, old_scroll_top); // iPad bug
@@ -389,12 +372,6 @@
 			}
 			
 			let scroll_to_y = isVertical(el) ? offsetY - index*old_height + index*new_height : 0;
-			
-			if (!isVertical(el) && isAuto(el)) {
-				
-				new_height += paddingY(el.children[index])/2;
-				
-			}
 			
 			scrollBy(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height).then(response => {
 	
@@ -424,11 +401,11 @@
 	
 		if (isVertical(el)) {
 	
-			slide(el, 0, parseFloat(getComputedStyle(el).height) * index - el.scrollTop, index);
+			slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop, index);
 		
 		} else {
 			
-			slide(el, parseFloat(getComputedStyle(el).width) * index - scrollStartX(el), 0, index);
+			slide(el, (el.offsetWidth - paddingX(el)) * index - scrollStartX(el), 0, index);
 			
 		}
 		
@@ -444,9 +421,9 @@
 				// Set a timeout to run after scrolling ends
 				isResizing = setTimeout(function() {
 					
-					scrollToAuto(el, parseFloat(getComputedStyle(el).width) * el.dataset.x - paddingX(el), parseFloat(getComputedStyle(el).height) * el.dataset.y + paddingY(el));
+					scrollToAuto(el, el.offsetWidth*el.dataset.x - paddingX(el), el.offsetHeight*el.dataset.y + paddingY(el));
 	/*
-					el.style.height = `${parseFloat(getComputedStyle(el.children[el.dataset.x]).height)}px`;
+					el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
 				
 	*/
 					// Run the callback
