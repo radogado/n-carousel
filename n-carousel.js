@@ -6,12 +6,14 @@
 
 	let resize_observer_support = typeof ResizeObserver === 'function';
 	
-	let scrollStartX = el => isRTL(el) && isChrome ? el.scrollLeft : (isRTL(el) && !isChrome ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
+// 	let scrollStartX = el => isRTL(el) && isChrome ? el.scrollLeft : (isRTL(el) && !isChrome ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
+
+	let scrollStartX = el => el.scrollLeft; // Get correct start scroll position for LTR and RTL
 	
 	let scrollToAuto = (el, x, y) => {
 
-		console.log(el, (isRTL(el) ? -1 : 1) * x, y);
-		el.scrollTo((isRTL(el) ? -1 : 1) * x, y);    // Scroll to correct scroll position for LTR and RTL
+		console.log('scroll to auto: ', isRTL(el) ? -1 * Math.abs(x) : x, y);
+		el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y);    // Scroll to correct scroll position for LTR and RTL
 	
 	};
 	
@@ -95,7 +97,7 @@
 	    var starty = getScroll(el).y;
 	    var starth = parseInt(el.style.height);
 	    var distanceH = new_height - starth;
-	    var duration = 300;
+	    var duration = 1300;
 	    var start = null;
 	    var end = null;
 	
