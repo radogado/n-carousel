@@ -267,12 +267,12 @@
 			
 			if (/* isChrome && */ (mod_x !== 0 || mod_y !== 0)) { // Stuck bc of Chrome bug when you scroll in both directions during snapping
 				
-				let new_x = Math.round(scrollStartX(el) / (el.offsetWidth 	- paddingX(el)));
-				let new_y = Math.round(el.scrollTop 	/ (el.offsetHeight 	- paddingY(el)));
+				let new_x = Math.abs(Math.round(scrollStartX(el) / (el.offsetWidth 	- paddingX(el))));
+				let new_y = Math.abs(Math.round(el.scrollTop 	/ (el.offsetHeight 	- paddingY(el))));
 				console.log('stuck', new_x, new_y);
 // 				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
 				slideTo(el, isVertical(el) ? new_y : new_x);
-				
+
 			}
 			
 			if (lastScrollX === scrollStartX(el) && lastScrollY === el.scrollTop && mod_x === 0 && mod_y === 0) { // Also if scroll is in snap position
@@ -407,7 +407,10 @@
 		
 		} else {
 			
-			slide(el, (el.offsetWidth - paddingX(el)) * index - scrollStartX(el), 0, index);
+			let new_offset = isRTL(el) ? 	Math.abs(scrollStartX(el)) - (el.offsetWidth - paddingX(el)) * index : 
+											(el.offsetWidth - paddingX(el)) * index - scrollStartX(el);
+
+			slide(el, new_offset, 0, index);
 			
 		}
 		
