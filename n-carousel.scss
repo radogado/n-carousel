@@ -326,7 +326,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
     	    
 		}
 		
-		&.n-carousel--controls-right {
+		&.n-carousel--controls-end {
 	
 		    grid-template-areas:
 		        "a1 	a1 	prev	a2 	b1"
@@ -356,7 +356,7 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 	        "index 		content  	a2"
 	        "b2 		next	 	a2";
 
-		&.n-carousel--controls-right {
+		&.n-carousel--controls-end {
 			
 		    grid-template-areas:
 		        "a1 		prev		b1"
