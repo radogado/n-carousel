@@ -218,9 +218,10 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 .n-carousel {
 		
 	display: grid;
-	grid-template: auto 1fr/auto 1fr auto 1fr auto;
+	grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
 
     grid-template-areas:
+        "a3 	a3 		a3 		a3 		a3"
         "prev 	a2 		a2 		a2 		next"
         "b1		b1	 	index 	b2		b2";
 	
@@ -240,12 +241,14 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 	> .n-carousel__previous {
 		
 		grid-area: prev;
+		align-self: center;
     		
 	}
     
 	> .n-carousel__next {
 
 		grid-area: next;
+		align-self: center;
 
 	}
 
@@ -373,11 +376,13 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 			
 			display: flex;
 			flex-wrap: wrap;
+			justify-content: start;
 			
 			button {
 				
 				border-radius: 0;
 				margin: 0;
+			    text-align: start;
 				
 				&:focus {
 					
@@ -385,6 +390,16 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 
 				}
 
+			}
+
+		}
+		
+		&.n-carousel--tabs-align-end > .n-carousel__index {
+			
+			button {
+				
+			    text-align: end;
+				
 			}
 
 		}
