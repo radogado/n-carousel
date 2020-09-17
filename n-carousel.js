@@ -12,7 +12,7 @@
 	
 	let scrollToAuto = (el, x, y) => {
 
-		console.log('scroll to auto: ', isRTL(el) ? -1 * Math.abs(x) : x, y);
+		// console.log('scroll to auto: ', isRTL(el) ? -1 * Math.abs(x) : x, y);
 		el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y);    // Scroll to correct scroll position for LTR and RTL
 	
 	};
@@ -91,6 +91,20 @@
 	
 		}
 	
+		if (!!new_height) {
+	
+			el.style.height = getComputedStyle(el).height;
+		
+		} else {
+			
+			if (!isVertical(el)) {
+			
+				el.style.height = '';
+			
+			}
+			
+		}
+
 	    var stop = false;
 	
 	    var startx = getScroll(el).x;
@@ -198,10 +212,15 @@
 	
 			delete current_active.dataset.active;
 			current_active.style.height = '';
+			if (!isVertical(el)) {
+				
+				el.style.height = '';
+				
+			}
 		
 		}
 		
-		if (!el.parentNode.dataset.ready && isAuto(el)) {
+		if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
 			
 			window.requestAnimationFrame(() => {
 	
@@ -272,6 +291,7 @@
 				console.log('stuck', new_x, new_y);
 // 				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
 				slideTo(el, isVertical(el) ? new_y : new_x);
+				return;
 
 			}
 			
@@ -286,6 +306,8 @@
 				if (isAuto(el)) {
 					
 					el.dataset.sliding = true;
+					
+					let old_height = el.scrollHeight;
 					
 					if (isVertical(el)) {
 					
@@ -306,6 +328,19 @@
 						var offset_y = 0;
 						
 					}
+					
+					if (old_height === new_height) {
+						
+						new_height = false;
+						
+						if (!isVertical(el)) {
+							
+							el.style.height = '';
+							
+						}
+						
+					}
+					console.log('scroll end new height', new_height);
 					
 					scrollBy(el, 0, offset_y, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 						
