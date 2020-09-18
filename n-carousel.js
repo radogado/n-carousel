@@ -300,20 +300,18 @@
 				console.log( 'Scrolling has stopped.', el, scrollStartX(e.target), lastScrollX, el.scrollTop, lastScrollY);
 	// 			updateCarousel(el);
 				
-				el.dataset.sliding = true;
 				observersOff(el);
 				
 				if (isAuto(el)) {
 					
-					el.dataset.sliding = true;
-					
-					let old_height = el.scrollHeight;
+					let old_height = el.offsetHeight;
+					let new_height;
 					
 					if (isVertical(el)) {
 					
 						let new_index = Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)));
 						el.children[new_index].style.height = 'auto';
-						var new_height = el.children[new_index].scrollHeight;
+						new_height = el.children[new_index].scrollHeight;
 						el.children[new_index].style.height = '';
 						var offset_y = new_index * new_height - el.scrollTop;
 						
@@ -322,7 +320,7 @@
 						let new_index = Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)));
 						el.children[new_index].style.height = 'auto';
 						el.children[new_index].style.position = 'absolute';
-						var new_height = el.children[new_index].scrollHeight;
+						new_height = el.children[new_index].scrollHeight;
 						el.children[new_index].style.position = el.children[new_index].style.height = '';
 						scrollToAuto(el, lastScrollX, lastScrollY);
 						var offset_y = 0;
@@ -341,6 +339,8 @@
 						
 					}
 					console.log('scroll end new height', new_height);
+
+					el.dataset.sliding = true;
 					
 					scrollBy(el, 0, offset_y, new_height).then(response => { // Scroll by old height * index, last param is new height - old height?
 						
@@ -356,7 +356,7 @@
 				} else {
 					
 					updateCarousel(el);
-					setTimeout(() => { 
+					setTimeout(() => {
 						
 						delete el.dataset.sliding;
 						
