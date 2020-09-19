@@ -90,6 +90,14 @@
 			return;
 	
 		}
+		
+		let scroll_changing = true;
+		
+		if (distanceX === 0 && distanceY === 0) {
+			
+			scroll_changing = false;
+			
+		}
 	
 		if (!!new_height) {
 	
@@ -131,8 +139,12 @@
 	        var val = inOutSine(p);
 	        var x = startx + distanceX * val;
 	        var y = starty + distanceY * val;
-	        scrollToAuto(el, x, y);
-	        
+			
+			if (scroll_changing) {
+			
+		        scrollToAuto(el, x, y);
+			
+			}
 	
 	        if (new_height) {
 		        
