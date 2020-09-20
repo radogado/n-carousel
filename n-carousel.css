@@ -35,6 +35,9 @@
   box-sizing: border-box;
   overflow: auto;
 }
+.n-carousel__content.n-measure > * {
+  position: absolute;
+}
 .n-carousel__content[data-sliding] {
   pointer-events: none;
 }

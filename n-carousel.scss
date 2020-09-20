@@ -29,6 +29,10 @@
     overflow: auto;
   }
 
+  &.n-measure > * {
+    position: absolute;
+  }
+
   &[data-sliding] {
     pointer-events: none;
   }
