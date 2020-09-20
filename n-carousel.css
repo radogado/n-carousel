@@ -46,9 +46,13 @@
   content: "";
   flex-shrink: 0;
   width: var(--peek-x, 0);
+  height: 0;
 }
 :not(.n-carousel--vertical) > .n-carousel__content:not(.n-carousel--auto) > * {
   overflow: auto;
+}
+:not(.n-carousel--vertical) > .n-carousel__content.n-carousel--auto {
+  overflow-y: hidden;
 }
 
 [data-ready]:not(.n-carousel--vertical) > .n-carousel__content.n-carousel--auto > :not([data-active]) {
@@ -65,20 +69,28 @@
   overflow: hidden;
 }
 
-_::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] {
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel__content[data-sliding] {
   scroll-snap-type: both mandatory;
 }
 
-_::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] > * {
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel__content[data-sliding] > * {
   scroll-snap-align: center;
 }
 
 @supports not (-webkit-touch-callout: none) {
-  _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] {
+  _::-webkit-full-page-media,
+_:future,
+:root .n-carousel__content[data-sliding] {
     pointer-events: all;
   }
 }
-.n-carousel__index button, .n-carousel__previous button, .n-carousel__next button {
+.n-carousel__index button,
+.n-carousel__previous button,
+.n-carousel__next button {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -93,19 +105,24 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
   font: inherit;
   text-align: center;
 }
-.n-carousel__index button[disabled], .n-carousel__previous button[disabled], .n-carousel__next button[disabled] {
+.n-carousel__index button[disabled],
+.n-carousel__previous button[disabled],
+.n-carousel__next button[disabled] {
   opacity: 0.5;
 }
 
-.n-carousel__previous button:before, [dir=rtl] .n-carousel__next button:before {
+.n-carousel__previous button:before,
+[dir=rtl] .n-carousel__next button:before {
   content: "⬅";
 }
 
-.n-carousel__next button:before, [dir=rtl] .n-carousel__previous button:before {
+.n-carousel__next button:before,
+[dir=rtl] .n-carousel__previous button:before {
   content: "➡";
 }
 
-.n-carousel--vertical > .n-carousel__next button:before, .n-carousel--vertical > .n-carousel__previous button:before {
+.n-carousel--vertical > .n-carousel__next button:before,
+.n-carousel--vertical > .n-carousel__previous button:before {
   content: "";
 }
 
@@ -206,7 +223,8 @@ _::-webkit-full-page-media, _:future, :root .n-carousel__content[data-sliding] >
 .n-carousel.n-carousel--tabs.n-carousel--tabs-align-end > .n-carousel__index button {
   text-align: end;
 }
-.n-carousel.n-carousel--tabs > .n-carousel__previous, .n-carousel.n-carousel--tabs > .n-carousel__next {
+.n-carousel.n-carousel--tabs > .n-carousel__previous,
+.n-carousel.n-carousel--tabs > .n-carousel__next {
   display: none;
 }
 
