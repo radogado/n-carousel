@@ -572,6 +572,18 @@
     }
   };
 
+  let verticalAutoObserver = new ResizeObserver((entries) => {
+    entries.forEach((e) => {
+      console.log("resized: ", e.target);
+      let slide = e.target;
+      let el = slide.closest(".n-carousel__content");
+
+      if (!!slide.parentNode.dataset.active && !el.dataset.sliding) {
+        el.style.height = `${slide.scrollHeight}px`;
+      }
+    });
+  });
+
   document.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
     getControl(el, ".n-carousel__previous button").onclick = slidePreviousEvent;
 
@@ -604,6 +616,15 @@
       content.addEventListener("pointerenter", (e) =>
         clearTimeout(e.target.nCarouselTimeout)
       );
+    }
+    if (
+      el.classList.contains("n-carousel--vertical") &&
+      content.classList.contains("n-carousel--auto")
+    ) {
+      // Vertical auto has a specified height which needs update on resize
+      content
+        .querySelectorAll(":scope > * > *")
+        .forEach((el) => verticalAutoObserver.observe(el));
     }
   });
 })();

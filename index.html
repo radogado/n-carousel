@@ -29,7 +29,7 @@
       content="width=device-width,initial-scale=1.0,maximum-scale=5,user-scalable=yes"
     />
     <link href="n-carousel.css" rel="styleSheet" />
-    <script data-src="n-carousel.js" type="module"></script>
+    <script src="n-carousel.js" type="module"></script>
 
     <style>
       body {
@@ -64,18 +64,6 @@
         text-align: center;
       }
     </style>
-
-    <script>
-      try {
-        new PerformanceObserver((entryList) => {
-          entryList.getEntries().forEach((el) => {
-            console.log(el);
-          });
-        }).observe({ type: "largest-contentful-paint", buffered: true });
-      } catch (e) {
-        /* API is not supported */
-      }
-    </script>
   </head>
 
   <body>
