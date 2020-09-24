@@ -1,8 +1,11 @@
-<meta charset="utf-8" />
-<title>Native Carousel</title>
-<link rel=icon href=./favicon.ico>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Native Carousel</title>
+    <link rel=icon href=./favicon.ico>
 
-<!--
+    <!--
 🔨 Tabs
 🔨 2D version
 🔨 (Cross) dissolve option. Slides are stacked and transparent, their empty doubles on top are scrollable. Opacity = % of reveal by Intersection Observer.
@@ -21,325 +24,103 @@
 
 -->
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0,maximum-scale=5,user-scalable=yes"
-/>
-<link href="n-carousel.css" rel="styleSheet" />
-<script src="n-carousel.js" type="module"></script>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=5,user-scalable=yes"
+    />
+    <link href="n-carousel.css" rel="styleSheet" />
+    <script data-src="n-carousel.js" type="module"></script>
 
-<style>
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
-      "Helvetica Neue", sans-serif;
-  }
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+      }
 
-  .n-carousel {
-    text-align: center;
-  }
+      .n-carousel {
+        text-align: center;
+      }
 
-  .n-carousel__content {
-    text-align: start;
-  }
+      .n-carousel__content {
+        text-align: start;
+      }
 
-  pre {
-    overflow: auto;
-  }
+      pre {
+        overflow: auto;
+      }
 
-  .n-carousel__content > * > * {
-    padding: 1em;
-  }
+      .n-carousel__content > * > * {
+        padding: 1em;
+      }
 
-  .demo-grid {
-    display: grid;
-    grid-gap: 1em;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  }
+      .demo-grid {
+        display: grid;
+        grid-gap: 1em;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      }
 
-  .demo-grid > * {
-    text-align: center;
-  }
-</style>
+      .demo-grid > * {
+        text-align: center;
+      }
+    </style>
 
-<body>
-  <h1>Scroll Snap Carousel</h1>
+    <script>
+      try {
+        new PerformanceObserver((entryList) => {
+          entryList.getEntries().forEach((el) => {
+            console.log(el);
+          });
+        }).observe({ type: "largest-contentful-paint", buffered: true });
+      } catch (e) {
+        /* API is not supported */
+      }
+    </script>
+  </head>
 
-  <h2>Default</h2>
+  <body>
+    <h1>Scroll Snap Carousel</h1>
 
-  <div class="n-carousel" style="max-width: 1000px; margin: auto;">
-    <div class="n-carousel__previous">
-      <button></button>
-    </div>
+    <h2>Default</h2>
 
-    <div class="n-carousel__next">
-      <button></button>
-    </div>
+    <div class="n-carousel" style="max-width: 1000px; margin: auto">
+      <div class="n-carousel__previous">
+        <button></button>
+      </div>
 
-    <div class="n-carousel__index">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-    </div>
+      <div class="n-carousel__next">
+        <button></button>
+      </div>
 
-    <div
-      class="n-carousel__content"
-      style="--peek-x: 5em; background: lightgrey;"
-    >
-      <section style="background: lightblue;">
-        One
-        <input type="text" />
-        <span>Span</span> <a href="#">Draggable link</a>
-        <a href="#">Draggable link</a> <a href="#">Draggable link</a>
-        <a href="#">Draggable link</a>
-      </section>
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+      </div>
 
-      <section style="background: lightgreen;" id="section2">
-        Two<br />
-        Two<br />
-        Two<br />
-        Two<br />
-        2
-        <div class="n-carousel">
-          <div class="n-carousel__content" style="--peek-x: 1em;">
-            <section>
-              Inner One
-            </section>
-
-            <section>
-              Inner Two
-            </section>
-
-            <section>
-              Inner Three<br />
-              _
-            </section>
-          </div>
-
-          <div class="n-carousel__previous">
-            <button></button>
-          </div>
-
-          <div class="n-carousel__next">
-            <button></button>
-          </div>
-
-          <div class="n-carousel__index">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-          </div>
-        </div>
-
-        <br /><br />
-      </section>
-
-      <section style="background: coral;">
-        Three<br />
-        _
-      </section>
-    </div>
-  </div>
-
-  <h2>Fixed height (RTL)</h2>
-
-  <div
-    class="n-carousel n-carousel--controls-top"
-    style="height: 167px; max-width: 1000px; margin: 0 auto;"
-    dir="rtl"
-  >
-    <div class="n-carousel__previous">
-      <button></button>
-    </div>
-
-    <div class="n-carousel__next">
-      <button></button>
-    </div>
-
-    <div class="n-carousel__index">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-    </div>
-
-    <div
-      class="n-carousel__content"
-      style="--peek-x: 50px; background: lightgrey;"
-    >
-      <section style="background: lightblue;">
-        One
-        <input type="text" />
-        <span>Span</span><a href="#">Draggable link</a>
-      </section>
-
-      <section style="background: lightgreen;">
-        Two<br />
-        2
-        <div class="n-carousel">
-          <div class="n-carousel__content" style="--peek-x: 1em;">
-            <section>
-              Inner One
-            </section>
-
-            <section>
-              Inner Two
-            </section>
-
-            <section>
-              Inner Three<br />
-              _
-            </section>
-          </div>
-
-          <div class="n-carousel__previous">
-            <button></button>
-          </div>
-
-          <div class="n-carousel__next">
-            <button></button>
-          </div>
-
-          <div class="n-carousel__index">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-          </div>
-        </div>
-
-        <br /><br />
-      </section>
-
-      <section style="background: coral;">
-        Three<br />
-        _
-      </section>
-    </div>
-  </div>
-
-  <h2>Auto height</h2>
-
-  <div
-    class="n-carousel n-carousel--controls-outside-"
-    style="max-width: 1000px; margin: auto;"
-  >
-    <div class="n-carousel__previous">
-      <button></button>
-    </div>
-
-    <div class="n-carousel__next">
-      <button></button>
-    </div>
-
-    <div class="n-carousel__index">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-    </div>
-
-    <div
-      class="n-carousel__content n-carousel--auto"
-      style="--peek-x: 50px; background: lightgrey;"
-    >
-      <section>
-        <div style="background: lightblue;">
-          One
-          <input type="text" />
-          <span>Span</span><a href="#">Draggable link</a>
-        </div>
-      </section>
-
-      <section>
-        <div style="background: lightgreen;">
-          Two<br />
-          2
-          <div class="n-carousel">
-            <div class="n-carousel__content" style="--peek-x: 1em;">
-              <section>
-                Inner One
-              </section>
-
-              <section>
-                Inner Two
-              </section>
-
-              <section>
-                Inner Three<br />
-                _
-              </section>
-            </div>
-
-            <div class="n-carousel__previous">
-              <button></button>
-            </div>
-
-            <div class="n-carousel__next">
-              <button></button>
-            </div>
-
-            <div class="n-carousel__index">
-              <button>1</button>
-              <button>2</button>
-              <button>3</button>
-            </div>
-          </div>
-
-          <br /><br />
-        </div>
-      </section>
-
-      <section>
-        <div style="background: coral;">
-          Three<br />
-          _
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <h2>Auto height with outside controls</h2>
-
-  <div
-    class="n-carousel n-carousel--controls-outside n-carousel--controls-top n-carousel--tabs"
-    style="max-width: 1000px; margin: auto;"
-  >
-    <div class="n-carousel__previous">
-      <button></button>
-    </div>
-
-    <div class="n-carousel__next">
-      <button></button>
-    </div>
-
-    <div class="n-carousel__index">
-      <button>First tab</button>
-      <button>Second tab</button>
-      <button>Third tab</button>
-    </div>
-
-    <div class="n-carousel__content n-carousel--auto">
-      <div>
-        <div style="background: lightblue;">
+      <div
+        class="n-carousel__content"
+        style="--peek-x: 5em; background: lightgrey"
+      >
+        <section style="background: lightblue">
           One
           <input type="text" />
           <span>Span</span> <a href="#">Draggable link</a>
           <a href="#">Draggable link</a> <a href="#">Draggable link</a>
           <a href="#">Draggable link</a>
-        </div>
-      </div>
+        </section>
 
-      <div>
-        <div style="background: lightgreen;">
+        <section style="background: lightgreen" id="section2">
+          Two<br />
+          Two<br />
+          Two<br />
           Two<br />
           2
           <div class="n-carousel">
-            <div class="n-carousel__content" style="--peek-x: 1em;">
-              <section>
-                Inner One
-              </section>
+            <div class="n-carousel__content" style="--peek-x: 1em">
+              <section>Inner One</section>
 
-              <section>
-                Inner Two
-              </section>
+              <section>Inner Two</section>
 
               <section>
                 Inner Three<br />
@@ -363,51 +144,270 @@
           </div>
 
           <br /><br />
-        </div>
-      </div>
+        </section>
 
-      <div>
-        <div style="background: coral;">
+        <section style="background: coral">
           Three<br />
           _
-        </div>
+        </section>
       </div>
     </div>
-  </div>
 
-  <h2 id="vertical">Vertical fixed height</h2>
-
-  <div class="n-carousel n-carousel--vertical">
-    <div class="n-carousel__index">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>4</button>
-    </div>
+    <h2>Fixed height (RTL)</h2>
 
     <div
-      class="n-carousel__content"
-      style="
-        --peek-y: 50px;
-        line-height: 100px;
-        background: lightgrey;
-        height: 200px;
-      "
+      class="n-carousel n-carousel--controls-top"
+      style="height: 167px; max-width: 1000px; margin: 0 auto"
+      dir="rtl"
     >
-      <section style="background: lightblue;">
-        <div>
+      <div class="n-carousel__previous">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+      </div>
+
+      <div
+        class="n-carousel__content"
+        style="--peek-x: 50px; background: lightgrey"
+      >
+        <section style="background: lightblue">
           One
           <input type="text" />
-          <span>Span</span>
-        </div>
-      </section>
+          <span>Span</span><a href="#">Draggable link</a>
+        </section>
 
-      <section style="background: lightgreen;">
-        <div>
+        <section style="background: lightgreen">
           Two<br />
           2
+          <div class="n-carousel">
+            <div class="n-carousel__content" style="--peek-x: 1em">
+              <section>Inner One</section>
+
+              <section>Inner Two</section>
+
+              <section>
+                Inner Three<br />
+                _
+              </section>
+            </div>
+
+            <div class="n-carousel__previous">
+              <button></button>
+            </div>
+
+            <div class="n-carousel__next">
+              <button></button>
+            </div>
+
+            <div class="n-carousel__index">
+              <button>1</button>
+              <button>2</button>
+              <button>3</button>
+            </div>
+          </div>
+
+          <br /><br />
+        </section>
+
+        <section style="background: coral">
+          Three<br />
+          _
+        </section>
+      </div>
+    </div>
+
+    <h2>Auto height</h2>
+
+    <div
+      class="n-carousel n-carousel--controls-outside-"
+      style="max-width: 1000px; margin: auto"
+    >
+      <div class="n-carousel__previous">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+      </div>
+
+      <div
+        class="n-carousel__content n-carousel--auto"
+        style="--peek-x: 50px; background: lightgrey"
+      >
+        <section>
+          <div style="background: lightblue">
+            One
+            <input type="text" />
+            <span>Span</span><a href="#">Draggable link</a>
+          </div>
+        </section>
+
+        <section>
+          <div style="background: lightgreen">
+            Two<br />
+            2
+            <div class="n-carousel">
+              <div class="n-carousel__content" style="--peek-x: 1em">
+                <section>Inner One</section>
+
+                <section>Inner Two</section>
+
+                <section>
+                  Inner Three<br />
+                  _
+                </section>
+              </div>
+
+              <div class="n-carousel__previous">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__next">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__index">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+              </div>
+            </div>
+
+            <br /><br />
+          </div>
+        </section>
+
+        <section>
+          <div style="background: coral">
+            Three<br />
+            _
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <h2>Auto height with outside controls</h2>
+
+    <div
+      class="n-carousel n-carousel--controls-outside n-carousel--controls-top n-carousel--tabs"
+      style="max-width: 1000px; margin: auto"
+    >
+      <div class="n-carousel__previous">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__index">
+        <button>First tab</button>
+        <button>Second tab</button>
+        <button>Third tab</button>
+      </div>
+
+      <div class="n-carousel__content n-carousel--auto">
+        <div>
+          <div style="background: lightblue">
+            One
+            <input type="text" />
+            <span>Span</span> <a href="#">Draggable link</a>
+            <a href="#">Draggable link</a> <a href="#">Draggable link</a>
+            <a href="#">Draggable link</a>
+          </div>
         </div>
-        <!--
+
+        <div>
+          <div style="background: lightgreen">
+            Two<br />
+            2
+            <div class="n-carousel">
+              <div class="n-carousel__content" style="--peek-x: 1em">
+                <section>Inner One</section>
+
+                <section>Inner Two</section>
+
+                <section>
+                  Inner Three<br />
+                  _
+                </section>
+              </div>
+
+              <div class="n-carousel__previous">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__next">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__index">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+              </div>
+            </div>
+
+            <br /><br />
+          </div>
+        </div>
+
+        <div>
+          <div style="background: coral">
+            Three<br />
+            _
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="vertical">Vertical fixed height</h2>
+
+    <div class="n-carousel n-carousel--vertical">
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+      </div>
+
+      <div
+        class="n-carousel__content"
+        style="
+          --peek-y: 50px;
+          line-height: 100px;
+          background: lightgrey;
+          height: 200px;
+        "
+      >
+        <section style="background: lightblue">
+          <div>
+            One
+            <input type="text" />
+            <span>Span</span>
+          </div>
+        </section>
+
+        <section style="background: lightgreen">
+          <div>
+            Two<br />
+            2
+          </div>
+          <!--
  			<div class="n-carousel">
  			
  				<div class="n-carousel__content" style="--peek: 1em;">
@@ -455,68 +455,68 @@
  				
  			</div>
  -->
-      </section>
+        </section>
 
-      <section style="background: coral;">
-        <div>
-          Three<br />
-          _<br />
-          _<br />
-          _
-        </div>
-      </section>
+        <section style="background: coral">
+          <div>
+            Three<br />
+            _<br />
+            _<br />
+            _
+          </div>
+        </section>
 
-      <section style="background: lightcoral;">
-        <div>
-          Four<br />
-          _<br />
-          _
-        </div>
-      </section>
+        <section style="background: lightcoral">
+          <div>
+            Four<br />
+            _<br />
+            _
+          </div>
+        </section>
+      </div>
+
+      <div class="n-carousel__previous">
+        <button>⬆</button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button>⬇</button>
+      </div>
     </div>
 
-    <div class="n-carousel__previous">
-      <button>⬆</button>
-    </div>
+    <h2 id="vertical">Vertical auto height with controls on the right</h2>
 
-    <div class="n-carousel__next">
-      <button>⬇</button>
-    </div>
-  </div>
+    <div class="n-carousel n-carousel--vertical n-carousel--controls-end">
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+      </div>
 
-  <h2 id="vertical">Vertical auto height with controls on the right</h2>
+      <div
+        class="n-carousel__content n-carousel--auto n-carousel--auto-slide-"
+        style="
+          --peek-y: 50px;
+          --peek-x: 50px;
+          line-height: 100px;
+          background: lightgrey;
+        "
+      >
+        <section style="background: lightblue">
+          <div>
+            One
+            <input type="text" />
+            <span>Span</span>
+          </div>
+        </section>
 
-  <div class="n-carousel n-carousel--vertical n-carousel--controls-end">
-    <div class="n-carousel__index">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>4</button>
-    </div>
-
-    <div
-      class="n-carousel__content n-carousel--auto n-carousel--auto-slide-"
-      style="
-        --peek-y: 50px;
-        --peek-x: 50px;
-        line-height: 100px;
-        background: lightgrey;
-      "
-    >
-      <section style="background: lightblue;">
-        <div>
-          One
-          <input type="text" />
-          <span>Span</span>
-        </div>
-      </section>
-
-      <section style="background: lightgreen;">
-        <div>
-          Two<br />
-          2
-        </div>
-        <!--
+        <section style="background: lightgreen">
+          <div>
+            Two<br />
+            2
+          </div>
+          <!--
  			<div class="n-carousel">
  			
  				<div class="n-carousel__content" style="--peek: 1em;">
@@ -564,63 +564,63 @@
  				
  			</div>
  -->
-      </section>
+        </section>
 
-      <section style="background: coral;">
-        <div>
-          Three<br />
-          _<br />
-          _<br />
-          _
-        </div>
-      </section>
+        <section style="background: coral">
+          <div>
+            Three<br />
+            _<br />
+            _<br />
+            _
+          </div>
+        </section>
 
-      <section style="background: lightcoral;">
-        <div>
-          Four<br />
-          _<br />
-          _
-        </div>
-      </section>
+        <section style="background: lightcoral">
+          <div>
+            Four<br />
+            _<br />
+            _
+          </div>
+        </section>
+      </div>
+
+      <div class="n-carousel__previous">
+        <button>⬆</button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button>⬇</button>
+      </div>
     </div>
 
-    <div class="n-carousel__previous">
-      <button>⬆</button>
-    </div>
+    <h2 id="vertical">Vertical auto height with outside controls</h2>
 
-    <div class="n-carousel__next">
-      <button>⬇</button>
-    </div>
-  </div>
+    <div class="n-carousel n-carousel--vertical n-carousel--controls-outside">
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+      </div>
 
-  <h2 id="vertical">Vertical auto height with outside controls</h2>
+      <div
+        class="n-carousel__content n-carousel--auto n-carousel--auto-slide-"
+        style="line-height: 100px; background: lightgrey"
+      >
+        <section style="background: lightblue">
+          <div>
+            One
+            <input type="text" />
+            <span>Span</span>
+          </div>
+        </section>
 
-  <div class="n-carousel n-carousel--vertical n-carousel--controls-outside">
-    <div class="n-carousel__index">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>4</button>
-    </div>
-
-    <div
-      class="n-carousel__content n-carousel--auto n-carousel--auto-slide-"
-      style="line-height: 100px; background: lightgrey;"
-    >
-      <section style="background: lightblue;">
-        <div>
-          One
-          <input type="text" />
-          <span>Span</span>
-        </div>
-      </section>
-
-      <section style="background: lightgreen;">
-        <div>
-          Two<br />
-          2
-        </div>
-        <!--
+        <section style="background: lightgreen">
+          <div>
+            Two<br />
+            2
+          </div>
+          <!--
  			<div class="n-carousel">
  			
  				<div class="n-carousel__content" style="--peek: 1em;">
@@ -668,44 +668,46 @@
  				
  			</div>
  -->
-      </section>
+        </section>
 
-      <section style="background: coral;">
-        <div>
-          Three<br />
-          _<br />
-          _<br />
-          _
-        </div>
-      </section>
+        <section style="background: coral">
+          <div>
+            Three<br />
+            _<br />
+            _<br />
+            _
+          </div>
+        </section>
 
-      <section style="background: lightcoral;">
-        <div>
-          Four<br />
-          _<br />
-          _
-        </div>
-      </section>
+        <section style="background: lightcoral">
+          <div>
+            Four<br />
+            _<br />
+            _
+          </div>
+        </section>
+      </div>
+
+      <div class="n-carousel__previous">
+        <button>⬆</button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button>⬇</button>
+      </div>
     </div>
 
-    <div class="n-carousel__previous">
-      <button>⬆</button>
-    </div>
+    <h2>Auto sliding</h2>
 
-    <div class="n-carousel__next">
-      <button>⬇</button>
-    </div>
-  </div>
+    <h2>Automatic RTL</h2>
 
-  <h2>Auto sliding</h2>
+    <p>
+      Control by scroll, swipe, arrow keys, direction buttons, index buttons.
+    </p>
 
-  <h2>Automatic RTL</h2>
+    <p><b>.n-carousel.n-carousel--instant</b> option to control instantly</p>
 
-  <p>Control by scroll, swipe, arrow keys, direction buttons, index buttons.</p>
-
-  <p><b>.n-carousel.n-carousel--instant</b> option to control instantly</p>
-
-  <!--
+    <!--
  <div style="height: 300px; overflow: scroll; padding: 50px; background: lightblue; align-content: flex-start; display: flex; flex-direction: column;">
 
  	<div style="height: inherit; background: lightcoral;">1</div>
@@ -714,9 +716,9 @@
  </div>
  -->
 
-  <h2>Code</h2>
+    <h2>Code</h2>
 
-  <pre>
+    <pre>
 
  	&lt;link rel="styleSheet" href="scroll-carousel.css"&gt;
  	&lt;script src="scroll-carousel.js" type="module" async&gt;&lt;/script&gt;
@@ -751,9 +753,11 @@
 
  	&lt;/div&gt;
 
- </pre>
+ </pre
+    >
 
-  <h2>Source</h2>
+    <h2>Source</h2>
 
-  <p><a href="https://github.com/radogado/n-carousel">GitHub</a></p>
-</body>
+    <p><a href="https://github.com/radogado/n-carousel">GitHub</a></p>
+  </body>
+</html>
