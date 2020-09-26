@@ -139,7 +139,11 @@ _:future,
   height: 0;
 }
 
-.n-carousel:not([data-ready]) > .n-carousel__content > :not([data-active]):not(:last-child) {
+.n-carousel:not([data-ready]) > .n-carousel--auto > :first-child {
+  min-height: 100%;
+}
+
+> .n-carousel__content > :not([data-active]):not(:last-child) {
   overflow: auto;
 }
 

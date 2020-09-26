@@ -172,6 +172,9 @@
 
     observersOff(el);
 
+    // el.style.width = getComputedStyle(el).width;
+    // el.style.position = "absolute";
+
     // 	el.dataset.sliding = true;
     // 	getComputedStyle(el);
 
@@ -198,6 +201,7 @@
       if (el.children[active] === current_active) {
         // Scroll snapping back to the same slide. Nothing to do here.
 
+        // el.style = '';
         observersOn(el);
         return;
       }
@@ -233,6 +237,7 @@
     getControl(wrapper, ".n-carousel__next button").disabled =
       active >= el.children.length - 1 ? true : false;
 
+    // el.style = '';
     /* 	setTimeout(() =>  */
     observersOn(el);
     /* 	, 66); */
@@ -596,11 +601,10 @@
     let content = el.querySelector(":scope > .n-carousel__content");
     content.tabIndex = 0;
 
-    updateCarousel(content);
-
     window.requestAnimationFrame(() => {
       el.dataset.ready = true;
       observersOn(content);
+      updateCarousel(content);
     });
 
     if (content.classList.contains("n-carousel--auto-slide")) {
