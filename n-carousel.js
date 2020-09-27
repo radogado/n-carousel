@@ -185,7 +185,7 @@
       Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)))
     );
 
-    // 	console.log('updateCarousel', scrollStartX(el));
+    console.log("updateCarousel", el.scrollTop, el.offsetHeight);
 
     let active = isVertical(el) ? el.dataset.y : el.dataset.x;
 
@@ -602,9 +602,27 @@
     content.tabIndex = 0;
 
     window.requestAnimationFrame(() => {
+      if (
+        el.classList.contains("n-carousel--vertical") &&
+        content.classList.contains("n-carousel--auto")
+      ) {
+        content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+        content.style.height = getComputedStyle(content).height;
+      }
+
       el.dataset.ready = true;
-      observersOn(content);
+
       updateCarousel(content);
+      if (
+        el.classList.contains("n-carousel--vertical") &&
+        content.classList.contains("n-carousel--auto")
+      ) {
+        // Vertical auto has a specified height which needs update on resize
+        content
+          .querySelectorAll(":scope > * > *")
+          .forEach((el) => verticalAutoObserver.observe(el));
+      }
+      // observersOn(content);
     });
 
     if (content.classList.contains("n-carousel--auto-slide")) {
@@ -620,15 +638,6 @@
       content.addEventListener("pointerenter", (e) =>
         clearTimeout(e.target.nCarouselTimeout)
       );
-    }
-    if (
-      el.classList.contains("n-carousel--vertical") &&
-      content.classList.contains("n-carousel--auto")
-    ) {
-      // Vertical auto has a specified height which needs update on resize
-      content
-        .querySelectorAll(":scope > * > *")
-        .forEach((el) => verticalAutoObserver.observe(el));
     }
   });
 })();
