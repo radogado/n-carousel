@@ -310,8 +310,8 @@
           let new_height;
 
           if (isVertical(el)) {
-            let new_index = Math.round(
-              el.scrollTop / (el.offsetHeight - paddingY(el))
+            let new_index = Math.abs(
+              Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)))
             );
             el.children[new_index].style.height = "auto";
             new_height = el.children[new_index].scrollHeight;
@@ -319,8 +319,8 @@
             var offset_y = new_index * new_height - el.scrollTop;
           } else {
             el.style.height = "";
-            let new_index = Math.round(
-              scrollStartX(el) / (el.offsetWidth - paddingX(el))
+            let new_index = Math.abs(
+              Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)))
             );
             el.children[new_index].style.height = "auto";
 

@@ -55,7 +55,7 @@
     flex-shrink: 0;
     // 	        padding-inline-end: inherit;
     width: var(--peek-x, 0); // Fixed value option
-    height: 0;
+    height: 1px;
   }
 
   &:not(.n-carousel--auto) > * {
@@ -120,15 +120,17 @@ _:future,
     user-select: none;
     all: revert;
     border: none;
-    background: #eee;
+    color: var(--control-color, #333);
+    background: var(--control-bg, #eee);
     min-width: 42px;
     min-height: 42px;
     border-radius: 42px;
     cursor: pointer;
     margin: 0.25em;
     font: inherit;
-    text-align: center;
-
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     &[disabled] {
       opacity: 0.5;
     }
@@ -138,23 +140,41 @@ _:future,
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
 .n-carousel__previous,
+.n-carousel__next {
+  button:before {
+    content: "";
+    background-color: var(--control-color, #333);
+    --chevron: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16.003 18.626l7.081-7.081L25 13.46l-8.997 8.998-9.003-9 1.917-1.916z'/%3E%3C/svg%3E");
+    -webkit-mask: var(--chevron) no-repeat 0 0 / contain;
+    mask: var(--chevron) no-repeat 0 0;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+  }
+}
+
+.n-carousel__previous,
 [dir="rtl"] .n-carousel__next {
   button:before {
-    content: "⬅";
+    transform: rotate(90deg);
   }
 }
 
 .n-carousel__next,
 [dir="rtl"] .n-carousel__previous {
   button:before {
-    content: "➡";
+    transform: rotate(-90deg);
   }
 }
 
-.n-carousel--vertical > .n-carousel__next,
+.n-carousel--vertical > .n-carousel__next {
+  button:before {
+    transform: none;
+  }
+}
 .n-carousel--vertical > .n-carousel__previous {
   button:before {
-    content: "";
+    transform: rotate(180deg);
   }
 }
 
@@ -228,6 +248,9 @@ _:future,
     grid-template-areas:
       "b1		b1	 	index 	b2		b2"
       "prev 	a3 		a3 		a3 		next";
+    > .n-carousel__index {
+      align-self: start;
+    }
   }
 
   &.n-carousel--controls-outside {
@@ -302,6 +325,7 @@ _:future,
         border-radius: 0;
         margin: 0;
         text-align: start;
+        padding: 0 1ch;
 
         &:focus {
           z-index: 0;
