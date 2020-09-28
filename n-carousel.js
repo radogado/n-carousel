@@ -600,16 +600,16 @@
 
     let content = el.querySelector(":scope > .n-carousel__content");
     content.tabIndex = 0;
+    if (
+      el.classList.contains("n-carousel--vertical") &&
+      content.classList.contains("n-carousel--auto")
+    ) {
+      content.style.height = getComputedStyle(content).height;
+      el.dataset.ready = true;
+      content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+    }
 
     window.requestAnimationFrame(() => {
-      if (
-        el.classList.contains("n-carousel--vertical") &&
-        content.classList.contains("n-carousel--auto")
-      ) {
-        content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
-        content.style.height = getComputedStyle(content).height;
-      }
-
       el.dataset.ready = true;
 
       updateCarousel(content);
