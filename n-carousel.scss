@@ -76,9 +76,12 @@
   }
 }
 
+.n-carousel--vertical > .n-carousel__content:not(.n-carousel--auto),
+.n-carousel--vertical[data-ready] > .n-carousel__content {
+  flex-direction: column;
+}
 .n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
-  flex-direction: column;
 
   > * {
     // 			height: var(--height, inherit); // Fallback not working in Safari
@@ -192,14 +195,21 @@ _:future,
   }
 }
 
-.n-carousel--vertical > .n-carousel__content.n-carousel--auto {
+.n-carousel--vertical[data-ready] > .n-carousel__content.n-carousel--auto {
   overflow: hidden;
   overflow-y: auto;
+}
+
+@keyframes carousel-css-only {
+  100% {
+    height: 100%;
+  }
 }
 
 /* .n-carousel[data-ready] > .n-carousel--auto:not(.n-carousel--vertical) > :not([data-active]), */
 .n-carousel:not([data-ready]) > .n-carousel--auto > :not(:first-child) {
   height: 0;
+  animation: carousel-css-only 2 0.1s linear 1s forwards;
 }
 
 .n-carousel:not([data-ready]) > .n-carousel--auto > :first-child {
