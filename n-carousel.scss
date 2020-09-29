@@ -36,15 +36,17 @@
   &[data-sliding] {
     pointer-events: none;
   }
+}
 
-  /*
-	> :not([data-active]):last-child, &[data-sliding] > *:last-child {
-			
-	    -webkit-mask: linear-gradient(0, #000, #000);
-	    mask: linear-gradient(0, #000, #000);
-
-	}
-*/
+.n-carousel.n-carousel--simple {
+  display: flex;
+  scroll-snap-type: both mandatory;
+  overflow: auto;
+  > :not([class*="carousel"]) {
+    flex: 1 0 auto;
+    width: 100%;
+    scroll-snap-align: center;
+  }
 }
 
 :not(.n-carousel--vertical) > .n-carousel__content {

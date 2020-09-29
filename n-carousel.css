@@ -5,14 +5,6 @@
   padding: var(--peek-y, 0) var(--peek-x, 0);
   scrollbar-width: none;
   /* Firefox */
-  /*
-  	> :not([data-active]):last-child, &[data-sliding] > *:last-child {
-
-  	    -webkit-mask: linear-gradient(0, #000, #000);
-  	    mask: linear-gradient(0, #000, #000);
-
-  	}
-  */
 }
 @media (prefers-reduced-motion: reduce) {
   .n-carousel__content {
@@ -39,6 +31,17 @@
 }
 .n-carousel__content[data-sliding] {
   pointer-events: none;
+}
+
+.n-carousel.n-carousel--simple {
+  display: flex;
+  scroll-snap-type: both mandatory;
+  overflow: auto;
+}
+.n-carousel.n-carousel--simple > :not([class*=carousel]) {
+  flex: 1 0 auto;
+  width: 100%;
+  scroll-snap-align: center;
 }
 
 :not(.n-carousel--vertical) > .n-carousel__content {
