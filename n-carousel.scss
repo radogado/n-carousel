@@ -141,15 +141,29 @@ _:future,
 
 .n-carousel__previous,
 .n-carousel__next {
-  button:before {
-    content: "";
-    background-color: var(--control-color, #333);
-    --chevron: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16.003 18.626l7.081-7.081L25 13.46l-8.997 8.998-9.003-9 1.917-1.916z'/%3E%3C/svg%3E");
-    -webkit-mask: var(--chevron) no-repeat 0 0 / contain;
-    mask: var(--chevron) no-repeat 0 0;
-    width: 1em;
-    height: 1em;
-    display: inline-block;
+  button {
+    span {
+      // Screen readers only
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    &:before {
+      content: "";
+      background-color: var(--control-color, #333);
+      --chevron: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16.003 18.626l7.081-7.081L25 13.46l-8.997 8.998-9.003-9 1.917-1.916z'/%3E%3C/svg%3E");
+      -webkit-mask: var(--chevron) no-repeat 0 0 / contain;
+      mask: var(--chevron) no-repeat 0 0;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+    }
   }
 }
 
