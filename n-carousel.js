@@ -126,7 +126,10 @@
 
       let draw = (now) => {
         if (stop) {
-          resolve(el);
+          if (new_height) {
+                        el.style.height = `${new_height}px`;
+                    }
+                      resolve(el);
           return;
         }
         if (now - start >= duration) stop = true;
