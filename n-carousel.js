@@ -114,7 +114,7 @@
       var starty = getScroll(el).y;
       var starth = parseInt(el.style.height);
       var distanceH = new_height - starth;
-      var duration = 1300;
+      var duration = parseFloat(el.dataset.duration)*1000 || 1000;
       var start = null;
       var end = null;
 

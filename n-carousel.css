@@ -33,17 +33,17 @@
   pointer-events: none;
 }
 
-.n-carousel.n-carousel--simple {
+.n-carousel--simple {
   display: flex;
   scroll-snap-type: both mandatory;
   overflow: auto;
   scrollbar-width: none;
   /* Firefox */
 }
-.n-carousel.n-carousel--simple::-webkit-scrollbar {
+.n-carousel--simple::-webkit-scrollbar {
   display: none;
 }
-.n-carousel.n-carousel--simple > :not([class*=carousel]) {
+.n-carousel--simple > * {
   flex: 1 0 auto;
   width: 100%;
   scroll-snap-align: center;

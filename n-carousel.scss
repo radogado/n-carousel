@@ -1,6 +1,7 @@
 .n-carousel__content {
   display: flex;
   will-change: scroll;
+
   box-sizing: content-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
 
@@ -38,7 +39,7 @@
   }
 }
 
-.n-carousel.n-carousel--simple {
+.n-carousel--simple {
   display: flex;
   scroll-snap-type: both mandatory;
   overflow: auto;
@@ -48,7 +49,7 @@
     display: none;
   }
 
-  > :not([class*="carousel"]) {
+  > * {
     flex: 1 0 auto;
     width: 100%;
     scroll-snap-align: center;
