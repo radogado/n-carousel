@@ -6,11 +6,11 @@
     <link rel=icon href=./favicon.ico>
 
     <!--
-🔨 Tabs
 🔨 2D version
 🔨 (Cross) dissolve option. Slides are stacked and transparent, their empty doubles on top are scrollable. Opacity = % of reveal by Intersection Observer.
 🔨 Optimise performance by displaying only nearby slides
-🔨 Safari iMac 4K scrolling much slower when carousel is focused.
+✅ Safari iMac 4K scrolling much slower when carousel is focused.
+✅ Tabs
 ✅ Vertical version
 ✅ Reduced motion support
 ✅ Auto resize option
@@ -70,11 +70,12 @@
   </head>
 
   <body>
-    <h1>Scroll Snap Carousel</h1>
 
-    <h2>Simple Carousel</h2>
+    <h1>Native Carousel</h1>
 
-    <div class="n-carousel--simple">
+    <h2>Simple</h2>
+
+    <div class="n-carousel--simple" style="line-height: 10em;">
       <div>One</div>
       <div>Two</div>
       <div>Three</div>
@@ -98,9 +99,9 @@
       </div>
 
       <div
-        class="n-carousel__content"
+        class="n-carousel__content n-carousel--auto-slide-"
         style="--peek-x: 5em; background: lightgrey"
-        data-duration="2"
+        data-duration="2" data-auto-slide="3"
       >
         <div style="background: lightblue">
           One
@@ -551,7 +552,7 @@
       </div>
     </div>
 
-    <h2>Auto sliding</h2>
+    <!-- <h2>Auto sliding</h2>
 
     <h2>Automatic RTL</h2>
 
@@ -574,7 +575,7 @@
     >
       <div style="height: inherit; background: lightcoral">1</div>
       <div style="height: inherit; background: lightgreen">2</div>
-    </div>
+    </div> -->
 
     <h2 id="vertical">Vertical auto height with outside controls</h2>
 
@@ -698,11 +699,11 @@
 
  	&lt;/div&gt;
 
- </pre
-    >
+ </pre>
 
     <h2>Source</h2>
 
     <p><a href="https://github.com/radogado/n-carousel">GitHub</a></p>
-  </body>
+    
+    </body>
 </html>

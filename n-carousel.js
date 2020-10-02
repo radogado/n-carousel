@@ -629,7 +629,7 @@
     });
 
     if (content.classList.contains("n-carousel--auto-slide")) {
-      let auto_delay = 2000;
+      let auto_delay = parseFloat(content.dataset.autoSlide)*1000 || 2000;
 
       let carouselTimeout = () => {
         slideNext(content);
