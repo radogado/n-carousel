@@ -1,4 +1,18 @@
 (function () {
+  function isElementInViewport(el) {
+    var rect = el.getBoundingClientRect();
+
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight ||
+          document.documentElement.clientHeight) /* or $(window).height() */ &&
+      rect.right <=
+        (window.innerWidth ||
+          document.documentElement.clientWidth) /* or $(window).width() */
+    );
+  }
   const default_duration = 1000;
   const default_interval = 4000;
 
@@ -637,11 +651,16 @@
         (parseFloat(content.dataset.duration) * 1000 || 1000);
 
       let carouselTimeout = () => {
-        slideNext(content);
+        if (isElementInViewport(content)) {
+          slideNext(content);
+        }
         content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
       };
 
-      content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
+      content.nCarouselTimeout = setTimeout(
+        carouselTimeout,
+        parseFloat(content.dataset.interval) * 1000 || default_interval
+      );
 
       content.addEventListener("pointerenter", (e) =>
         clearTimeout(e.target.nCarouselTimeout)
