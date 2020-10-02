@@ -1,5 +1,9 @@
 (function () {
-  let isChrome = !!navigator.userAgent.match("Chrome");
+
+  const default_duration = 1000;
+  const default_interval = 4000;
+
+  const isChrome = !!navigator.userAgent.match("Chrome");
 
   let isRTL = (el) => getComputedStyle(el).direction === "rtl";
 
@@ -114,7 +118,7 @@
       var starty = getScroll(el).y;
       var starth = parseInt(el.style.height);
       var distanceH = new_height - starth;
-      var duration = parseFloat(el.dataset.duration)*1000 || 1000;
+      var duration = parseFloat(el.dataset.duration)*1000 || default_duration;
       var start = null;
       var end = null;
 
@@ -629,7 +633,7 @@
     });
 
     if (content.classList.contains("n-carousel--auto-slide")) {
-      let auto_delay = parseFloat(content.dataset.autoSlide)*1000 || 2000;
+      let auto_delay = (parseFloat(content.dataset.interval)*1000 || default_interval) + (parseFloat(content.dataset.duration)*1000 || 1000);
 
       let carouselTimeout = () => {
         slideNext(content);

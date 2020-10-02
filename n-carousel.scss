@@ -237,8 +237,41 @@ _:future,
     "a3 	a3 		a3 		a3 		a3"
     "prev 	a2 		a2 		a2 		next"
     "b1		b1	 	index 	b2		b2";
+    
+    &.n-carousel--controls-align-start {
+      
+      grid-template: 1fr auto 1fr/auto auto 1fr auto;
+            grid-template-areas:
+                "a3 a3 a3 a3"
+                "prev a2 a2 next"
+                "index index b2 b2";
+                
+                &.n-carousel.n-carousel--controls-top:not(.n-carousel--controls-outside) {
+                grid-template-areas:
+                "index index b1 b2 b2"
+                "prev a3 a3 a3 next";
+                
+              }
+                
+    }
 
-  > .n-carousel__content {
+
+    &.n-carousel--controls-align-end {
+          
+          grid-template: 1fr auto 1fr/auto 1fr auto auto;
+                grid-template-areas:
+                    "a3 a3 a3 a3"
+                    "prev a2 a2 next"
+                    " b2 b2 index index";
+                    &.n-carousel.n-carousel--controls-top:not(.n-carousel--controls-outside) {
+                                          
+                                          grid-template-areas:
+                                                  "b1 b1 b2 index index"
+                                                  "prev a3 a3 a3 next";        
+                                        }
+                                          }
+    
+    > .n-carousel__content {
     // To do: support intermediate container, while not affecting nested carousels
 
     grid-row: 1/-1;
@@ -304,7 +337,18 @@ _:future,
         "prev 	content  	next"
         "a3 	a3	 		a3";
     }
-  }
+    
+    &.n-carousel--controls-align-start .n-carousel__index {
+      
+      text-align: start;
+      
+    }
+    &.n-carousel--controls-align-end .n-carousel__index {
+          
+          text-align: end;
+          
+        }
+      }
 
   &.n-carousel--vertical {
     grid-template-areas:
