@@ -591,10 +591,8 @@
   let slideNextEvent = (e) => slideNext(closestCarousel(e.target));
 
   let slideIndexEvent = (e) => {
-    let el = e.target;
-    if (el.tagName === "BUTTON") {
-      slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
-    }
+    let el = e.target.closest("button");
+    slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
   };
 
   let verticalAutoObserver = new ResizeObserver((entries) => {
