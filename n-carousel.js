@@ -664,5 +664,18 @@
         clearTimeout(e.target.nCarouselTimeout)
       );
     }
+
+    content.addEventListener("focusin", (e) => {
+      console.log(e.target);
+      let el = e.target.closest(".n-carousel__content > div");
+      let index = [...el.parentNode.children].indexOf(el);
+      let carousel = el.closest(".n-carousel__content");
+      let current_index = parseInt(
+        isVertical(carousel) ? carousel.dataset.y : carousel.dataset.x
+      );
+      if (current_index !== index) {
+        slideTo(carousel, index);
+      }
+    });
   });
 })();
