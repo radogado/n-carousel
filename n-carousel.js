@@ -285,10 +285,10 @@
 
     // Set a timeout to run after scrolling ends
     isScrolling = setTimeout(function () {
-      console.log("scrollStopped check");
-
       let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
       let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
+
+      console.log("scrollStopped check", mod_x, mod_y);
 
       if (/* isChrome && */ mod_x !== 0 || mod_y !== 0) {
         // Stuck bc of Chrome bug when you scroll in both directions during snapping
@@ -371,16 +371,16 @@
             updateCarousel(el);
             setTimeout(() => {
               delete el.dataset.sliding;
-            }, 66);
+            }, 33);
           });
         } else {
           updateCarousel(el);
           setTimeout(() => {
             delete el.dataset.sliding;
-          }, 66);
+          }, 33);
         }
       }
-    }, 66);
+    }, 133);
   };
 
   let slide = (el, offsetX, offsetY, index) => {
