@@ -261,7 +261,6 @@
     /* 	setTimeout(() =>  */
     observersOn(el);
     /* 	, 66); */
-    delete el.dataset.touchmove;
   };
 
   // Setup isScrolling variable
@@ -378,7 +377,6 @@
           updateCarousel(el);
           setTimeout(() => {
             delete el.dataset.sliding;
-            delete el.dataset.touchmove;
           }, 66);
         }
       }
@@ -669,18 +667,11 @@
 
     content.addEventListener("touchmove", (e) => {
       let el = e.target.closest(".n-carousel__content");
-      console.log(e);
-      el.dataset.touchmove = true;
       el.removeEventListener("scroll", scrollStopped);
-      // if (!!el.dataset.sliding) {
-      //   console.log(e);
-      //   e.preventDefault();
-      // }
     });
 
     content.addEventListener("touchend", (e) => {
       let el = e.target.closest(".n-carousel__content");
-      delete el.dataset.touchmove;
       el.addEventListener("scroll", scrollStopped);
     });
 
