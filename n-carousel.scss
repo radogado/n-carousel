@@ -143,6 +143,7 @@ _:future,
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    padding: 0;
     &[disabled] {
       opacity: 0.5;
     }

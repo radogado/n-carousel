@@ -121,6 +121,7 @@ _:future,
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  padding: 0;
 }
 .n-carousel__index button[disabled],
 .n-carousel__previous button[disabled],
