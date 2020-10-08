@@ -176,14 +176,13 @@
   let paddingY = (el) => parseInt(getComputedStyle(el).paddingBlockStart) * 2;
 
   let getControl = (carousel, control) => {
-    
-    let detached_control = document.querySelector(`${control}[data-for="${carousel.id}"]`);
+    let detached_control = document.querySelector(
+      `${control}[data-for="${carousel.id}"]`
+    );
     if (detached_control) {
-      
       return detached_control;
-      
     }
-    
+
     for (let el of carousel.children) {
       if (el.matches(control)) {
         return el;
@@ -592,11 +591,17 @@
   };
 
   let closestCarousel = (el) =>
-    (document.getElementById(el.closest('[class*="n-carousel"]').dataset.for) || el.closest(".n-carousel")).querySelector(".n-carousel__content");
+    (
+      document.getElementById(
+        el.closest('[class*="n-carousel"]').dataset.for
+      ) || el.closest(".n-carousel")
+    ).querySelector(".n-carousel__content");
 
-  let slidePreviousEvent = (e) => slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
+  let slidePreviousEvent = (e) =>
+    slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
 
-  let slideNextEvent = (e) => slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
+  let slideNextEvent = (e) =>
+    slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
 
   let slideIndexEvent = (e) => {
     let el = e.target.closest("button");
@@ -616,11 +621,21 @@
   });
 
   document.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
-    getControl(el, ".n-carousel__previous").onclick = slidePreviousEvent;
+    let previous = getControl(el, ".n-carousel__previous");
+    let next = getControl(el, ".n-carousel__next");
+    let index = getControl(el, ".n-carousel__index");
 
-    getControl(el, ".n-carousel__next").onclick = slideNextEvent;
+    if (previous) {
+      previous.onclick = slidePreviousEvent;
+    }
 
-    getControl(el, ".n-carousel__index").onclick = slideIndexEvent;
+    if (next) {
+      next.onclick = slideNextEvent;
+    }
+
+    if (index) {
+      index.onclick = slideIndexEvent;
+    }
 
     el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
 

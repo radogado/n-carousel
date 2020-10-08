@@ -29,51 +29,35 @@
       content="width=device-width,initial-scale=1.0,maximum-scale=5,user-scalable=yes"
     />
     <link href="n-carousel.css" rel="styleSheet" />
+    <link href="demo.css" rel="styleSheet" />
     <script src="n-carousel.js" type="module"></script>
-
-    <style>
-      body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
-          "Helvetica Neue", sans-serif;
-      }
-
-      .n-carousel {
-        text-align: center;
-      }
-
-      .n-carousel__index,
-      .n-carousel__previous,
-      .n-carousel__next {
-        --control-bg: lightcoral;
-        --control-color: #fff;
-      }
-
-      .n-carousel__content {
-        text-align: start;
-      }
-
-      pre {
-        overflow: auto;
-      }
-
-      .n-carousel__content > * > * {
-        padding: 1em;
-      }
-
-      .demo-grid {
-        display: grid;
-        grid-gap: 1em;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      }
-
-      .demo-grid > * {
-        text-align: center;
-      }
-    </style>
   </head>
 
   <body>
+    <div
+      class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--controls-align-start n-carousel--controls-outside-"
+    >
+      <span class="n-carousel__index">
+        <button><span>Home</span></button>
+        <button><span>Auto height</span></button>
+        <button><span>Auto slide</span></button>
+        <button><span>Peeking</span></button>
+        <button><span>RTL</span></button>
+        <button><span>Tabs</span></button>
+        <button><span>Vertical</span></button>
+      </span>
+      <div class="n-carousel__content" data-duration=".5">
+        <div><div>Home</div></div>
+
+        <div><div>Auto height</div></div>
+        <div><div>Auto slide</div></div>
+        <div><div>Peeking</div></div>
+        <div><div>RTL</div></div>
+        <div><div>Tabs</div></div>
+        <div><div>Vertical</div></div>
+      </div>
+    </div>
+
     <h1>Native Carousel</h1>
 
     <h2>Simple</h2>
