@@ -176,6 +176,14 @@
   let paddingY = (el) => parseInt(getComputedStyle(el).paddingBlockStart) * 2;
 
   let getControl = (carousel, control) => {
+    
+    let detached_control = document.querySelector(`${control}[data-for="${carousel.id}"]`);
+    if (detached_control) {
+      
+      return detached_control;
+      
+    }
+    
     for (let el of carousel.children) {
       if (el.matches(control)) {
         return el;
@@ -252,10 +260,10 @@
     }
     index.children[active].disabled = true;
 
-    getControl(wrapper, ".n-carousel__previous button").disabled =
-      active === "0" ? true : false;
-    getControl(wrapper, ".n-carousel__next button").disabled =
-      active >= el.children.length - 1 ? true : false;
+    // getControl(wrapper, ".n-carousel__previous button").disabled =
+    //   active === "0" ? true : false;
+    // getControl(wrapper, ".n-carousel__next button").disabled =
+    //   active >= el.children.length - 1 ? true : false;
 
     // el.style = '';
     /* 	setTimeout(() =>  */
@@ -584,11 +592,11 @@
   };
 
   let closestCarousel = (el) =>
-    el.closest(".n-carousel").querySelector(".n-carousel__content");
+    (document.getElementById(el.closest('[class*="n-carousel"]').dataset.for) || el.closest(".n-carousel")).querySelector(".n-carousel__content");
 
-  let slidePreviousEvent = (e) => slidePrevious(closestCarousel(e.target));
+  let slidePreviousEvent = (e) => slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
 
-  let slideNextEvent = (e) => slideNext(closestCarousel(e.target));
+  let slideNextEvent = (e) => slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
 
   let slideIndexEvent = (e) => {
     let el = e.target.closest("button");
@@ -608,9 +616,9 @@
   });
 
   document.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
-    getControl(el, ".n-carousel__previous button").onclick = slidePreviousEvent;
+    getControl(el, ".n-carousel__previous").onclick = slidePreviousEvent;
 
-    getControl(el, ".n-carousel__next button").onclick = slideNextEvent;
+    getControl(el, ".n-carousel__next").onclick = slideNextEvent;
 
     getControl(el, ".n-carousel__index").onclick = slideIndexEvent;
 
