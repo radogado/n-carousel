@@ -30,9 +30,7 @@
     />
     <link href="n-carousel.css" rel="styleSheet" />
     <link href="demo.css" rel="styleSheet" />
-    <link href="prism.css" rel="styleSheet" />
     <script src="n-carousel.js" type="module"></script>
-    <script src="prism.js" defer></script>
   </head>
 
   <body>
@@ -47,7 +45,7 @@
         <button><span>Peeking</span></button>
         <button><span>Outside controls</span></button>
         <button><span>Detached controls</span></button>
-        <button><span>Right to left</span></button>
+        <button><span>RTL</span></button>
         <button><span>Tabs</span></button>
         <button><span>Vertical</span></button>
       </span>
@@ -99,29 +97,45 @@
             </div>
             <h2>Code</h2>
 
-            <div class="code">
-              <pre><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
+            <pre>
+
+&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
 &lt;script src="n-carousel.min.js" type="module" async&gt;&lt;/script&gt;
 
 &lt;div class="n-carousel"&gt;
+
   &lt;div class="n-carousel__content"&gt;
+  
     &lt;div&gt;&lt;div&gt;One&lt;/div&gt;&lt;/div&gt;
     &lt;div&gt;&lt;div&gt;Two&lt;/div&gt;&lt;/div&gt;
     &lt;div&gt;&lt;div&gt;Three&lt;/div&gt;&lt;/div&gt;
+  
   &lt;/div&gt;
+  
   &lt;div class=&quot;n-carousel__previous&quot;&gt;
+  
     &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  
   &lt;/div&gt;
+  
   &lt;div class=&quot;n-carousel__next&quot;&gt;
+  
     &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  
   &lt;/div&gt;
+  
   &lt;div class=&quot;n-carousel__index&quot;&gt;
+  
     &lt;button&lt;span&gt;1&lt;/span&gt;/button&gt;
     &lt;button&lt;span&gt;2&lt;/span&gt;/button&gt;
     &lt;button&lt;span&gt;3&lt;/span&gt;/button&gt;
+  
   &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-            </div>
+
+&lt;/div&gt;
+
+                         </pre
+            >
 
             <h2>Source</h2>
 
@@ -133,8 +147,6 @@
             <p><a href="https://github.com/radogado/n-carousel">GitHub</a></p>
 
             <p><a href="https://www.npmjs.com/package/n-carousel">NPM</a></p>
-
-            <p><br /></p>
           </div>
         </div>
 
@@ -217,287 +229,12 @@
             </div>
           </div>
         </div>
-        <div>
-          <div>
-            <h2>Auto slide</h2>
-
-            <div class="n-carousel n-carousel--auto-slide">
-              <div class="n-carousel__previous">
-                <button><span>Previous</span></button>
-              </div>
-
-              <div class="n-carousel__next">
-                <button></button>
-              </div>
-
-              <div class="n-carousel__index">
-                <button><span>1</span></button>
-                <button><span>2</span></button>
-                <button><span>3</span></button>
-              </div>
-
-              <div class="n-carousel__content">
-                <div style="background: lightblue">
-                  <div>
-                    One
-                    <input type="text" />
-                    <span>Span</span><a href="#">Draggable link</a>
-                  </div>
-                </div>
-
-                <div style="background: lightgreen">
-                  <div>
-                    Two<br />
-                    2
-
-                    <br /><br />
-                  </div>
-                </div>
-
-                <div style="background: coral">
-                  <div>
-                    Three<br />
-                    _
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <h2>Peeking</h2>
-            <div class="n-carousel">
-              <div class="n-carousel__previous">
-                <button><span>Previous</span></button>
-              </div>
-
-              <div class="n-carousel__next">
-                <button></button>
-              </div>
-
-              <div class="n-carousel__index">
-                <button><span>1</span></button>
-                <button><span>2</span></button>
-                <button><span>3</span></button>
-              </div>
-
-              <div class="n-carousel__content" style="--peek-x: 12ch">
-                <div style="background: lightblue">
-                  <div>
-                    One
-                    <input type="text" />
-                    <span>Span</span><a href="#">Draggable link</a>
-                  </div>
-                </div>
-
-                <div style="background: lightgreen">
-                  <div>
-                    Two<br />
-                    2
-
-                    <br /><br />
-                  </div>
-                </div>
-
-                <div style="background: coral">
-                  <div>
-                    Three<br />
-                    _
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <h2>Outside controls</h2>
-            <div class="n-carousel n-carousel--controls-outside">
-              <div class="n-carousel__previous">
-                <button><span>Previous</span></button>
-              </div>
-
-              <div class="n-carousel__next">
-                <button></button>
-              </div>
-
-              <div class="n-carousel__index">
-                <button><span>1</span></button>
-                <button><span>2</span></button>
-                <button><span>3</span></button>
-              </div>
-
-              <div class="n-carousel__content">
-                <div style="background: lightblue">
-                  <div>
-                    One
-                    <input type="text" />
-                    <span>Span</span><a href="#">Draggable link</a>
-                  </div>
-                </div>
-
-                <div style="background: lightgreen">
-                  <div>
-                    Two<br />
-                    2
-
-                    <br /><br />
-                  </div>
-                </div>
-
-                <div style="background: coral">
-                  <div>
-                    Three<br />
-                    _
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <h2>Detached controls</h2>
-
-            <span class="n-carousel__previous" data-for="carousel-detached">
-              <button><span>Previous</span></button>
-            </span>
-
-            <span class="n-carousel__next" data-for="carousel-detached">
-              <button></button>
-            </span>
-
-            <div class="n-carousel__index" data-for="carousel-detached">
-              <button><span>1</span></button>
-              <button><span>2</span></button>
-              <button><span>3</span></button>
-            </div>
-
-            <h3>Carousel here</h3>
-
-            <div class="n-carousel" id="carousel-detached">
-              <div class="n-carousel__content">
-                <div style="background: lightblue">
-                  <div>
-                    One
-                    <input type="text" />
-                    <span>Span</span><a href="#">Draggable link</a>
-                  </div>
-                </div>
-
-                <div style="background: lightgreen">
-                  <div>
-                    Two<br />
-                    2
-
-                    <br /><br />
-                  </div>
-                </div>
-
-                <div style="background: coral">
-                  <div>
-                    Three<br />
-                    _
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <h2>Right to left</h2>
-            <div class="n-carousel n-carousel--controls-outside" dir="rtl">
-              <div class="n-carousel__previous">
-                <button><span>Previous</span></button>
-              </div>
-
-              <div class="n-carousel__next">
-                <button></button>
-              </div>
-
-              <div class="n-carousel__index">
-                <button><span>1</span></button>
-                <button><span>2</span></button>
-                <button><span>3</span></button>
-              </div>
-
-              <div class="n-carousel__content">
-                <div style="background: lightblue">
-                  <div>
-                    One
-                    <input type="text" />
-                    <span>Span</span><a href="#">Draggable link</a>
-                  </div>
-                </div>
-
-                <div style="background: lightgreen">
-                  <div>
-                    Two<br />
-                    2
-
-                    <br /><br />
-                  </div>
-                </div>
-
-                <div style="background: coral">
-                  <div>
-                    Three<br />
-                    _
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <h2>Tabs</h2>
-
-            <div class="n-carousel n-carousel--tabs">
-              <div class="n-carousel__previous">
-                <button><span>Previous</span></button>
-              </div>
-
-              <div class="n-carousel__next">
-                <button></button>
-              </div>
-
-              <div class="n-carousel__index">
-                <button><span>Tab 1</span></button>
-                <button><span>Tab 2</span></button>
-                <button><span>Tab 3</span></button>
-              </div>
-
-              <div class="n-carousel__content">
-                <div style="background: lightblue">
-                  <div>
-                    One
-                    <input type="text" />
-                    <span>Span</span><a href="#">Draggable link</a>
-                  </div>
-                </div>
-
-                <div style="background: lightgreen">
-                  <div>
-                    Two<br />
-                    2
-
-                    <br /><br />
-                  </div>
-                </div>
-
-                <div style="background: coral">
-                  <div>
-                    Three<br />
-                    _
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div><div>Auto slide</div></div>
+        <div><div>Peeking</div></div>
+        <div><div>Outside controls</div></div>
+        <div><div>Detached controls</div></div>
+        <div><div>RTL</div></div>
+        <div><div>Tabs</div></div>
         <div>
           <div>
             <h2 id="vertical3">Vertical fixed height</h2>
@@ -795,26 +532,240 @@
         </div>
       </div>
     </div>
-    <script>
-      function copyButton(el, target, echo) {
-        el.addEventListener("click", (event) => {
-          window.getSelection().removeAllRanges(); // Clear previous clipboard
-          var range = document.createRange();
-          range.selectNode(target);
-          window.getSelection().addRange(range);
 
-          try {
-            document.execCommand("copy");
-          } catch (err) {}
-        });
-      }
-      document.querySelectorAll(".code").forEach(function (el) {
-        el.insertAdjacentHTML(
-          "beforeend",
-          "<button class='n-btn'>Copy</button>"
-        );
-        copyButton(el.querySelector("button"), el.querySelector("pre"));
-      });
-    </script>
+    <h1>Native Carousel</h1>
+
+    <h2>Simple</h2>
+
+    <div class="n-carousel--simple" style="line-height: 10em">
+      <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+    </div>
+
+    <h2>Default (equal height)</h2>
+
+    <span class="n-carousel__previous" data-for="carousel1">
+      <button><span>Previous</span></button>
+    </span>
+
+    <span class="n-carousel__next" data-for="carousel1">
+      <button><span>Next</span></button>
+    </span>
+    <span class="n-carousel__index" data-for="carousel1">
+      <button><span>1</span></button>
+      <button><span>2</span></button>
+      <button><span>3</span></button>
+    </span>
+
+    <h3>Detached controls ⬆️</h3>
+
+    <div
+      class="n-carousel n-carousel--controls-align-start"
+      style="max-width: 1000px; margin: auto"
+      id="carousel1"
+      data-duration="2"
+      data-interval="3"
+    >
+      <div
+        class="n-carousel__content n-carousel--auto-slide-"
+        style="--peek-x: 5em; background: lightgrey"
+      >
+        <div style="background: lightblue">
+          One
+          <input type="text" />
+          <span>Span</span> <a href="#">Draggable link</a>
+          <a href="#">Draggable link</a> <a href="#">Draggable link</a>
+          <a href="#">Draggable link</a>
+        </div>
+
+        <div style="background: lightgreen" id="div2">
+          Two<br />
+          Two<br />
+          Two<br />
+          Two<br />
+          2
+          <div class="n-carousel">
+            <div class="n-carousel__content" style="--peek-x: 1em">
+              <div>Inner One</div>
+
+              <div>Inner Two</div>
+
+              <div>
+                Inner Three<br />
+                _
+              </div>
+            </div>
+
+            <div class="n-carousel__previous">
+              <button></button>
+            </div>
+
+            <div class="n-carousel__next">
+              <button></button>
+            </div>
+
+            <div class="n-carousel__index">
+              <button>1</button>
+              <button>2</button>
+              <button>3</button>
+            </div>
+          </div>
+
+          <br /><br />
+        </div>
+
+        <div style="background: coral">
+          Three<br />
+          _
+        </div>
+      </div>
+    </div>
+
+    <h2>Fixed height (RTL)</h2>
+
+    <div
+      class="n-carousel n-carousel--controls-top"
+      style="height: 167px; max-width: 1000px; margin: 0 auto"
+      dir="rtl"
+    >
+      <div class="n-carousel__previous">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__index">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+      </div>
+
+      <div
+        class="n-carousel__content"
+        style="--peek-x: 50px; background: lightgrey"
+      >
+        <div style="background: lightblue">
+          One
+          <input type="text" />
+          <span>Span</span><a href="#">Draggable link</a>
+        </div>
+
+        <div style="background: lightgreen">
+          Two<br />
+          2
+          <div class="n-carousel">
+            <div class="n-carousel__content" style="--peek-x: 1em">
+              <div>Inner One</div>
+
+              <div>Inner Two</div>
+
+              <div>
+                Inner Three<br />
+                _
+              </div>
+            </div>
+
+            <div class="n-carousel__previous">
+              <button></button>
+            </div>
+
+            <div class="n-carousel__next">
+              <button></button>
+            </div>
+
+            <div class="n-carousel__index">
+              <button>1</button>
+              <button>2</button>
+              <button>3</button>
+            </div>
+          </div>
+
+          <br /><br />
+        </div>
+
+        <div style="background: coral">
+          Three<br />
+          _
+        </div>
+      </div>
+    </div>
+
+    <h2>Auto height with outside controls</h2>
+
+    <div
+      class="n-carousel n-carousel--controls-outside n-carousel--controls-top n-carousel--tabs n-carousel--auto-height"
+      style="max-width: 1000px; margin: auto"
+    >
+      <div class="n-carousel__previous">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__next">
+        <button></button>
+      </div>
+
+      <div class="n-carousel__index">
+        <button>First tab</button>
+        <button>Second tab</button>
+        <button>Third tab</button>
+      </div>
+
+      <div class="n-carousel__content">
+        <div>
+          <div style="background: lightblue">
+            One
+            <input type="text" />
+            <span>Span</span> <a href="#">Draggable link</a>
+            <a href="#">Draggable link</a> <a href="#">Draggable link</a>
+            <a href="#">Draggable link</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="background: lightgreen">
+            Two<br />
+            2
+            <div class="n-carousel">
+              <div class="n-carousel__content" style="--peek-x: 1em">
+                <div>Inner One</div>
+
+                <div>Inner Two</div>
+
+                <div>
+                  Inner Three<br />
+                  _
+                </div>
+              </div>
+
+              <div class="n-carousel__previous">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__next">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__index">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+              </div>
+            </div>
+
+            <br /><br />
+          </div>
+        </div>
+
+        <div>
+          <div style="background: coral">
+            Three<br />
+            _
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

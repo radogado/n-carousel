@@ -558,7 +558,7 @@
       }
     });
 
-    if (content.classList.contains("n-carousel--auto-slide")) {
+    if (el.classList.contains("n-carousel--auto-slide")) {
       let auto_delay =
         (parseFloat(el.dataset.interval) * 1000 || default_interval) +
         (parseFloat(el.dataset.duration) * 1000 || 1000);

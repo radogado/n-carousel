@@ -28,6 +28,9 @@
     width: 100%;
     box-sizing: border-box;
     overflow: auto;
+    > * {
+      max-height: 100%;
+    }
   }
 
   &.n-measure > * {
@@ -95,7 +98,7 @@
   > * {
     // 			height: var(--height, inherit); // Fallback not working in Safari
     height: inherit; // Fallback not working in Safari
-    overflow: hidden;
+    // overflow: hidden;
   }
 }
 
