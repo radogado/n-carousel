@@ -43,53 +43,14 @@
     el.parentNode.classList.contains("n-carousel--auto-height");
 
   let observersOn = (el) => {
-    /*
-		if (!isVertical(el)) {
-		
-			if (resize_observer_support) {
-			
-				carouselResizeObserver.observe(el);
-				
-			} else {
-		
-				window.addEventListener('resize', resizeObserverFallback);
-		
-			}
-			
-		}
-	*/
-
-    // 	console.log('observersOn', scrollStartX(el), el.scrollTop);
-    /*
-		let left = scrollStartX(el);
-		let top = el.scrollTop;
-	*/
-
-    // 	scrollToAuto(el, left, top); // Because Safari reverts to 0 scroll upon activating Scroll Snap Points
     setTimeout(() => {
       delete el.dataset.sliding;
       el.addEventListener("scroll", scrollStopped);
     }, 1);
-    // 	scrollToAuto(el, left, top);
-    // 	console.log('Observers On');
   };
 
   let observersOff = (el) => {
-    /*
-		if (resize_observer_support) {
-		
-			carouselResizeObserver.unobserve(el);
-			
-		} else {
-	
-			window.removeEventListener('resize', resizeObserverFallback);
-	
-		}
-	*/
-
     el.removeEventListener("scroll", scrollStopped);
-
-    // 	console.log('Observers Off');
   };
 
   let inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
@@ -201,12 +162,6 @@
 
     observersOff(el);
 
-    // el.style.width = getComputedStyle(el).width;
-    // el.style.position = "absolute";
-
-    // 	el.dataset.sliding = true;
-    // 	getComputedStyle(el);
-
     el.dataset.x = Math.abs(
       Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)))
     );
@@ -277,7 +232,6 @@
     }
 
     clearTimeout(isScrolling);
-    // 	clearTimeout(el.nCarouselTimeout);
 
     lastScrollX = scrollStartX(el);
     lastScrollY = el.scrollTop;
@@ -299,7 +253,6 @@
           Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)))
         );
         console.log("stuck", new_x, new_y);
-        // 				scrollToAuto(el, 0, 0); // Get the current slide (the one with most visibility) and correct offsets to scroll to
         slideTo(el, isVertical(el) ? new_y : new_x);
         return;
       }
@@ -474,12 +427,6 @@
           el.offsetWidth * el.dataset.x - paddingX(el),
           el.offsetHeight * el.dataset.y + paddingY(el)
         );
-        /*
-					el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
-				
-	*/
-        // Run the callback
-        // 				console.log( 'Resizing has stopped.', e.target);
       }, 66);
     });
   };
@@ -609,7 +556,6 @@
           .querySelectorAll(":scope > * > *")
           .forEach((el) => verticalAutoObserver.observe(el));
       }
-      // observersOn(content);
     });
 
     if (content.classList.contains("n-carousel--auto-slide")) {
