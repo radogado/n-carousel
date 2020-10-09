@@ -39,7 +39,8 @@
   let isVertical = (el) =>
     el.closest(".n-carousel").classList.contains("n-carousel--vertical");
 
-  let isAuto = (el) => el.classList.contains("n-carousel--auto");
+  let isAuto = (el) =>
+    el.parentNode.classList.contains("n-carousel--auto-height");
 
   let observersOn = (el) => {
     /*
@@ -131,7 +132,8 @@
       var starty = getScroll(el).y;
       var starth = parseInt(el.style.height);
       var distanceH = new_height - starth;
-      var duration = parseFloat(el.dataset.duration) * 1000 || default_duration;
+      var duration =
+        parseFloat(el.parentNode.dataset.duration) * 1000 || default_duration;
       var start = null;
       var end = null;
 
@@ -492,52 +494,6 @@
     });
   };
 
-  /*
-	if (resize_observer_support) {
-	
-		var carouselResizeObserver = new ResizeObserver(entries => {
-	
-			entries.forEach(e => {
-	// 			return;
-				let el = e.target;
-				
-				if (!!el.dataset.sliding) {
-					
-					return;
-	
-				}
-				
-				console.log('Resized', el, e.contentRect.width, e.contentRect.height);
-				
-				el.dataset.sliding = true;
-				
-				el.removeEventListener('scroll', scrollStopped);
-	
-				scrollToAuto(el, el.offsetWidth*el.dataset.x, el.offsetHeight*el.dataset.y); // To do: Fix Safari glitch
-							
-				if (el.classList.contains('n-carousel--auto')) {
-				
-					if (isVertical(el)) {
-		
-						el.style.height = `${el.children[el.dataset.y].scrollHeight}px`;
-						
-					} else {
-						
-						el.style.height = `${el.children[el.dataset.x].scrollHeight}px`;
-						
-					}
-				
-				}
-				
-				setTimeout(() => el.addEventListener('scroll', scrollStopped), 66);
-	
-			});
-		
-		});
-	
-	}
-	*/
-
   let carouselKeys = (e) => {
     let keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
     let keys_vertical = ["ArrowUp", "ArrowDown", "Home", "End"];
@@ -643,7 +599,7 @@
     content.tabIndex = 0;
     if (
       el.classList.contains("n-carousel--vertical") &&
-      content.classList.contains("n-carousel--auto")
+      el.classList.contains("n-carousel--auto-height")
     ) {
       content.style.height = getComputedStyle(content).height;
       el.dataset.ready = true;
@@ -656,7 +612,7 @@
       updateCarousel(content);
       if (
         el.classList.contains("n-carousel--vertical") &&
-        content.classList.contains("n-carousel--auto")
+        el.classList.contains("n-carousel--auto-height")
       ) {
         // Vertical auto has a specified height which needs update on resize
         content
@@ -668,8 +624,8 @@
 
     if (content.classList.contains("n-carousel--auto-slide")) {
       let auto_delay =
-        (parseFloat(content.dataset.interval) * 1000 || default_interval) +
-        (parseFloat(content.dataset.duration) * 1000 || 1000);
+        (parseFloat(el.dataset.interval) * 1000 || default_interval) +
+        (parseFloat(el.dataset.duration) * 1000 || 1000);
 
       let carouselTimeout = () => {
         if (isElementInViewport(content)) {
@@ -680,7 +636,7 @@
 
       content.nCarouselTimeout = setTimeout(
         carouselTimeout,
-        parseFloat(content.dataset.interval) * 1000 || default_interval
+        parseFloat(el.dataset.interval) * 1000 || default_interval
       );
 
       content.addEventListener("pointerenter", (e) =>

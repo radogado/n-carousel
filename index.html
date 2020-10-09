@@ -35,7 +35,8 @@
 
   <body>
     <div
-      class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--controls-align-start n-carousel--controls-outside-"
+      class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--controls-align-start n-carousel--controls-outside"
+      data-duration=".5"
     >
       <span class="n-carousel__index">
         <button><span>Home</span></button>
@@ -48,8 +49,84 @@
         <button><span>Tabs</span></button>
         <button><span>Vertical</span></button>
       </span>
-      <div class="n-carousel__content" data-duration=".5">
-        <div><div>Home</div></div>
+      <div class="n-carousel__content">
+        <div>
+          <div>
+            <div class="n-carousel" data-ready="true">
+              <div class="n-carousel__previous">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__next">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__index">
+                <button disabled="">1</button>
+                <button>2</button>
+                <button>3</button>
+              </div>
+
+              <div
+                class="n-carousel__content"
+                style="--peek-x: 50px; background: lightgrey"
+                tabindex="0"
+                data-x="0"
+                data-y="0"
+              >
+                <div style="background: lightblue" data-active="true">
+                  One
+                  <input type="text" />
+                  <span>Span</span><a href="#">Draggable link</a>
+                </div>
+
+                <div style="background: lightgreen">
+                  Two<br />
+                  2
+                  <div class="n-carousel" data-ready="true">
+                    <div
+                      class="n-carousel__content"
+                      style="--peek-x: 1em"
+                      tabindex="0"
+                      data-x="0"
+                      data-y="0"
+                    >
+                      <div data-active="true">Inner One</div>
+
+                      <div>Inner Two</div>
+
+                      <div>
+                        Inner Three<br />
+                        _
+                      </div>
+                    </div>
+
+                    <div class="n-carousel__previous">
+                      <button></button>
+                    </div>
+
+                    <div class="n-carousel__next">
+                      <button></button>
+                    </div>
+
+                    <div class="n-carousel__index">
+                      <button disabled="">1</button>
+                      <button>2</button>
+                      <button>3</button>
+                    </div>
+                  </div>
+
+                  <br /><br />
+                </div>
+
+                <div style="background: coral">
+                  Three<br />
+                  _
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div><div>Auto height</div></div>
         <div><div>Auto slide</div></div>
@@ -72,7 +149,7 @@
       <div>Three</div>
     </div>
 
-    <h2>Default</h2>
+    <h2>Default (equal height)</h2>
 
     <span class="n-carousel__previous" data-for="carousel1">
       <button><span>Previous</span></button>
@@ -93,12 +170,12 @@
       class="n-carousel n-carousel--controls-align-start"
       style="max-width: 1000px; margin: auto"
       id="carousel1"
+      data-duration="2"
+      data-interval="3"
     >
       <div
         class="n-carousel__content n-carousel--auto-slide-"
         style="--peek-x: 5em; background: lightgrey"
-        data-duration="2"
-        data-interval="3"
       >
         <div style="background: lightblue">
           One
@@ -225,7 +302,7 @@
     <h2>Auto height</h2>
 
     <div
-      class="n-carousel n-carousel--controls-outside-"
+      class="n-carousel n-carousel--controls-outside- n-carousel--auto-height"
       style="max-width: 1000px; margin: auto"
     >
       <div class="n-carousel__previous">
@@ -243,7 +320,7 @@
       </div>
 
       <div
-        class="n-carousel__content n-carousel--auto"
+        class="n-carousel__content"
         style="--peek-x: 50px; background: lightgrey"
       >
         <div>
@@ -301,7 +378,7 @@
     <h2>Auto height with outside controls</h2>
 
     <div
-      class="n-carousel n-carousel--controls-outside n-carousel--controls-top n-carousel--tabs"
+      class="n-carousel n-carousel--controls-outside n-carousel--controls-top n-carousel--tabs n-carousel--auto-height"
       style="max-width: 1000px; margin: auto"
     >
       <div class="n-carousel__previous">
@@ -318,7 +395,7 @@
         <button>Third tab</button>
       </div>
 
-      <div class="n-carousel__content n-carousel--auto">
+      <div class="n-carousel__content">
         <div>
           <div style="background: lightblue">
             One
@@ -463,7 +540,9 @@
 
     <h2 id="vertical">Vertical auto height with controls on the right</h2>
 
-    <div class="n-carousel n-carousel--vertical n-carousel--controls-end">
+    <div
+      class="n-carousel n-carousel--vertical n-carousel--controls-end n-carousel--auto-height"
+    >
       <div class="n-carousel__index">
         <button>1</button>
         <button>2</button>
@@ -472,7 +551,7 @@
       </div>
 
       <div
-        class="n-carousel__content n-carousel--auto n-carousel--auto-slide-"
+        class="n-carousel__content n-carousel--auto-slide-"
         style="
           --peek-y: 50px;
           --peek-x: 50px;
@@ -577,7 +656,7 @@
     <h2 id="vertical">Vertical auto height with outside controls</h2>
 
     <div
-      class="n-carousel n-carousel--vertical n-carousel--controls-outside n-carousel--controls-end"
+      class="n-carousel n-carousel--vertical n-carousel--controls-outside n-carousel--controls-end n-carousel--auto-height"
     >
       <div class="n-carousel__index">
         <button>1</button>
@@ -587,7 +666,7 @@
       </div>
 
       <div
-        class="n-carousel__content n-carousel--auto n-carousel--auto-slide-"
+        class="n-carousel__content n-carousel--auto-slide-"
         style="line-height: 100px; background: lightgrey"
       >
         <div style="background: lightblue">
@@ -665,15 +744,17 @@
 
     <pre>
 
- 	&lt;link rel="styleSheet" href="n-carousel.css"&gt;
- 	&lt;script src="n-carousel.js" type="module" async&gt;&lt;/script&gt;
+ 	&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
+ 	&lt;script src="n-carousel.min.js" type="module" async&gt;&lt;/script&gt;
 
  	&lt;div class="n-carousel"&gt;
 
- 		&lt;div class="n-carousel__content n-carousel--auto" style="--peek-x: 5em;"&gt;
+ 		&lt;div class="n-carousel__content"&gt;
+
  			&lt;div&gt;&lt;div&gt;One&lt;/div&gt;&lt;/div&gt;
  			&lt;div&gt;&lt;div&gt;Two&lt;/div&gt;&lt;/div&gt;
  			&lt;div&gt;&lt;div&gt;Three&lt;/div&gt;&lt;/div&gt;
+
  		&lt;/div&gt;
 
  		&lt;div class=&quot;n-carousel__previous&quot;&gt;
@@ -682,11 +763,11 @@
 
  		&lt;/div&gt;
 
- 		&lt;div class=&quot;n-carousel__next&quot;&gt;
-
-         &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-
- 		&lt;/div&gt;
+                &lt;div class=&quot;n-carousel__next&quot;&gt;
+                
+                        &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+                
+                &lt;/div&gt;
 
  		&lt;div class=&quot;n-carousel__index&quot;&gt;
 
