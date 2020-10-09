@@ -28,9 +28,6 @@
     width: 100%;
     box-sizing: border-box;
     overflow: auto;
-    > * {
-      max-height: 100%;
-    }
   }
 
   &.n-measure > * {

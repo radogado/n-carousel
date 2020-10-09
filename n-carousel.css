@@ -26,9 +26,6 @@
   box-sizing: border-box;
   overflow: auto;
 }
-.n-carousel__content > * > * {
-  max-height: 100%;
-}
 .n-carousel__content.n-measure > * {
   position: absolute;
 }
