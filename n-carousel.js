@@ -251,8 +251,6 @@
     el.children[active].dataset.active = true;
     el.children[active].style.height = "";
 
-    // If auto height and active height !== carousel height, change (animate) carousel height to active height (.scrollHeight)
-
     // Fix buttons.
     let wrapper = el.closest(".n-carousel");
     let index = getControl(wrapper, ".n-carousel__index");
@@ -261,15 +259,7 @@
     }
     index.children[active].disabled = true;
 
-    // getControl(wrapper, ".n-carousel__previous button").disabled =
-    //   active === "0" ? true : false;
-    // getControl(wrapper, ".n-carousel__next button").disabled =
-    //   active >= el.children.length - 1 ? true : false;
-
-    // el.style = '';
-    /* 	setTimeout(() =>  */
     observersOn(el);
-    /* 	, 66); */
   };
 
   // Setup isScrolling variable
@@ -581,15 +571,15 @@
     let next = getControl(el, ".n-carousel__next");
     let index = getControl(el, ".n-carousel__index");
 
-    if (previous) {
+    if (!!previous) {
       previous.onclick = slidePreviousEvent;
     }
 
-    if (next) {
+    if (!!next) {
       next.onclick = slideNextEvent;
     }
 
-    if (index) {
+    if (!!index) {
       index.onclick = slideIndexEvent;
     }
 
@@ -656,14 +646,16 @@
 
     content.addEventListener("focusin", (e) => {
       console.log(e.target);
-      let el = e.target.closest(".n-carousel__content > div");
-      let index = [...el.parentNode.children].indexOf(el);
-      let carousel = el.closest(".n-carousel__content");
-      let current_index = parseInt(
-        isVertical(carousel) ? carousel.dataset.y : carousel.dataset.x
-      );
-      if (current_index !== index) {
-        slideTo(carousel, index);
+      let el = e.target.closest(".n-carousel__content > *");
+      if (el) {
+        let index = [...el.parentNode.children].indexOf(el);
+        let carousel = el.closest(".n-carousel__content");
+        let current_index = parseInt(
+          isVertical(carousel) ? carousel.dataset.y : carousel.dataset.x
+        );
+        if (current_index !== index) {
+          slideTo(carousel, index);
+        }
       }
     });
   });

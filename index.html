@@ -52,9 +52,9 @@
       <div class="n-carousel__content">
         <div>
           <div>
-            <div class="n-carousel" data-ready="true">
+            <div class="n-carousel">
               <div class="n-carousel__previous">
-                <button></button>
+                <button><span>Previous</span></button>
               </div>
 
               <div class="n-carousel__next">
@@ -62,19 +62,16 @@
               </div>
 
               <div class="n-carousel__index">
-                <button disabled="">1</button>
-                <button>2</button>
-                <button>3</button>
+                <button><span>1</span></button>
+                <button><span>2</span></button>
+                <button><span>3</span></button>
               </div>
 
               <div
                 class="n-carousel__content"
                 style="--peek-x: 50px; background: lightgrey"
-                tabindex="0"
-                data-x="0"
-                data-y="0"
               >
-                <div style="background: lightblue" data-active="true">
+                <div style="background: lightblue">
                   One
                   <input type="text" />
                   <span>Span</span><a href="#">Draggable link</a>
@@ -83,15 +80,9 @@
                 <div style="background: lightgreen">
                   Two<br />
                   2
-                  <div class="n-carousel" data-ready="true">
-                    <div
-                      class="n-carousel__content"
-                      style="--peek-x: 1em"
-                      tabindex="0"
-                      data-x="0"
-                      data-y="0"
-                    >
-                      <div data-active="true">Inner One</div>
+                  <div class="n-carousel">
+                    <div class="n-carousel__content" style="--peek-x: 1em">
+                      <div>Inner One</div>
 
                       <div>Inner Two</div>
 
@@ -102,17 +93,17 @@
                     </div>
 
                     <div class="n-carousel__previous">
-                      <button></button>
+                      <button><span>Previous</span></button>
                     </div>
 
                     <div class="n-carousel__next">
-                      <button></button>
+                      <button><span>Next</span></button>
                     </div>
 
                     <div class="n-carousel__index">
-                      <button disabled="">1</button>
-                      <button>2</button>
-                      <button>3</button>
+                      <button><span>1</span></button>
+                      <button><span>2</span></button>
+                      <button><span>3</span></button>
                     </div>
                   </div>
 
