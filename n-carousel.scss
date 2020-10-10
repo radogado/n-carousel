@@ -235,6 +235,7 @@ _:future,
 .n-carousel {
   display: grid;
   grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
+  padding: 0 var(--subpixel-compensation, 0);
 
   grid-template-areas:
     "a3 	a3 		a3 		a3 		a3"
@@ -348,6 +349,7 @@ _:future,
       "b1 	a1 	prev 	a2 	a2"
       "index	a3 	a3 		a3 	a3"
       "b2 	a4 	next	a5 	a5";
+    padding: var(--subpixel-compensation, 0) 0;
 
     > .n-carousel__index {
       align-self: center;

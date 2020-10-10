@@ -513,6 +513,24 @@
     });
   });
 
+  let subpixel = new ResizeObserver((entries) => {
+    entries.forEach((e) => {
+      let el = e.target;
+
+      // subpixel.unobserve(el);
+      el.style.removeProperty("--subpixel-compensation");
+      let dimension = el.classList.contains("n-carousel--vertical")
+        ? getComputedStyle(el).height
+        : getComputedStyle(el).width;
+      el.style.setProperty(
+        `--subpixel-compensation`,
+        `${(parseFloat(dimension) % 1) / 2}px`
+      );
+
+      // setTimeout(() => subpixel.observe(el), 166);
+    });
+  });
+
   document.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
     let previous = getControl(el, ".n-carousel__previous");
     let next = getControl(el, ".n-carousel__next");
@@ -544,6 +562,7 @@
     }
 
     window.requestAnimationFrame(() => {
+      subpixel.observe(el);
       el.dataset.ready = true;
 
       updateCarousel(content);
