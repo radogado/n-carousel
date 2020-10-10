@@ -519,7 +519,7 @@
 
       // subpixel.unobserve(el);
       el.style.removeProperty("--subpixel-compensation");
-      let dimension = el.classList.contains("n-carousel--vertical")
+      let dimension = el.parentNode.classList.contains("n-carousel--vertical")
         ? getComputedStyle(el).height
         : getComputedStyle(el).width;
       el.style.setProperty(
@@ -562,7 +562,7 @@
     }
 
     window.requestAnimationFrame(() => {
-      subpixel.observe(el);
+      subpixel.observe(content);
       el.dataset.ready = true;
 
       updateCarousel(content);

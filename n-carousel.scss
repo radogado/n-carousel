@@ -5,6 +5,7 @@
   box-sizing: content-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
 
+  margin: 0 var(--subpixel-compensation, 0);
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
@@ -91,6 +92,7 @@
 .n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
   height: 100%;
+  margin: var(--subpixel-compensation, 0) 0;
 
   > * {
     // 			height: var(--height, inherit); // Fallback not working in Safari
@@ -235,7 +237,6 @@ _:future,
 .n-carousel {
   display: grid;
   grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
-  padding: 0 var(--subpixel-compensation, 0);
 
   grid-template-areas:
     "a3 	a3 		a3 		a3 		a3"
@@ -349,7 +350,6 @@ _:future,
       "b1 	a1 	prev 	a2 	a2"
       "index	a3 	a3 		a3 	a3"
       "b2 	a4 	next	a5 	a5";
-    padding: var(--subpixel-compensation, 0) 0;
 
     > .n-carousel__index {
       align-self: center;
