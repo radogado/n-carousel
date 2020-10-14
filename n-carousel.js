@@ -519,12 +519,22 @@
 
       // subpixel.unobserve(el);
       el.style.removeProperty("--subpixel-compensation");
-      let dimension = el.parentNode.classList.contains("n-carousel--vertical")
-        ? getComputedStyle(el).height
-        : getComputedStyle(el).width;
+
+      // Round down the padding, because sub pixel padding + scrolling is a problem
+      let padding_horizontal = parseInt(getComputedStyle(el).paddingLeft);
+      let padding_vertical = parseInt(getComputedStyle(el).paddingTop);
+
+      el.style.padding = isVertical(el)
+        ? `${padding_vertical}px 0`
+        : `0 ${padding_horizontal}px`;
+
+      let dimension = isVertical(el)
+        ? parseFloat(getComputedStyle(el).height) + padding_vertical * 2
+        : parseFloat(getComputedStyle(el).width) + padding_horizontal * 2;
+      // console.log("dimension", dimension);
       el.style.setProperty(
         `--subpixel-compensation`,
-        `${(parseFloat(dimension) % 1) / 2}px`
+        `${(dimension % 1) / 2}px`
       );
 
       // setTimeout(() => subpixel.observe(el), 166);
