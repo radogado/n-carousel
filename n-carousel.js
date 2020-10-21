@@ -517,27 +517,19 @@
     entries.forEach((e) => {
       let el = e.target;
 
-      // subpixel.unobserve(el);
-      el.style.removeProperty("--subpixel-compensation");
-
       // Round down the padding, because sub pixel padding + scrolling is a problem
-      let padding_horizontal = parseInt(getComputedStyle(el).paddingLeft);
-      let padding_vertical = parseInt(getComputedStyle(el).paddingTop);
+      let carousel = el.querySelector(":scope > .n-carousel__content");
+      let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
+      let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
 
-      el.style.padding = isVertical(el)
+      carousel.style.padding = isVertical(el)
         ? `${padding_vertical}px 0`
         : `0 ${padding_horizontal}px`;
 
-      let dimension = isVertical(el)
-        ? parseFloat(getComputedStyle(el).height) + padding_vertical * 2
-        : parseFloat(getComputedStyle(el).width) + padding_horizontal * 2;
-      // console.log("dimension", dimension);
       el.style.setProperty(
         `--subpixel-compensation`,
-        `${(dimension % 1) / 2}px`
+        `${parseInt(getComputedStyle(el).width)}px`
       );
-
-      // setTimeout(() => subpixel.observe(el), 166);
     });
   });
 
@@ -572,7 +564,7 @@
     }
 
     window.requestAnimationFrame(() => {
-      subpixel.observe(content);
+      subpixel.observe(el);
       el.dataset.ready = true;
 
       updateCarousel(content);

@@ -5,7 +5,6 @@
   box-sizing: content-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
 
-  margin: 0 var(--subpixel-compensation, 0);
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
@@ -59,6 +58,7 @@
 
 :not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
+  width: var(--subpixel-compensation, auto);
 
   &:after {
     content: "";
@@ -92,7 +92,6 @@
 .n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
   height: 100%;
-  margin: var(--subpixel-compensation, 0) 0;
 
   > * {
     // 			height: var(--height, inherit); // Fallback not working in Safari

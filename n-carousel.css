@@ -3,7 +3,6 @@
   will-change: scroll;
   box-sizing: content-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
-  margin: 0 var(--subpixel-compensation, 0);
   scrollbar-width: none;
   /* Firefox */
 }
@@ -52,6 +51,7 @@
 
 :not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
+  width: var(--subpixel-compensation, auto);
 }
 :not(.n-carousel--vertical) > .n-carousel__content:after {
   content: "";
@@ -79,7 +79,6 @@
 .n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
   height: 100%;
-  margin: var(--subpixel-compensation, 0) 0;
 }
 .n-carousel--vertical > .n-carousel__content > * {
   height: inherit;
