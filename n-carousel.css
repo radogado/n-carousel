@@ -1,7 +1,8 @@
 .n-carousel__content {
   display: flex;
   will-change: scroll;
-  box-sizing: content-box;
+  outline: 0;
+  box-sizing: border-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
   scrollbar-width: none;
   /* Firefox */
@@ -51,7 +52,6 @@
 
 :not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
-  width: var(--subpixel-compensation, auto);
 }
 :not(.n-carousel--vertical) > .n-carousel__content:after {
   content: "";

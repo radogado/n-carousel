@@ -106,6 +106,7 @@
 
       let draw = (now) => {
         if (stop) {
+          scrollToAuto(el, startx + distanceX, starty + distanceY);
           if (new_height) {
             el.style.height = `${new_height}px`;
           }
@@ -516,9 +517,13 @@
   let subpixel = new ResizeObserver((entries) => {
     entries.forEach((e) => {
       let el = e.target;
+      // el.style.removeProperty("--subpixel-compensation");
 
       // Round down the padding, because sub pixel padding + scrolling is a problem
       let carousel = el.querySelector(":scope > .n-carousel__content");
+
+      carousel.style.width = "";
+
       let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
       let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
 
@@ -526,10 +531,12 @@
         ? `${padding_vertical}px 0`
         : `0 ${padding_horizontal}px`;
 
-      el.style.setProperty(
-        `--subpixel-compensation`,
-        `${parseInt(getComputedStyle(el).width)}px`
-      );
+      carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
+
+      // el.style.setProperty(
+      //   `--subpixel-compensation`,
+      //   `${parseInt(getComputedStyle(carousel).width)}px`
+      // );
     });
   });
 

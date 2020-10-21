@@ -1,8 +1,8 @@
 .n-carousel__content {
   display: flex;
   will-change: scroll;
-
-  box-sizing: content-box;
+  outline: 0;
+  box-sizing: border-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
 
   @media (prefers-reduced-motion: reduce) {
@@ -58,7 +58,7 @@
 
 :not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
-  width: var(--subpixel-compensation, auto);
+  // width: var(--subpixel-compensation);
 
   &:after {
     content: "";
