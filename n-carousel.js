@@ -517,6 +517,14 @@
   let subpixel = new ResizeObserver((entries) => {
     entries.forEach((e) => {
       let el = e.target;
+
+      if (
+        el.classList.contains("n-carousel--auto-height") &&
+        !!el.dataset.sliding
+      ) {
+        return;
+      }
+
       // el.style.removeProperty("--subpixel-compensation");
 
       // Round down the padding, because sub pixel padding + scrolling is a problem
@@ -531,12 +539,11 @@
         ? `${padding_vertical}px 0`
         : `0 ${padding_horizontal}px`;
 
-      carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
-
-      // el.style.setProperty(
-      //   `--subpixel-compensation`,
-      //   `${parseInt(getComputedStyle(carousel).width)}px`
-      // );
+      if (!isVertical(el)) {
+        carousel.style.width = `${parseInt(
+          getComputedStyle(carousel).width
+        )}px`;
+      }
     });
   });
 
@@ -619,7 +626,7 @@
     });
 
     content.addEventListener("focusin", (e) => {
-      console.log(e.target);
+      // console.log(e.target);
       let el = e.target.closest(".n-carousel__content > *");
       if (el) {
         let index = [...el.parentNode.children].indexOf(el);

@@ -4,6 +4,7 @@
   outline: 0;
   box-sizing: border-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
+  overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

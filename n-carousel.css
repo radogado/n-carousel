@@ -4,6 +4,7 @@
   outline: 0;
   box-sizing: border-box;
   padding: var(--peek-y, 0) var(--peek-x, 0);
+  overflow-anchor: none;
   scrollbar-width: none;
   /* Firefox */
 }
