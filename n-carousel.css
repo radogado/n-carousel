@@ -59,10 +59,10 @@
   width: var(--peek-x, 0);
   height: 1px;
 }
-.n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height) > * .n-carousel__content {
+.n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height) > .n-carousel__content > * {
   overflow: auto;
 }
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height .n-carousel__content {
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content {
   overflow-y: hidden;
 }
 

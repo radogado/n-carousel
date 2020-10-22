@@ -69,12 +69,12 @@
       height: 1px;
     }
   }
-  &:not(.n-carousel--auto-height) > * {
-    .n-carousel__content {
+  &:not(.n-carousel--auto-height) > {
+    .n-carousel__content > * {
       overflow: auto;
     }
   }
-  &.n-carousel--auto-height {
+  &.n-carousel--auto-height > {
     .n-carousel__content {
       overflow-y: hidden;
     }
