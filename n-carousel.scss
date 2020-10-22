@@ -56,24 +56,28 @@
   }
 }
 
-:not(.n-carousel--vertical) > .n-carousel__content {
-  overflow-x: auto;
-  // width: var(--subpixel-compensation);
+.n-carousel:not(.n-carousel--vertical) {
+  > .n-carousel__content {
+    overflow-x: auto;
+    // width: var(--subpixel-compensation);
 
-  &:after {
-    content: "";
-    flex-shrink: 0;
-    // 	        padding-inline-end: inherit;
-    width: var(--peek-x, 0); // Fixed value option
-    height: 1px;
+    &:after {
+      content: "";
+      flex-shrink: 0;
+      // 	        padding-inline-end: inherit;
+      width: var(--peek-x, 0); // Fixed value option
+      height: 1px;
+    }
   }
-
   &:not(.n-carousel--auto-height) > * {
-    overflow: auto;
+    .n-carousel__content {
+      overflow: auto;
+    }
   }
-
   &.n-carousel--auto-height {
-    overflow-y: hidden;
+    .n-carousel__content {
+      overflow-y: hidden;
+    }
   }
 }
 
