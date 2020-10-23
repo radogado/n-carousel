@@ -17,6 +17,7 @@
   const default_interval = 4000;
 
   const isChrome = !!navigator.userAgent.match("Chrome");
+  const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
 
   let isRTL = (el) => getComputedStyle(el).direction === "rtl";
 
@@ -108,7 +109,20 @@
         if (stop) {
           scrollToAuto(el, startx + distanceX, starty + distanceY);
           if (new_height) {
-            el.style.height = `${new_height}px`;
+            // el.style.height = `${new_height}px`;
+            // el.animate(
+            //   [
+            //     // keyframes
+            //     { height: `${el.offsetHeight}px` },
+            //     { height: "${new_height}px" },
+            //   ],
+            //   {
+            //     // timing options
+            //     duration: duration,
+            //   }
+            // ).onfinish = (e) => {
+            //   el.style.height = `${new_height}px`;
+            // };
           }
           resolve(el);
           return;
@@ -123,12 +137,10 @@
           scrollToAuto(el, x, y);
         }
 
-        if (new_height) {
-          window.requestAnimationFrame(() => {
-            el.style.height = `${starth + distanceH * val}px`;
-          }); // Timeout because Safari can't do scroll and height at once
+        if (new_height && !isSafari) {
+          // Safari can't animate both height and scroll (?!)
+          el.style.height = `${starth + distanceH * val}px`;
         }
-
         requestAnimationFrame(draw);
       };
 
