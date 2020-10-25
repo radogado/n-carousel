@@ -509,11 +509,94 @@
 
               <div
                 class="n-carousel__content"
+                style="line-height: 100px; background: lightgrey; height: 300px"
+              >
+                <div style="background: lightblue">
+                  <div>
+                    One
+                    <input type="text" />
+                    <span>Span</span>
+                  </div>
+                </div>
+
+                <div style="background: lightgreen">
+                  <div>
+                    Two<br />
+                    2
+                  </div>
+
+                  <div class="n-carousel">
+                    <div class="n-carousel__content" style="--peek: 1em">
+                      <div>Inner One</div>
+
+                      <div>Inner Two</div>
+
+                      <div>
+                        Inner Three<br />
+                        _
+                      </div>
+                    </div>
+
+                    <div class="n-carousel__previous">
+                      <button></button>
+                    </div>
+
+                    <div class="n-carousel__next">
+                      <button></button>
+                    </div>
+
+                    <div class="n-carousel__index">
+                      <button>1</button>
+                      <button>2</button>
+                      <button>3</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: coral">
+                  <div>
+                    Three<br />
+                    _<br />
+                    _<br />
+                    _
+                  </div>
+                </div>
+
+                <div style="background: lightcoral">
+                  <div>
+                    Four<br />
+                    _<br />
+                    _
+                  </div>
+                </div>
+              </div>
+
+              <div class="n-carousel__previous">
+                <button></button>
+              </div>
+
+              <div class="n-carousel__next">
+                <button></button>
+              </div>
+            </div>
+
+            <h2 id="vertical31">Vertical fixed height with peeking</h2>
+
+            <div class="n-carousel n-carousel--vertical">
+              <div class="n-carousel__index">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+              </div>
+
+              <div
+                class="n-carousel__content"
                 style="
-                  --peek-y: 50px;
                   line-height: 100px;
                   background: lightgrey;
                   height: 300px;
+                  --peek-y: 50px;
                 "
               >
                 <div style="background: lightblue">

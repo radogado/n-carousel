@@ -416,7 +416,7 @@
       slide(
         el,
         0,
-        (el.offsetHeight - paddingY(el)) * index - el.scrollTop,
+        el.offsetHeight * index - el.scrollTop + paddingY(el) / 2,
         index
       );
     } else {
@@ -511,7 +511,8 @@
 
   let slideIndexEvent = (e) => {
     let el = e.target.closest("button");
-    if (el) slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
+    if (el)
+      slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
   };
 
   let verticalAutoObserver = new ResizeObserver((entries) => {
