@@ -60,7 +60,14 @@
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
-      console.log("scrolling by: x ", distanceX, " y ", distanceY);
+      console.log(
+        "scrolling by: x ",
+        distanceX,
+        " y ",
+        distanceY,
+        " height ",
+        new_height
+      );
       if (
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         el.closest(".n-carousel").classList.contains("n-carousel--instant")
@@ -110,7 +117,7 @@
         if (stop) {
           scrollToAuto(el, startx + distanceX, starty + distanceY);
           if (new_height) {
-            // el.style.height = `${new_height}px`;
+            el.style.height = `${Math.ceil(new_height)}px`;
             // el.animate(
             //   [
             //     // keyframes
@@ -221,12 +228,13 @@
     el.children[active].style.height = "";
 
     // Fix buttons.
-    let wrapper = el.closest(".n-carousel");
-    let index = getControl(wrapper, ".n-carousel__index");
-    if (index.querySelector("[disabled]")) {
-      index.querySelector("[disabled]").disabled = false;
+    let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
+    if (!!index) {
+      if (index.querySelector("[disabled]")) {
+        index.querySelector("[disabled]").disabled = false;
+      }
+      index.children[active].disabled = true;
     }
-    index.children[active].disabled = true;
 
     observersOn(el);
   };
@@ -395,7 +403,7 @@
         el,
         offsetX,
         scroll_to_y,
-        new_height === old_height ? false : new_height
+        new_height === old_height ? false : Math.ceil(new_height)
       ).then((response) => {
         updateCarousel(el); // Handled by scroll end
       });
