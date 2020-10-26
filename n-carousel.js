@@ -60,6 +60,7 @@
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
+      console.log("scrolling by: x ", distanceX, " y ", distanceY);
       if (
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         el.closest(".n-carousel").classList.contains("n-carousel--instant")
@@ -416,7 +417,7 @@
       slide(
         el,
         0,
-        el.offsetHeight * index - el.scrollTop + paddingY(el) / 2,
+        (el.offsetHeight - paddingY(el)) * index - el.scrollTop,
         index
       );
     } else {
