@@ -97,6 +97,7 @@
 .n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
   height: 100%;
+  box-sizing: content-box;
 
   > * {
     // 			height: var(--height, inherit); // Fallback not working in Safari
