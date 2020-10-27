@@ -45,9 +45,9 @@
 
   let observersOn = (el) => {
     setTimeout(() => {
-      delete el.dataset.sliding;
       el.addEventListener("scroll", scrollStopped);
-    }, 1);
+      delete el.dataset.sliding;
+    }, 66);
   };
 
   let observersOff = (el) => {
@@ -182,7 +182,7 @@
     // Called on init and scroll end
 
     observersOff(el);
-
+    delete el.dataset.touchend;
     el.dataset.x = Math.abs(
       Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)))
     );
@@ -246,10 +246,19 @@
   var isResizing;
 
   let scrollStopped = (e) => {
+    // console.log("scroll ", e);
     // return;
     // Clear our timeout throughout the scroll
     let el = e.target;
     if (!!el.dataset.sliding) {
+      // e.preventDefault();
+      return;
+    }
+
+    let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
+    let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
+
+    if (mod_x !== 0 || mod_y !== 0) {
       return;
     }
 
@@ -345,13 +354,13 @@
             updateCarousel(el);
             setTimeout(() => {
               delete el.dataset.sliding;
-            }, 33);
+            }, 166);
           });
         } else {
           updateCarousel(el);
           setTimeout(() => {
             delete el.dataset.sliding;
-          }, 33);
+          }, 166);
         }
       }
     }, 133);
@@ -364,6 +373,7 @@
 
     if (!el.dataset.sliding) {
       el.removeEventListener("scroll", scrollStopped);
+
       el.dataset.sliding = true;
 
       let old_height = el.children[el.dataset.y].clientHeight;
@@ -636,16 +646,6 @@
         clearTimeout(e.target.nCarouselTimeout)
       );
     }
-
-    content.addEventListener("touchmove", (e) => {
-      let el = e.target.closest(".n-carousel__content");
-      el.removeEventListener("scroll", scrollStopped);
-    });
-
-    content.addEventListener("touchend", (e) => {
-      let el = e.target.closest(".n-carousel__content");
-      el.addEventListener("scroll", scrollStopped);
-    });
 
     content.addEventListener("focusin", (e) => {
       // console.log(e.target);
