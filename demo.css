@@ -40,6 +40,11 @@ pre {
   padding: 1em;
 }
 
+.n-carousel--lightbox > .n-carousel__content > * > * {
+  padding: 0;
+  margin: 0;
+}
+
 .demo-grid {
   display: grid;
   grid-gap: 1em;

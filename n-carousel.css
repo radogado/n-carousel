@@ -363,5 +363,32 @@ _:future,
     margin-block-end: var(--peek-y, 0);
   }
 }
+.n-carousel--lightbox {
+  flex: 1;
+}
+.n-carousel--lightbox figure {
+  max-height: 100%;
+  display: grid;
+  grid-template: 1fr auto/auto;
+  border: 0.1px solid transparent;
+  box-sizing: border-box;
+}
+.n-carousel--lightbox figure > * {
+  grid-row: 1/3;
+  grid-column: 1/1;
+}
+.n-carousel--lightbox figure > figcaption {
+  grid-row: 2/3;
+  justify-self: center;
+  padding: 0.5em 0.75em;
+  background: rgba(0, 0, 0, 0.3);
+  color: #ddd;
+}
+.n-carousel--lightbox img {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
 
 /*# sourceMappingURL=n-carousel.css.map */
