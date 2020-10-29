@@ -4,6 +4,7 @@ body {
 }
 
 html {
+  height: 100vh;
   height: -webkit-fill-available;
   margin: 0;
   padding: 0;
@@ -56,7 +57,7 @@ pre {
 }
 
 .demo {
-  width: 1920px;
+  width: 100vmin;
   height: 100vh;
   max-width: 100vw;
   margin: auto;
