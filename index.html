@@ -49,8 +49,8 @@
         <button><span>Detached controls</span></button>
         <button><span>Right to left</span></button>
         <button><span>Tabs</span></button>
-        <button><span>Vertical</span></button>
         <button><span>Lightbox</span></button>
+        <button><span>Vertical</span></button>
       </span>
       <div class="n-carousel__content">
         <div>
@@ -496,6 +496,109 @@
             </div>
           </div>
         </div>
+        <div style="max-height: -webkit-fill-available">
+          <div
+            style="
+              max-height: 100%;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+            "
+          >
+            <h2>Lightbox</h2>
+
+            <div style="display: flex; min-height: 0; background: lightgrey">
+              <div
+                class="n-carousel n-carousel--lightbox n-carousel--controls-top"
+              >
+                <div class="n-carousel__previous">
+                  <button><span>Previous</span></button>
+                </div>
+
+                <div class="n-carousel__next">
+                  <button></button>
+                </div>
+
+                <div class="n-carousel__index">
+                  <button><span>1</span></button>
+                  <button><span>2</span></button>
+                  <button><span>3</span></button>
+                </div>
+
+                <div class="n-carousel__content">
+                  <div>
+                    <figure>
+                      <picture>
+                        <img
+                          width="3840"
+                          height="2560"
+                          src="https://www.rado.bg/wp-content/uploads/2020/07/DSC01832.jpg"
+                          alt="Demo Image 1"
+                          loading="lazy"
+                        />
+                      </picture>
+                      <figcaption>Kaohsiung, Taiwan</figcaption>
+                    </figure>
+                  </div>
+
+                  <div>
+                    <figure>
+                      <picture>
+                        <img
+                          width="3840"
+                          height="2560"
+                          src="https://www.rado.bg/wp-content/uploads/2017/02/DSC01293-Pano.jpg"
+                          alt="Demo Image 2"
+                          loading="lazy"
+                        />
+                      </picture>
+                      <figcaption>Bastia, Corsica</figcaption>
+                    </figure>
+                  </div>
+
+                  <div>
+                    <figure>
+                      <picture>
+                        <img
+                          width="384"
+                          height="256"
+                          src="https://www.rado.bg/wp-content/uploads/2017/10/DSC04308.jpg"
+                          alt="Demo Image 2"
+                          loading="lazy"
+                        />
+                      </picture>
+                      <figcaption>Financial District, Manhattan</figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="code">
+  <pre><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
+&lt;script src="n-carousel.min.js" type="module" async&gt;&lt;/script&gt;
+
+&lt;div class="n-carousel"&gt;
+&lt;div class="n-carousel__content"&gt;
+&lt;div&gt;&lt;div&gt;One&lt;/div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;div&gt;Two&lt;/div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;div&gt;Three&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;n-carousel__previous&quot;&gt;
+&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class=&quot;n-carousel__next&quot;&gt;
+&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class=&quot;n-carousel__index&quot;&gt;
+&lt;button&lt;span&gt;1&lt;/span&gt;/button&gt;
+&lt;button&lt;span&gt;2&lt;/span&gt;/button&gt;
+&lt;button&lt;span&gt;3&lt;/span&gt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div> -->
+          </div>
+        </div>
         <div>
           <div>
             <h2 id="vertical3">Vertical fixed height</h2>
@@ -849,29 +952,29 @@
             </div>
 
             <!-- <h2>Auto sliding</h2>
-                    
-                        <h2>Automatic RTL</h2>
-                    
-                        <p>
-                          Control by scroll, swipe, arrow keys, direction buttons, index buttons.
-                        </p>
-                    
-                        <p><b>.n-carousel.n-carousel--instant</b> option to control instantly</p>
-                    
-                        <div
-                          style="
-                            height: 300px;
-                            overflow: scroll;
-                            padding: 50px;
-                            background: lightblue;
-                            align-content: flex-start;
-                            display: flex;
-                            flex-direction: column;
-                          "
-                        >
-                          <div style="height: inherit; background: lightcoral">1</div>
-                          <div style="height: inherit; background: lightgreen">2</div>
-                        </div> -->
+            
+                <h2>Automatic RTL</h2>
+            
+                <p>
+                  Control by scroll, swipe, arrow keys, direction buttons, index buttons.
+                </p>
+            
+                <p><b>.n-carousel.n-carousel--instant</b> option to control instantly</p>
+            
+                <div
+                  style="
+                    height: 300px;
+                    overflow: scroll;
+                    padding: 50px;
+                    background: lightblue;
+                    align-content: flex-start;
+                    display: flex;
+                    flex-direction: column;
+                  "
+                >
+                  <div style="height: inherit; background: lightcoral">1</div>
+                  <div style="height: inherit; background: lightgreen">2</div>
+                </div> -->
 
             <h2 id="vertical2">Vertical auto height with outside controls</h2>
 
@@ -959,109 +1062,6 @@
                 <button></button>
               </div>
             </div>
-          </div>
-        </div>
-        <div style="max-height: -webkit-fill-available">
-          <div
-            style="
-              max-height: 100%;
-              box-sizing: border-box;
-              display: flex;
-              flex-direction: column;
-            "
-          >
-            <h2>Lightbox</h2>
-
-            <div style="display: flex; min-height: 0; background: lightgrey">
-              <div
-                class="n-carousel n-carousel--lightbox n-carousel--controls-top"
-              >
-                <div class="n-carousel__previous">
-                  <button><span>Previous</span></button>
-                </div>
-
-                <div class="n-carousel__next">
-                  <button></button>
-                </div>
-
-                <div class="n-carousel__index">
-                  <button><span>1</span></button>
-                  <button><span>2</span></button>
-                  <button><span>3</span></button>
-                </div>
-
-                <div class="n-carousel__content">
-                  <div>
-                    <figure>
-                      <picture>
-                        <img
-                          width="3840"
-                          height="2560"
-                          src="https://www.rado.bg/wp-content/uploads/2020/07/DSC01832.jpg"
-                          alt="Demo Image 1"
-                          loading="lazy"
-                        />
-                      </picture>
-                      <figcaption>Kaohsiung, Taiwan</figcaption>
-                    </figure>
-                  </div>
-
-                  <div>
-                    <figure>
-                      <picture>
-                        <img
-                          width="3840"
-                          height="2560"
-                          src="https://www.rado.bg/wp-content/uploads/2017/02/DSC01293-Pano.jpg"
-                          alt="Demo Image 2"
-                          loading="lazy"
-                        />
-                      </picture>
-                      <figcaption>Bastia, Corsica</figcaption>
-                    </figure>
-                  </div>
-
-                  <div>
-                    <figure>
-                      <picture>
-                        <img
-                          width="384"
-                          height="256"
-                          src="https://www.rado.bg/wp-content/uploads/2017/10/DSC04308.jpg"
-                          alt="Demo Image 2"
-                          loading="lazy"
-                        />
-                      </picture>
-                      <figcaption>Financial District, Manhattan</figcaption>
-                    </figure>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- <div class="code">
-  <pre><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
-&lt;script src="n-carousel.min.js" type="module" async&gt;&lt;/script&gt;
-
-&lt;div class="n-carousel"&gt;
-&lt;div class="n-carousel__content"&gt;
-&lt;div&gt;&lt;div&gt;One&lt;/div&gt;&lt;/div&gt;
-&lt;div&gt;&lt;div&gt;Two&lt;/div&gt;&lt;/div&gt;
-&lt;div&gt;&lt;div&gt;Three&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;n-carousel__previous&quot;&gt;
-&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-&lt;/div&gt;
-&lt;div class=&quot;n-carousel__next&quot;&gt;
-&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-&lt;/div&gt;
-&lt;div class=&quot;n-carousel__index&quot;&gt;
-&lt;button&lt;span&gt;1&lt;/span&gt;/button&gt;
-&lt;button&lt;span&gt;2&lt;/span&gt;/button&gt;
-&lt;button&lt;span&gt;3&lt;/span&gt;/button&gt;
-&lt;/div&gt;
-&lt;/div&gt;</code></pre>
-</div> -->
           </div>
         </div>
       </div>
