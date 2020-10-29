@@ -133,6 +133,7 @@
             // };
           }
           resolve(el);
+          subpixel.observe(el.parentNode);
           return;
         }
         if (now - start >= duration) stop = true;
@@ -145,13 +146,16 @@
           scrollToAuto(el, x, y);
         }
 
-        if (new_height && !isSafari) {
-          // Safari can't animate both height and scroll (?!)
-          el.style.height = `${starth + distanceH * val}px`;
+        if (new_height) {
+          window.requestAnimationFrame(() => {
+            el.style.height = `${starth + distanceH * val}px`;
+          }); // Timeout because Safari can't do scroll and height at once
         }
+
         requestAnimationFrame(draw);
       };
 
+      subpixel.unobserve(el.parentNode);
       requestAnimationFrame(startAnim);
     });
 
@@ -663,4 +667,3 @@
     });
   });
 })();
-
