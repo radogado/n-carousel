@@ -508,7 +508,7 @@ _:future,
 .n-carousel--lightbox {
   flex: 1;
   figure {
-    max-height: 100%;
+    height: 100%;
     display: grid;
     grid-template: 1fr auto/auto;
     border: 0.1px solid transparent;
@@ -517,6 +517,9 @@ _:future,
     > * {
       grid-row: 1/3;
       grid-column: 1/1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     > figcaption {
       grid-row: 2/3;
