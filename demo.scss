@@ -101,6 +101,13 @@ code[class*="language-"] {
     right: 0;
     font-size: 0.75em;
     margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: lightcoral;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
   }
 }
 
