@@ -93,6 +93,7 @@
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--controls-end > .n-carousel__index {
   right: 0;
+  grid-area: auto;
 }
 
 _::-webkit-full-page-media,

@@ -121,6 +121,7 @@
     &.n-carousel--controls-end {
       > .n-carousel__index {
         right: 0; // To do: RTL
+        grid-area: auto;
       }
     }
   }
