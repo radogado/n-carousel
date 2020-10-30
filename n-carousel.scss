@@ -94,15 +94,35 @@
 .n-carousel--vertical[data-ready] > .n-carousel__content {
   flex-direction: column;
 }
-.n-carousel--vertical > .n-carousel__content {
-  overflow-y: auto;
-  height: 100%;
-  box-sizing: content-box;
+.n-carousel.n-carousel--vertical {
+  > .n-carousel__content {
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: content-box;
 
-  > * {
-    // 			height: var(--height, inherit); // Fallback not working in Safari
-    height: inherit; // Fallback not working in Safari
-    // overflow: hidden;
+    > * {
+      // 			height: var(--height, inherit); // Fallback not working in Safari
+      height: inherit; // Fallback not working in Safari
+      // overflow: hidden;
+    }
+  }
+
+  &:not(.n-carousel--controls-outside) {
+    > .n-carousel__index {
+      position: absolute;
+      max-height: 100%;
+      overflow: auto;
+      justify-content: initial;
+      // &,
+      // button {
+      //   display: block;
+      // }
+    }
+    &.n-carousel--controls-end {
+      > .n-carousel__index {
+        right: 0; // To do: RTL
+      }
+    }
   }
 }
 
@@ -242,6 +262,7 @@ _:future,
 .n-carousel {
   display: grid;
   grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
+  position: relative;
 
   grid-template-areas:
     "a3 	a3 		a3 		a3 		a3"
