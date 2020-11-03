@@ -632,7 +632,7 @@
     if (el.classList.contains("n-carousel--auto-slide")) {
       let auto_delay =
         (parseFloat(el.dataset.interval) * 1000 || default_interval) +
-        (parseFloat(el.dataset.duration) * 1000 || 1000);
+        (parseFloat(el.dataset.duration) * 1000 || default_duration);
 
       let carouselTimeout = () => {
         if (isElementInViewport(content)) {
