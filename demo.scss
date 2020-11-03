@@ -117,3 +117,22 @@ h2 {
     margin-top: 0;
   }
 }
+
+[href="n-carousel.min.css"],
+[href="n-carousel.min.js"] {
+  text-decoration: none;
+
+  &:after {
+    content: attr(data-size);
+    padding-inline-start: 1ch;
+    min-width: 6ch;
+    display: inline-block;
+    font-size: 0.75em;
+    vertical-align: top;
+  }
+  b {
+    text-decoration: underline;
+    min-width: 4ch;
+    display: inline-block;
+  }
+}

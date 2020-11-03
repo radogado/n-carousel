@@ -112,4 +112,24 @@ h2:first-child {
   margin-top: 0;
 }
 
+[href="n-carousel.min.css"],
+[href="n-carousel.min.js"] {
+  text-decoration: none;
+}
+[href="n-carousel.min.css"]:after,
+[href="n-carousel.min.js"]:after {
+  content: attr(data-size);
+  padding-inline-start: 1ch;
+  min-width: 6ch;
+  display: inline-block;
+  font-size: 0.75em;
+  vertical-align: top;
+}
+[href="n-carousel.min.css"] b,
+[href="n-carousel.min.js"] b {
+  text-decoration: underline;
+  min-width: 4ch;
+  display: inline-block;
+}
+
 /*# sourceMappingURL=demo.css.map */

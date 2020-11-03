@@ -127,8 +127,9 @@
             <h2>Source</h2>
 
             <p>
-              <a href="n-carousel.min.css">CSS</a>,
-              <a href="n-carousel.min.js">JS</a>
+              <a href="n-carousel.min.css"><b>CSS</b></a
+              ><br /><br />
+              <a href="n-carousel.min.js"><b>JS</b></a>
             </p>
 
             <p><a href="https://github.com/radogado/n-carousel">GitHub</a></p>
@@ -594,6 +595,7 @@
                         src="https://www.youtube-nocookie.com/embed/g2Ehv4wOPvA"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
+                        loading="lazy"
                       ></iframe>
                       <figcaption>YouTube embed</figcaption>
                     </figure>
@@ -1131,12 +1133,26 @@
           } catch (err) {}
         });
       }
+
       document.querySelectorAll(".code").forEach(function (el) {
         el.insertAdjacentHTML(
           "beforeend",
           "<button class='n-btn'>Copy</button>"
         );
         copyButton(el.querySelector("button"), el.querySelector("pre"));
+      });
+
+      ["css", "js"].forEach((el) => {
+        fetch(`n-carousel.min.${el}.size`)
+          .then((response) => response.text())
+          .then(
+            (text) =>
+              (document.querySelector(
+                `[href="n-carousel.min.${el}"]`
+              ).dataset.size = `${parseFloat(text.trim() / 1024).toFixed(
+                1
+              )} KB`)
+          );
       });
     </script>
   </body>

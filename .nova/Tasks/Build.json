@@ -1,0 +1,9 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : "cleancss -o n-carousel.min.css n-carousel.css\nterser -o n-carousel.min.js --compress --mangle -- n-carousel.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
+    }
+  },
+  "identifier" : "546A1171-DF51-49EC-B2CF-BBF6E59415B0"
+}
