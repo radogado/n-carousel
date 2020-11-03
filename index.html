@@ -1149,9 +1149,7 @@
             (text) =>
               (document.querySelector(
                 `[href="n-carousel.min.${el}"]`
-              ).dataset.size = `${parseFloat(text.trim() / 1024).toFixed(
-                1
-              )} KB`)
+              ).dataset.size = `${parseFloat(text / 1024).toFixed(1)} KB`)
           );
       });
     </script>
