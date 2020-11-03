@@ -118,19 +118,6 @@
           scrollToAuto(el, startx + distanceX, starty + distanceY);
           if (new_height) {
             el.style.height = `${Math.ceil(new_height)}px`;
-            // el.animate(
-            //   [
-            //     // keyframes
-            //     { height: `${el.offsetHeight}px` },
-            //     { height: "${new_height}px" },
-            //   ],
-            //   {
-            //     // timing options
-            //     duration: duration,
-            //   }
-            // ).onfinish = (e) => {
-            //   el.style.height = `${new_height}px`;
-            // };
           }
           resolve(el);
           subpixel.observe(el.parentNode);
@@ -469,15 +456,15 @@
 
   let carouselKeys = (e) => {
     let keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
-    let keys_vertical = ["ArrowUp", "ArrowDown", "Home", "End"];
-    let keys_2d = [
-      "ArrowLeft",
-      "ArrowRight",
-      "ArrowUp",
-      "ArrowDown",
-      "Home",
-      "End",
-    ];
+    // let keys_vertical = ["ArrowUp", "ArrowDown", "Home", "End"];
+    // let keys_2d = [
+    //   "ArrowLeft",
+    //   "ArrowRight",
+    //   "ArrowUp",
+    //   "ArrowDown",
+    //   "Home",
+    //   "End",
+    // ];
 
     // 	console.log(e);
     let el = e.target;
