@@ -652,5 +652,34 @@
         }
       }
     });
+
+    // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
+
+    function detectTrackPad(e) {
+      var isTrackpad = false;
+      if (e.wheelDeltaY) {
+        if (e.wheelDeltaY === e.deltaY * -3) {
+          isTrackpad = true;
+        }
+      } else if (e.deltaMode === 0) {
+        isTrackpad = true;
+      }
+      console.log(e);
+      console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
+
+      if (!isTrackpad) {
+        e.preventDefault();
+        let el = e.target.closest(".n-carousel__content");
+
+        if (e.deltaY < 0) {
+          slidePrevious(el);
+        } else {
+          slideNext(el);
+        }
+      }
+    }
+
+    content.addEventListener("mousewheel", detectTrackPad, false);
+    content.addEventListener("DOMMouseScroll", detectTrackPad, false);
   });
 })();
