@@ -19,6 +19,18 @@
   const isChrome = !!navigator.userAgent.match("Chrome");
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
 
+  const getScrollableAncestor = (el) => {
+    el = el.parentNode;
+    while (el) {
+      if (el.scrollHeight > el.offsetHeight) {
+        return el;
+      } else {
+        el = el.parentNode;
+      }
+    }
+    return false;
+  };
+
   let isRTL = (el) => getComputedStyle(el).direction === "rtl";
 
   let resize_observer_support = typeof ResizeObserver === "function";
@@ -668,13 +680,24 @@
       console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
 
       if (!isTrackpad) {
-        e.preventDefault();
+        // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
         let el = e.target.closest(".n-carousel__content");
+        let scrollable_ancestor = getScrollableAncestor(e.target);
 
         if (e.deltaY < 0) {
+          // if (!scrollable_ancestor || scrollable_ancestor.scrollTop === 0) {
+          e.preventDefault();
           slidePrevious(el);
+          // }
         } else {
+          // if (
+          //   !scrollable_ancestor ||
+          //   scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
+          //     scrollable_ancestor.scrollHeight
+          // ) {
+          e.preventDefault();
           slideNext(el);
+          // }
         }
       }
     }
