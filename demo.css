@@ -76,6 +76,20 @@ pre {
 .demo.n-carousel.n-carousel--tabs > .n-carousel__index button {
   max-width: 25vw;
 }
+.demo .source {
+  display: flex;
+}
+.demo .source > * {
+  margin-inline-end: 5ch;
+}
+.demo .source pre {
+  all: initial;
+  font: inherit;
+}
+.demo a[href]:visited {
+  color: inherit;
+  text-decoration: none;
+}
 
 code[class*=language-] {
   font-family: monospace !important;
@@ -110,6 +124,14 @@ code[class*=language-] {
 h1:first-child,
 h2:first-child {
   margin-top: 0;
+}
+
+h1:after {
+  content: attr(data-version);
+  padding-inline-start: 1ch;
+  font-size: 0.5em;
+  font-weight: normal;
+  vertical-align: super;
 }
 
 [href="n-carousel.min.css"],

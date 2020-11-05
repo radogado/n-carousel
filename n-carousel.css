@@ -96,6 +96,11 @@
   grid-area: auto;
 }
 
+[dir=rtl] .n-carousel.n-carousel--vertical.n-carousel--controls-end > .n-carousel__index {
+  right: auto;
+  left: 0;
+}
+
 _::-webkit-full-page-media,
 _:future,
 :root .n-carousel__content[data-sliding] {

@@ -77,6 +77,23 @@ pre {
       max-width: 25vw;
     }
   }
+
+  .source {
+    display: flex;
+
+    > * {
+      margin-inline-end: 5ch;
+    }
+    pre {
+      all: initial;
+      font: inherit;
+    }
+  }
+
+  a[href]:visited {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 code[class*="language-"] {
@@ -116,10 +133,14 @@ h2 {
   &:first-child {
     margin-top: 0;
   }
+}
 
-  &:after {
-    content: attr(data-version);
-  }
+h1:after {
+  content: attr(data-version);
+  padding-inline-start: 1ch;
+  font-size: 0.5em;
+  font-weight: normal;
+  vertical-align: super;
 }
 
 [href="n-carousel.min.css"],
