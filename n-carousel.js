@@ -684,20 +684,27 @@
         let el = e.target.closest(".n-carousel__content");
         let scrollable_ancestor = getScrollableAncestor(e.target);
 
+        // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
+
         if (e.deltaY < 0) {
-          // if (!scrollable_ancestor || scrollable_ancestor.scrollTop === 0) {
-          e.preventDefault();
-          slidePrevious(el);
-          // }
+          if (
+            !scrollable_ancestor ||
+            scrollable_ancestor.matches(".n-carousel__content") ||
+            scrollable_ancestor.scrollTop === 0
+          ) {
+            e.preventDefault();
+            slidePrevious(el);
+          }
         } else {
-          // if (
-          //   !scrollable_ancestor ||
-          //   scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
-          //     scrollable_ancestor.scrollHeight
-          // ) {
-          e.preventDefault();
-          slideNext(el);
-          // }
+          if (
+            !scrollable_ancestor ||
+            scrollable_ancestor.matches(".n-carousel__content") ||
+            scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
+              scrollable_ancestor.scrollHeight
+          ) {
+            e.preventDefault();
+            slideNext(el);
+          }
         }
       }
     }

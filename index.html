@@ -1152,6 +1152,13 @@
               ).dataset.size = `${parseFloat(text / 1024).toFixed(1)} KB`)
           );
       });
+
+      fetch(`package.json`)
+        .then((response) => response.json())
+        .then((text) => {
+          document.querySelector("h1").dataset.version =
+            text.version.split(".")[0] + "." + text.version.split(".")[1];
+        });
     </script>
   </body>
 </html>

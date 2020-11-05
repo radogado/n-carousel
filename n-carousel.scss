@@ -127,6 +127,15 @@
   }
 }
 
+[dir="rtl"] .n-carousel.n-carousel--vertical {
+  &.n-carousel--controls-end {
+    > .n-carousel__index {
+      right: auto;
+      left: 0;
+    }
+  }
+}
+
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
 
 _::-webkit-full-page-media,
