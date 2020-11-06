@@ -575,3 +575,21 @@ _:future,
     max-height: 100%;
   }
 }
+
+// Vertical, Controls outside
+
+// .n-carousel.n-carousel--vertical > .n-carousel__index {
+// 
+// position: absolute;
+// top: 0;
+// margin-inline-start: calc(-1 * var(--index-size, 3.25em));
+// max-height: 100%;
+// overflow: auto;
+// 
+// }
+// 
+// .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__content {
+// 
+//   padding-inline-end: var(--index-size, 3.25em);
+// 
+// }
