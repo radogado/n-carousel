@@ -58,12 +58,27 @@
   let observersOn = (el) => {
     setTimeout(() => {
       el.addEventListener("scroll", scrollStopped);
-      delete el.dataset.sliding;
+      delete el.parentNode.dataset.sliding;
+      if (
+        el.parentNode.matches(
+          ".n-carousel--vertical.n-carousel--controls-outside"
+        )
+      ) {
+        height_minus_index.observe(el.parentNode);
+      }
     }, 66);
   };
 
   let observersOff = (el) => {
     el.removeEventListener("scroll", scrollStopped);
+
+    if (
+      el.parentNode.matches(
+        ".n-carousel--vertical.n-carousel--controls-outside"
+      )
+    ) {
+      height_minus_index.unobserve(el.parentNode);
+    }
   };
 
   let inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
@@ -253,7 +268,7 @@
     // return;
     // Clear our timeout throughout the scroll
     let el = e.target;
-    if (!!el.dataset.sliding) {
+    if (!!el.parentNode.dataset.sliding) {
       // e.preventDefault();
       return;
     }
@@ -349,20 +364,20 @@
           }
           console.log("scroll end new height", new_height);
 
-          el.dataset.sliding = true;
+          el.parentNode.dataset.sliding = true;
 
           scrollBy(el, 0, offset_y, new_height).then((response) => {
             // Scroll by old height * index, last param is new height - old height?
 
             updateCarousel(el);
             setTimeout(() => {
-              delete el.dataset.sliding;
+              delete el.parentNode.dataset.sliding;
             }, 166);
           });
         } else {
           updateCarousel(el);
           setTimeout(() => {
-            delete el.dataset.sliding;
+            delete el.parentNode.dataset.sliding;
           }, 166);
         }
       }
@@ -374,10 +389,10 @@
 
     observersOff(el);
 
-    if (!el.dataset.sliding) {
+    if (!el.parentNode.dataset.sliding) {
       el.removeEventListener("scroll", scrollStopped);
 
-      el.dataset.sliding = true;
+      el.parentNode.dataset.sliding = true;
 
       let old_height = el.children[el.dataset.y].clientHeight;
 
@@ -543,7 +558,7 @@
       let slide = e.target;
       let el = slide.closest(".n-carousel__content");
 
-      if (!!slide.parentNode.dataset.active && !el.dataset.sliding) {
+      if (!!slide.parentNode.dataset.active && !el.parentNode.dataset.sliding) {
         el.style.height = `${slide.scrollHeight}px`;
       }
     });
@@ -555,7 +570,7 @@
 
       if (
         el.classList.contains("n-carousel--auto-height") &&
-        !!el.dataset.sliding
+        !!el.parentNode.dataset.sliding
       ) {
         return;
       }
@@ -578,6 +593,20 @@
         carousel.style.width = `${parseInt(
           getComputedStyle(carousel).width
         )}px`;
+      }
+    });
+  });
+
+  let height_minus_index = new ResizeObserver((entries) => {
+    // Observing the carousel wrapper
+    entries.forEach((e) => {
+      let el = e.target;
+      let index = el.querySelector(":scope > .n-carousel__index");
+      if (index && !el.dataset.sliding) {
+        el.style.removeProperty("--height-minus-index");
+        index.style.position = "absolute";
+        el.style.setProperty("--height-minus-index", `${el.scrollHeight}px`);
+        index.style.position = "";
       }
     });
   });
