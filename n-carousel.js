@@ -50,10 +50,9 @@
       : { x: scrollStartX(el), y: el.scrollTop };
 
   let isVertical = (el) =>
-    el.closest(".n-carousel").classList.contains("n-carousel--vertical");
+    el.closest(".n-carousel").matches(".n-carousel--vertical");
 
-  let isAuto = (el) =>
-    el.parentNode.classList.contains("n-carousel--auto-height");
+  let isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
 
   let observersOn = (el) => {
     setTimeout(() => {
@@ -97,7 +96,7 @@
       );
       if (
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        el.closest(".n-carousel").classList.contains("n-carousel--instant")
+        el.closest(".n-carousel").matches(".n-carousel--instant")
       ) {
         scrollToAuto(
           el,
@@ -117,6 +116,16 @@
 
       if (!!new_height) {
         el.style.height = getComputedStyle(el).height;
+        if (
+          el.parentNode.matches(
+            ".n-carousel--vertical.n-carousel--controls-outside"
+          )
+        ) {
+          el.parentNode.style.setProperty(
+            "--height-minus-index",
+            el.style.height
+          );
+        }
       } else {
         if (!isVertical(el)) {
           el.style.height = "";
@@ -495,7 +504,7 @@
 
     // 	console.log(e);
     let el = e.target;
-    if (el.classList.contains("n-carousel__content") && keys.includes(e.key)) {
+    if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
 
       e.preventDefault();
@@ -569,7 +578,7 @@
       let el = e.target;
 
       if (
-        el.classList.contains("n-carousel--auto-height") &&
+        el.matches(".n-carousel--auto-height") &&
         !!el.parentNode.dataset.sliding
       ) {
         return;
@@ -632,10 +641,7 @@
 
     let content = el.querySelector(":scope > .n-carousel__content");
     content.tabIndex = 0;
-    if (
-      el.classList.contains("n-carousel--vertical") &&
-      el.classList.contains("n-carousel--auto-height")
-    ) {
+    if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
       content.style.height = getComputedStyle(content).height;
       el.dataset.ready = true;
       content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
@@ -646,10 +652,7 @@
       el.dataset.ready = true;
 
       updateCarousel(content);
-      if (
-        el.classList.contains("n-carousel--vertical") &&
-        el.classList.contains("n-carousel--auto-height")
-      ) {
+      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
         // Vertical auto has a specified height which needs update on resize
         content
           .querySelectorAll(":scope > * > *")
@@ -657,7 +660,7 @@
       }
     });
 
-    if (el.classList.contains("n-carousel--auto-slide")) {
+    if (el.matches(".n-carousel--auto-slide")) {
       let auto_delay =
         (parseFloat(el.dataset.interval) * 1000 || default_interval) +
         (parseFloat(el.dataset.duration) * 1000 || default_duration);
