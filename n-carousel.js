@@ -123,7 +123,7 @@
         ) {
           el.parentNode.style.setProperty(
             "--height-minus-index",
-            el.style.height
+            `${new_height}px`
           );
         }
       } else {
