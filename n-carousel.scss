@@ -380,6 +380,7 @@ _:future,
   }
 
   &.n-carousel--vertical {
+    box-sizing: border-box;
     grid-template-areas:
       "i 	a1 	prev 	a2 	a2"
       "i	a3 	a3 		a3 	a3"
@@ -491,7 +492,6 @@ _:future,
     }
     &[data-sliding] {
       overflow: hidden;
-      box-sizing: border-box;
       > .n-carousel__index {
         position: absolute;
         margin-inline-start: calc(-1 * var(--index-width));

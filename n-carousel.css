@@ -284,6 +284,7 @@ _:future,
   text-align: end;
 }
 .n-carousel.n-carousel--vertical {
+  box-sizing: border-box;
   grid-template-areas: "i 	a1 	prev 	a2 	a2" "i	a3 	a3 		a3 	a3" "i 	a4 	next	a5 	a5";
 }
 .n-carousel.n-carousel--vertical > .n-carousel__index {
@@ -352,7 +353,6 @@ _:future,
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] {
   overflow: hidden;
-  box-sizing: border-box;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] > .n-carousel__index {
   position: absolute;
