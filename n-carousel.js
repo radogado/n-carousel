@@ -620,7 +620,8 @@
         );
         el.style.setProperty(
           "--index-width",
-          `${el.querySelector(":scope > .n-carousel__index").offsetWidth}px`
+          getComputedStyle(el.querySelector(":scope > .n-carousel__index"))
+            .width
         );
         index.style.position = "";
       }

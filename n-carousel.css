@@ -352,6 +352,7 @@ _:future,
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] {
   overflow: hidden;
+  box-sizing: border-box;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] > .n-carousel__index {
   position: absolute;
@@ -361,7 +362,7 @@ _:future,
   padding-inline-end: var(--index-width);
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding].n-carousel--controls-end > .n-carousel__index {
-  margin-inline-start: calc(1 * var(--index-width));
+  margin-inline-start: calc(-1px * var(--index-width) / 2);
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding]:not(.n-carousel--controls-end) {
   padding-inline-start: var(--index-width);
