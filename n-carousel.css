@@ -289,8 +289,9 @@ _:future,
 }
 .n-carousel.n-carousel--vertical > .n-carousel__index {
   align-self: center;
-  display: flex;
-  flex-direction: column;
+}
+.n-carousel.n-carousel--vertical > .n-carousel__index > * {
+  display: block;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-end {
   grid-template-areas: "a1 	a1 	prev	a2 	i" "a3		a3 	a3 		a3 	i" "a4 	a4 	next 	a5 	i";

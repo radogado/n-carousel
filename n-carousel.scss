@@ -388,8 +388,11 @@ _:future,
 
     > .n-carousel__index {
       align-self: center;
-      display: flex;
-      flex-direction: column;
+      // display: flex;
+      // flex-direction: column;
+      > * {
+        display: block;
+      }
     }
 
     &.n-carousel--controls-end {
