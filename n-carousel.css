@@ -350,6 +350,22 @@ _:future,
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
   max-height: var(--height-minus-index, none);
 }
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] {
+  overflow: hidden;
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] > .n-carousel__index {
+  position: absolute;
+  margin-inline-start: calc(-1 * var(--index-width));
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding].n-carousel--controls-end {
+  padding-inline-end: var(--index-width);
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding].n-carousel--controls-end > .n-carousel__index {
+  margin-inline-start: calc(1 * var(--index-width));
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding]:not(.n-carousel--controls-end) {
+  padding-inline-start: var(--index-width);
+}
 .n-carousel.n-carousel--tabs > .n-carousel__index {
   display: flex;
   flex-wrap: wrap;

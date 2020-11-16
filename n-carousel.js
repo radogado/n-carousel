@@ -116,16 +116,16 @@
 
       if (!!new_height) {
         el.style.height = getComputedStyle(el).height;
-        if (
-          el.parentNode.matches(
-            ".n-carousel--vertical.n-carousel--controls-outside"
-          )
-        ) {
-          el.parentNode.style.setProperty(
-            "--height-minus-index",
-            `${new_height}px`
-          );
-        }
+        // if (
+        //   el.parentNode.matches(
+        //     ".n-carousel--vertical.n-carousel--controls-outside"
+        //   )
+        // ) {
+        //   el.parentNode.style.setProperty(
+        //     "--height-minus-index",
+        //     `${new_height}px`
+        //   );
+        // }
       } else {
         if (!isVertical(el)) {
           el.style.height = "";
@@ -614,7 +614,14 @@
       if (index && !el.dataset.sliding) {
         el.style.removeProperty("--height-minus-index");
         index.style.position = "absolute";
-        el.style.setProperty("--height-minus-index", `${el.scrollHeight}px`);
+        el.style.setProperty(
+          "--height-minus-index",
+          `${el.querySelector(":scope > .n-carousel__content").offsetHeight}px`
+        );
+        el.style.setProperty(
+          "--index-width",
+          `${el.querySelector(":scope > .n-carousel__index").offsetWidth}px`
+        );
         index.style.position = "";
       }
     });

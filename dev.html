@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Native Carousel</title>
+    <link rel=icon href=./favicon.ico>
+
+    <!--
+🔨 2D version
+🔨 (Cross) dissolve option. Slides are stacked and transparent, their empty doubles on top are scrollable. Opacity = % of reveal by Intersection Observer.
+🔨 Optimise performance by displaying only nearby slides
+✅ Safari iMac 4K scrolling much slower when carousel is focused.
+✅ Tabs
+✅ Vertical version
+✅ Reduced motion support
+✅ Auto resize option
+✅ Slide by keys: Left, Right, Home, End (prevent default keys events on the carousel)
+✅ Animate scroll with requestAnimationFrame for Safari and custom duration support
+✅ Promise callback
+✅ Fire event on scroll end
+✅ Peek option 
+✅ Resize Observer to fix scroll offset on resize
+✅ Index buttons – last slide glitch
+
+-->
+
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=5,user-scalable=yes"
+    />
+    <link href="n-carousel.css" rel="styleSheet" />
+    <link href="demo.css" rel="styleSheet" />
+    <script src="n-carousel.js" type="module"></script>
+  </head>
+
+  <body>
+
+<h2 id="vertical2">Vertical auto height with outside controls</h2>
+
+<div
+  class="n-carousel n-carousel--vertical n-carousel--controls-outside n-carousel--controls-end n-carousel--auto-height"
+>
+  <div class="n-carousel__index">
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+    <button>7</button>
+  </div>
+
+  <div
+    class="n-carousel__content n-carousel--auto-slide-"
+    style="line-height: 100px; background: lightgrey"
+  >
+    <div style="background: lightblue">
+      <div>
+        One
+        <input type="text" />
+        <span>Span</span>
+      </div>
+    </div>
+
+    <div style="background: lightgreen">
+      <div>
+        <div>
+          Two<br />
+          2
+        </div>
+
+        <div class="n-carousel" style="line-height: initial">
+          <div class="n-carousel__content" style="--peek: 1em">
+            <div>Inner One</div>
+
+            <div>Inner Two</div>
+
+            <div>
+              Inner Three<br />
+              _
+            </div>
+          </div>
+
+          <div class="n-carousel__previous">
+            <button></button>
+          </div>
+
+          <div class="n-carousel__next">
+            <button></button>
+          </div>
+
+          <div class="n-carousel__index">
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: coral">
+      <div>
+        Three<br />
+        _<br />
+        _<br />
+        _
+      </div>
+    </div>
+
+    <div style="background: lightcoral">
+      <div>
+        Four<br />
+        _<br />
+        _
+      </div>
+    </div>
+
+    <div style="background: lightcoral">
+      <div>
+        Four<br />
+        _<br />
+        _
+      </div>
+    </div>
+    <div style="background: lightcoral">
+      <div>
+        Four<br />
+        _<br />
+        _
+      </div>
+    </div>
+    <div style="background: lightcoral">
+      <div>
+        Four<br />
+        _<br />
+        _
+      </div>
+    </div>
+  </div>
+
+  <div class="n-carousel__previous">
+    <button></button>
+  </div>
+
+  <div class="n-carousel__next">
+    <button></button>
+  </div>
+</div>
+<!--   </body>
+</html>
