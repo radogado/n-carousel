@@ -200,7 +200,7 @@ _:future,
   min-height: 100%;
 }
 
-> .n-carousel__content > :not([data-active]):not(:last-child) {
+.n-carousel__content > :not([data-active]):not(:last-child) {
   overflow: auto;
 }
 
@@ -384,6 +384,12 @@ _:future,
 }
 .n-carousel.n-carousel--tabs > .n-carousel__index button:focus {
   z-index: 0;
+}
+.n-carousel.n-carousel--tabs.n-carousel--vertical > .n-carousel__index {
+  display: block;
+}
+.n-carousel.n-carousel--tabs.n-carousel--vertical > .n-carousel__index > * {
+  width: 100%;
 }
 .n-carousel.n-carousel--tabs.n-carousel--tabs-align-end > .n-carousel__index button {
   text-align: end;

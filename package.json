@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "clean-css-cli": "^4.3.0",
+    "gzip-size": "^6.0.0",
+    "terser": "^5.4.0"
+  }
 }

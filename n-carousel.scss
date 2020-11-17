@@ -250,7 +250,7 @@ _:future,
   min-height: 100%;
 }
 
-> .n-carousel__content > :not([data-active]):not(:last-child) {
+.n-carousel__content > :not([data-active]):not(:last-child) {
   overflow: auto;
 }
 
@@ -529,6 +529,13 @@ _:future,
         &:focus {
           z-index: 0;
         }
+      }
+    }
+
+    &.n-carousel--vertical > .n-carousel__index {
+      display: block;
+      > * {
+        width: 100%;
       }
     }
 
