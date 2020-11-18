@@ -147,7 +147,7 @@ h1:after {
 [href="n-carousel.min.js"] {
   text-decoration: none;
 
-  &:after {
+  &:not([data-size="0.0 KB"]):after {
     content: attr(data-size);
     padding-inline-start: 1ch;
     min-width: 6ch;
