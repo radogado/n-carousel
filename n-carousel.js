@@ -56,8 +56,13 @@
 
   let observersOn = (el) => {
     setTimeout(() => {
-      el.addEventListener("scroll", scrollStopped);
+      // let x = el.scrollLeft;
+      // let y = el.scrollTop;
       delete el.parentNode.dataset.sliding;
+      // getComputedStyle(el);
+      // el.scrollLeft = x;
+      // el.scrollLeft = y;
+      el.addEventListener("scroll", scrollStopped);
       if (
         el.parentNode.matches(
           ".n-carousel--vertical.n-carousel--controls-outside"
@@ -442,7 +447,7 @@
         scroll_to_y,
         new_height === old_height ? false : Math.ceil(new_height)
       ).then((response) => {
-        updateCarousel(el); // Handled by scroll end
+        updateCarousel(el);
       });
     }
   };

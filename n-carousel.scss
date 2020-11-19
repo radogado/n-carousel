@@ -130,9 +130,12 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel[data-sliding] > .n-carousel__content {
   scroll-snap-type: both mandatory;
-  > * {
-    scroll-snap-align: center;
-  }
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel[data-sliding] > .n-carousel__content > * {
+  scroll-snap-align: center;
 }
 
 // Because macOS-only Safari can't swipe backwards when pointer events are re-enabled.

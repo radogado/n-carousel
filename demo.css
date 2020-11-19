@@ -93,7 +93,8 @@ pre {
 
 code[class*=language-] {
   font-family: monospace !important;
-  line-height: 1.4 !important;
+  line-height: 1.9 !important;
+  display: block;
 }
 
 .code {
@@ -138,14 +139,18 @@ h1:after {
 [href="n-carousel.min.js"] {
   text-decoration: none;
 }
-[href="n-carousel.min.css"]:not([data-size="0.0 KB"]):after,
-[href="n-carousel.min.js"]:not([data-size="0.0 KB"]):after {
+[href="n-carousel.min.css"]:after,
+[href="n-carousel.min.js"]:after {
   content: attr(data-size);
   padding-inline-start: 1ch;
   min-width: 6ch;
   display: inline-block;
   font-size: 0.75em;
   vertical-align: top;
+}
+[href="n-carousel.min.css"][data-size="0.0 KB"]:after,
+[href="n-carousel.min.js"][data-size="0.0 KB"]:after {
+  opacity: 0;
 }
 [href="n-carousel.min.css"] b,
 [href="n-carousel.min.js"] b {
