@@ -724,7 +724,8 @@
       console.log(e);
       console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
 
-      if (!isTrackpad) {
+      if (!isTrackpad || !!navigator.platform.match(/Win/)) {
+        // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
         // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
         let el = e.target.closest(".n-carousel__content");
         let scrollable_ancestor = getScrollableAncestor(e.target);
