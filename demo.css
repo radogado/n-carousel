@@ -159,4 +159,10 @@ h1:after {
   display: inline-block;
 }
 
+_::-webkit-full-page-media,
+_:future,
+:root .demo {
+  height: -webkit-fill-available;
+}
+
 /*# sourceMappingURL=demo.css.map */

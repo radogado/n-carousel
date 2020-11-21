@@ -166,3 +166,11 @@ h1:after {
     display: inline-block;
   }
 }
+
+// Safari only
+
+_::-webkit-full-page-media,
+_:future,
+:root .demo {
+  height: -webkit-fill-available;
+}
