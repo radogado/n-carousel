@@ -334,6 +334,7 @@ _:future,
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside {
   grid-template-areas: "i 		prev		a2" "i 		content  	a2" "i 		next	 	a2";
   grid-template-rows: auto 1fr auto;
+  padding-inline-start: var(--index-width);
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-align-start > .n-carousel__index {
   align-self: start;
@@ -346,28 +347,18 @@ _:future,
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-end {
   grid-template-areas: "a1 		prev		i" "a1 		content  	i" "a1 		next	 	i";
+  padding-inline-end: var(--index-width);
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-end.n-carousel--controls-align-start {
   grid-template-columns: auto 1fr auto;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
-  max-height: var(--height-minus-index, none);
-}
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] {
-  overflow: hidden;
-}
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding] > .n-carousel__index {
   position: absolute;
+  max-height: 100%;
   margin-inline-start: calc(-1 * var(--index-width));
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding].n-carousel--controls-end {
-  padding-inline-end: var(--index-width);
-}
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding].n-carousel--controls-end > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-end > .n-carousel__index {
   margin-inline-start: calc(-1px * var(--index-width) / 2);
-}
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-sliding]:not(.n-carousel--controls-end) {
-  padding-inline-start: var(--index-width);
 }
 .n-carousel.n-carousel--tabs > .n-carousel__index {
   display: flex;

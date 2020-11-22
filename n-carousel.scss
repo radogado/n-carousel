@@ -469,6 +469,7 @@ _:future,
       "i 		content  	a2"
       "i 		next	 	a2";
     grid-template-rows: auto 1fr auto;
+    padding-inline-start: var(--index-width);
 
     &.n-carousel--controls-align-start {
       > .n-carousel__index {
@@ -488,28 +489,21 @@ _:future,
         "a1 		prev		i"
         "a1 		content  	i"
         "a1 		next	 	i";
+      padding-inline-end: var(--index-width);
 
       &.n-carousel--controls-align-start {
         grid-template-columns: auto 1fr auto;
       }
     }
     > .n-carousel__index {
-      max-height: var(--height-minus-index, none);
+      // max-height: var(--height-minus-index, none);
+      position: absolute;
+      max-height: 100%;
+      margin-inline-start: calc(-1 * var(--index-width));
     }
-    &[data-sliding] {
-      overflow: hidden;
+    &.n-carousel--controls-end {
       > .n-carousel__index {
-        position: absolute;
-        margin-inline-start: calc(-1 * var(--index-width));
-      }
-      &.n-carousel--controls-end {
-        padding-inline-end: var(--index-width);
-        > .n-carousel__index {
-          margin-inline-start: calc(-1px * var(--index-width) / 2);
-        }
-      }
-      &:not(.n-carousel--controls-end) {
-        padding-inline-start: var(--index-width);
+        margin-inline-start: calc(-1px * var(--index-width) / 2);
       }
     }
   }
