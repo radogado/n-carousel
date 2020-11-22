@@ -619,10 +619,7 @@
       if (index && !el.dataset.sliding) {
         el.style.removeProperty("--height-minus-index");
         index.style.position = "absolute";
-        el.style.setProperty(
-          "--height-minus-index",
-          `${el.querySelector(":scope > .n-carousel__content").offsetHeight}px`
-        );
+        el.style.setProperty("--height-minus-index", `${el.offsetHeight}px`);
         el.style.setProperty(
           "--index-width",
           getComputedStyle(el.querySelector(":scope > .n-carousel__index"))
