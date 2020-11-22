@@ -353,11 +353,13 @@ _:future,
   grid-template-columns: auto 1fr auto;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
-  position: absolute;
   max-height: 100%;
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-ready] > .n-carousel__index {
+  position: absolute;
   margin-inline-start: calc(-1 * var(--index-width));
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-end > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside[data-ready].n-carousel--controls-end > .n-carousel__index {
   margin-inline-start: calc(-1px * var(--index-width) / 2);
 }
 .n-carousel.n-carousel--tabs > .n-carousel__index {

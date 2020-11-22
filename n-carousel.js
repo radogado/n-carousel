@@ -611,22 +611,26 @@
     });
   });
 
+  let setIndexWidth = (el) => {
+    let index = el.querySelector(":scope > .n-carousel__index");
+    if (index && !el.dataset.sliding) {
+      el.style.removeProperty("--height-minus-index");
+      index.style.position = "absolute";
+      el.style.setProperty("--height-minus-index", `${el.offsetHeight}px`);
+      el.style.setProperty(
+        "--index-width",
+        getComputedStyle(el.querySelector(":scope > .n-carousel__index")).width
+      );
+      index.style.position = "";
+    }
+  };
+
   let height_minus_index = new ResizeObserver((entries) => {
     // Observing the carousel wrapper
     entries.forEach((e) => {
       let el = e.target;
-      let index = el.querySelector(":scope > .n-carousel__index");
-      if (index && !el.dataset.sliding) {
-        el.style.removeProperty("--height-minus-index");
-        index.style.position = "absolute";
-        el.style.setProperty("--height-minus-index", `${el.offsetHeight}px`);
-        el.style.setProperty(
-          "--index-width",
-          getComputedStyle(el.querySelector(":scope > .n-carousel__index"))
-            .width
-        );
-        index.style.position = "";
-      }
+
+      setIndexWidth(el);
     });
   });
 
@@ -660,7 +664,7 @@
     window.requestAnimationFrame(() => {
       subpixel.observe(el);
       el.dataset.ready = true;
-
+      setIndexWidth(el);
       updateCarousel(content);
       if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
         // Vertical auto has a specified height which needs update on resize
