@@ -499,7 +499,7 @@ _:future,
       max-height: 100%;
     }
 
-    &[data-ready] {
+    &.n-carousel--auto-height[data-ready] {
       > .n-carousel__index {
         position: absolute;
         margin-inline-start: calc(-1 * var(--index-width));

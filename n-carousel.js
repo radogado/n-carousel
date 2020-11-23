@@ -65,7 +65,7 @@
       el.addEventListener("scroll", scrollStopped);
       if (
         el.parentNode.matches(
-          ".n-carousel--vertical.n-carousel--controls-outside"
+          ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
         )
       ) {
         height_minus_index.observe(el.parentNode);
@@ -78,7 +78,7 @@
 
     if (
       el.parentNode.matches(
-        ".n-carousel--vertical.n-carousel--controls-outside"
+        ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
       )
     ) {
       height_minus_index.unobserve(el.parentNode);
@@ -664,7 +664,13 @@
     window.requestAnimationFrame(() => {
       subpixel.observe(el);
       el.dataset.ready = true;
-      setIndexWidth(el);
+      if (
+        el.parentNode.matches(
+          ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
+        )
+      ) {
+        setIndexWidth(el);
+      }
       updateCarousel(content);
       if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
         // Vertical auto has a specified height which needs update on resize
