@@ -1,12 +1,12 @@
 # Native Carousel
 
 ```
-<link rel="styleSheet" href="n-carousel.css">
-<script src="n-carousel.js" type="module" async></script>
+<link rel="styleSheet" href="n-carousel.min.css">
+<script src="n-carousel.min.js" type="module" async></script>
 	
 <div class="n-carousel">
 
-	<div class="n-carousel__content" style="--peek: 5em;"">
+	<div class="n-carousel__content">
 		<div><div>One</div></div>
 		<div><div>Two</div></div>
 		<div><div>Three</div></div>
