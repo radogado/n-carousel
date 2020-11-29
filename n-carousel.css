@@ -54,6 +54,10 @@
 .n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height) > .n-carousel__content > * {
   overflow: auto;
 }
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not([data-ready]) > .n-carousel__content > :not(:first-child) {
+  height: 0;
+  overflow: visible;
+}
 .n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content {
   overflow-y: hidden;
 }
@@ -68,9 +72,14 @@
   flex-direction: column;
 }
 
+.n-carousel.n-carousel--vertical.n-carousel--auto-height:not([data-ready]) > .n-carousel__content > :not(:first-child) {
+  display: none;
+}
+.n-carousel.n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content {
+  height: 100%;
+}
 .n-carousel.n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
-  height: 100%;
   box-sizing: content-box;
 }
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
@@ -354,6 +363,9 @@ _:future,
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
   max-height: 100%;
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not([data-ready]) > .n-carousel__index {
+  max-height: 0;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready] > .n-carousel__index {
   position: absolute;

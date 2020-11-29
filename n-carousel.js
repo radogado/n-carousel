@@ -278,7 +278,15 @@
   var isResizing;
 
   let scrollStopped = (e) => {
-    // console.log("scroll ", e);
+    if (!!navigator.platform.match(/Win/)) {
+      // Scrolling is broken on Windows
+      console.log("scroll Windows", e);
+
+      e.stopPropagation();
+      e.preventDefault();
+      return;
+    }
+
     // return;
     // Clear our timeout throughout the scroll
     let el = e.target;
@@ -567,47 +575,56 @@
   };
 
   let verticalAutoObserver = new ResizeObserver((entries) => {
-    entries.forEach((e) => {
-      console.log("resized: ", e.target);
-      let slide = e.target;
-      let el = slide.closest(".n-carousel__content");
+    window.requestAnimationFrame(() => {
+      entries.forEach((e) => {
+        console.log("resized: ", e.target);
+        let slide = e.target;
+        let el = slide.closest(".n-carousel__content");
 
-      if (!!slide.parentNode.dataset.active && !el.parentNode.dataset.sliding) {
-        el.style.height = `${slide.scrollHeight}px`;
-      }
+        if (
+          !!slide.parentNode.dataset.active &&
+          !el.parentNode.dataset.sliding
+        ) {
+          el.style.height = `${slide.scrollHeight}px`;
+        }
+      });
     });
   });
 
   let subpixel = new ResizeObserver((entries) => {
-    entries.forEach((e) => {
-      let el = e.target;
+    window.requestAnimationFrame(() => {
+      entries.forEach((e) => {
+        let el = e.target;
 
-      if (
-        el.matches(".n-carousel--auto-height") &&
-        !!el.parentNode.dataset.sliding
-      ) {
-        return;
-      }
+        if (
+          el.matches(".n-carousel--auto-height") &&
+          !!el.parentNode.dataset.sliding
+        ) {
+          return;
+        }
 
-      // el.style.removeProperty("--subpixel-compensation");
+        // el.style.removeProperty("--subpixel-compensation");
 
-      // Round down the padding, because sub pixel padding + scrolling is a problem
-      let carousel = el.querySelector(":scope > .n-carousel__content");
+        // Round down the padding, because sub pixel padding + scrolling is a problem
+        let carousel = el.querySelector(":scope > .n-carousel__content");
 
-      carousel.style.width = "";
+        carousel.style.width = "";
 
-      let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
-      let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
+        let padding_horizontal = parseInt(
+          getComputedStyle(carousel).paddingLeft
+        );
+        let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
 
-      carousel.style.padding = isVertical(el)
-        ? `${padding_vertical}px 0`
-        : `0 ${padding_horizontal}px`;
+        carousel.style.padding = isVertical(el)
+          ? `${padding_vertical}px 0`
+          : `0 ${padding_horizontal}px`;
 
-      if (!isVertical(el)) {
-        carousel.style.width = `${parseInt(
-          getComputedStyle(carousel).width
-        )}px`;
-      }
+        if (!isVertical(el)) {
+          carousel.style.width = `${parseInt(
+            getComputedStyle(carousel).width
+          )}px`;
+        }
+      });
     });
   });
 
@@ -626,11 +643,13 @@
   };
 
   let height_minus_index = new ResizeObserver((entries) => {
-    // Observing the carousel wrapper
-    entries.forEach((e) => {
-      let el = e.target;
+    window.requestAnimationFrame(() => {
+      // Observing the carousel wrapper
+      entries.forEach((e) => {
+        let el = e.target;
 
-      setIndexWidth(el);
+        setIndexWidth(el);
+      });
     });
   });
 

@@ -63,8 +63,15 @@
       overflow: auto;
     }
   }
-  &.n-carousel--auto-height > {
-    .n-carousel__content {
+  &.n-carousel--auto-height {
+    &:not([data-ready]) {
+      > .n-carousel__content > :not(:first-child) {
+        height: 0;
+        overflow: visible;
+      }
+    }
+
+    > .n-carousel__content {
       overflow-y: hidden;
     }
   }
@@ -83,9 +90,25 @@
   flex-direction: column;
 }
 .n-carousel.n-carousel--vertical {
+  &.n-carousel--auto-height {
+    &:not([data-ready]) {
+      > .n-carousel__content {
+        // overflow: hidden;
+        > :not(:first-child) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &:not(.n-carousel--auto-height) {
+    > .n-carousel__content {
+      height: 100%;
+    }
+  }
+
   > .n-carousel__content {
     overflow-y: auto;
-    height: 100%;
     box-sizing: content-box;
 
     > * {
@@ -263,6 +286,7 @@ _:future,
   }
   &:not([data-sliding]) > .n-carousel__content {
     scroll-snap-type: both mandatory;
+    // scroll-snap-stop: always;
 
     > * {
       scroll-snap-align: center;
@@ -497,6 +521,12 @@ _:future,
     }
     > .n-carousel__index {
       max-height: 100%;
+    }
+
+    &:not([data-ready]) {
+      > .n-carousel__index {
+        max-height: 0;
+      }
     }
 
     &.n-carousel--auto-height[data-ready] {
