@@ -364,7 +364,7 @@ _:future,
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
   max-height: 100%;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not([data-ready]) > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height:not([data-ready]) > .n-carousel__index {
   max-height: 0;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready] > .n-carousel__index {
