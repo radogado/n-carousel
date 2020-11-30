@@ -26,7 +26,7 @@ body {
 .n-carousel__previous,
 .n-carousel__next {
   --control-bg: lightcoral;
-  --control-color: #fff;
+  --control-color: #670d5b;
 }
 
 .n-carousel__content {
