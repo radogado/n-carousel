@@ -530,6 +530,11 @@ _:future,
     }
 
     &.n-carousel--auto-height[data-ready] {
+      overflow: hidden;
+      &[data-sliding] > .n-carousel__index {
+        max-height: none;
+      }
+
       > .n-carousel__index {
         position: absolute;
         margin-inline-start: calc(-1 * var(--index-width));

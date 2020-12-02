@@ -367,6 +367,12 @@ _:future,
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height:not([data-ready]) > .n-carousel__index {
   max-height: 0;
 }
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready] {
+  overflow: hidden;
+}
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready][data-sliding] > .n-carousel__index {
+  max-height: none;
+}
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready] > .n-carousel__index {
   position: absolute;
   margin-inline-start: calc(-1 * var(--index-width));
