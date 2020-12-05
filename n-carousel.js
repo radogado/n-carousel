@@ -1,6 +1,6 @@
 (function () {
   function isElementInViewport(el) {
-    var rect = el.getBoundingClientRect();
+    let rect = el.getBoundingClientRect();
 
     return (
       rect.top >= 0 &&
@@ -31,9 +31,21 @@
     return false;
   };
 
-  let isRTL = (el) => getComputedStyle(el).direction === "rtl";
+  const isRTL = (el) => getComputedStyle(el).direction === "rtl";
 
-  let resize_observer_support = typeof ResizeObserver === "function";
+  const resize_observer_support = typeof ResizeObserver === "function";
+
+  const toggleFullScreen = (el) => {
+    el = el.closest(".n-carousel");
+
+    document.fullscreen || document.webkitIsFullScreen
+      ? !!document.exitFullscreen
+        ? document.exitFullscreen()
+        : document.webkitExitFullscreen()
+      : !!el.requestFullscreen
+      ? el.requestFullscreen()
+      : el.webkitRequestFullscreen();
+  };
 
   // 	let scrollStartX = el => isRTL(el) && isChrome ? el.scrollLeft : (isRTL(el) && !isChrome ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
 
@@ -788,16 +800,7 @@
       ":scope > .n-carousel__full-screen button"
     );
     if (full_screen) {
-      full_screen.onclick = (e) => {
-        let carousel = e.target.closest(".n-carousel");
-        document.fullscreen
-          ? !!document.exitFullscreen
-            ? document.exitFullscreen()
-            : document.webkitExitFullscreen()
-          : !!carousel.requestFullscreen
-          ? carousel.requestFullscreen()
-          : carousel.webkitRequestFullscreen();
-      };
+      full_screen.onclick = (e) => toggleFullScreen(e.target);
     }
   });
 })();
