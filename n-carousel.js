@@ -788,10 +788,16 @@
       ":scope > .n-carousel__full-screen button"
     );
     if (full_screen) {
-      full_screen.onclick = (e) =>
+      full_screen.onclick = (e) => {
+        let carousel = e.target.closest(".n-carousel");
         document.fullscreen
-          ? document.exitFullscreen()
-          : e.target.closest(".n-carousel").requestFullscreen();
+          ? !!document.exitFullscreen
+            ? document.exitFullscreen()
+            : document.webkitExitFullscreen()
+          : !!carousel.requestFullscreen
+          ? carousel.requestFullscreen()
+          : carousel.webkitRequestFullscreen();
+      };
     }
   });
 })();
