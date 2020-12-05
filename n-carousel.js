@@ -783,5 +783,15 @@
 
     content.addEventListener("mousewheel", detectTrackPad, false);
     content.addEventListener("DOMMouseScroll", detectTrackPad, false);
+
+    let full_screen = el.querySelector(
+      ":scope > .n-carousel__full-screen button"
+    );
+    if (full_screen) {
+      full_screen.onclick = (e) =>
+        document.fullscreen
+          ? document.exitFullscreen()
+          : e.target.closest(".n-carousel").requestFullscreen();
+    }
   });
 })();
