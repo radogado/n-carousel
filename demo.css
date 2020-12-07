@@ -24,7 +24,8 @@ body {
 
 .n-carousel__index,
 .n-carousel__previous,
-.n-carousel__next {
+.n-carousel__next,
+.n-carousel__full-screen {
   --control-bg: lightcoral;
   --control-color: #670d5b;
 }
