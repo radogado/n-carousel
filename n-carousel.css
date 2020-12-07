@@ -135,7 +135,7 @@ _:future,
   min-height: 42px;
   border-radius: 42px;
   cursor: pointer;
-  margin: 0.5em;
+  margin: 0.25em;
   font: inherit;
   display: inline-flex;
   justify-content: center;
@@ -289,14 +289,15 @@ _:future,
   align-self: start;
 }
 .n-carousel.n-carousel--controls-outside {
-  grid-template-areas: "f 	a1 			a1" "prev 	content  	next" "i 	i	 	i";
+  grid-template-areas: "f 	    content 	a1" "prev 	content  	next" "a2     content   a3" "i 	    i	 	      i";
   grid-template-columns: auto 1fr auto;
 }
 .n-carousel.n-carousel--controls-outside > .n-carousel__content {
   grid-area: content;
 }
 .n-carousel.n-carousel--controls-outside.n-carousel--controls-top {
-  grid-template-areas: "i 	i 		i" "prev 	content  	next" "a3 	a3	 		a3";
+  grid-template-areas: "f 	    i 	       i" "b1     content    b2" "prev 	content    next" "a1     content    a2";
+  grid-template-rows: auto auto 1fr auto;
 }
 .n-carousel.n-carousel--controls-outside.n-carousel--controls-align-start > .n-carousel__index {
   text-align: start;
