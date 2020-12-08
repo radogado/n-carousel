@@ -78,6 +78,9 @@
 .n-carousel.n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content {
   height: 100%;
 }
+.n-carousel.n-carousel--vertical:not(.n-carousel--auto-height):fullscreen > .n-carousel__content {
+  height: 100% !important;
+}
 .n-carousel.n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
   box-sizing: content-box;
@@ -275,6 +278,7 @@ _:future,
 }
 .n-carousel > .n-carousel__full-screen {
   grid-area: f;
+  justify-self: baseline;
 }
 .n-carousel.n-carousel--controls-start .n-carousel__index {
   justify-content: flex-start;
@@ -307,7 +311,8 @@ _:future,
 }
 .n-carousel.n-carousel--vertical {
   box-sizing: border-box;
-  grid-template-areas: "i 	a1 	prev 	a2 	a2" "i	a3 	a3 		a3 	a3" "i 	a4 	next	a5 	a5";
+  grid-template-areas: "f a1 prev a2 a2" "i a3 a3 a3 a3" "i a4 next a5 a5";
+  grid-template-rows: auto;
 }
 .n-carousel.n-carousel--vertical > .n-carousel__index {
   align-self: center;
@@ -316,11 +321,13 @@ _:future,
   display: block;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-end {
-  grid-template-areas: "a1 	a1 	prev	a2 	i" "a3		a3 	a3 		a3 	i" "a4 	a4 	next 	a5 	i";
+  grid-template-areas: "f 	a1 	prev	a2 	i" "a3		a3 	a3 		a3 	i" "a4 	a4 	next 	a5 	i";
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-end.n-carousel--controls-align-start:not(.n-carousel--controls-end) {
   grid-template: 1fr auto auto/auto auto 1fr auto;
-  grid-template-areas: "a1 	a1 	prev	a2 	i" "a3		a3 	a3 		a3 	i" "a4 	a4 	next 	a5 	b2";
+  grid-template-areas: "f 	a1 	prev	a2 	i" "a3		a3 	a3 		a3 	i" "a4 	a4 	next 	a5 	b2";
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-end.n-carousel--controls-align-start:not(.n-carousel--controls-end) > .n-carousel__index {
   align-self: start;
@@ -353,7 +360,7 @@ _:future,
   grid-template-areas: "b1 a1 prev a2 a2" "i a3 a3 a3 a3" "i a4 next a5 a5";
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside {
-  grid-template-areas: "i 		prev		a2" "i 		content  	a2" "i 		next	 	a2";
+  grid-template-areas: "f 		prev		a2" "i 		content  	a2" "i 		next	 	a2";
   grid-template-rows: auto 1fr auto;
   padding-inline-start: var(--index-width);
 }
@@ -367,7 +374,7 @@ _:future,
   align-self: end;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-end {
-  grid-template-areas: "a1 		prev		i" "a1 		content  	i" "a1 		next	 	i";
+  grid-template-areas: "f 		prev		i" "a1 		content  	i" "a1 		next	 	i";
   padding-inline-end: var(--index-width);
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--controls-end.n-carousel--controls-align-start {
