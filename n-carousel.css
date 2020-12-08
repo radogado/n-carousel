@@ -134,9 +134,9 @@ _:future,
   border: none;
   color: var(--control-color, #333);
   background: var(--control-bg, #eee);
-  min-width: 42px;
-  min-height: 42px;
-  border-radius: 42px;
+  min-width: 2.25em;
+  min-height: 2.25em;
+  border-radius: 2.25em;
   cursor: pointer;
   margin: 0.25em;
   font: inherit;
