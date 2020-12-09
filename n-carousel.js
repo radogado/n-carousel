@@ -47,27 +47,26 @@
       : el.webkitRequestFullscreen();
   };
 
-  // 	let scrollStartX = el => isRTL(el) && isChrome ? el.scrollLeft : (isRTL(el) && !isChrome ? -1 : 1) * el.scrollLeft; // Get correct start scroll position for LTR and RTL
+  const scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
 
-  let scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
-
-  let scrollToAuto = (el, x, y) => {
-    // console.log('scroll to auto: ', isRTL(el) ? -1 * Math.abs(x) : x, y);
+  const scrollToAuto = (el, x, y) => {
     el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y); // Scroll to correct scroll position for LTR and RTL
   };
 
-  let getScroll = (el) =>
+  const getScroll = (el) =>
     el === window
       ? { x: el.scrollX, y: el.scrollY }
       : { x: scrollStartX(el), y: el.scrollTop };
 
-  let isVertical = (el) =>
+  const isVertical = (el) =>
     el.closest(".n-carousel").matches(".n-carousel--vertical");
 
-  let isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
+  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
 
-  let observersOn = (el) => {
-    setTimeout(() => {
+  const observersOn = (el) => {
+    // setTimeout(() => {
+
+    window.requestAnimationFrame(() => {
       // let x = el.scrollLeft;
       // let y = el.scrollTop;
       delete el.parentNode.dataset.sliding;
@@ -82,10 +81,11 @@
       ) {
         height_minus_index.observe(el.parentNode);
       }
-    }, 66);
+    });
+    // }, 66);
   };
 
-  let observersOff = (el) => {
+  const observersOff = (el) => {
     el.removeEventListener("scroll", scrollStopped);
 
     if (
@@ -97,9 +97,40 @@
     }
   };
 
-  let inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
+  const inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
 
-  let scrollBy = (el, distanceX, distanceY, new_height) =>
+  const paddingX = (el) =>
+    parseInt(getComputedStyle(el).paddingInlineStart) * 2;
+
+  const paddingY = (el) => parseInt(getComputedStyle(el).paddingBlockStart) * 2;
+
+  const getControl = (carousel, control) => {
+    let detached_control = document.querySelector(
+      `${control}[data-for="${carousel.id}"]`
+    );
+    if (detached_control) {
+      return detached_control;
+    }
+
+    for (let el of carousel.children) {
+      if (el.matches(control)) {
+        return el;
+      }
+
+      if (!el.matches(".n-carousel__content") && el.querySelector(control)) {
+        return el.querySelector(control);
+      }
+    }
+  };
+
+  const closestCarousel = (el) =>
+    (
+      document.getElementById(
+        el.closest('[class*="n-carousel"]').dataset.for
+      ) || el.closest(".n-carousel")
+    ).querySelector(".n-carousel__content");
+
+  const scrollBy = (el, distanceX, distanceY, new_height) =>
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
@@ -124,6 +155,8 @@
         resolve(el);
         return;
       }
+
+      subpixel.unobserve(el.parentNode);
 
       let scroll_changing = true;
 
@@ -195,34 +228,10 @@
         requestAnimationFrame(draw);
       };
 
-      subpixel.unobserve(el.parentNode);
       requestAnimationFrame(startAnim);
     });
 
-  let paddingX = (el) => parseInt(getComputedStyle(el).paddingInlineStart) * 2;
-
-  let paddingY = (el) => parseInt(getComputedStyle(el).paddingBlockStart) * 2;
-
-  let getControl = (carousel, control) => {
-    let detached_control = document.querySelector(
-      `${control}[data-for="${carousel.id}"]`
-    );
-    if (detached_control) {
-      return detached_control;
-    }
-
-    for (let el of carousel.children) {
-      if (el.matches(control)) {
-        return el;
-      }
-
-      if (!el.matches(".n-carousel__content") && el.querySelector(control)) {
-        return el.querySelector(control);
-      }
-    }
-  };
-
-  let updateCarousel = (el) => {
+  const updateCarousel = (el) => {
     // Called on init and scroll end
 
     observersOff(el);
@@ -289,7 +298,7 @@
   var lastScrollY;
   var isResizing;
 
-  let scrollStopped = (e) => {
+  const scrollStopped = (e) => {
     if (!!navigator.platform.match(/Win/)) {
       // Scrolling is broken on Windows
       console.log("scroll Windows", e);
@@ -418,7 +427,7 @@
     }, 133);
   };
 
-  let slide = (el, offsetX, offsetY, index) => {
+  const slide = (el, offsetX, offsetY, index) => {
     clearTimeout(el.nCarouselTimeout);
 
     observersOff(el);
@@ -472,17 +481,17 @@
     }
   };
 
-  let slideNext = (el) => {
+  const slideNext = (el) => {
     let index = 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
     slideTo(el, index >= el.children.length - 1 ? 0 : index + 1);
   };
 
-  let slidePrevious = (el) => {
+  const slidePrevious = (el) => {
     let index = 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
     slideTo(el, index === 0 ? el.children.length - 1 : index - 1);
   };
 
-  let slideTo = (el, index) => {
+  const slideTo = (el, index) => {
     if (isVertical(el)) {
       slide(
         el,
@@ -499,23 +508,23 @@
     }
   };
 
-  let resizeObserverFallback = (e) => {
-    document.querySelectorAll(".n-carousel__content").forEach((el) => {
-      // Clear our timeout throughout the scroll
-      clearTimeout(isResizing);
+  //   const resizeObserverFallback = (e) => {
+  //     document.querySelectorAll(".n-carousel__content").forEach((el) => {
+  //       // Clear our timeout throughout the scroll
+  //       clearTimeout(isResizing);
+  //
+  //       // Set a timeout to run after scrolling ends
+  //       isResizing = setTimeout(function () {
+  //         scrollToAuto(
+  //           el,
+  //           el.offsetWidth * el.dataset.x - paddingX(el),
+  //           el.offsetHeight * el.dataset.y + paddingY(el)
+  //         );
+  //       }, 66);
+  //     });
+  //   };
 
-      // Set a timeout to run after scrolling ends
-      isResizing = setTimeout(function () {
-        scrollToAuto(
-          el,
-          el.offsetWidth * el.dataset.x - paddingX(el),
-          el.offsetHeight * el.dataset.y + paddingY(el)
-        );
-      }, 66);
-    });
-  };
-
-  let carouselKeys = (e) => {
+  const carouselKeys = (e) => {
     let keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
     // let keys_vertical = ["ArrowUp", "ArrowDown", "Home", "End"];
     // let keys_2d = [
@@ -567,26 +576,19 @@
     }
   };
 
-  let closestCarousel = (el) =>
-    (
-      document.getElementById(
-        el.closest('[class*="n-carousel"]').dataset.for
-      ) || el.closest(".n-carousel")
-    ).querySelector(".n-carousel__content");
-
-  let slidePreviousEvent = (e) =>
+  const slidePreviousEvent = (e) =>
     slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
 
-  let slideNextEvent = (e) =>
+  const slideNextEvent = (e) =>
     slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
 
-  let slideIndexEvent = (e) => {
+  const slideIndexEvent = (e) => {
     let el = e.target.closest("button");
     if (el)
       slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
   };
 
-  let verticalAutoObserver = new ResizeObserver((entries) => {
+  const verticalAutoObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         console.log("resized: ", e.target);
@@ -603,7 +605,7 @@
     });
   });
 
-  let subpixel = new ResizeObserver((entries) => {
+  const subpixel = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         let el = e.target;
@@ -640,7 +642,7 @@
     });
   });
 
-  let setIndexWidth = (el) => {
+  const setIndexWidth = (el) => {
     let index = el.querySelector(":scope > .n-carousel__index");
     if (index && !el.dataset.sliding) {
       el.style.removeProperty("--height-minus-index");
@@ -654,7 +656,7 @@
     }
   };
 
-  let height_minus_index = new ResizeObserver((entries) => {
+  const height_minus_index = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       // Observing the carousel wrapper
       entries.forEach((e) => {
@@ -750,7 +752,7 @@
 
     // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
 
-    function detectTrackPad(e) {
+    const detectTrackPad = (e) => {
       var isTrackpad = false;
       if (e.wheelDeltaY) {
         if (e.wheelDeltaY === e.deltaY * -3) {
@@ -791,12 +793,12 @@
           }
         }
       }
-    }
+    };
 
     content.addEventListener("mousewheel", detectTrackPad, false);
     content.addEventListener("DOMMouseScroll", detectTrackPad, false);
 
-    let full_screen = el.querySelector(
+    const full_screen = el.querySelector(
       ":scope > .n-carousel__full-screen button"
     );
     if (full_screen) {
