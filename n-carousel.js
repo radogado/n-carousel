@@ -66,14 +66,14 @@
   const observersOn = (el) => {
     // setTimeout(() => {
 
+    delete el.parentNode.dataset.sliding;
     window.requestAnimationFrame(() => {
       // let x = el.scrollLeft;
       // let y = el.scrollTop;
-      delete el.parentNode.dataset.sliding;
       // getComputedStyle(el);
       // el.scrollLeft = x;
       // el.scrollLeft = y;
-      el.addEventListener("scroll", scrollStopped);
+      el.addEventListener("scroll", scrollStopped, { passive: true });
       if (
         el.parentNode.matches(
           ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
@@ -87,14 +87,7 @@
 
   const observersOff = (el) => {
     el.removeEventListener("scroll", scrollStopped);
-
-    if (
-      el.parentNode.matches(
-        ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
-      )
-    ) {
-      height_minus_index.unobserve(el.parentNode);
-    }
+    height_minus_index.unobserve(el.parentNode);
   };
 
   const inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
@@ -134,14 +127,14 @@
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
-      console.log(
-        "scrolling by: x ",
-        distanceX,
-        " y ",
-        distanceY,
-        " height ",
-        new_height
-      );
+      // console.log(
+      //   "scrolling by: x ",
+      //   distanceX,
+      //   " y ",
+      //   distanceY,
+      //   " height ",
+      //   new_height
+      // );
       if (
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         el.closest(".n-carousel").matches(".n-carousel--instant")
@@ -243,7 +236,7 @@
       Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)))
     );
 
-    console.log("updateCarousel", el.scrollTop, el.offsetHeight);
+    // console.log("updateCarousel", el.scrollTop, el.offsetHeight);
 
     let active = isVertical(el) ? el.dataset.y : el.dataset.x;
 
@@ -251,7 +244,7 @@
       active = el.children.length - 1;
     }
 
-    console.log("updateCarousel", scrollStartX(el), "active", active);
+    // console.log("updateCarousel", scrollStartX(el), "active", active);
 
     let current_active = el.querySelector(":scope > [data-active]");
 
@@ -301,7 +294,7 @@
   const scrollStopped = (e) => {
     if (!!navigator.platform.match(/Win/)) {
       // Scrolling is broken on Windows
-      console.log("scroll Windows", e);
+      // console.log("scroll Windows", e);
 
       e.stopPropagation();
       e.preventDefault();
@@ -333,7 +326,7 @@
       let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
       let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
 
-      console.log("scrollStopped check", mod_x, mod_y);
+      // console.log("scrollStopped check", mod_x, mod_y);
 
       if (/* isChrome && */ mod_x !== 0 || mod_y !== 0) {
         // Stuck bc of Chrome bug when you scroll in both directions during snapping
@@ -344,7 +337,7 @@
         let new_y = Math.abs(
           Math.round(el.scrollTop / (el.offsetHeight - paddingY(el)))
         );
-        console.log("stuck", new_x, new_y);
+        // console.log("stuck", new_x, new_y);
         slideTo(el, isVertical(el) ? new_y : new_x);
         return;
       }
@@ -357,14 +350,14 @@
       ) {
         // Also if scroll is in snap position
         // 			console.log(lastScrollX, scrollStartX(el));
-        console.log(
-          "Scrolling has stopped.",
-          el,
-          scrollStartX(e.target),
-          lastScrollX,
-          el.scrollTop,
-          lastScrollY
-        );
+        // console.log(
+        //   "Scrolling has stopped.",
+        //   el,
+        //   scrollStartX(e.target),
+        //   lastScrollX,
+        //   el.scrollTop,
+        //   lastScrollY
+        // );
         // 			updateCarousel(el);
 
         observersOff(el);
@@ -405,7 +398,7 @@
           if (old_height === new_height) {
             new_height = false;
           }
-          console.log("scroll end new height", new_height);
+          // console.log("scroll end new height", new_height);
 
           el.parentNode.dataset.sliding = true;
 
@@ -433,8 +426,6 @@
     observersOff(el);
 
     if (!el.parentNode.dataset.sliding) {
-      el.removeEventListener("scroll", scrollStopped);
-
       el.parentNode.dataset.sliding = true;
 
       let old_height = el.children[el.dataset.y].clientHeight;
@@ -591,7 +582,7 @@
   const verticalAutoObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
-        console.log("resized: ", e.target);
+        // console.log("resized: ", e.target);
         let slide = e.target;
         let el = slide.closest(".n-carousel__content");
 
@@ -761,8 +752,8 @@
       } else if (e.deltaMode === 0) {
         isTrackpad = true;
       }
-      console.log(e);
-      console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
+      // console.log(e);
+      // console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
 
       if (!isTrackpad || !!navigator.platform.match(/Win/)) {
         // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
@@ -778,7 +769,7 @@
             scrollable_ancestor.matches(".n-carousel__content") ||
             scrollable_ancestor.scrollTop === 0
           ) {
-            e.preventDefault();
+            // e.preventDefault();
             slidePrevious(el);
           }
         } else {
@@ -788,15 +779,17 @@
             scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
               scrollable_ancestor.scrollHeight
           ) {
-            e.preventDefault();
+            // e.preventDefault();
             slideNext(el);
           }
         }
       }
     };
 
-    content.addEventListener("mousewheel", detectTrackPad, false);
-    content.addEventListener("DOMMouseScroll", detectTrackPad, false);
+    content.addEventListener("mousewheel", detectTrackPad, { passive: true });
+    content.addEventListener("DOMMouseScroll", detectTrackPad, {
+      passive: true,
+    });
 
     const full_screen = el.querySelector(
       ":scope > .n-carousel__full-screen button"

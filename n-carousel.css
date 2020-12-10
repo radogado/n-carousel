@@ -78,6 +78,9 @@
 .n-carousel.n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content {
   height: 100%;
 }
+.n-carousel.n-carousel--vertical:not(.n-carousel--auto-height):-webkit-full-screen > .n-carousel__content {
+  height: 100% !important;
+}
 .n-carousel.n-carousel--vertical:not(.n-carousel--auto-height):fullscreen > .n-carousel__content {
   height: 100% !important;
 }
@@ -428,6 +431,12 @@ _:future,
 .n-carousel.n-carousel--tabs > .n-carousel__previous,
 .n-carousel.n-carousel--tabs > .n-carousel__next {
   display: none;
+}
+.n-carousel:-webkit-full-screen {
+  background: #000;
+}
+.n-carousel:fullscreen {
+  background: #000;
 }
 
 @-moz-document url-prefix() {
