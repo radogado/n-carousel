@@ -66,7 +66,9 @@
   // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
 
   const detectTrackPad = (e) => {
-    if (!e.target.matches(".n-carousel__content")) {
+    let el = e.target;
+
+    if (!el.matches(".n-carousel__content")) {
       return;
     }
 
@@ -84,7 +86,8 @@
       console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
       // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
       // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
-      let el = e.target.closest(".n-carousel__content");
+      observersOff(el);
+
       let scrollable_ancestor = getScrollableAncestor(e.target);
 
       // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
@@ -113,8 +116,6 @@
   };
 
   const observersOn = (el) => {
-    // setTimeout(() => {
-
     delete el.parentNode.dataset.sliding;
     window.requestAnimationFrame(() => {
       // let x = el.scrollLeft;
@@ -122,7 +123,6 @@
       // getComputedStyle(el);
       // el.scrollLeft = x;
       // el.scrollLeft = y;
-      el.addEventListener("scroll", scrollStopped, { passive: true });
       if (
         el.parentNode.matches(
           ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
@@ -130,10 +130,16 @@
       ) {
         height_minus_index.observe(el.parentNode);
       }
-      el.addEventListener("mousewheel", detectTrackPad);
-      el.addEventListener("DOMMouseScroll", detectTrackPad);
+
+      if (!navigator.platform.match(/Win/)) {
+        el.addEventListener("scroll", scrollStopped, { passive: true });
+      } else {
+        el.addEventListener("mousewheel", detectTrackPad, { passive: true });
+        el.addEventListener("DOMMouseScroll", detectTrackPad, {
+          passive: true,
+        });
+      }
     });
-    // }, 66);
   };
 
   const observersOff = (el) => {
@@ -251,8 +257,11 @@
           if (new_height) {
             el.style.height = `${Math.ceil(new_height)}px`;
           }
-          resolve(el);
           subpixel.observe(el.parentNode);
+          window.requestAnimationFrame(() => {
+            updateCarousel(el);
+            resolve(el);
+          });
           return;
         }
         if (now - start >= duration) stop = true;
@@ -281,7 +290,7 @@
     // Called on init and scroll end
 
     observersOff(el);
-    delete el.dataset.touchend;
+
     el.dataset.x = Math.abs(
       Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el)))
     );
@@ -353,22 +362,19 @@
       e.preventDefault();
       return;
     }
-    if (!e.target.matches(".n-carousel__content")) {
-      return;
-    }
-
     // return;
     // Clear our timeout throughout the scroll
     let el = e.target;
-    if (!!el.parentNode.dataset.sliding) {
-      // e.preventDefault();
-      return;
-    }
 
     let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
     let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
 
-    if (mod_x !== 0 || mod_y !== 0) {
+    if (
+      mod_x !== 0 ||
+      mod_y !== 0 ||
+      !!el.parentNode.dataset.sliding ||
+      !el.matches(".n-carousel__content")
+    ) {
       return;
     }
 
@@ -458,19 +464,11 @@
 
           el.parentNode.dataset.sliding = true;
 
-          scrollBy(el, 0, offset_y, new_height).then((response) => {
-            // Scroll by old height * index, last param is new height - old height?
-
-            updateCarousel(el);
-            setTimeout(() => {
-              delete el.parentNode.dataset.sliding;
-            }, 166);
+          window.requestAnimationFrame(() => {
+            scrollBy(el, 0, offset_y, new_height);
           });
         } else {
           updateCarousel(el);
-          setTimeout(() => {
-            delete el.parentNode.dataset.sliding;
-          }, 166);
         }
       }
     }, 133);
@@ -517,13 +515,13 @@
         ? offsetY - index * old_height + index * new_height
         : 0;
 
-      scrollBy(
-        el,
-        offsetX,
-        scroll_to_y,
-        new_height === old_height ? false : Math.ceil(new_height)
-      ).then((response) => {
-        updateCarousel(el);
+      window.requestAnimationFrame(() => {
+        scrollBy(
+          el,
+          offsetX,
+          scroll_to_y,
+          new_height === old_height ? false : Math.ceil(new_height)
+        );
       });
     }
   };
