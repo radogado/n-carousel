@@ -63,6 +63,55 @@
 
   const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
 
+  // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
+
+  const detectTrackPad = (e) => {
+    if (!e.target.matches(".n-carousel__content")) {
+      return;
+    }
+
+    var isTrackpad = false;
+    if (e.wheelDeltaY) {
+      if (e.wheelDeltaY === e.deltaY * -3) {
+        isTrackpad = true;
+      }
+    } else if (e.deltaMode === 0) {
+      isTrackpad = true;
+    }
+    console.log(e);
+
+    if (!isTrackpad || !!navigator.platform.match(/Win/)) {
+      console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
+      // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
+      // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
+      let el = e.target.closest(".n-carousel__content");
+      let scrollable_ancestor = getScrollableAncestor(e.target);
+
+      // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
+
+      if (e.deltaY < 0) {
+        if (
+          !scrollable_ancestor ||
+          scrollable_ancestor.matches(".n-carousel__content") ||
+          scrollable_ancestor.scrollTop === 0
+        ) {
+          // e.preventDefault();
+          slidePrevious(el);
+        }
+      } else {
+        if (
+          !scrollable_ancestor ||
+          scrollable_ancestor.matches(".n-carousel__content") ||
+          scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
+            scrollable_ancestor.scrollHeight
+        ) {
+          // e.preventDefault();
+          slideNext(el);
+        }
+      }
+    }
+  };
+
   const observersOn = (el) => {
     // setTimeout(() => {
 
@@ -81,6 +130,8 @@
       ) {
         height_minus_index.observe(el.parentNode);
       }
+      el.addEventListener("mousewheel", detectTrackPad);
+      el.addEventListener("DOMMouseScroll", detectTrackPad);
     });
     // }, 66);
   };
@@ -88,6 +139,8 @@
   const observersOff = (el) => {
     el.removeEventListener("scroll", scrollStopped);
     height_minus_index.unobserve(el.parentNode);
+    el.removeEventListener("mousewheel", detectTrackPad);
+    el.removeEventListener("DOMMouseScroll", detectTrackPad);
   };
 
   const inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
@@ -298,6 +351,9 @@
 
       e.stopPropagation();
       e.preventDefault();
+      return;
+    }
+    if (!e.target.matches(".n-carousel__content")) {
       return;
     }
 
@@ -685,6 +741,20 @@
       content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
     }
 
+    if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+      // Vertical auto has a specified height which needs update on resize
+      content
+        .querySelectorAll(":scope > * > *")
+        .forEach((el) => verticalAutoObserver.observe(el));
+    }
+
+    const full_screen = el.querySelector(
+      ":scope > .n-carousel__full-screen button"
+    );
+    if (full_screen) {
+      full_screen.onclick = (e) => toggleFullScreen(e.target);
+    }
+
     window.requestAnimationFrame(() => {
       subpixel.observe(el);
       el.dataset.ready = true;
@@ -696,106 +766,28 @@
         setIndexWidth(el);
       }
       updateCarousel(content);
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        // Vertical auto has a specified height which needs update on resize
-        content
-          .querySelectorAll(":scope > * > *")
-          .forEach((el) => verticalAutoObserver.observe(el));
-      }
-    });
 
-    if (el.matches(".n-carousel--auto-slide")) {
-      let auto_delay =
-        (parseFloat(el.dataset.interval) * 1000 || default_interval) +
-        (parseFloat(el.dataset.duration) * 1000 || default_duration);
+      if (el.matches(".n-carousel--auto-slide")) {
+        let auto_delay =
+          (parseFloat(el.dataset.interval) * 1000 || default_interval) +
+          (parseFloat(el.dataset.duration) * 1000 || default_duration);
 
-      let carouselTimeout = () => {
-        if (isElementInViewport(content)) {
-          slideNext(content);
-        }
-        content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
-      };
-
-      content.nCarouselTimeout = setTimeout(
-        carouselTimeout,
-        parseFloat(el.dataset.interval) * 1000 || default_interval
-      );
-
-      content.addEventListener("pointerenter", (e) =>
-        clearTimeout(e.target.nCarouselTimeout)
-      );
-    }
-
-    content.addEventListener("focusin", (e) => {
-      // console.log(e.target);
-      let el = e.target.closest(".n-carousel__content > *");
-      if (el) {
-        // let index = [...el.parentNode.children].indexOf(el);
-        // let carousel = el.closest(".n-carousel__content");
-        // let current_index = parseInt(
-        //   isVertical(carousel) ? carousel.dataset.y : carousel.dataset.x
-        // );
-        // if (current_index !== index) {
-        //   slideTo(carousel, index);
-        // }
-      }
-    });
-
-    // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
-
-    const detectTrackPad = (e) => {
-      var isTrackpad = false;
-      if (e.wheelDeltaY) {
-        if (e.wheelDeltaY === e.deltaY * -3) {
-          isTrackpad = true;
-        }
-      } else if (e.deltaMode === 0) {
-        isTrackpad = true;
-      }
-      // console.log(e);
-      // console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
-
-      if (!isTrackpad || !!navigator.platform.match(/Win/)) {
-        // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
-        // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
-        let el = e.target.closest(".n-carousel__content");
-        let scrollable_ancestor = getScrollableAncestor(e.target);
-
-        // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
-
-        if (e.deltaY < 0) {
-          if (
-            !scrollable_ancestor ||
-            scrollable_ancestor.matches(".n-carousel__content") ||
-            scrollable_ancestor.scrollTop === 0
-          ) {
-            // e.preventDefault();
-            slidePrevious(el);
+        let carouselTimeout = () => {
+          if (isElementInViewport(content)) {
+            slideNext(content);
           }
-        } else {
-          if (
-            !scrollable_ancestor ||
-            scrollable_ancestor.matches(".n-carousel__content") ||
-            scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
-              scrollable_ancestor.scrollHeight
-          ) {
-            // e.preventDefault();
-            slideNext(el);
-          }
-        }
+          content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
+        };
+
+        content.nCarouselTimeout = setTimeout(
+          carouselTimeout,
+          parseFloat(el.dataset.interval) * 1000 || default_interval
+        );
+
+        content.addEventListener("pointerenter", (e) =>
+          clearTimeout(e.target.nCarouselTimeout)
+        );
       }
-    };
-
-    content.addEventListener("mousewheel", detectTrackPad, { passive: true });
-    content.addEventListener("DOMMouseScroll", detectTrackPad, {
-      passive: true,
     });
-
-    const full_screen = el.querySelector(
-      ":scope > .n-carousel__full-screen button"
-    );
-    if (full_screen) {
-      full_screen.onclick = (e) => toggleFullScreen(e.target);
-    }
   });
 })();
