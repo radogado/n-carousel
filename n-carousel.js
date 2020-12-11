@@ -49,7 +49,7 @@
 
   const scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
 
-  const scrollToAuto = (el, x, y) => {
+  const scrollTo = (el, x, y) => {
     el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y); // Scroll to correct scroll position for LTR and RTL
   };
 
@@ -182,7 +182,7 @@
       ) || el.closest(".n-carousel")
     ).querySelector(".n-carousel__content");
 
-  const scrollBy = (el, distanceX, distanceY, new_height) =>
+  const scrollAnimate = (el, distanceX, distanceY, new_height) =>
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
@@ -198,11 +198,7 @@
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         el.closest(".n-carousel").matches(".n-carousel--instant")
       ) {
-        scrollToAuto(
-          el,
-          getScroll(el).x + distanceX,
-          getScroll(el).y + distanceY
-        );
+        scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
         el.style.height = `${new_height}px`;
         resolve(el);
         return;
@@ -253,7 +249,7 @@
 
       let draw = (now) => {
         if (stop) {
-          scrollToAuto(el, startx + distanceX, starty + distanceY);
+          scrollTo(el, startx + distanceX, starty + distanceY);
           if (new_height) {
             el.style.height = `${Math.ceil(new_height)}px`;
           }
@@ -271,7 +267,7 @@
         var y = starty + distanceY * val;
 
         if (scroll_changing) {
-          scrollToAuto(el, x, y);
+          scrollTo(el, x, y);
         }
 
         if (new_height) {
@@ -453,7 +449,7 @@
             el.classList.remove("n-measure");
 
             el.children[new_index].style.height = "";
-            scrollToAuto(el, lastScrollX, lastScrollY);
+            scrollTo(el, lastScrollX, lastScrollY);
             var offset_y = 0;
           }
 
@@ -465,7 +461,7 @@
           el.parentNode.dataset.sliding = true;
 
           window.requestAnimationFrame(() => {
-            scrollBy(el, 0, offset_y, new_height);
+            scrollAnimate(el, 0, offset_y, new_height);
           });
         } else {
           updateCarousel(el);
@@ -507,8 +503,8 @@
         }
         el.children[index].style.width = el.children[index].style.height = "";
 
-        scrollToAuto(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
-        scrollToAuto(el, old_scroll_left, old_scroll_top);
+        scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
+        scrollTo(el, old_scroll_left, old_scroll_top);
       }
 
       let scroll_to_y = isVertical(el)
@@ -516,7 +512,7 @@
         : 0;
 
       window.requestAnimationFrame(() => {
-        scrollBy(
+        scrollAnimate(
           el,
           offsetX,
           scroll_to_y,
@@ -560,7 +556,7 @@
   //
   //       // Set a timeout to run after scrolling ends
   //       isResizing = setTimeout(function () {
-  //         scrollToAuto(
+  //         scrollTo(
   //           el,
   //           el.offsetWidth * el.dataset.x - paddingX(el),
   //           el.offsetHeight * el.dataset.y + paddingY(el)
