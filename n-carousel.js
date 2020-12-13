@@ -66,11 +66,12 @@
   // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
 
   const detectTrackPad = (e) => {
+    // console.log(e);
     let el = e.target;
 
-    if (!el.matches(".n-carousel__content")) {
-      return;
-    }
+    // if (!el.matches(".n-carousel__content")) {
+    //   return;
+    // }
 
     var isTrackpad = false;
     if (e.wheelDeltaY) {
@@ -80,39 +81,38 @@
     } else if (e.deltaMode === 0) {
       isTrackpad = true;
     }
-    console.log(e);
 
-    if (!isTrackpad || !!navigator.platform.match(/Win/)) {
-      console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
-      // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
-      // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
-      observersOff(el);
+    console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
+    // if (!isTrackpad || !!navigator.platform.match(/Win/)) {
+    // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
+    // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
+    observersOff(el);
 
-      let scrollable_ancestor = getScrollableAncestor(e.target);
+    let scrollable_ancestor = getScrollableAncestor(e.target);
 
-      // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
+    // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
 
-      if (e.deltaY < 0) {
-        if (
-          !scrollable_ancestor ||
-          scrollable_ancestor.matches(".n-carousel__content") ||
-          scrollable_ancestor.scrollTop === 0
-        ) {
-          // e.preventDefault();
-          slidePrevious(el);
-        }
-      } else {
-        if (
-          !scrollable_ancestor ||
-          scrollable_ancestor.matches(".n-carousel__content") ||
-          scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
-            scrollable_ancestor.scrollHeight
-        ) {
-          // e.preventDefault();
-          slideNext(el);
-        }
+    if (e.deltaY < 0) {
+      if (
+        !scrollable_ancestor ||
+        scrollable_ancestor.matches(".n-carousel__content") ||
+        scrollable_ancestor.scrollTop === 0
+      ) {
+        e.preventDefault();
+        slidePrevious(el);
+      }
+    } else {
+      if (
+        !scrollable_ancestor ||
+        scrollable_ancestor.matches(".n-carousel__content") ||
+        scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
+          scrollable_ancestor.scrollHeight
+      ) {
+        e.preventDefault();
+        slideNext(el);
       }
     }
+    // }
   };
 
   const observersOn = (el) => {
@@ -131,14 +131,14 @@
         height_minus_index.observe(el.parentNode);
       }
 
-      if (!navigator.platform.match(/Win/)) {
-        el.addEventListener("scroll", scrollStopped, { passive: true });
-      } else {
-        el.addEventListener("mousewheel", detectTrackPad, { passive: true });
-        el.addEventListener("DOMMouseScroll", detectTrackPad, {
-          passive: true,
-        });
-      }
+      el.addEventListener("scroll", scrollStopped, { passive: true });
+
+      // if (!navigator.platform.match(/Win/)) {
+      //   el.addEventListener("scroll", scrollStopped, { passive: true });
+      // } else {
+      //   el.addEventListener("mousewheel", detectTrackPad);
+      //   el.addEventListener("DOMMouseScroll", detectTrackPad);
+      // }
     });
   };
 
@@ -350,16 +350,17 @@
   var isResizing;
 
   const scrollStopped = (e) => {
-    if (!!navigator.platform.match(/Win/)) {
-      // Scrolling is broken on Windows
-      // console.log("scroll Windows", e);
-
-      e.stopPropagation();
-      e.preventDefault();
-      return;
-    }
+    //     if (!!navigator.platform.match(/Win/)) {
+    //       // Scrolling is broken on Windows
+    //       // console.log("scroll Windows", e);
+    //
+    //       e.stopPropagation();
+    //       e.preventDefault();
+    //       return;
+    //     }
     // return;
     // Clear our timeout throughout the scroll
+    console.log("scroll stopped", e);
     let el = e.target;
 
     let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
@@ -664,6 +665,7 @@
         let carousel = el.querySelector(":scope > .n-carousel__content");
 
         carousel.style.width = "";
+        carousel.style.height = "";
 
         let padding_horizontal = parseInt(
           getComputedStyle(carousel).paddingLeft
@@ -674,7 +676,11 @@
           ? `${padding_vertical}px 0`
           : `0 ${padding_horizontal}px`;
 
-        if (!isVertical(el)) {
+        if (isVertical(el)) {
+          carousel.style.height = `${parseInt(
+            getComputedStyle(carousel).height
+          )}px`;
+        } else {
           carousel.style.width = `${parseInt(
             getComputedStyle(carousel).width
           )}px`;
