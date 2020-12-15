@@ -65,55 +65,55 @@
 
   // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
 
-  const detectTrackPad = (e) => {
-    // console.log(e);
-    let el = e.target;
-
-    // if (!el.matches(".n-carousel__content")) {
-    //   return;
-    // }
-
-    var isTrackpad = false;
-    if (e.wheelDeltaY) {
-      if (e.wheelDeltaY === e.deltaY * -3) {
-        isTrackpad = true;
-      }
-    } else if (e.deltaMode === 0) {
-      isTrackpad = true;
-    }
-
-    console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
-    // if (!isTrackpad || !!navigator.platform.match(/Win/)) {
-    // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
-    // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
-    observersOff(el);
-
-    let scrollable_ancestor = getScrollableAncestor(e.target);
-
-    // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
-
-    if (e.deltaY < 0) {
-      if (
-        !scrollable_ancestor ||
-        scrollable_ancestor.matches(".n-carousel__content") ||
-        scrollable_ancestor.scrollTop === 0
-      ) {
-        e.preventDefault();
-        slidePrevious(el);
-      }
-    } else {
-      if (
-        !scrollable_ancestor ||
-        scrollable_ancestor.matches(".n-carousel__content") ||
-        scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
-          scrollable_ancestor.scrollHeight
-      ) {
-        e.preventDefault();
-        slideNext(el);
-      }
-    }
-    // }
-  };
+  //   const detectTrackPad = (e) => {
+  //     // console.log(e);
+  //     let el = e.target;
+  //
+  //     // if (!el.matches(".n-carousel__content")) {
+  //     //   return;
+  //     // }
+  //
+  //     var isTrackpad = false;
+  //     if (e.wheelDeltaY) {
+  //       if (e.wheelDeltaY === e.deltaY * -3) {
+  //         isTrackpad = true;
+  //       }
+  //     } else if (e.deltaMode === 0) {
+  //       isTrackpad = true;
+  //     }
+  //
+  //     console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
+  //     // if (!isTrackpad || !!navigator.platform.match(/Win/)) {
+  //     // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
+  //     // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
+  //     observersOff(el);
+  //
+  //     let scrollable_ancestor = getScrollableAncestor(e.target);
+  //
+  //     // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
+  //
+  //     if (e.deltaY < 0) {
+  //       if (
+  //         !scrollable_ancestor ||
+  //         scrollable_ancestor.matches(".n-carousel__content") ||
+  //         scrollable_ancestor.scrollTop === 0
+  //       ) {
+  //         e.preventDefault();
+  //         slidePrevious(el);
+  //       }
+  //     } else {
+  //       if (
+  //         !scrollable_ancestor ||
+  //         scrollable_ancestor.matches(".n-carousel__content") ||
+  //         scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
+  //           scrollable_ancestor.scrollHeight
+  //       ) {
+  //         e.preventDefault();
+  //         slideNext(el);
+  //       }
+  //     }
+  //     // }
+  //   };
 
   const observersOn = (el) => {
     delete el.parentNode.dataset.sliding;
@@ -145,8 +145,8 @@
   const observersOff = (el) => {
     el.removeEventListener("scroll", scrollStop);
     height_minus_index.unobserve(el.parentNode);
-    el.removeEventListener("mousewheel", detectTrackPad);
-    el.removeEventListener("DOMMouseScroll", detectTrackPad);
+    // el.removeEventListener("mousewheel", detectTrackPad);
+    // el.removeEventListener("DOMMouseScroll", detectTrackPad);
   };
 
   const inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
