@@ -90,16 +90,16 @@
   flex-direction: column;
 }
 .n-carousel.n-carousel--vertical {
-  &.n-carousel--auto-height {
-    &:not([data-ready]) {
-      > .n-carousel__content {
-        // overflow: hidden;
-        > :not(:first-child) {
-          display: none;
-        }
+  // &.n-carousel--auto-height {
+  &:not([data-ready]) {
+    > .n-carousel__content {
+      // overflow: hidden;
+      > :not(:first-child) {
+        display: none;
       }
     }
   }
+  // }
 
   &:not(.n-carousel--auto-height) {
     > .n-carousel__content {
@@ -544,6 +544,7 @@ _:future,
         "a1 		content  	i"
         "a1 		next	 	i";
       padding-inline-end: var(--index-width);
+      padding-inline-start: 0;
 
       &.n-carousel--controls-align-start {
         grid-template-columns: auto 1fr auto;

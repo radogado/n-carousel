@@ -654,6 +654,8 @@
       entries.forEach((e) => {
         let el = e.target;
 
+        return;
+
         if (
           el.matches(".n-carousel--auto-height") &&
           !!el.parentNode.dataset.sliding
@@ -665,9 +667,7 @@
 
         // Round down the padding, because sub pixel padding + scrolling is a problem
         let carousel = el.querySelector(":scope > .n-carousel__content");
-
-        carousel.style.width = "";
-        carousel.style.height = "";
+        // observersOff(carousel);
 
         let padding_horizontal = parseInt(
           getComputedStyle(carousel).paddingLeft
@@ -679,14 +679,25 @@
           : `0 ${padding_horizontal}px`;
 
         if (isVertical(el)) {
-          carousel.style.height = `${parseInt(
-            getComputedStyle(carousel).height
-          )}px`;
+          if (!isAuto(el)) {
+            let slide = carousel.querySelector(":scope > [data-active]");
+            carousel.style.height = "";
+            carousel.style.height = `${parseInt(
+              getComputedStyle(slide).height
+            )}px`;
+            // carousel.scrollTo(
+            //   0,
+            //   carousel.style.height * [carousel.children].indexOf(slide)
+            // );
+          }
         } else {
+          carousel.style.width = "";
           carousel.style.width = `${parseInt(
             getComputedStyle(carousel).width
           )}px`;
         }
+
+        // observersOn(carousel);
       });
     });
   });
