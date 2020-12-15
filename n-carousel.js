@@ -131,10 +131,10 @@
         height_minus_index.observe(el.parentNode);
       }
 
-      el.addEventListener("scroll", scrollStopped, { passive: true });
+      el.addEventListener("scroll", scrollStop, { passive: true });
 
       // if (!navigator.platform.match(/Win/)) {
-      //   el.addEventListener("scroll", scrollStopped, { passive: true });
+      //   el.addEventListener("scroll", scrollStop, { passive: true });
       // } else {
       //   el.addEventListener("mousewheel", detectTrackPad);
       //   el.addEventListener("DOMMouseScroll", detectTrackPad);
@@ -143,7 +143,7 @@
   };
 
   const observersOff = (el) => {
-    el.removeEventListener("scroll", scrollStopped);
+    el.removeEventListener("scroll", scrollStop);
     height_minus_index.unobserve(el.parentNode);
     el.removeEventListener("mousewheel", detectTrackPad);
     el.removeEventListener("DOMMouseScroll", detectTrackPad);
@@ -349,7 +349,7 @@
   var lastScrollY;
   var isResizing;
 
-  const scrollStopped = (e) => {
+  const scrollStop = (e) => {
     //     if (!!navigator.platform.match(/Win/)) {
     //       // Scrolling is broken on Windows
     //       // console.log("scroll Windows", e);
@@ -360,11 +360,13 @@
     //     }
     // return;
     // Clear our timeout throughout the scroll
-    console.log("scroll stopped", e);
+    // console.log("scroll stopped", e);
     let el = e.target;
 
     let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
-    let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
+    let mod_y = Math.round(el.scrollTop) % (el.offsetHeight - paddingY(el)); // scrollTop rounded, because Windows Chrome positions it in subpixel on even slides
+
+    console.log(mod_x, mod_y);
 
     if (
       mod_x !== 0 ||
@@ -385,7 +387,7 @@
       let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
       let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
 
-      // console.log("scrollStopped check", mod_x, mod_y);
+      // console.log("scrollStop check", mod_x, mod_y);
 
       if (/* isChrome && */ mod_x !== 0 || mod_y !== 0) {
         // Stuck bc of Chrome bug when you scroll in both directions during snapping

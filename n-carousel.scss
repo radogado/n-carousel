@@ -305,10 +305,10 @@ _:future,
   }
   &:not([data-sliding]) > .n-carousel__content {
     scroll-snap-type: both mandatory;
-    scroll-snap-stop: always;
 
     > * {
       scroll-snap-align: center;
+      scroll-snap-stop: always;
     }
   }
 

@@ -239,10 +239,10 @@ _:future,
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content {
   scroll-snap-type: both mandatory;
-  scroll-snap-stop: always;
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content > * {
   scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 .n-carousel.n-carousel--controls-align-start {
   grid-template: auto 1fr auto/auto auto 1fr auto;
