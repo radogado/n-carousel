@@ -654,7 +654,7 @@
       entries.forEach((e) => {
         let el = e.target;
 
-        return;
+        // return;
 
         if (
           el.matches(".n-carousel--auto-height") &&
@@ -679,6 +679,7 @@
           : `0 ${padding_horizontal}px`;
 
         if (isVertical(el)) {
+          return;
           if (!isAuto(el)) {
             let slide = carousel.querySelector(":scope > [data-active]");
             carousel.style.height = "";
