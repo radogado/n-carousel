@@ -239,6 +239,7 @@ _:future,
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content {
   scroll-snap-type: both mandatory;
+  scroll-snap-stop: always;
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content > * {
   scroll-snap-align: center;
