@@ -17,6 +17,7 @@ body {
   padding: 0;
   overflow: hidden;
   background: linen;
+  height: 100%;
 }
 
 .n-carousel {
@@ -65,7 +66,8 @@ pre {
     }
   }
   width: 150vmin;
-  height: 100vh;
+  max-height: 100vh;
+  max-height: -webkit-fill-available;
   max-width: 100vw;
   margin: auto;
   &.n-carousel.n-carousel--tabs > .n-carousel__index {

@@ -91,7 +91,7 @@
 }
 .n-carousel.n-carousel--vertical {
   // &.n-carousel--auto-height {
-  &:not([data-ready]) {
+  &.n-carousel--auto-height:not([data-ready]) {
     > .n-carousel__content {
       // overflow: hidden;
       > :not(:first-child) {
@@ -102,6 +102,7 @@
   // }
 
   &:not(.n-carousel--auto-height) {
+    &,
     > .n-carousel__content {
       height: 100%;
     }
