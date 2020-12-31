@@ -1,0 +1,171 @@
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: 100vh;
+  height: -webkit-fill-available;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: linen;
+  height: 100%;
+}
+
+.n-carousel {
+  text-align: center;
+}
+
+.n-carousel__index,
+.n-carousel__previous,
+.n-carousel__next,
+.n-carousel__full-screen {
+  --control-bg: lightcoral;
+  --control-color: #670d5b;
+}
+
+.n-carousel__content {
+  text-align: start;
+}
+
+pre {
+  overflow: auto;
+}
+
+.n-carousel__content > * > * {
+  padding: 1em;
+}
+
+.n-carousel--lightbox > .n-carousel__content > * > * {
+  padding: 0;
+  margin: 0;
+}
+
+.demo-grid {
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
+.demo-grid > * {
+  text-align: center;
+}
+
+.demo {
+  width: 150vmin;
+  max-height: 100vh;
+  max-height: -webkit-fill-available;
+  max-width: 100vw;
+  margin: auto;
+}
+.demo > .n-carousel__content > * {
+  justify-content: center;
+  align-items: center;
+}
+.demo.n-carousel.n-carousel--tabs > .n-carousel__index {
+  max-height: 100%;
+  overflow: auto;
+  flex-wrap: nowrap;
+  padding: 1ch 0;
+  background: var(--control-bg);
+}
+.demo.n-carousel.n-carousel--tabs > .n-carousel__index button {
+  max-width: 25vw;
+}
+.demo .source {
+  display: flex;
+}
+.demo .source > * {
+  margin-inline-end: 5ch;
+}
+.demo .source pre {
+  all: initial;
+  font: inherit;
+}
+.demo a[href]:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+code[class*=language-] {
+  font-family: monospace !important;
+  line-height: 1.9 !important;
+  display: block;
+}
+
+.code {
+  position: relative;
+  margin-bottom: 1.5em;
+  display: inline-block;
+  max-width: 100%;
+}
+.code pre {
+  padding: 1em;
+  margin: 0.5em 0;
+}
+.code button.n-btn {
+  position: absolute;
+  bottom: 0.67em;
+  right: 0;
+  font-size: 0.75em;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: lightcoral;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+}
+
+h1:first-child,
+h2:first-child {
+  margin-top: 0;
+}
+
+h1:after {
+  content: attr(data-version);
+  padding-inline-start: 1ch;
+  font-size: 0.5em;
+  font-weight: normal;
+  vertical-align: super;
+}
+
+[href="n-carousel.min.css"],
+[href="n-carousel.min.js"] {
+  text-decoration: none;
+}
+[href="n-carousel.min.css"]:after,
+[href="n-carousel.min.js"]:after {
+  content: attr(data-size);
+  padding-inline-start: 1ch;
+  min-width: 6ch;
+  display: inline-block;
+  font-size: 0.75em;
+  vertical-align: top;
+}
+[href="n-carousel.min.css"][data-size="0.0 KB"]:after,
+[href="n-carousel.min.js"][data-size="0.0 KB"]:after {
+  opacity: 0;
+}
+[href="n-carousel.min.css"] b,
+[href="n-carousel.min.js"] b {
+  text-decoration: underline;
+  min-width: 4ch;
+  display: inline-block;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .demo {
+  height: -webkit-fill-available;
+}
+
+/*# sourceMappingURL=demo.css.map */
