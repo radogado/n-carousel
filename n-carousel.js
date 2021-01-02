@@ -62,12 +62,14 @@
 		const restoreScroll = () => {
 			if (!document.webkitIsFullScreen) {
 				el.nuiAncestors.forEach((el) => {
-					// observersOff(el);
-					el.scrollLeft = el.nuiScrollX;
-					el.scrollTop = el.nuiScrollY;
-					delete el.nuiScrollX;
-					delete el.nuiScrollY;
-					// observersOn(el);
+					window.requestAnimationFrame(() => {
+						// observersOff(el);
+						el.scrollLeft = el.nuiScrollX;
+						el.scrollTop = el.nuiScrollY;
+						delete el.nuiScrollX;
+						delete el.nuiScrollY;
+						// observersOn(el);
+					});
 				});
 
 				delete el.nuiAncestors;
@@ -561,7 +563,7 @@
 		//   "End",
 		// ];
 
-		console.log(e);
+		// console.log(e);
 		let el = e.target;
 		if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
 			// Capture relevant keys
