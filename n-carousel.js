@@ -698,65 +698,69 @@
 		});
 	});
 
-	document.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
-		let previous = getControl(el, ".n-carousel__previous");
-		let next = getControl(el, ".n-carousel__next");
-		let index = getControl(el, ".n-carousel__index");
+	const init = (host) => {
+		host.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
+			let previous = getControl(el, ".n-carousel__previous");
+			let next = getControl(el, ".n-carousel__next");
+			let index = getControl(el, ".n-carousel__index");
 
-		if (!!previous) {
-			previous.onclick = slidePreviousEvent;
-		}
-
-		if (!!next) {
-			next.onclick = slideNextEvent;
-		}
-
-		if (!!index) {
-			index.onclick = slideIndexEvent;
-		}
-
-		el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
-
-		let content = el.querySelector(":scope > .n-carousel__content");
-		content.tabIndex = 0;
-		if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-			content.style.height = getComputedStyle(content).height;
-			el.dataset.ready = true;
-			content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
-		}
-
-		if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-			// Vertical auto has a specified height which needs update on resize
-			content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
-		}
-
-		const full_screen = el.querySelector(":scope > .n-carousel__full-screen button");
-		if (full_screen) {
-			full_screen.onclick = (e) => toggleFullScreen(e.target);
-		}
-
-		window.requestAnimationFrame(() => {
-			subpixel.observe(el);
-			el.dataset.ready = true;
-			if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
-				setIndexWidth(el);
+			if (!!previous) {
+				previous.onclick = slidePreviousEvent;
 			}
-			updateCarousel(content);
 
-			if (el.matches(".n-carousel--auto-slide")) {
-				let auto_delay = (parseFloat(el.dataset.interval) * 1000 || default_interval) + (parseFloat(el.dataset.duration) * 1000 || default_duration);
-
-				let carouselTimeout = () => {
-					if (isElementInViewport(content)) {
-						slideNext(content);
-					}
-					content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
-				};
-
-				content.nCarouselTimeout = setTimeout(carouselTimeout, parseFloat(el.dataset.interval) * 1000 || default_interval);
-
-				content.addEventListener("pointerenter", (e) => clearTimeout(e.target.nCarouselTimeout));
+			if (!!next) {
+				next.onclick = slideNextEvent;
 			}
+
+			if (!!index) {
+				index.onclick = slideIndexEvent;
+			}
+
+			el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
+
+			let content = el.querySelector(":scope > .n-carousel__content");
+			content.tabIndex = 0;
+			if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+				content.style.height = getComputedStyle(content).height;
+				el.dataset.ready = true;
+				content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+			}
+
+			if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+				// Vertical auto has a specified height which needs update on resize
+				content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
+			}
+
+			const full_screen = el.querySelector(":scope > .n-carousel__full-screen button");
+			if (full_screen) {
+				full_screen.onclick = (e) => toggleFullScreen(e.target);
+			}
+
+			window.requestAnimationFrame(() => {
+				subpixel.observe(el);
+				el.dataset.ready = true;
+				if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
+					setIndexWidth(el);
+				}
+				updateCarousel(content);
+
+				if (el.matches(".n-carousel--auto-slide")) {
+					let auto_delay = (parseFloat(el.dataset.interval) * 1000 || default_interval) + (parseFloat(el.dataset.duration) * 1000 || default_duration);
+
+					let carouselTimeout = () => {
+						if (isElementInViewport(content)) {
+							slideNext(content);
+						}
+						content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
+					};
+
+					content.nCarouselTimeout = setTimeout(carouselTimeout, parseFloat(el.dataset.interval) * 1000 || default_interval);
+					content.addEventListener("pointerenter", (e) => clearTimeout(e.target.nCarouselTimeout));
+				}
+				el.dataset.platform = navigator.platform;
+			});
 		});
-	});
+	};
+
+	typeof registerComponent === "function" ? registerComponent("n-select", init) : init(document);
 })();

@@ -26,22 +26,6 @@
   position: absolute;
 }
 
-.n-carousel--simple {
-  display: flex;
-  scroll-snap-type: both mandatory;
-  overflow: auto;
-  scrollbar-width: none;
-  /* Firefox */
-}
-.n-carousel--simple::-webkit-scrollbar {
-  display: none;
-}
-.n-carousel--simple > * {
-  flex: 1 0 auto;
-  width: 100%;
-  scroll-snap-align: center;
-}
-
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
 }
@@ -238,10 +222,10 @@ _:future,
 .n-carousel[data-sliding] {
   pointer-events: none;
 }
-.n-carousel:not([data-sliding]) > .n-carousel__content {
+.n-carousel:not([data-sliding]):not([data-platform*=Win]) > .n-carousel__content {
   scroll-snap-type: both mandatory;
 }
-.n-carousel:not([data-sliding]) > .n-carousel__content > * {
+.n-carousel:not([data-sliding]):not([data-platform*=Win]) > .n-carousel__content > * {
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
