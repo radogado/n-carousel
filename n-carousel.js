@@ -387,21 +387,13 @@
 		let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
 		let mod_y = Math.round(el.scrollTop) % (el.offsetHeight - paddingY(el)); // scrollTop rounded, because Windows Chrome positions it in subpixel on even slides
 
-		console.log(mod_x, mod_y);
+		console.log("while scrolling", mod_x, mod_y);
 
-		if (mod_x !== 0 || mod_y !== 0 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content")) {
-			return;
-		}
-
-		clearTimeout(isScrolling);
-
-		lastScrollX = scrollStartX(el);
-		lastScrollY = el.scrollTop;
-
-		// Set a timeout to run after scrolling ends
-		isScrolling = setTimeout(function () {
+		const afterScrollTimeout = () => {
 			let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
 			let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
+
+			console.log("after timeout", mod_x, mod_y);
 
 			// console.log("scrollStop check", mod_x, mod_y);
 
@@ -470,7 +462,20 @@
 					updateCarousel(el);
 				}
 			}
-		}, 133);
+		};
+
+		if (mod_x !== 0 || mod_y !== 0 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content")) {
+			// It should also set up the timeout in case we're stuck after a while
+			// return;
+		}
+
+		clearTimeout(isScrolling);
+
+		lastScrollX = scrollStartX(el);
+		lastScrollY = el.scrollTop;
+
+		// Set a timeout to run after scrolling ends
+		isScrolling = setTimeout(afterScrollTimeout, 133);
 	};
 
 	const slide = (el, offsetX, offsetY, index) => {

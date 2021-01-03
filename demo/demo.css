@@ -123,6 +123,7 @@ code[class*=language-] {
   cursor: pointer;
   color: #fff;
   font-weight: bold;
+  padding: 0.5em;
 }
 
 h1:first-child,
