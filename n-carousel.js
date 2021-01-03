@@ -464,9 +464,9 @@
 			}
 		};
 
-		if (mod_x !== 0 || mod_y !== 0 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content")) {
+		if (typeof window.ontouchstart !== "undefined" && (mod_x !== 0 || mod_y !== 0 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content"))) {
 			// It should also set up the timeout in case we're stuck after a while
-			// return;
+			return; // return only on touch Safari. What about iPad Safari with trackpad?
 		}
 
 		clearTimeout(isScrolling);

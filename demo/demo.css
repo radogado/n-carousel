@@ -95,9 +95,10 @@ pre {
 }
 
 code[class*=language-] {
-  font-family: monospace !important;
+  font-family: Monaco, monospace !important;
   line-height: 1.9 !important;
   display: block;
+  font-size: 0.812em;
 }
 
 .code {
