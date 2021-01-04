@@ -191,3 +191,17 @@ _:future,
 :root .demo {
 	height: -webkit-fill-available;
 }
+
+.demo-grid-2 {
+	gap: 1em;
+	margin: 2em 0;
+	text-align: start;
+
+	@media (min-width: 600px) {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+	> * {
+		overflow: auto;
+	}
+}
