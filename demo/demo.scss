@@ -1,3 +1,5 @@
+@import "aspect-ratio";
+
 body {
 	min-height: 100vh;
 	min-height: -webkit-fill-available;
@@ -16,6 +18,8 @@ body {
 	overflow: hidden;
 	background: linen;
 	height: 100%;
+	line-height: 1.333;
+color: #027b7b;
 }
 
 .n-carousel {
@@ -32,6 +36,9 @@ body {
 
 .n-carousel__content {
 	text-align: start;
+	img {
+		max-width: 100%;
+	}
 }
 
 pre {
@@ -40,6 +47,12 @@ pre {
 
 .n-carousel__content > * > * {
 	padding: 1em;
+	h3 {
+		margin-top: 0;
+	}
+}
+.demo .n-carousel {
+	background: aliceblue;
 }
 .n-carousel--lightbox > .n-carousel__content > * > * {
 	padding: 0;
@@ -63,7 +76,7 @@ pre {
 			align-items: center;
 		}
 	}
-	width: 150vmin;
+	width: 133vmin;
 	max-height: 100vh;
 	max-height: -webkit-fill-available;
 	max-width: 100vw;
@@ -90,9 +103,10 @@ pre {
 			font: inherit;
 		}
 	}
-
+a[href] {
+color: blueviolet;
+}
 	a[href]:visited {
-		color: inherit;
 		text-decoration: none;
 	}
 }
