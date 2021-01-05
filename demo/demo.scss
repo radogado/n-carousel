@@ -16,10 +16,10 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linen;
+  background: darkcyan;
   height: 100%;
   line-height: 1.333;
-  color: #027b7b;
+  color: white;
 }
 
 .n-carousel {
@@ -55,7 +55,11 @@ pre {
 }
 .demo .n-carousel .n-carousel__content {
   background: aliceblue;
-  @media (min-width: 900px) {
+  color: #027b7b;
+  a[href] {
+    color: #4d64bd;
+  }
+@media (min-width: 900px) {
     p {
       columns: 2;
     }
@@ -116,7 +120,7 @@ pre {
     }
   }
   a[href] {
-    color: #4d64bd;
+    color: #cecfd6;
   }
   a[href]:visited {
     text-decoration: none;
