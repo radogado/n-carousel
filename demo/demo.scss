@@ -54,8 +54,10 @@ pre {
 }
 }
 .demo .n-carousel .n-carousel__content {
+  > * {
   background: aliceblue;
   color: #027b7b;
+}
   a[href] {
     color: #4d64bd;
   }
@@ -70,6 +72,13 @@ pre {
   // 	}
   // }
 }
+
+.demo .n-carousel.n-carousel--lightbox .n-carousel__content {
+  > * {
+  background: none;
+}
+}
+
 .n-carousel--lightbox > .n-carousel__content > * > * {
   padding: 0;
   margin: 0;

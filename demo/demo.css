@@ -94,7 +94,7 @@ pre {
   }
 }
 
-.demo .n-carousel .n-carousel__content {
+.demo .n-carousel .n-carousel__content > * {
   background: aliceblue;
   color: #027b7b;
 }
@@ -105,6 +105,10 @@ pre {
   .demo .n-carousel .n-carousel__content p {
     columns: 2;
   }
+}
+
+.demo .n-carousel.n-carousel--lightbox .n-carousel__content > * {
+  background: none;
 }
 
 .n-carousel--lightbox > .n-carousel__content > * > * {
