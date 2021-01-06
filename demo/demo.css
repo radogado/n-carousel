@@ -79,6 +79,7 @@ body {
 }
 .n-carousel__content img {
   max-width: 100%;
+  align-self: center;
 }
 
 pre {
@@ -267,6 +268,14 @@ _:future,
     display: grid;
     grid-template-columns: minmax(0, 1fr) 1fr;
   }
+}
+.demo-grid-3 > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.demo-grid-3 > .n-aspect {
+  margin: auto;
 }
 
 /*# sourceMappingURL=demo.css.map */

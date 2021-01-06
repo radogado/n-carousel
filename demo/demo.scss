@@ -38,6 +38,7 @@ body {
   text-align: start;
   img {
     max-width: 100%;
+    align-self: center;
   }
 }
 
@@ -242,4 +243,12 @@ _:future,
   }
   gap: 1em;
   padding: 2em;
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  > .n-aspect {
+    margin: auto;
+  }
 }
