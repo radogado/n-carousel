@@ -230,7 +230,7 @@
 				return;
 			}
 
-			subpixel.unobserve(el.parentNode);
+			// subpixel.unobserve(el.parentNode);
 
 			let scroll_changing = true;
 
@@ -278,7 +278,7 @@
 					if (new_height) {
 						el.style.height = `${Math.ceil(new_height)}px`;
 					}
-					subpixel.observe(el.parentNode);
+					// subpixel.observe(el.parentNode);
 					window.requestAnimationFrame(() => {
 						updateCarousel(el);
 						resolve(el);
@@ -397,7 +397,7 @@
 
 			// console.log("scrollStop check", mod_x, mod_y);
 
-			if (/* isChrome && */ mod_x !== 0 || mod_y !== 0) {
+			if (/* isChrome && */ mod_x > 1 || mod_y > 1) {
 				// Stuck bc of Chrome bug when you scroll in both directions during snapping
 
 				let new_x = Math.abs(Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el))));
@@ -464,7 +464,7 @@
 			}
 		};
 
-		if (typeof window.ontouchstart !== "undefined" && (mod_x !== 0 || mod_y !== 0 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content"))) {
+		if (typeof window.ontouchstart !== "undefined" && (mod_x > 1 || mod_y > 1 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content"))) {
 			// It should also set up the timeout in case we're stuck after a while
 			return; // return only on touch Safari. What about iPad Safari with trackpad?
 		}
@@ -633,48 +633,48 @@
 		});
 	});
 
-	const subpixel = new ResizeObserver((entries) => {
-		window.requestAnimationFrame(() => {
-			entries.forEach((e) => {
-				let el = e.target;
-
-				// return;
-
-				if (el.matches(".n-carousel--auto-height") && !!el.parentNode.dataset.sliding) {
-					return;
-				}
-
-				// el.style.removeProperty("--subpixel-compensation");
-
-				// Round down the padding, because sub pixel padding + scrolling is a problem
-				let carousel = el.querySelector(":scope > .n-carousel__content");
-				// observersOff(carousel);
-
-				let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
-				let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
-
-				carousel.style.padding = isVertical(el) ? `${padding_vertical}px 0` : `0 ${padding_horizontal}px`;
-
-				if (isVertical(el)) {
-					return;
-					if (!isAuto(el)) {
-						let slide = carousel.querySelector(":scope > [data-active]");
-						carousel.style.height = "";
-						carousel.style.height = `${parseInt(getComputedStyle(slide).height)}px`;
-						// carousel.scrollTo(
-						//   0,
-						//   carousel.style.height * [carousel.children].indexOf(slide)
-						// );
-					}
-				} else {
-					carousel.style.width = "";
-					carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
-				}
-
-				// observersOn(carousel);
-			});
-		});
-	});
+// 	const subpixel = new ResizeObserver((entries) => {
+// 		window.requestAnimationFrame(() => {
+// 			entries.forEach((e) => {
+// 				let el = e.target;
+// 
+// 				// return;
+// 
+// 				if (el.matches(".n-carousel--auto-height") && !!el.parentNode.dataset.sliding) {
+// 					return;
+// 				}
+// 
+// 				// el.style.removeProperty("--subpixel-compensation");
+// 
+// 				// Round down the padding, because sub pixel padding + scrolling is a problem
+// 				let carousel = el.querySelector(":scope > .n-carousel__content");
+// 				// observersOff(carousel);
+// 
+// 				let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
+// 				let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
+// 
+// 				carousel.style.padding = isVertical(el) ? `${padding_vertical}px 0` : `0 ${padding_horizontal}px`;
+// 
+// 				if (isVertical(el)) {
+// 					return;
+// 					if (!isAuto(el)) {
+// 						let slide = carousel.querySelector(":scope > [data-active]");
+// 						carousel.style.height = "";
+// 						carousel.style.height = `${parseInt(getComputedStyle(slide).height)}px`;
+// 						// carousel.scrollTo(
+// 						//   0,
+// 						//   carousel.style.height * [carousel.children].indexOf(slide)
+// 						// );
+// 					}
+// 				} else {
+// 					carousel.style.width = "";
+// 					carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
+// 				}
+// 
+// 				// observersOn(carousel);
+// 			});
+// 		});
+// 	});
 
 	const setIndexWidth = (el) => {
 		let index = el.querySelector(":scope > .n-carousel__index");
@@ -737,7 +737,7 @@
 			}
 
 			window.requestAnimationFrame(() => {
-				subpixel.observe(el);
+				// subpixel.observe(el);
 				el.dataset.ready = true;
 				if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
 					setIndexWidth(el);
