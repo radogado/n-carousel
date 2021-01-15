@@ -90,7 +90,8 @@ pre {
   padding: 1em;
 }
 @media (min-width: 600px) {
-  .n-carousel__content > * > * h3, .n-carousel__content > * > * h2 {
+  .n-carousel__content > * > * h3,
+.n-carousel__content > * > * h2 {
     margin-top: 0;
   }
 }
