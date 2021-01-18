@@ -246,11 +246,11 @@ _:future,
 		&:before {
 			content: "";
 			background-color: var(--control-color, #333);
-			--chevron: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16.003 18.626l7.081-7.081L25 13.46l-8.997 8.998-9.003-9 1.917-1.916z'/%3E%3C/svg%3E");
+			--chevron: url("data:image/svg+xml,%3Csvg height='18' viewBox='0 0 18 18' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m9.003 7.626 7.081-7.081 1.916 1.915-8.997 8.998-9.003-9 1.917-1.916z' transform='translate(0 5)'/%3E%3C/svg%3E");
 			-webkit-mask: var(--chevron) no-repeat 0 0 / contain;
 			mask: var(--chevron) no-repeat 0 0;
-			width: 1.5em;
-			height: 1.5em;
+			width: 1.25em;
+			height: 1.25em;
 			display: inline-block;
 		}
 	}
