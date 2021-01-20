@@ -655,8 +655,7 @@
   				carousel.style.padding = isVertical(el) ? `${padding_vertical}px 0` : `0 ${padding_horizontal}px`;
   
   				if (isVertical(el)) {
-  					return;
-  					if (!isAuto(el)) {
+  					// if (!isAuto(el)) {
   						let slide = carousel.querySelector(":scope > [data-active]");
   						carousel.style.height = "";
   						carousel.style.height = `${parseInt(getComputedStyle(slide).height)}px`;
@@ -664,7 +663,7 @@
   						//   0,
   						//   carousel.style.height * [carousel.children].indexOf(slide)
   						// );
-  					}
+  					// }
   				} else {
   					carousel.style.width = "";
   					carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;

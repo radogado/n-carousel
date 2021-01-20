@@ -1,6 +1,7 @@
 (() => {
 
   const isVertical = (el) => el.matches(".n-carousel--vertical");
+  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
 
   let observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
@@ -19,6 +20,11 @@
           if (!isVertical(el)) {
             carousel.style.width = "";
             carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
+          } else {
+            // if (!isAuto(el)) {
+              carousel.style.height = "";
+              carousel.style.height = `${parseInt(getComputedStyle(carousel).height)}px`;
+            // }
           }
 
           // We found our element, we're done:
