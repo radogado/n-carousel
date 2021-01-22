@@ -22,6 +22,9 @@
   box-sizing: border-box;
   overflow: auto;
 }
+.n-carousel__content > *:not(:last-child) {
+  margin-inline-end: calc(1px * var(--subpixel-compensation));
+}
 .n-carousel__content.n-measure > * {
   position: absolute;
 }
@@ -75,6 +78,10 @@
 }
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   height: inherit;
+}
+.n-carousel.n-carousel--vertical > .n-carousel__content > *:not(:last-child) {
+  margin-inline-end: 0;
+  margin-block-end: calc(1px * var(--subpixel-compensation));
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside) > .n-carousel__index {
   position: absolute;

@@ -649,24 +649,26 @@
   				let carousel = el.querySelector(":scope > .n-carousel__content");
   				// observersOff(carousel);
   
-  				let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
-  				let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
-  
-  				carousel.style.padding = isVertical(el) ? `${padding_vertical}px 0` : `0 ${padding_horizontal}px`;
+  // 				let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
+  // 				let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
+  // 
+  // 				carousel.style.padding = isVertical(el) ? `${padding_vertical}px 0` : `0 ${padding_horizontal}px`;
   
   				if (isVertical(el)) {
   					// if (!isAuto(el)) {
-  						let slide = carousel.querySelector(":scope > [data-active]");
-  						carousel.style.height = "";
-  						carousel.style.height = `${parseInt(getComputedStyle(slide).height)}px`;
+  						// let slide = carousel.querySelector(":scope > [data-active]");
+  						// carousel.style.height = "";
+  						// carousel.style.height = `${parseInt(getComputedStyle(slide).height)}px`;
   						// carousel.scrollTo(
   						//   0,
   						//   carousel.style.height * [carousel.children].indexOf(slide)
   						// );
   					// }
+            carousel.style.setProperty('--subpixel-compensation', Math.ceil(parseFloat(getComputedStyle(carousel).height)) - parseFloat(getComputedStyle(carousel).height));
   				} else {
-  					carousel.style.width = "";
-  					carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
+  					// carousel.style.width = "";
+  					// carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
+            carousel.style.setProperty('--subpixel-compensation', Math.ceil(parseFloat(getComputedStyle(carousel).width)) - parseFloat(getComputedStyle(carousel).width));
   				}
   
   				// observersOn(carousel);

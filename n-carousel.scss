@@ -22,7 +22,11 @@
 		width: 100%;
 		box-sizing: border-box;
 		overflow: auto;
+
 		// padding: calc(1px + (1px - var(--subpixel-adjust, 0)));
+		&:not(:last-child) {
+			margin-inline-end: calc(1px * var(--subpixel-compensation));
+		}
 	}
 
 	&.n-measure>* {
@@ -136,7 +140,14 @@
 			// 			height: var(--height, inherit); // Fallback not working in Safari
 			height: inherit; // Fallback not working in Safari
 			// overflow: hidden;
+
+			&:not(:last-child) {
+				margin-inline-end: 0;
+				margin-block-end: calc(1px * var(--subpixel-compensation));
+			}
+
 		}
+
 	}
 
 	&:not(.n-carousel--controls-outside) {
@@ -336,8 +347,8 @@ _:future,
 	"prev 	a2 		a2 		a2 		next"
 	"i		  i	 	  i 	  i 		i";
 
-// box-sizing: border-box;
-// padding: var(--subpixel-adjust, 1px);
+	// box-sizing: border-box;
+	// padding: var(--subpixel-adjust, 1px);
 
 	&.n-carousel--controls-align-start {
 		grid-template: auto 1fr auto / auto auto 1fr auto;
