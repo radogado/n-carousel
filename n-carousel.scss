@@ -24,9 +24,9 @@
 		overflow: auto;
 
 		// padding: calc(1px + (1px - var(--subpixel-adjust, 0)));
-		&:not(:last-child) {
+		// &:not(:last-child) {
 			margin-inline-end: calc(1px * var(--subpixel-compensation));
-		}
+		// }
 	}
 
 	&.n-measure>* {
@@ -141,10 +141,10 @@
 			height: inherit; // Fallback not working in Safari
 			// overflow: hidden;
 
-			&:not(:last-child) {
+			// &:not(:last-child) {
 				margin-inline-end: 0;
 				margin-block-end: calc(1px * var(--subpixel-compensation));
-			}
+			// }
 
 		}
 

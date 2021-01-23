@@ -311,7 +311,7 @@
 
     observersOff(el);
 
-    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el))));
+    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (Math.ceil(el.offsetWidth) - paddingX(el))));
     el.dataset.y = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
 
     // console.log("updateCarousel", el.scrollTop, el.offsetHeight);
@@ -383,23 +383,23 @@
     // console.log("scroll stopped", e);
     let el = e.target;
 
-    let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
+    let mod_x = scrollStartX(el) % (Math.ceil(el.offsetWidth) - paddingX(el));
     let mod_y = Math.round(el.scrollTop) % (el.offsetHeight - paddingY(el)); // scrollTop rounded, because Windows Chrome positions it in subpixel on even slides
 
     console.log("while scrolling", mod_x, mod_y);
 
     const afterScrollTimeout = () => {
-      let mod_x = scrollStartX(el) % (el.offsetWidth - paddingX(el));
+      let mod_x = scrollStartX(el) % (Math.ceil(el.offsetWidth) - paddingX(el));
       let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
 
       console.log("after timeout", mod_x, mod_y);
 
       // console.log("scrollStop check", mod_x, mod_y);
 
-      if ( /* isChrome && */ mod_x > 1 || mod_y > 1) {
+      if ( /* isChrome && */ mod_x !== 0 || mod_y !== 0) {
         // Stuck bc of Chrome bug when you scroll in both directions during snapping
 
-        let new_x = Math.abs(Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el))));
+        let new_x = Math.abs(Math.round(scrollStartX(el) / (Math.ceil(el.offsetWidth) - paddingX(el))));
         let new_y = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
         // console.log("stuck", new_x, new_y);
         slideTo(el, isVertical(el) ? new_y : new_x);
@@ -433,7 +433,7 @@
             var offset_y = new_index * new_height - el.scrollTop;
           } else {
             el.style.height = "";
-            let new_index = Math.abs(Math.round(scrollStartX(el) / (el.offsetWidth - paddingX(el))));
+            let new_index = Math.abs(Math.round(scrollStartX(el) / (Math.ceil(el.offsetWidth) - paddingX(el))));
             el.children[new_index].style.height = "auto";
 
             el.classList.add("n-measure");
@@ -533,7 +533,7 @@
     if (isVertical(el)) {
       slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop, index);
     } else {
-      let new_offset = isRTL(el) ? Math.abs(scrollStartX(el)) - (el.offsetWidth - paddingX(el)) * index : (el.offsetWidth - paddingX(el)) * index - scrollStartX(el);
+      let new_offset = isRTL(el) ? Math.abs(scrollStartX(el)) - (Math.ceil(el.offsetWidth) - paddingX(el)) * index : (Math.ceil(el.offsetWidth) - paddingX(el)) * index - scrollStartX(el);
 
       slide(el, new_offset, 0, index);
     }

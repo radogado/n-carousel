@@ -21,8 +21,6 @@
   width: 100%;
   box-sizing: border-box;
   overflow: auto;
-}
-.n-carousel__content > *:not(:last-child) {
   margin-inline-end: calc(1px * var(--subpixel-compensation));
 }
 .n-carousel__content.n-measure > * {
@@ -78,8 +76,6 @@
 }
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   height: inherit;
-}
-.n-carousel.n-carousel--vertical > .n-carousel__content > *:not(:last-child) {
   margin-inline-end: 0;
   margin-block-end: calc(1px * var(--subpixel-compensation));
 }
