@@ -1,4 +1,6 @@
 (function() {
+  const ceilingWidth = el => Math.ceil(parseFloat(getComputedStyle(el).width));
+  const ceilingHeight = el => Math.ceil(parseFloat(getComputedStyle(el).height));
   function isElementInViewport(el) {
     let rect = el.getBoundingClientRect();
 
@@ -275,7 +277,7 @@
         if (stop) {
           scrollTo(el, startx + distanceX, starty + distanceY);
           if (new_height) {
-            el.style.height = `${Math.ceil(new_height)}px`;
+            el.style.height = `${new_height}px`;
           }
           subpixel.observe(el.parentNode);
           window.requestAnimationFrame(() => {
@@ -311,8 +313,8 @@
 
     observersOff(el);
 
-    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (Math.ceil(el.offsetWidth) - paddingX(el))));
-    el.dataset.y = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
+    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
+    el.dataset.y = Math.abs(Math.round(el.scrollTop / (ceilingHeight(el) - paddingY(el))));
 
     // console.log("updateCarousel", el.scrollTop, el.offsetHeight);
 
@@ -383,14 +385,14 @@
     // console.log("scroll stopped", e);
     let el = e.target;
 
-    let mod_x = scrollStartX(el) % (Math.ceil(el.offsetWidth) - paddingX(el));
-    let mod_y = Math.round(el.scrollTop) % (el.offsetHeight - paddingY(el)); // scrollTop rounded, because Windows Chrome positions it in subpixel on even slides
+    let mod_x = scrollStartX(el) % (ceilingWidth(el) - paddingX(el));
+    let mod_y = el.scrollTop % (ceilingHeight(el) - paddingY(el));
 
     console.log("while scrolling", mod_x, mod_y);
 
     const afterScrollTimeout = () => {
-      let mod_x = scrollStartX(el) % (Math.ceil(el.offsetWidth) - paddingX(el));
-      let mod_y = el.scrollTop % (el.offsetHeight - paddingY(el));
+      let mod_x = scrollStartX(el) % (ceilingWidth(el) - paddingX(el));
+      let mod_y = el.scrollTop % (ceilingHeight(el) - paddingY(el));
 
       console.log("after timeout", mod_x, mod_y);
 
@@ -399,8 +401,8 @@
       if ( /* isChrome && */ mod_x !== 0 || mod_y !== 0) {
         // Stuck bc of Chrome bug when you scroll in both directions during snapping
 
-        let new_x = Math.abs(Math.round(scrollStartX(el) / (Math.ceil(el.offsetWidth) - paddingX(el))));
-        let new_y = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
+        let new_x = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
+        let new_y = Math.abs(Math.round(el.scrollTop / (ceilingHeight(el) - paddingY(el))));
         // console.log("stuck", new_x, new_y);
         slideTo(el, isVertical(el) ? new_y : new_x);
         return;
@@ -433,7 +435,7 @@
             var offset_y = new_index * new_height - el.scrollTop;
           } else {
             el.style.height = "";
-            let new_index = Math.abs(Math.round(scrollStartX(el) / (Math.ceil(el.offsetWidth) - paddingX(el))));
+            let new_index = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
             el.children[new_index].style.height = "auto";
 
             el.classList.add("n-measure");
@@ -531,9 +533,9 @@
 
   const slideTo = (el, index) => {
     if (isVertical(el)) {
-      slide(el, 0, (el.offsetHeight - paddingY(el)) * index - el.scrollTop, index);
+      slide(el, 0, (ceilingHeight(el) - paddingY(el)) * index - el.scrollTop, index);
     } else {
-      let new_offset = isRTL(el) ? Math.abs(scrollStartX(el)) - (Math.ceil(el.offsetWidth) - paddingX(el)) * index : (Math.ceil(el.offsetWidth) - paddingX(el)) * index - scrollStartX(el);
+      let new_offset = isRTL(el) ? Math.abs(scrollStartX(el)) - (ceilingWidth(el) - paddingX(el)) * index : (ceilingWidth(el) - paddingX(el)) * index - scrollStartX(el);
 
       slide(el, new_offset, 0, index);
     }
@@ -664,11 +666,11 @@
   						//   carousel.style.height * [carousel.children].indexOf(slide)
   						// );
   					// }
-            carousel.style.setProperty('--subpixel-compensation', Math.ceil(parseFloat(getComputedStyle(carousel).height)) - parseFloat(getComputedStyle(carousel).height));
+            carousel.style.setProperty('--subpixel-compensation', ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
   				} else {
   					// carousel.style.width = "";
   					// carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
-            carousel.style.setProperty('--subpixel-compensation', Math.ceil(parseFloat(getComputedStyle(carousel).width)) - parseFloat(getComputedStyle(carousel).width));
+            carousel.style.setProperty('--subpixel-compensation', ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
   				}
   
   				// observersOn(carousel);
