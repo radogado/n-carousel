@@ -48,7 +48,7 @@
 }
 
 [data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content > :not([data-active]) {
-  height: 0;
+  height: var(--height, 0);
   overflow: visible;
 }
 
