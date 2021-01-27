@@ -122,14 +122,6 @@ _:future,
   scroll-snap-align: center;
 }
 
-@supports not (-webkit-touch-callout: none) {
-  _::-webkit-full-page-media,
-  _:future,
-  :root .n-carousel[data-sliding] {
-    pointer-events: all;
-  }
-}
-
 .n-carousel__index button,
 .n-carousel__previous button,
 .n-carousel__next button,
