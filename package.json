@@ -4,7 +4,8 @@
   "description": "Carousel",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": ".\/node_modules\/clean-css-cli\/bin\/cleancss -o n-carousel.min.css n-carousel.css\n.\/node_modules\/terser\/bin\/terser -o n-carousel.min.js --compress --mangle -- n-carousel.js\n.\/node_modules\/terser\/bin\/terser -o n-carousel-preload.min.js --compress --mangle -- n-carousel-preload.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\ngzip-size --raw n-carousel-preload.min.js > n-carousel-preload.min.js.size\n"
   },
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
