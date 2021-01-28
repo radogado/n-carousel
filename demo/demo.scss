@@ -65,6 +65,11 @@ pre {
   > * {
     background: aliceblue;
     color: #027b7b;
+    > * {
+      min-height: 100%;
+      box-sizing: border-box;
+      // display: flex; // Very slow in Safari
+    }
   }
 
   a[href] {

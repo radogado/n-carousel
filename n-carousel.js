@@ -242,7 +242,9 @@
       }
 
       if (!!new_height) {
-        el.style.height = getComputedStyle(el).height;
+        delete el.parentNode.dataset.sliding;
+        el.style.height = getComputedStyle(el.children[el.dataset.x]).height; // Wrong. Get the current slide height, not the carousel height
+        el.parentNode.dataset.sliding = true;
         // if (
         //   el.parentNode.matches(
         //     ".n-carousel--vertical.n-carousel--controls-outside"
@@ -491,9 +493,8 @@
     observersOff(el);
 
     if (!el.parentNode.dataset.sliding) {
-      el.parentNode.dataset.sliding = true;
-
       let old_height = el.children[el.dataset.y].clientHeight;
+      el.parentNode.dataset.sliding = true;
 
       let new_height = old_height;
 

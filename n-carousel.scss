@@ -22,7 +22,7 @@
     width: 100%;
     box-sizing: border-box;
     overflow: auto;
-/*    display: flex;
+    /*    display: flex;
     flex-direction: column;
     justify-content: center;
 */
@@ -88,11 +88,16 @@
   }
 }
 
-[data-ready].n-carousel--auto-height:not(.n-carousel--vertical)
-  > .n-carousel__content {
+[data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
   > :not([data-active]) {
     height: var(--height, 0);
     overflow: visible;
+  }
+}
+
+[data-ready][data-sliding].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
+  > :not([data-active]) {
+    height: 100%;
   }
 }
 
@@ -297,8 +302,7 @@ _:future,
   }
 }
 
-.n-carousel--vertical[data-ready].n-carousel--auto-height
-  > .n-carousel__content {
+.n-carousel--vertical[data-ready].n-carousel--auto-height > .n-carousel__content {
   overflow: hidden;
   overflow-y: auto;
 }

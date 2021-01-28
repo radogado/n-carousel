@@ -100,6 +100,10 @@ pre {
   background: aliceblue;
   color: #027b7b;
 }
+.demo .n-carousel .n-carousel__content > * > * {
+  min-height: 100%;
+  box-sizing: border-box;
+}
 .demo .n-carousel .n-carousel__content a[href] {
   color: #4d64bd;
 }
@@ -278,3 +282,5 @@ _:future,
 .demo-grid-3 > .n-aspect {
   margin: auto;
 }
+
+/*# sourceMappingURL=demo.css.map */
