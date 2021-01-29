@@ -214,7 +214,7 @@
 
   const closestCarousel = (el) => (document.getElementById(el.closest('[class*="n-carousel"]').dataset.for) || el.closest(".n-carousel")).querySelector(".n-carousel__content");
 
-  const scrollAnimate = (el, distanceX, distanceY, new_height) =>
+  const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) =>
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
@@ -242,9 +242,7 @@
       }
 
       if (!!new_height) {
-        delete el.parentNode.dataset.sliding;
-        el.style.height = getComputedStyle(el.children[el.dataset.x]).height; // Wrong. Get the current slide height, not the carousel height
-        el.parentNode.dataset.sliding = true;
+        el.style.height = `${old_height}px`;
         // if (
         //   el.parentNode.matches(
         //     ".n-carousel--vertical.n-carousel--controls-outside"
@@ -465,7 +463,7 @@
           el.parentNode.dataset.sliding = true;
 
           window.requestAnimationFrame(() => {
-            scrollAnimate(el, 0, offset_y, new_height);
+            scrollAnimate(el, 0, offset_y, new_height, old_height);
           });
         } else {
           updateCarousel(el);
@@ -524,7 +522,7 @@
       let scroll_to_y = isVertical(el) ? offsetY - index * old_height + index * new_height : 0;
 
       window.requestAnimationFrame(() => {
-        scrollAnimate(el, offsetX, scroll_to_y, new_height === old_height ? false : Math.ceil(new_height));
+        scrollAnimate(el, offsetX, scroll_to_y, new_height === old_height ? false : Math.ceil(new_height), old_height);
       });
     }
   };
