@@ -95,11 +95,11 @@
   }
 }
 
-[data-ready][data-sliding].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
-  > :not([data-active]) {
-    height: 100%;
-  }
-}
+// [data-ready][data-sliding].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
+//   > :not([data-active]) {
+//     height: 100%;
+//   }
+// }
 
 .n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content,
 .n-carousel--vertical[data-ready] > .n-carousel__content {

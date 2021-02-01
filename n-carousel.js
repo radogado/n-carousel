@@ -446,6 +446,7 @@
 
             el.classList.add("n-measure");
 
+            el.style.setProperty("--height", getComputedStyle(el).height);
             new_height = Math.max(el.children[new_index].scrollHeight, el.scrollHeight);
 
             el.classList.remove("n-measure");
@@ -507,7 +508,7 @@
           el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
 
           el.classList.add("n-measure");
-          el.style.setProperty("--height", 0);
+          el.style.setProperty("--height", getComputedStyle(el).height);
 
           new_height = Math.max(el.children[index].scrollHeight, el.scrollHeight);
 
