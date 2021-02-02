@@ -315,7 +315,7 @@
 
     observersOff(el);
 
-    el.style.setProperty("--height", 0);
+    // el.style.setProperty("--height", 0);
 
     el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
     el.dataset.y = Math.abs(Math.round(el.scrollTop / (ceilingHeight(el) - paddingY(el))));
@@ -357,6 +357,7 @@
       }
 
       el.style.setProperty("--height", getComputedStyle(el.children[active]).height);
+      // console.log('new --height:', getComputedStyle(el.children[active]).height);
     });
 
     // Fix buttons
@@ -447,6 +448,7 @@
             el.classList.add("n-measure");
 
             el.style.setProperty("--height", getComputedStyle(el).height);
+            // console.log('new --height:', getComputedStyle(el).height);
             new_height = Math.max(el.children[new_index].scrollHeight, el.scrollHeight);
 
             el.classList.remove("n-measure");
@@ -511,6 +513,8 @@
           el.style.setProperty("--height", getComputedStyle(el).height);
 
           new_height = Math.max(el.children[index].scrollHeight, el.scrollHeight);
+
+console.log('old index', el.dataset.x, 'new index', index, '--height (old height):', getComputedStyle(el).height, 'new height', new_height); // old height is wrong
 
           el.classList.remove("n-measure");
         }

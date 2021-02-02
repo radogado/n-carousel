@@ -7,6 +7,7 @@
   overflow-anchor: none;
   scrollbar-width: none;
   /* Firefox */
+  --height: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   .n-carousel__content {
