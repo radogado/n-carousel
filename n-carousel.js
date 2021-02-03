@@ -313,6 +313,9 @@
   const updateCarousel = (el) => {
     // Called on init and scroll end
 
+let container_height = getComputedStyle(el).height;
+// console.log('updateCarousel container height', container_height);
+
     observersOff(el);
 
     // el.style.setProperty("--height", 0);
@@ -356,8 +359,8 @@
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
       }
 
-      el.style.setProperty("--height", getComputedStyle(el.children[active]).height);
-      // console.log('new --height:', getComputedStyle(el.children[active]).height);
+      el.style.setProperty("--height", container_height);
+      // console.log("updateCarousel new --height:", new_height);
     });
 
     // Fix buttons
@@ -510,11 +513,17 @@
           el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
 
           el.classList.add("n-measure");
-          el.style.setProperty("--height", getComputedStyle(el).height);
 
-          new_height = Math.max(el.children[index].scrollHeight, el.scrollHeight);
+          el.children[el.dataset.x].style.height = el.children[index].style.height = "auto";
 
-console.log('old index', el.dataset.x, 'new index', index, '--height (old height):', getComputedStyle(el).height, 'new height', new_height); // old height is wrong
+          let container_height = parseFloat(getComputedStyle(el).height);
+          new_height = Math.max(parseFloat(getComputedStyle(el.children[index]).height), container_height);
+          let old_height = parseInt(el.dataset.x) === index ? new_height : Math.max(parseFloat(getComputedStyle(el.children[el.dataset.x]).height), container_height);
+
+          el.children[el.dataset.x].style.height = el.children[index].style.height = "";
+
+          el.style.setProperty("--height", `${old_height}px`);
+          console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
 
           el.classList.remove("n-measure");
         }
@@ -527,7 +536,7 @@ console.log('old index', el.dataset.x, 'new index', index, '--height (old height
       let scroll_to_y = isVertical(el) ? offsetY - index * old_height + index * new_height : 0;
 
       window.requestAnimationFrame(() => {
-        scrollAnimate(el, offsetX, scroll_to_y, new_height === old_height ? false : Math.ceil(new_height), old_height);
+        scrollAnimate(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
       });
     }
   };
