@@ -313,8 +313,8 @@
   const updateCarousel = (el) => {
     // Called on init and scroll end
 
-let container_height = getComputedStyle(el).height;
-// console.log('updateCarousel container height', container_height);
+    let container_height = getComputedStyle(el).height;
+    // console.log('updateCarousel container height', container_height);
 
     observersOff(el);
 
@@ -353,14 +353,14 @@ let container_height = getComputedStyle(el).height;
 
     el.children[active].dataset.active = true;
     el.children[active].style.height = "";
+el.style.setProperty("--height", container_height);
+// console.log("updateCarousel new --height:", new_height);
 
     window.requestAnimationFrame(() => {
       if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
       }
 
-      el.style.setProperty("--height", container_height);
-      // console.log("updateCarousel new --height:", new_height);
     });
 
     // Fix buttons
