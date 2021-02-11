@@ -101,7 +101,6 @@ pre {
   color: #027b7b;
 }
 .demo .n-carousel .n-carousel__content > * > * {
-  min-height: 100%;
   box-sizing: border-box;
 }
 .demo .n-carousel .n-carousel__content a[href] {

@@ -434,7 +434,7 @@ el.style.setProperty("--height", container_height);
         observersOff(el);
 
         if (isAuto(el)) {
-          let old_height = el.offsetHeight;
+          let old_height = parseFloat(getComputedStyle(el).height);
           let new_height;
 
           if (isVertical(el)) {
@@ -444,19 +444,20 @@ el.style.setProperty("--height", container_height);
             el.children[new_index].style.height = "";
             var offset_y = new_index * new_height - el.scrollTop;
           } else {
-            el.style.height = "";
+            // el.style.height = "";
             let new_index = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
-            el.children[new_index].style.height = "auto";
+            // el.children[new_index].style.height = "auto";
 
-            el.classList.add("n-measure");
+            // el.classList.add("n-measure");
 
-            el.style.setProperty("--height", getComputedStyle(el).height);
+            // el.style.setProperty("--height", Math.max(parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height), parseFloat(getComputedStyle(el).height)) + 'px');
             // console.log('new --height:', getComputedStyle(el).height);
-            new_height = Math.max(el.children[new_index].scrollHeight, el.scrollHeight);
+            // new_height = Math.max(parseFloat(getComputedStyle(el.children[new_index].children[0]).height), parseFloat(getComputedStyle(el).height)); // carousel height without any slides. Lowest position of controls.
+            new_height = parseFloat(getComputedStyle(el.children[new_index].children[0]).height); // but shouldn't be lower than blank carousel height. worked around by min height of 9em which surpasses the blank carousel height
 
-            el.classList.remove("n-measure");
+            // el.classList.remove("n-measure");
 
-            el.children[new_index].style.height = "";
+            // el.children[new_index].style.height = "";
             scrollTo(el, lastScrollX, lastScrollY);
             var offset_y = 0;
           }
