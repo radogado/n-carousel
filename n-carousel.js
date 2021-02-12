@@ -513,7 +513,7 @@ el.style.setProperty("--height", container_height);
         } else {
           el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
 
-          el.classList.add("n-measure");
+          el.classList.add("n-measure"); // don't use this, get height from slide child instead
 
           el.children[el.dataset.x].style.height = el.children[index].style.height = "auto";
 
