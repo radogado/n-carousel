@@ -1,9 +1,10 @@
 .n-carousel__content {
+  --peek-x: 0px;
+  --peek-y: 0px;
   display: flex;
   will-change: scroll;
   outline: 0;
   box-sizing: border-box;
-  padding: var(--peek-y, 0) var(--peek-x, 0);
   overflow-anchor: none;
   scrollbar-width: none;
   /* Firefox */
@@ -20,6 +21,7 @@
 .n-carousel__content > * {
   flex: 1 0 auto;
   width: 100%;
+  width: calc(100% - 2 * var(--peek-x, 0));
   box-sizing: border-box;
   overflow: auto;
   /*    display: flex;
@@ -32,7 +34,7 @@
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
 }
-.n-carousel:not(.n-carousel--vertical) > .n-carousel__content:after {
+.n-carousel:not(.n-carousel--vertical) > .n-carousel__content:before, .n-carousel:not(.n-carousel--vertical) > .n-carousel__content:after {
   content: "";
   flex-shrink: 0;
   width: var(--peek-x, 0);
