@@ -24,11 +24,7 @@
   width: calc(100% - 2 * var(--peek-x, 0));
   box-sizing: border-box;
   overflow: auto;
-  /*    display: flex;
-      flex-direction: column;
-      justify-content: center;
-  */
-  margin-inline-end: calc(1px * var(--subpixel-compensation));
+  margin: 0 calc(0.5px * var(--subpixel-compensation));
 }
 
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {
@@ -84,7 +80,7 @@
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   height: inherit;
   margin-inline-end: 0;
-  margin-block-end: calc(1px * var(--subpixel-compensation));
+  margin: calc(0.5px * var(--subpixel-compensation)) 0;
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside) > .n-carousel__index {
   position: absolute;
