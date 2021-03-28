@@ -381,6 +381,7 @@
 	var isResizing;
 
 	const scrollStop = (e) => {
+		return;
 		//     if (!!navigator.platform.match(/Win/)) {
 		//       // Scrolling is broken on Windows
 		//       // console.log("scroll Windows", e);
@@ -556,9 +557,11 @@
 
 	const slideTo = (el, index) => {
 		if (isVertical(el)) {
-			slide(el, 0, (ceilingHeight(el) - paddingY(el)) * index - el.scrollTop, index);
+			let height = Math.ceil(parseFloat(getComputedStyle(el.children[index]).height));
+			slide(el, 0, height * index - el.scrollTop, index);
 		} else {
-			let new_offset = isRTL(el) ? Math.abs(scrollStartX(el)) - (ceilingWidth(el) - paddingX(el)) * index : (ceilingWidth(el) - paddingX(el)) * index - scrollStartX(el);
+			let width = Math.ceil(parseFloat(getComputedStyle(el.children[index]).width));
+			let new_offset = isRTL(el) ? Math.abs(scrollStartX(el)) - width * index : width * index - scrollStartX(el);
 
 			slide(el, new_offset, 0, index);
 		}
