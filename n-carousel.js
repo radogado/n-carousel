@@ -320,8 +320,14 @@
 
 		// el.style.setProperty("--height", 0);
 
-		el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
-		el.dataset.y = Math.abs(Math.round(el.scrollTop / (ceilingHeight(el) - paddingY(el))));
+		let width = Math.ceil(parseFloat(getComputedStyle(el.children[0]).width));
+		let height = Math.ceil(parseFloat(getComputedStyle(el.children[0]).height));
+
+		// el.dataset.x = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
+		// el.dataset.y = Math.abs(Math.round(el.scrollTop / (ceilingHeight(el) - paddingY(el))));
+
+		el.dataset.x = Math.abs(Math.round(scrollStartX(el) / width));
+		el.dataset.y = Math.abs(Math.round(el.scrollTop / height));
 
 		// console.log("updateCarousel", el.scrollTop, el.offsetHeight);
 
@@ -493,18 +499,6 @@
 					el.children[index].style.height = "auto";
 					new_height = el.children[index].scrollHeight;
 				} else {
-					//           el.children[index].style.width = `${el.offsetWidth - paddingX(el)}px`;
-					//
-					//           el.classList.add("n-measure"); // don't use this, get height from slide child instead
-					//
-					//           el.children[el.dataset.x].style.height = el.children[index].style.height = "auto";
-					//
-					//           let container_height = parseFloat(getComputedStyle(el).height);
-					//           new_height = Math.max(parseFloat(getComputedStyle(el.children[index]).height), container_height);
-					//           let old_height = parseInt(el.dataset.x) === index ? new_height : Math.max(parseFloat(getComputedStyle(el.children[el.dataset.x]).height), container_height);
-					//
-					//           el.children[el.dataset.x].style.height = el.children[index].style.height = "";
-
 					new_height = parseFloat(getComputedStyle(el.children[index].children[0]).height);
 					let old_height = parseInt(el.dataset.x) === index ? new_height : parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height);
 
@@ -549,33 +543,8 @@
 		}
 	};
 
-	//   const resizeObserverFallback = (e) => {
-	//     document.querySelectorAll(".n-carousel__content").forEach((el) => {
-	//       // Clear our timeout throughout the scroll
-	//       clearTimeout(isResizing);
-	//
-	//       // Set a timeout to run after scrolling ends
-	//       isResizing = setTimeout(function () {
-	//         scrollTo(
-	//           el,
-	//           el.offsetWidth * el.dataset.x - paddingX(el),
-	//           el.offsetHeight * el.dataset.y + paddingY(el)
-	//         );
-	//       }, 66);
-	//     });
-	//   };
-
 	const carouselKeys = (e) => {
 		let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
-		// let keys_vertical = ["ArrowUp", "ArrowDown", "Home", "End"];
-		// let keys_2d = [
-		//   "ArrowLeft",
-		//   "ArrowRight",
-		//   "ArrowUp",
-		//   "ArrowDown",
-		//   "Home",
-		//   "End",
-		// ];
 
 		// console.log(e);
 		let el = e.target;
