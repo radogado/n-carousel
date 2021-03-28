@@ -381,7 +381,7 @@
 	var isResizing;
 
 	const scrollStop = (e) => {
-		return;
+		// return;
 		//     if (!!navigator.platform.match(/Win/)) {
 		//       // Scrolling is broken on Windows
 		//       // console.log("scroll Windows", e);
@@ -395,14 +395,17 @@
 		// console.log("scroll stopped", e);
 		let el = e.target;
 
-		let mod_x = scrollStartX(el) % (ceilingWidth(el) - paddingX(el));
-		let mod_y = el.scrollTop % (ceilingHeight(el) - paddingY(el));
+		let width = Math.ceil(parseFloat(getComputedStyle(el.children[el.dataset.x]).width));
+		let height = Math.ceil(parseFloat(getComputedStyle(el.children[el.dataset.y]).height));
+
+		let mod_x = scrollStartX(el) % width;
+		let mod_y = el.scrollTop % height;
 
 		console.log("while scrolling", mod_x, mod_y);
 
 		const afterScrollTimeout = () => {
-			let mod_x = scrollStartX(el) % (ceilingWidth(el) - paddingX(el));
-			let mod_y = el.scrollTop % (ceilingHeight(el) - paddingY(el));
+			let mod_x = scrollStartX(el) % width;
+			let mod_y = el.scrollTop % height;
 
 			console.log("after timeout", mod_x, mod_y);
 
@@ -419,17 +422,7 @@
 			}
 
 			if (lastScrollX === scrollStartX(el) && lastScrollY === el.scrollTop && mod_x === 0 && mod_y === 0) {
-				// Also if scroll is in snap position
-				// 			console.log(lastScrollX, scrollStartX(el));
-				// console.log(
-				//   "Scrolling has stopped.",
-				//   el,
-				//   scrollStartX(e.target),
-				//   lastScrollX,
-				//   el.scrollTop,
-				//   lastScrollY
-				// );
-				// 			updateCarousel(el);
+				// Snapped to position, not stuck
 
 				observersOff(el);
 
@@ -444,20 +437,9 @@
 						el.children[new_index].style.height = "";
 						var offset_y = new_index * new_height - el.scrollTop;
 					} else {
-						// el.style.height = "";
 						let new_index = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
-						// el.children[new_index].style.height = "auto";
-
-						// el.classList.add("n-measure");
-
-						// el.style.setProperty("--height", Math.max(parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height), parseFloat(getComputedStyle(el).height)) + 'px');
-						// console.log('new --height:', getComputedStyle(el).height);
-						// new_height = Math.max(parseFloat(getComputedStyle(el.children[new_index].children[0]).height), parseFloat(getComputedStyle(el).height)); // carousel height without any slides. Lowest position of controls.
 						new_height = parseFloat(getComputedStyle(el.children[new_index].children[0]).height); // but shouldn't be lower than blank carousel height. worked around by min height of 9em which surpasses the blank carousel height
 
-						// el.classList.remove("n-measure");
-
-						// el.children[new_index].style.height = "";
 						scrollTo(el, lastScrollX, lastScrollY);
 						var offset_y = 0;
 					}
