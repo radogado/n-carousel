@@ -66,12 +66,10 @@
       if (!document.webkitIsFullScreen) {
         el.nuiAncestors.forEach((el) => {
           window.requestAnimationFrame(() => {
-            // observersOff(el);
             el.scrollLeft = el.nuiScrollX;
             el.scrollTop = el.nuiScrollY;
             delete el.nuiScrollX;
             delete el.nuiScrollY;
-            // observersOn(el);
           });
         });
 
@@ -162,23 +160,11 @@
   const observersOn = (el) => {
     delete el.parentNode.dataset.sliding;
     window.requestAnimationFrame(() => {
-      // let x = el.scrollLeft;
-      // let y = el.scrollTop;
-      // getComputedStyle(el);
-      // el.scrollLeft = x;
-      // el.scrollLeft = y;
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
       }
 
       el.addEventListener("scroll", scrollStop, { passive: true });
-
-      // if (!navigator.platform.match(/Win/)) {
-      //   el.addEventListener("scroll", scrollStop, { passive: true });
-      // } else {
-      //   el.addEventListener("mousewheel", detectTrackPad);
-      //   el.addEventListener("DOMMouseScroll", detectTrackPad);
-      // }
     });
   };
 
@@ -218,14 +204,6 @@
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
 
-      // console.log(
-      //   "scrolling by: x ",
-      //   distanceX,
-      //   " y ",
-      //   distanceY,
-      //   " height ",
-      //   new_height
-      // );
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || el.closest(".n-carousel").matches(".n-carousel--instant")) {
         scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
         el.style.height = `${new_height}px`;
@@ -243,16 +221,6 @@
 
       if (!!new_height) {
         el.style.height = `${old_height}px`;
-        // if (
-        //   el.parentNode.matches(
-        //     ".n-carousel--vertical.n-carousel--controls-outside"
-        //   )
-        // ) {
-        //   el.parentNode.style.setProperty(
-        //     "--height-minus-index",
-        //     `${new_height}px`
-        //   );
-        // }
       } else {
         if (!isVertical(el)) {
           el.style.height = "";
@@ -314,16 +282,11 @@
     // Called on init and scroll end
 
     let container_height = getComputedStyle(el).height;
-    // console.log('updateCarousel container height', container_height);
 
     observersOff(el);
 
-    // el.style.setProperty("--height", 0);
-
     el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.children[0])));
     el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.children[0])));
-
-    // console.log("updateCarousel", el.scrollTop, el.offsetHeight);
 
     let active = isVertical(el) ? el.dataset.y : el.dataset.x;
 
@@ -331,15 +294,12 @@
       active = el.children.length - 1;
     }
 
-    // console.log("updateCarousel", scrollStartX(el), "active", active);
-
     let current_active = el.querySelector(":scope > [data-active]");
 
     if (current_active) {
       if (el.children[active] === current_active) {
         // Scroll snapping back to the same slide. Nothing to do here.
 
-        // el.style = '';
         observersOn(el);
         return;
       }
@@ -354,7 +314,6 @@
     el.children[active].dataset.active = true;
     el.children[active].style.height = "";
     el.style.setProperty("--height", container_height);
-    // console.log("updateCarousel new --height:", new_height);
 
     window.requestAnimationFrame(() => {
       if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
@@ -410,7 +369,7 @@
 
       let new_x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.children[0])));
       let new_y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.children[0])));
-      if (/* isChrome && */ mod_x !== 0 || mod_y !== 0) {
+      if (mod_x !== 0 || mod_y !== 0) {
         // Stuck bc of Chrome bug when you scroll in both directions during snapping
 
         // console.log("stuck", new_x, new_y);
@@ -477,10 +436,11 @@
     observersOff(el);
 
     if (!el.parentNode.dataset.sliding) {
-      let old_height = el.dataset.y === "NaN" ? 0 : el.children[el.dataset.y].clientHeight;
       el.parentNode.dataset.sliding = true;
 
+      let old_height = el.children[isVertical(el) ? el.dataset.y : el.dataset.x].clientHeight;
       let new_height = old_height;
+      let scroll_to_y = 0;
 
       if (isAuto(el)) {
         let old_scroll_left = scrollStartX(el);
@@ -495,8 +455,6 @@
 
           el.style.setProperty("--height", `${old_height}px`);
           console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
-
-          // el.classList.remove("n-measure");
         }
         el.children[index].style.width = el.children[index].style.height = "";
 
@@ -504,8 +462,9 @@
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
 
-      let scroll_to_y = isVertical(el) ? offsetY - index * old_height + index * new_height : 0;
-
+      if (isVertical(el)) {
+        scroll_to_y = offsetY - index * old_height + index * new_height;
+      }
       window.requestAnimationFrame(() => {
         scrollAnimate(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
       });
@@ -524,7 +483,6 @@
 
   const slideTo = (el, index) => {
     if (isVertical(el)) {
-      // let height = Math.ceil(parseFloat(getComputedStyle(el.children[index]).height));
       slide(el, 0, ceilingHeight(el.children[index]) * index - el.scrollTop, index);
     } else {
       let width = Math.ceil(parseFloat(getComputedStyle(el.children[index]).width));
@@ -537,7 +495,6 @@
   const carouselKeys = (e) => {
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
 
-    // console.log(e);
     let el = e.target;
     if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
@@ -591,7 +548,6 @@
   const verticalAutoObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
-        // console.log("resized: ", e.target);
         let slide = e.target;
         let el = slide.closest(".n-carousel__content");
 
@@ -607,41 +563,18 @@
       entries.forEach((e) => {
         let el = e.target;
 
-        // return;
-
         if (el.matches(".n-carousel--auto-height") && !!el.parentNode.dataset.sliding) {
           return;
         }
 
-        // el.style.removeProperty("--subpixel-compensation");
-
         // Round down the padding, because sub pixel padding + scrolling is a problem
         let carousel = el.querySelector(":scope > .n-carousel__content");
-        // observersOff(carousel);
-
-        // 				let padding_horizontal = parseInt(getComputedStyle(carousel).paddingLeft);
-        // 				let padding_vertical = parseInt(getComputedStyle(carousel).paddingTop);
-        //
-        // 				carousel.style.padding = isVertical(el) ? `${padding_vertical}px 0` : `0 ${padding_horizontal}px`;
 
         if (isVertical(el)) {
-          // if (!isAuto(el)) {
-          // let slide = carousel.querySelector(":scope > [data-active]");
-          // carousel.style.height = "";
-          // carousel.style.height = `${parseInt(getComputedStyle(slide).height)}px`;
-          // carousel.scrollTo(
-          //   0,
-          //   carousel.style.height * [carousel.children].indexOf(slide)
-          // );
-          // }
           carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
         } else {
-          // carousel.style.width = "";
-          // carousel.style.width = `${parseInt(getComputedStyle(carousel).width)}px`;
           carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
         }
-
-        // observersOn(carousel);
       });
     });
   });
