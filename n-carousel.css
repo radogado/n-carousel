@@ -247,6 +247,8 @@ _:future,
   grid-template-areas: "b1 b1 b2 i i" "prev a3 a3 a3 next";
 }
 .n-carousel > .n-carousel__content {
+  padding: 0;
+  margin: 0;
   grid-row: 1/-1;
   grid-column: 1/-1;
 }

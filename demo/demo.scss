@@ -13,9 +13,7 @@ html {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -59,6 +57,13 @@ pre {
       margin-top: 0;
     }
   }
+}
+
+.demo .n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > * {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  aspect-ratio: 2;
 }
 
 .demo .n-carousel .n-carousel__content {

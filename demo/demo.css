@@ -96,6 +96,13 @@ pre {
   }
 }
 
+.demo .n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > * {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  aspect-ratio: 2;
+}
+
 .demo .n-carousel .n-carousel__content > * {
   background: aliceblue;
   color: #027b7b;
