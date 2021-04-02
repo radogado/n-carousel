@@ -100,7 +100,6 @@ pre {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  aspect-ratio: 2;
 }
 
 .demo .n-carousel .n-carousel__content > * {
