@@ -61,6 +61,7 @@
 
 	const toggleFullScreen = (el) => {
 		el = el.closest(".n-carousel");
+		let carousel = el.querySelector(":scope > .n-carousel__content");
 
 		const restoreScroll = () => {
 			if (!document.webkitIsFullScreen) {
@@ -91,6 +92,8 @@
 			}
 			!!el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen();
 		}
+
+		// updateCarousel(carousel);
 	};
 
 	const scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
@@ -637,6 +640,14 @@
 			const full_screen = el.querySelector(":scope > .n-carousel__full-screen button");
 			if (full_screen) {
 				full_screen.onclick = (e) => toggleFullScreen(e.target);
+				el.onfullscreenchange = (e) => {
+					// Chrome: Keep and update the real scroll here
+					let carousel = e.target.querySelector(":scope > .n-carousel__content");
+					let x = carousel.dataset.x;
+					let y = carousel.dataset.y;
+					carousel.scrollTo(x * ceilingWidth(carousel.children[x]), y * ceilingHeight(carousel.children[y]));
+					// updateCarousel(carousel);
+				};
 			}
 
 			window.requestAnimationFrame(() => {
