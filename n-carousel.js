@@ -360,13 +360,13 @@
 		let mod_x = scrollStartX(el) % ceilingWidth(el.children[0]);
 		let mod_y = el.scrollTop % ceilingHeight(el.children[0]);
 
-		console.log("while scrolling", mod_x, mod_y);
+		// console.log("while scrolling", mod_x, mod_y);
 
 		const afterScrollTimeout = () => {
 			let mod_x = scrollStartX(el) % ceilingWidth(el.children[0]);
 			let mod_y = el.scrollTop % ceilingHeight(el.children[0]);
 
-			console.log("after timeout", mod_x, mod_y);
+			// console.log("after timeout", mod_x, mod_y);
 
 			// console.log("scrollStop check", mod_x, mod_y);
 
@@ -457,7 +457,7 @@
 					let old_height = parseInt(el.dataset.x) === index ? new_height : parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height);
 
 					el.style.setProperty("--height", `${old_height}px`);
-					console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
+					// console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
 				}
 				el.children[index].style.width = el.children[index].style.height = "";
 
@@ -639,12 +639,20 @@
 
 			const full_screen = el.querySelector(":scope > .n-carousel__full-screen button");
 			if (full_screen) {
-				full_screen.onclick = (e) => toggleFullScreen(e.target);
+				full_screen.onclick = (e) => {
+					let carousel = e.target.closest(".n-carousel").querySelector(":scope > .n-carousel__content");
+					let x = carousel.dataset.x;
+					let y = carousel.dataset.y;
+					console.log(x, carousel.scrollLeft);
+
+					toggleFullScreen(e.target);
+				};
 				el.onfullscreenchange = (e) => {
 					// Chrome: Keep and update the real scroll here
 					let carousel = e.target.querySelector(":scope > .n-carousel__content");
 					let x = carousel.dataset.x;
 					let y = carousel.dataset.y;
+					console.log(x, carousel.scrollLeft);
 					carousel.scrollTo(x * ceilingWidth(carousel.children[x]), y * ceilingHeight(carousel.children[y]));
 					// updateCarousel(carousel);
 				};
