@@ -579,7 +579,7 @@
           carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
         }
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
-        carousel.scrollTo(carousel.dataset.x * ceilingWidth(carousel.firstElementChild), carousel.dataset.y * ceilingHeight(carousel.firstElementChild));
+        scrollTo(carousel, carousel.dataset.x * ceilingWidth(carousel.firstElementChild), carousel.dataset.y * ceilingHeight(carousel.firstElementChild));
       });
     });
   });
@@ -668,7 +668,7 @@
             delete carousel.dataset.xx;
             delete carousel.dataset.yy;
 
-            carousel.scrollTo(carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]), carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y]));
+            scrollTo(carousel, carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]), carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y]));
           });
         };
       }
