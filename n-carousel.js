@@ -578,6 +578,8 @@
         } else {
           carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
         }
+        // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
+        carousel.scrollTo(carousel.dataset.x * ceilingWidth(carousel.firstElementChild), carousel.dataset.y * ceilingHeight(carousel.firstElementChild));
       });
     });
   });
