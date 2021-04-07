@@ -29,7 +29,7 @@
     margin-inline-end: calc(1px * var(--subpixel-compensation));
 
     &:first-child {
-      margin-inline-start: calc(1px * var(--subpixel-compensation-peeking));
+      // margin-inline-start: calc(1px * var(--subpixel-compensation-peeking));
     }
   }
 
@@ -64,6 +64,7 @@
       flex-shrink: 0;
       //          padding-inline-end: inherit;
       width: var(--peek-x, 0); // Fixed value option
+      width: calc(var(--peek-x, 0) + 1px * var(--subpixel-compensation-peeking, 0));
       height: 1px;
     }
   }
