@@ -574,8 +574,12 @@
         let carousel = el.querySelector(":scope > .n-carousel__content");
 
         if (isVertical(el)) {
+          let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
+          carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
           carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
         } else {
+          let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
+          carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
           carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
         }
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);

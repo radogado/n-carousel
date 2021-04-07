@@ -25,11 +25,10 @@
   width: calc(100% - 2 * var(--peek-x, 0));
   box-sizing: border-box;
   overflow: auto;
-  /*    display: flex;
-      flex-direction: column;
-      justify-content: center;
-  */
   margin-inline-end: calc(1px * var(--subpixel-compensation));
+}
+.n-carousel__content > *:first-child {
+  margin-inline-start: calc(1px * var(--subpixel-compensation-peeking));
 }
 
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {

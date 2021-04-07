@@ -26,14 +26,11 @@
     width: calc(100% - 2 * var(--peek-x, 0));
     box-sizing: border-box;
     overflow: auto;
-    /*    display: flex;
-    flex-direction: column;
-    justify-content: center;
-*/
-    // padding: calc(1px + (1px - var(--subpixel-adjust, 0)));
-    // &:not(:last-child) {
     margin-inline-end: calc(1px * var(--subpixel-compensation));
-    // }
+
+    &:first-child {
+      margin-inline-start: calc(1px * var(--subpixel-compensation-peeking));
+    }
   }
 
   --height: 0;
