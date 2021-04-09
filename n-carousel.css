@@ -22,10 +22,9 @@
 .n-carousel__content > * {
   flex: 1 0 auto;
   width: 100%;
-  width: calc(100% - 2 * var(--peek-x, 0));
+  width: calc(100% - 2 * var(--peek-x, 0) + 1px * var(--subpixel-compensation, 0));
   box-sizing: border-box;
   overflow: auto;
-  margin-inline-end: calc(1px * var(--subpixel-compensation));
 }
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
