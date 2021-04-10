@@ -25,6 +25,7 @@
 		width: 100%;
 		// width: calc(100% - 2 * var(--peek-x, 0));
 		width: calc(100% - 2 * var(--peek-x, 0) + 1px * var(--subpixel-compensation, 0));
+		padding-inline-end: calc(1px * var(--subpixel-compensation));
 		box-sizing: border-box;
 		overflow: auto;
 		// margin-inline-end: calc(1px * var(--subpixel-compensation));
@@ -73,10 +74,6 @@
 	&:not(.n-carousel--auto-height) > {
 		.n-carousel__content > * {
 			overflow: auto;
-			// > * {
-			//   height: 100%;
-			//   display: flex;
-			// }
 		}
 	}
 
@@ -104,29 +101,19 @@
 	}
 }
 
-// [data-ready][data-sliding].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
-//   > :not([data-active]) {
-//     height: 100%;
-//   }
-// }
-
 .n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content,
 .n-carousel--vertical[data-ready] > .n-carousel__content {
 	flex-direction: column;
 }
 
 .n-carousel.n-carousel--vertical {
-	// &.n-carousel--auto-height {
 	&.n-carousel--auto-height:not([data-ready]) {
 		> .n-carousel__content {
-			// overflow: hidden;
 			> :not(:first-child) {
 				display: none;
 			}
 		}
 	}
-
-	// }
 
 	&:not(.n-carousel--auto-height) {
 		&,
@@ -152,14 +139,10 @@
 		box-sizing: content-box;
 
 		> * {
-			//      height: var(--height, inherit); // Fallback not working in Safari
 			height: inherit; // Fallback not working in Safari
-			// overflow: hidden;
 
-			// &:not(:last-child) {
 			margin-inline-end: 0;
 			margin-block-end: calc(1px * var(--subpixel-compensation));
-			// }
 		}
 	}
 
@@ -169,10 +152,6 @@
 			max-height: 100%;
 			overflow: auto;
 			justify-content: initial;
-			// &,
-			// button {
-			//   display: block;
-			// }
 		}
 
 		&.n-carousel--controls-end {
@@ -359,9 +338,6 @@ _:future,
 		"f    a3    a3    a3    a3"
 		"prev   a2    a2    a2    next"
 		"i      i     i     i     i";
-
-	// box-sizing: border-box;
-	// padding: var(--subpixel-adjust, 1px);
 
 	&.n-carousel--controls-align-start {
 		grid-template: auto 1fr auto / auto auto 1fr auto;
