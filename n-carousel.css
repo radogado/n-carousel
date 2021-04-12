@@ -81,7 +81,8 @@
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   height: inherit;
   margin-inline-end: 0;
-  margin-block-end: calc(1px * var(--subpixel-compensation));
+  height: calc(100% - 2 * var(--peek-y, 0) + 1px * var(--subpixel-compensation, 0));
+  padding-block-end: calc(1px * var(--subpixel-compensation));
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside) > .n-carousel__index {
   position: absolute;
