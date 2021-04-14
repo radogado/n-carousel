@@ -450,8 +450,8 @@
         let old_scroll_top = el.scrollTop;
 
         if (isVertical(el)) {
-          el.children[index].style.height = "auto";
-          new_height = el.children[index].scrollHeight;
+          // el.children[index].style.height = "auto";
+          new_height = el.children[index].firstElementChild.scrollHeight;
         } else {
           new_height = parseFloat(getComputedStyle(el.children[index].children[0]).height);
           let old_height = parseInt(el.dataset.x) === index ? new_height : parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height);
@@ -459,7 +459,7 @@
           el.style.setProperty("--height", `${old_height}px`);
           // console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
         }
-        el.children[index].style.width = el.children[index].style.height = "";
+        // el.children[index].style.width = el.children[index].style.height = "";
 
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
