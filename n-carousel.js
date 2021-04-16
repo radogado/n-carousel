@@ -354,7 +354,7 @@
     //     }
     // return;
     // Clear our timeout throughout the scroll
-    // console.log("scroll stopped", e);
+    console.log("scrolling", e, e.target.scrollLeft);
     let el = e.target;
 
     let mod_x = scrollStartX(el) % ceilingWidth(el.children[0]);
