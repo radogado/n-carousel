@@ -191,6 +191,7 @@ code[class*=language-] {
 .code pre {
   padding: 1em;
   margin: 0.5em 0;
+  background: #fff !important;
 }
 .code button.n-btn {
   position: absolute;
