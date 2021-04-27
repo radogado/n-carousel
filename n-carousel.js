@@ -366,7 +366,7 @@
 			let mod_x = scrollStartX(el) % ceilingWidth(el.children[0]);
 			let mod_y = el.scrollTop % ceilingHeight(el.children[0]);
 
-			console.log("after timeout", mod_x, mod_y);
+			// console.log("after timeout", mod_x, mod_y);
 
 			// console.log("scrollStop check", mod_x, mod_y);
 
@@ -375,7 +375,7 @@
 			if (mod_x !== 0 || mod_y !== 0) {
 				// Stuck bc of Chrome bug when you scroll in both directions during snapping
 
-				// console.log("stuck", new_x, new_y);
+				console.log("stuck", new_x, new_y, el);
 				updateCarousel(el);
 				slideTo(el, isVertical(el) ? new_y : new_x);
 				return;
@@ -702,6 +702,8 @@
 				el.dataset.platform = navigator.platform;
 			});
 		});
+		
+		
 	};
 
 	typeof registerComponent === "function" ? registerComponent("n-select", init) : init(document);
