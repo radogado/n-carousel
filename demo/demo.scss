@@ -50,6 +50,7 @@ pre {
 
 .n-carousel__content > * > * {
 	padding: 1em;
+	max-height: 100%;
 
 	@media (min-width: 600px) {
 		h3,

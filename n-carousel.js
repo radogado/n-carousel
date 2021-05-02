@@ -577,7 +577,7 @@
 				if (isVertical(el)) {
 					let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
 					carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-					carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel.firstElementChild) - parseFloat(getComputedStyle(carousel.firstElementChild).height));
+					carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
 				} else {
 					let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
 					carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
@@ -702,8 +702,6 @@
 				el.dataset.platform = navigator.platform;
 			});
 		});
-		
-		
 	};
 
 	typeof registerComponent === "function" ? registerComponent("n-select", init) : init(document);
