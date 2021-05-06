@@ -325,6 +325,7 @@ _:future,
 .n-carousel {
 	max-height: 100vh;
 	// max-height: -webkit-fill-available; // Moved to Safari only
+	overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
 
 	&[data-sliding] {
 		pointer-events: none;
@@ -674,7 +675,6 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
 	max-height: -webkit-fill-available;
-	overflow: hidden;
 }
 
 @-moz-document url-prefix() {
@@ -694,6 +694,7 @@ _:future,
 
 	figure {
 		height: 100%;
+		margin: 0;
 		display: grid;
 		grid-template: 1fr auto/auto;
 		border: 0.1px solid transparent;

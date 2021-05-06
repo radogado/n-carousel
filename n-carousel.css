@@ -222,6 +222,7 @@ _:future,
 
 .n-carousel {
   max-height: 100vh;
+  overflow: hidden;
   display: grid;
   grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
   position: relative;
@@ -442,7 +443,6 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
   max-height: -webkit-fill-available;
-  overflow: hidden;
 }
 
 @-moz-document url-prefix() {
@@ -458,6 +458,7 @@ _:future,
 }
 .n-carousel--lightbox figure {
   height: 100%;
+  margin: 0;
   display: grid;
   grid-template: 1fr auto/auto;
   border: 0.1px solid transparent;
