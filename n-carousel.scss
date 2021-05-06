@@ -33,6 +33,9 @@
 		&:first-child {
 			// margin-inline-start: calc(1px * var(--subpixel-compensation-peeking));
 		}
+		> * {
+			overflow: auto; // Collapse inner margins
+		}
 	}
 
 	--height: 0;
@@ -320,6 +323,9 @@ _:future,
 }
 
 .n-carousel {
+	max-height: 100vh;
+	// max-height: -webkit-fill-available; // Moved to Safari only
+
 	&[data-sliding] {
 		pointer-events: none;
 	}
@@ -625,6 +631,7 @@ _:future,
 				text-align: start;
 				word-break: break-word;
 				color: inherit;
+				outline-offset: -3px;
 
 				&:focus {
 					z-index: 0;
@@ -659,6 +666,15 @@ _:future,
 	&:fullscreen {
 		background: #000;
 	}
+}
+
+// Safari only
+
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel {
+	max-height: -webkit-fill-available;
+	overflow: hidden;
 }
 
 @-moz-document url-prefix() {

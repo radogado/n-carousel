@@ -128,17 +128,13 @@ pre {
 		}
 	}
 
-	// width: 133vmin;
-	max-height: 100vh;
-	max-height: -webkit-fill-available;
-	// max-width: 100vw;
 	margin: auto;
 
 	&.n-carousel.n-carousel--tabs > .n-carousel__index {
 		max-height: 100%;
 		overflow: auto;
 		flex-wrap: nowrap;
-		padding: 1ch 0;
+		// padding: 1ch 0;
 		background: var(--control-bg);
 
 		button {
