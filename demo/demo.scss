@@ -53,12 +53,12 @@ pre {
 	padding: 1em;
 	// max-height: 100%;
 
-	@media (min-width: 600px) {
-		h3,
-		h2 {
-			margin-top: 0;
-		}
-	}
+	// @media (min-width: 600px) {
+	// 	h3,
+	// 	h2 {
+	// 		margin-top: 0;
+	// 	}
+	// }
 }
 
 .demo .n-carousel:not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > *,
@@ -201,14 +201,14 @@ code[class*="language-"] {
 	}
 }
 
-@media (min-width: 600px) {
-	h1,
-	h2 {
-		&:first-child {
-			margin-top: 0;
-		}
-	}
-}
+// @media (min-width: 600px) {
+// 	h1,
+// 	h2 {
+// 		&:first-child {
+// 			margin-top: 0;
+// 		}
+// 	}
+// }
 
 h1:after {
 	content: attr(data-version);
