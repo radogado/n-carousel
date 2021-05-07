@@ -30,6 +30,8 @@
   // 	return false;
   // };
 
+  const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
+
   const scrolledAncestor = (el) => {
     el = el.parentNode;
     while (el) {
@@ -291,7 +293,7 @@
     el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.children[0])));
     el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.children[0])));
 
-    let active = isVertical(el) ? el.dataset.y : el.dataset.x;
+    let active = getIndex(el);
 
     if (active >= el.children.length) {
       active = el.children.length - 1;
@@ -441,7 +443,7 @@
     if (!el.parentNode.dataset.sliding) {
       el.parentNode.dataset.sliding = true;
 
-      let old_height = el.children[isVertical(el) ? el.dataset.y : el.dataset.x].clientHeight;
+      let old_height = el.children[getIndex(el)].clientHeight;
       let new_height = old_height;
       let scroll_to_y = 0;
 
@@ -475,12 +477,12 @@
   };
 
   const slideNext = (el) => {
-    let index = 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
+    let index = getIndex(el);
     slideTo(el, index >= el.children.length - 1 ? 0 : index + 1);
   };
 
   const slidePrevious = (el) => {
-    let index = 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
+    let index = getIndex(el);
     slideTo(el, index === 0 ? el.children.length - 1 : index - 1);
   };
 
