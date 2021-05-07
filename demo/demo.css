@@ -276,4 +276,13 @@ _:future,
   margin: auto;
 }
 
+.n-carousel__options {
+  margin: 1em 0;
+}
+.n-carousel__options label {
+  margin-inline-end: 2ch;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
 /*# sourceMappingURL=demo.css.map */

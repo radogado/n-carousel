@@ -1,6 +1,4 @@
 .n-carousel__content {
-	--peek-x: 0px;
-	--peek-y: 0px;
 	display: flex;
 	will-change: scroll;
 	outline: 0;
@@ -170,7 +168,8 @@
 	}
 }
 
-[dir="rtl"] .n-carousel.n-carousel--vertical {
+[dir="rtl"] .n-carousel.n-carousel--vertical,
+.n-carousel.n-carousel--vertical.n-carousel--rtl {
 	&.n-carousel--controls-end {
 		> .n-carousel__index {
 			right: auto;
@@ -272,14 +271,16 @@ _:future,
 }
 
 .n-carousel__previous,
-[dir="rtl"] .n-carousel__next {
+[dir="rtl"] .n-carousel__next,
+.n-carousel--rtl > .n-carousel__next {
 	button:before {
 		transform: rotate(90deg);
 	}
 }
 
 .n-carousel__next,
-[dir="rtl"] .n-carousel__previous {
+[dir="rtl"] .n-carousel__previous,
+.n-carousel--rtl > .n-carousel__previous {
 	button:before {
 		transform: rotate(-90deg);
 	}
@@ -326,9 +327,20 @@ _:future,
 	max-height: 100vh;
 	// max-height: -webkit-fill-available; // Moved to Safari only
 	overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
+	--peek-x: 0px;
+	--peek-y: 0px;
 
 	&[data-sliding] {
 		pointer-events: none;
+	}
+
+	&.n-carousel--rtl {
+		direction: rtl;
+	}
+
+	&.n-carousel--peek {
+		--peek-x: 15%;
+		--peek-y: 15%;
 	}
 
 	&:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {

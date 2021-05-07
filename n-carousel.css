@@ -1,6 +1,4 @@
 .n-carousel__content {
-  --peek-x: 0px;
-  --peek-y: 0px;
   display: flex;
   will-change: scroll;
   outline: 0;
@@ -101,7 +99,8 @@
   grid-area: auto;
 }
 
-[dir=rtl] .n-carousel.n-carousel--vertical.n-carousel--controls-end > .n-carousel__index {
+[dir=rtl] .n-carousel.n-carousel--vertical.n-carousel--controls-end > .n-carousel__index,
+.n-carousel.n-carousel--vertical.n-carousel--rtl.n-carousel--controls-end > .n-carousel__index {
   right: auto;
   left: 0;
 }
@@ -179,12 +178,14 @@ _:future,
 }
 
 .n-carousel__previous button:before,
-[dir=rtl] .n-carousel__next button:before {
+[dir=rtl] .n-carousel__next button:before,
+.n-carousel--rtl > .n-carousel__next button:before {
   transform: rotate(90deg);
 }
 
 .n-carousel__next button:before,
-[dir=rtl] .n-carousel__previous button:before {
+[dir=rtl] .n-carousel__previous button:before,
+.n-carousel--rtl > .n-carousel__previous button:before {
   transform: rotate(-90deg);
 }
 
@@ -223,6 +224,8 @@ _:future,
 .n-carousel {
   max-height: 100vh;
   overflow: hidden;
+  --peek-x: 0px;
+  --peek-y: 0px;
   display: grid;
   grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
   position: relative;
@@ -230,6 +233,13 @@ _:future,
 }
 .n-carousel[data-sliding] {
   pointer-events: none;
+}
+.n-carousel.n-carousel--rtl {
+  direction: rtl;
+}
+.n-carousel.n-carousel--peek {
+  --peek-x: 15%;
+  --peek-y: 15%;
 }
 .n-carousel:not([data-sliding]):not([data-platform*=Win]) > .n-carousel__content {
   scroll-snap-type: both mandatory;
