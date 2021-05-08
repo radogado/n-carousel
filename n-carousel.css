@@ -66,7 +66,6 @@
 .n-carousel.n-carousel--vertical.n-carousel--auto-height:not([data-ready]) > .n-carousel__content > :not(:first-child) {
   display: none;
 }
-.n-carousel.n-carousel--vertical:not(.n-carousel--auto-height),
 .n-carousel.n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content {
   height: 100%;
   height: 50vh;
