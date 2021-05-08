@@ -157,11 +157,13 @@
 			max-height: 100%;
 			overflow: auto;
 			justify-content: initial;
+			grid-area: auto;
 		}
 
 		&.n-carousel--index-end {
 			> .n-carousel__index {
-				right: 0; // To do: RTL
+				inset-inline-end: 0;
+				inset-inline-start: auto;
 				grid-area: auto;
 			}
 			&.n-carousel--index-align-end {
@@ -172,21 +174,21 @@
 		}
 		&.n-carousel--index-align-end {
 			> .n-carousel__index {
-				position: static;
+				// position: static;
 			}
 		}
 	}
 }
 
-[dir="rtl"] .n-carousel.n-carousel--vertical,
-.n-carousel.n-carousel--vertical.n-carousel--rtl {
-	&.n-carousel--index-end {
-		> .n-carousel__index {
-			right: auto;
-			left: 0;
-		}
-	}
-}
+// [dir="rtl"] .n-carousel.n-carousel--vertical,
+// .n-carousel.n-carousel--vertical.n-carousel--rtl {
+// 	&.n-carousel--index-end {
+// 		> .n-carousel__index {
+// 			right: auto;
+// 			left: 0;
+// 		}
+// 	}
+// }
 
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
 
@@ -533,6 +535,8 @@ _:future,
 		&.n-carousel--index-align-end {
 			> .n-carousel__index {
 				align-self: end;
+				grid-area: i;
+				inset-inline-start: 0;
 			}
 		}
 		&.n-carousel--index-end {
