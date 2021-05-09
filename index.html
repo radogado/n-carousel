@@ -2301,19 +2301,17 @@
 					let snippet = false;
 
 					[...carousel.parentNode.querySelectorAll("code .attr-value")].forEach((el) => {
-						if (el.childNodes[2].textContent.match(/n-carousel/) && el.previousElementSibling.textContent.match(/class/) && !snippet) {
+						if (!snippet && el.childNodes[2].textContent.match(/n-carousel/) && el.previousElementSibling.textContent.match(/class/)) {
 							snippet = el.childNodes[2];
 						}
 					});
-
-					console.log(snippet);
 
 					if (el.checked) {
 						carousel.classList.add(el.dataset.class);
 						snippet.textContent += ` ${el.dataset.class}`;
 					} else {
 						carousel.classList.remove(el.dataset.class);
-						snippet.textContent = snippet.textContent.replace(el.dataset.class, "").trim();
+						snippet.textContent = snippet.textContent.replace(` ${el.dataset.class}`, "").trim();
 					}
 				};
 			});
