@@ -223,7 +223,6 @@ _:future,
 
 .n-carousel {
   max-height: 100vh;
-  overflow: hidden;
   --peek-x: 0px;
   --peek-y: 0px;
   display: grid;

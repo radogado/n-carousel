@@ -243,6 +243,12 @@ _:future,
   height: -webkit-fill-available;
 }
 
+_::-webkit-full-page-media,
+_:future,
+:root .demo.n-carousel {
+  overflow: hidden;
+}
+
 .demo-grid-2 {
   gap: 1em;
   margin: 2em 0;
