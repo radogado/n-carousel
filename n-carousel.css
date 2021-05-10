@@ -181,23 +181,23 @@ _:future,
   --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M0 0v180h60V60h120V0z'/%3E%3Cpath d='M0 0v180h60V60h120V0zM300 0v60h120v120h60V0z'/%3E%3Cpath d='M300 0v60h120v120h60V0zM420 300v120H300v60h180V300z'/%3E%3Cpath d='M420 300v120H300v60h180V300zM0 300v180h180v-60H60V300z'/%3E%3Cpath d='M0 300v180h180v-60H60V300z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-.n-carousel__previous button:before,
-[dir=rtl] .n-carousel__next button:before,
-.n-carousel--rtl > .n-carousel__next button:before {
+.n-carousel__previous button,
+[dir=rtl] .n-carousel__next button,
+.n-carousel--rtl > .n-carousel__next button {
   transform: rotate(90deg);
 }
 
-.n-carousel__next button:before,
-[dir=rtl] .n-carousel__previous button:before,
-.n-carousel--rtl > .n-carousel__previous button:before {
+.n-carousel__next button,
+[dir=rtl] .n-carousel__previous button,
+.n-carousel--rtl > .n-carousel__previous button {
   transform: rotate(-90deg);
 }
 
-.n-carousel--vertical > .n-carousel__next button:before {
+.n-carousel--vertical > .n-carousel__next button {
   transform: none;
 }
 
-.n-carousel--vertical > .n-carousel__previous button:before {
+.n-carousel--vertical > .n-carousel__previous button {
   transform: rotate(180deg);
 }
 

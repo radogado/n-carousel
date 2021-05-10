@@ -244,7 +244,7 @@ _:future,
 .n-carousel__previous,
 [dir="rtl"] .n-carousel__next,
 .n-carousel--rtl > .n-carousel__next {
-  button:before {
+  button {
     transform: rotate(90deg);
   }
 }
@@ -252,19 +252,19 @@ _:future,
 .n-carousel__next,
 [dir="rtl"] .n-carousel__previous,
 .n-carousel--rtl > .n-carousel__previous {
-  button:before {
+  button {
     transform: rotate(-90deg);
   }
 }
 
 .n-carousel--vertical > .n-carousel__next {
-  button:before {
+  button {
     transform: none;
   }
 }
 
 .n-carousel--vertical > .n-carousel__previous {
-  button:before {
+  button {
     transform: rotate(180deg);
   }
 }
