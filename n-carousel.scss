@@ -3,7 +3,6 @@
   will-change: scroll;
   outline: 0;
   box-sizing: border-box;
-  // padding: var(--peek-y, 0) var(--peek-x, 0);
   overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
   list-style: none;
 
@@ -20,17 +19,11 @@
 
   > * {
     flex: 1 0 auto;
-    width: 100%;
-    // width: calc(100% - 2 * var(--peek-x, 0));
-    width: calc(100% - 2 * var(--peek-x, 0) + 1px * var(--subpixel-compensation, 0));
+    width: calc(100% - 2 * var(--peek, 0) + 1px * var(--subpixel-compensation, 0));
     padding-inline-end: calc(1px * var(--subpixel-compensation));
     box-sizing: border-box;
     overflow: auto;
-    // margin-inline-end: calc(1px * var(--subpixel-compensation));
 
-    &:first-child {
-      // margin-inline-start: calc(1px * var(--subpixel-compensation-peeking));
-    }
     > * {
       overflow: auto; // Collapse inner margins
     }
@@ -39,23 +32,6 @@
   --height: 0;
 }
 
-// .n-carousel--simple {
-//   display: flex;
-//   scroll-snap-type: both mandatory;
-//   overflow: auto;
-//   scrollbar-width: none; /* Firefox */
-//
-//   &::-webkit-scrollbar {
-//     display: none;
-//   }
-//
-//   > * {
-//     flex: 1 0 auto;
-//     width: 100%;
-//     scroll-snap-align: center;
-//   }
-// }
-//
 .n-carousel:not(.n-carousel--vertical) {
   > .n-carousel__content {
     overflow-x: auto;
@@ -65,9 +41,7 @@
     &:after {
       content: "";
       flex-shrink: 0;
-      //          padding-inline-end: inherit;
-      width: var(--peek-x, 0); // Fixed value option
-      width: calc(var(--peek-x, 0) + 1px * var(--subpixel-compensation-peeking, 0));
+      width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
       height: 1px;
     }
   }
@@ -140,14 +114,19 @@
     box-sizing: content-box;
 
     > * {
-      height: inherit; // Fallback not working in Safari
-
       margin-inline-end: 0;
-      // margin-block-end: calc(1px * var(--subpixel-compensation));
-      height: calc(100% - 2 * var(--peek-y, 0) + 1px * var(--subpixel-compensation, 0));
+      width: 100%;
+      height: calc(100% - 2 * var(--peek, 0) + 1px * var(--subpixel-compensation, 0));
       padding-block-end: calc(1px * var(--subpixel-compensation));
       padding-inline-end: 0;
       box-sizing: content-box;
+    }
+    &:before,
+    &:after {
+      content: "";
+      flex-shrink: 0;
+      height: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
+      width: 1px;
     }
   }
 
@@ -180,16 +159,6 @@
   }
 }
 
-// [dir="rtl"] .n-carousel.n-carousel--vertical,
-// .n-carousel.n-carousel--vertical.n-carousel--rtl {
-// 	&.n-carousel--index-end {
-// 		> .n-carousel__index {
-// 			right: auto;
-// 			left: 0;
-// 		}
-// 	}
-// }
-
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
 
 _::-webkit-full-page-media,
@@ -203,16 +172,6 @@ _:future,
 :root .n-carousel[data-sliding] > .n-carousel__content > * {
   scroll-snap-align: center;
 }
-
-// Because macOS-only Safari can't swipe backwards when pointer events are re-enabled. Seems to be fixed in newer versions.
-
-// @supports not (-webkit-touch-callout: none) {
-//   _::-webkit-full-page-media,
-//   _:future,
-//   :root .n-carousel[data-sliding] {
-//     pointer-events: all;
-//   }
-// }
 
 .n-carousel__index,
 .n-carousel__previous,
@@ -321,7 +280,6 @@ _:future,
   }
 }
 
-/* .n-carousel[data-ready] > .n-carousel--auto-height:not(.n-carousel--vertical) > :not([data-active]), */
 .n-carousel:not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
   height: 0;
   animation: carousel-css-only 2 0.1s linear 1s forwards;
@@ -339,8 +297,7 @@ _:future,
   max-height: 100vh;
   // max-height: -webkit-fill-available; // Moved to Safari only
   // overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
-  --peek-x: 0px;
-  --peek-y: 0px;
+  --peek: 0px;
 
   &[data-sliding] {
     pointer-events: none;
@@ -351,8 +308,7 @@ _:future,
   }
 
   &.n-carousel--peek {
-    --peek-x: 15%;
-    --peek-y: 15%;
+    --peek: 15%;
   }
 
   &:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {
@@ -520,8 +476,6 @@ _:future,
     > .n-carousel__index {
       align-self: center;
 
-      // display: flex;
-      // flex-direction: column;
       > * {
         display: block;
       }
@@ -690,7 +644,7 @@ _:future,
         padding: 0.5ch 1ch;
         text-align: start;
         word-break: break-word;
-        color: inherit;
+        // color: inherit;
         outline-offset: -3px;
 
         &:focus {
@@ -735,7 +689,7 @@ _:future,
     display: block;
 
     > :last-child {
-      margin-block-end: var(--peek-y, 0);
+      margin-block-end: var(--peek, 0);
     }
   }
 }
