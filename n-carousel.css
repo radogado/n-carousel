@@ -19,7 +19,7 @@
 }
 .n-carousel__content > * {
   flex: 1 0 auto;
-  width: calc(100% - 2 * var(--peek, 0) + 1px * var(--subpixel-compensation, 0));
+  width: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
   padding-inline-end: calc(1px * var(--subpixel-compensation));
   box-sizing: border-box;
   overflow: auto;
@@ -83,7 +83,7 @@
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   margin-inline-end: 0;
   width: 100%;
-  height: calc(100% - 2 * var(--peek, 0) + 1px * var(--subpixel-compensation, 0));
+  height: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
   padding-block-end: calc(1px * var(--subpixel-compensation));
   padding-inline-end: 0;
   box-sizing: content-box;
