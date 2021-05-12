@@ -1836,7 +1836,7 @@
                 Tabs
               </label>
               <label>
-                <input type="checkbox" data-class="n-carousel--lightbox" />
+                <input type="checkbox" data-class="n-carousel--lightbox" checked="true" />
                 Lightbox
               </label>
             </div>
@@ -2765,7 +2765,7 @@
           let carousel = el.parentElement.parentElement.parentElement.querySelector(".n-carousel");
           let snippet = false;
 
-          [...carousel.parentNode.querySelectorAll("code .attr-value")].forEach((el) => {
+          [...carousel.parentNode.parentNode.querySelectorAll("code .attr-value")].forEach((el) => {
             if (!snippet && el.childNodes[2].textContent.match(/n-carousel/) && el.previousElementSibling.textContent.match(/class/)) {
               snippet = el.childNodes[2];
             }
