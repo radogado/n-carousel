@@ -12,7 +12,7 @@
       rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
     );
   }
-  const default_duration = 1000;
+  const default_duration = 500;
   const default_interval = 4000;
 
   const isChrome = !!navigator.userAgent.match("Chrome");

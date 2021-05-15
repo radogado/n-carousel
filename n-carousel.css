@@ -140,13 +140,13 @@ _:future,
   min-width: 2.25em;
   min-height: 2.25em;
   border-radius: 2.25em;
-  cursor: pointer;
   margin: 0.25em;
   font: inherit;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 0;
+  cursor: not-allowed;
 }
 .n-carousel__index button[disabled],
 .n-carousel__previous button[disabled],
@@ -154,6 +154,13 @@ _:future,
 .n-carousel__full-screen button[disabled] {
   opacity: 0.5;
   color: blue;
+}
+
+[data-ready] > .n-carousel__index button,
+[data-ready] > .n-carousel__previous button,
+[data-ready] > .n-carousel__next button,
+[data-ready] > .n-carousel__full-screen button {
+  cursor: pointer;
 }
 
 .n-carousel__previous button span,
@@ -511,7 +518,7 @@ _:future,
 }
 .n-carousel--lightbox img {
   display: block;
-  max-height: var(--max-height, 100%);
+  max-height: 100%;
   max-width: 100%;
   object-fit: contain;
 }

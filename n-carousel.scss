@@ -195,13 +195,13 @@ _:future,
     min-width: 2.25em;
     min-height: 2.25em;
     border-radius: 2.25em;
-    cursor: pointer;
     margin: 0.25em;
     font: inherit;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     padding: 0;
+    cursor: not-allowed;
 
     &[disabled] {
       opacity: 0.5;
@@ -210,6 +210,17 @@ _:future,
   }
 }
 
+[data-ready] > {
+.n-carousel__index,
+.n-carousel__previous,
+.n-carousel__next,
+.n-carousel__full-screen {
+  button {
+    cursor: pointer;
+
+}
+}
+}
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
 .n-carousel__previous,
@@ -766,7 +777,7 @@ margin-bottom: 3em;
 
   img {
     display: block;
-    max-height: var(--max-height, 100%);
+    max-height: 100%;
     max-width: 100%;
     object-fit: contain;
   }
