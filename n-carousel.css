@@ -258,7 +258,7 @@ _:future,
   justify-self: start;
 }
 .n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
-  grid-template-areas: "i i b1 b2 b2" "prev a3 a3 a3 next";
+  grid-template-areas: "f i b1 b2 b2" "prev a3 a3 a3 next";
 }
 .n-carousel.n-carousel--index-align-center:not(.n-carousel--vertical) > .n-carousel__index {
   justify-self: center;
@@ -267,7 +267,7 @@ _:future,
   justify-self: end;
 }
 .n-carousel.n-carousel--index-align-end.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
-  grid-template-areas: "b1 b1 b2 i i" "prev a3 a3 a3 next";
+  grid-template-areas: "b1 b1 b2 i f" "prev a3 a3 a3 next";
 }
 .n-carousel > .n-carousel__content {
   padding: 0;
@@ -479,7 +479,7 @@ _:future,
   height: 100%;
   margin: 0;
   display: grid;
-  grid-template: 1fr auto/auto;
+  grid-template: auto 1fr/auto;
   box-sizing: border-box;
 }
 .n-carousel--lightbox figure > * {
@@ -490,17 +490,33 @@ _:future,
   align-items: center;
 }
 .n-carousel--lightbox figure > figcaption {
-  grid-row: 2/3;
+  grid-row: 1/2;
   justify-self: center;
   padding: 0.5em 0.75em;
   background: rgba(0, 0, 0, 0.3);
   color: #ddd;
+}
+.n-carousel--lightbox.n-carousel--index-start figure {
+  grid-template: 1fr auto/auto;
+}
+.n-carousel--lightbox.n-carousel--index-start figure > figcaption {
+  grid-row: 2/3;
+}
+.n-carousel--lightbox.n-carousel--vertical:not(.n-carousel--controls-outside) figure > figcaption {
+  margin-top: 3em;
+}
+.n-carousel--lightbox.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--index-start figure > figcaption {
+  margin-top: none;
+  margin-bottom: 3em;
 }
 .n-carousel--lightbox img {
   display: block;
   max-height: var(--max-height, 100%);
   max-width: 100%;
   object-fit: contain;
+}
+.n-carousel--lightbox:-webkit-full-screen img {
+  max-height: 100%;
 }
 .n-carousel--lightbox iframe,
 .n-carousel--lightbox video {
