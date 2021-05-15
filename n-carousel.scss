@@ -89,13 +89,20 @@
       }
     }
   }
+--max-height: 50vh;
+height: var(--max-height, 100%);
+max-height: 100%;
+> .n-carousel__content {
+  max-height: 100%;
+  // height: var(--max-height); // Working default – overflows lightbox
+}
+
+&.n-carousel--auto-height {
+  height: auto;
+
+}
 
   &:not(.n-carousel--auto-height) {
-    --max-height: 50vh;
-    > .n-carousel__content {
-      height: var(--max-height); // Working default
-    }
-
     &:-webkit-full-screen {
       > .n-carousel__content {
         height: 100% !important;
@@ -294,7 +301,9 @@ _:future,
 }
 
 .n-carousel {
-  max-height: 100vh;
+  --max-height: 100vh;
+  max-height: var(--max-height, 100vh);
+
   // max-height: -webkit-fill-available; // Moved to Safari only
   // overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
   --peek: 0px;
@@ -702,7 +711,7 @@ _:future,
     margin: 0;
     display: grid;
     grid-template: 1fr auto/auto;
-    border: 0.1px solid transparent;
+    // border: 0.1px solid transparent;
     box-sizing: border-box;
 
     > * {
@@ -724,7 +733,7 @@ _:future,
 
   img {
     display: block;
-    max-height: 100%;
+    max-height: var(--max-height, 100%);
     max-width: 100%;
     object-fit: contain;
   }
