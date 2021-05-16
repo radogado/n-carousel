@@ -296,8 +296,8 @@ _:future,
 .n-carousel__options span, .n-carousel__options input {
   grid-row: 1;
   grid-column: 1;
-  width: 1ch;
-  height: 1ch;
+  width: 1.25ch;
+  height: 1.25ch;
   border-radius: 2px;
 }
 .n-carousel__options span {
@@ -311,9 +311,13 @@ _:future,
   -webkit-appearance: none;
   appearance: none;
   display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 .n-carousel__options input:checked + span {
   background: var(--control-color);
+  border: 3px solid var(--control-bg);
+  box-sizing: border-box;
 }
 
 /*# sourceMappingURL=demo.css.map */
