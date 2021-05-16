@@ -65,12 +65,6 @@ body {
 
 .n-carousel {
   text-align: center;
-}
-
-.n-carousel__index,
-.n-carousel__previous,
-.n-carousel__next,
-.n-carousel__full-screen {
   --control-bg: rgb(255, 158, 158);
   --control-color: #670d5b;
 }
@@ -293,6 +287,33 @@ _:future,
   line-height: 1.5;
   white-space: nowrap;
   user-select: none;
+  display: inline-grid;
+  grid-template: 1fr/auto 1fr;
+  align-items: center;
+  justify-items: center;
+  gap: 0.5ch;
+}
+.n-carousel__options span, .n-carousel__options input {
+  grid-row: 1;
+  grid-column: 1;
+  width: 1ch;
+  height: 1ch;
+  border-radius: 2px;
+}
+.n-carousel__options span {
+  display: inline-block;
+  background: var(--control-bg);
+  z-index: -1;
+}
+.n-carousel__options input {
+  border: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-block;
+}
+.n-carousel__options input:checked + span {
+  background: var(--control-color);
 }
 
 /*# sourceMappingURL=demo.css.map */
