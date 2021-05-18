@@ -89,18 +89,13 @@
       }
     }
   }
---max-height: 50vh;
-height: var(--max-height, 100%);
-max-height: 100%;
-> .n-carousel__content {
+  --max-height: 50vh;
+  height: var(--max-height, 100%);
   max-height: 100%;
-  // height: var(--max-height); // Working default – overflows lightbox
-}
-
-&.n-carousel--auto-height {
-  height: auto;
-
-}
+  > .n-carousel__content {
+    max-height: 100%;
+    // height: var(--max-height); // Working default – overflows lightbox
+  }
 
   &:not(.n-carousel--auto-height) {
     &:-webkit-full-screen {
@@ -164,6 +159,21 @@ max-height: 100%;
       }
     }
   }
+  &.n-carousel--auto-height {
+    height: auto;
+    &.n-carousel--peek {
+      // Disable vertical auto-height peeking for the time being
+      > .n-carousel__content {
+        > * {
+          height: calc(100% + 1px * var(--subpixel-compensation, 0));
+        }
+        &:before,
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
@@ -211,15 +221,14 @@ _:future,
 }
 
 [data-ready] > {
-.n-carousel__index,
-.n-carousel__previous,
-.n-carousel__next,
-.n-carousel__full-screen {
-  button {
-    cursor: pointer;
-
-}
-}
+  .n-carousel__index,
+  .n-carousel__previous,
+  .n-carousel__next,
+  .n-carousel__full-screen {
+    button {
+      cursor: pointer;
+    }
+  }
 }
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
@@ -721,7 +730,7 @@ _:future,
     height: 100%;
     margin: 0;
     display: grid;
-    grid-template: auto 1fr/auto;
+    grid-template: auto 1fr / auto;
     // border: 0.1px solid transparent;
     box-sizing: border-box;
 
@@ -741,38 +750,34 @@ _:future,
       color: #ddd;
     }
   }
-  
+
   &.n-carousel--index-start {
-  figure {
-    grid-template: 1fr auto/auto;
-  > figcaption {
-    grid-row: 2/3;
-  
+    figure {
+      grid-template: 1fr auto/auto;
+      > figcaption {
+        grid-row: 2/3;
+      }
     }
   }
-}    
 
   &.n-carousel--vertical:not(.n-carousel--controls-outside) {
-  figure {
-    // grid-template: 1fr auto/auto;
-  > figcaption {
-    // grid-row: 2/3;
-margin-top: 3em;  
+    figure {
+      // grid-template: 1fr auto/auto;
+      > figcaption {
+        // grid-row: 2/3;
+        margin-top: 3em;
+      }
     }
-  }
-  &.n-carousel--index-start    {
-figure {
-  // grid-template: 1fr auto/auto;
-> figcaption {
-  // grid-row: 2/3;
-margin-top: none;
-margin-bottom: 3em;
-  }
-}
-    
-    
-  }
-
+    &.n-carousel--index-start {
+      figure {
+        // grid-template: 1fr auto/auto;
+        > figcaption {
+          // grid-row: 2/3;
+          margin-top: none;
+          margin-bottom: 3em;
+        }
+      }
+    }
   }
 
   img {
@@ -781,13 +786,12 @@ margin-bottom: 3em;
     max-width: 100%;
     object-fit: contain;
   }
-  
-&:-webkit-full-screen {
-img {
-  max-height: 100%;
-}
 
-}  
+  &:-webkit-full-screen {
+    img {
+      max-height: 100%;
+    }
+  }
 
   iframe,
   video {

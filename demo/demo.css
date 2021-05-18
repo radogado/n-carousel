@@ -292,8 +292,11 @@ _:future,
   align-items: center;
   justify-items: center;
   gap: 0.5ch;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.n-carousel__options span, .n-carousel__options input {
+.n-carousel__options span,
+.n-carousel__options input {
   grid-row: 1;
   grid-column: 1;
   width: 1.25ch;

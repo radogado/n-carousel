@@ -72,9 +72,6 @@
 .n-carousel.n-carousel--vertical > .n-carousel__content {
   max-height: 100%;
 }
-.n-carousel.n-carousel--vertical.n-carousel--auto-height {
-  height: auto;
-}
 .n-carousel.n-carousel--vertical:not(.n-carousel--auto-height):-webkit-full-screen > .n-carousel__content {
   height: 100% !important;
 }
@@ -114,6 +111,16 @@
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--index-end.n-carousel--index-align-end > .n-carousel__index {
   position: absolute;
 }
+.n-carousel.n-carousel--vertical.n-carousel--auto-height {
+  height: auto;
+}
+.n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content > * {
+  height: calc(100% + 1px * var(--subpixel-compensation, 0));
+}
+.n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content:before, .n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content:after {
+  display: none;
+}
+
 _::-webkit-full-page-media,
 _:future,
 :root .n-carousel[data-sliding] > .n-carousel__content {
