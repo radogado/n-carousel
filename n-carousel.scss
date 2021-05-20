@@ -81,6 +81,10 @@
   flex-direction: column;
 }
 
+.n-carousel:-webkit-full-screen {
+  max-height: 100% !important;
+}
+
 .n-carousel.n-carousel--vertical {
   &.n-carousel--auto-height:not([data-ready]) {
     > .n-carousel__content {

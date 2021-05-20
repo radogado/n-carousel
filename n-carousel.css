@@ -61,6 +61,10 @@
   flex-direction: column;
 }
 
+.n-carousel:-webkit-full-screen {
+  max-height: 100% !important;
+}
+
 .n-carousel.n-carousel--vertical {
   --max-height: 50vh;
   height: var(--max-height, 100%);
