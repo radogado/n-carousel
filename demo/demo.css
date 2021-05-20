@@ -149,7 +149,7 @@ pre {
   display: flex;
 }
 .demo .source > * {
-  margin-inline-end: 5ch;
+  margin-inline-end: 3ch;
 }
 .demo .source pre {
   all: initial;
@@ -207,6 +207,7 @@ h1:after {
 [href="n-carousel.min.css"],
 [href="n-carousel.min.js"] {
   text-decoration: none;
+  white-space: nowrap;
 }
 [href="n-carousel.min.css"]:after,
 [href="n-carousel.min.js"]:after {

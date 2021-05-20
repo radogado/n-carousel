@@ -145,7 +145,7 @@ pre {
     display: flex;
 
     > * {
-      margin-inline-end: 5ch;
+      margin-inline-end: 3ch;
     }
 
     pre {
@@ -219,6 +219,7 @@ h1:after {
 [href="n-carousel.min.css"],
 [href="n-carousel.min.js"] {
   text-decoration: none;
+  white-space: nowrap;
 
   &:after {
     content: attr(data-size);

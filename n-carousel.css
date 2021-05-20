@@ -157,7 +157,13 @@ _:future,
   justify-content: center;
   align-items: center;
   padding: 0 1ch;
-  cursor: not-allowed;
+  cursor: pointer;
+}
+.n-carousel__index button span,
+.n-carousel__previous button span,
+.n-carousel__next button span,
+.n-carousel__full-screen button span {
+  color: var(--control-color, #333);
 }
 .n-carousel__index button[disabled],
 .n-carousel__previous button[disabled],
@@ -165,6 +171,10 @@ _:future,
 .n-carousel__full-screen button[disabled] {
   opacity: 0.5;
   color: blue;
+}
+
+.n-carousel:not([data-ready]) > * > button {
+  cursor: not-allowed;
 }
 
 [data-ready] > .n-carousel__index button,
@@ -469,6 +479,9 @@ _:future,
 }
 .n-carousel.n-carousel--tabs.n-carousel--vertical > .n-carousel__index > * {
   width: 100%;
+}
+.n-carousel.n-carousel--tabs.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index > * {
+  white-space: nowrap;
 }
 .n-carousel.n-carousel--tabs.n-carousel--tabs-align-end > .n-carousel__index button {
   text-align: end;

@@ -215,13 +215,20 @@ _:future,
     justify-content: center;
     align-items: center;
     padding: 0 1ch;
-    cursor: not-allowed;
+    cursor: pointer;
+    span {
+      color: var(--control-color, #333);
+    }
 
     &[disabled] {
       opacity: 0.5;
       color: blue;
     }
   }
+}
+
+.n-carousel:not([data-ready]) > * > button {
+  cursor: not-allowed;
 }
 
 [data-ready] > {
@@ -693,6 +700,12 @@ _:future,
 
       > * {
         width: 100%;
+      }
+    }
+
+    &.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index {
+      > * {
+        white-space: nowrap;
       }
     }
 
