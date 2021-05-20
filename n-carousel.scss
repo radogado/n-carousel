@@ -787,6 +787,8 @@ _:future,
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
+    box-sizing: border-box;
+    padding: 0.5px; // Safari: visible pixel from neighbour
   }
 
   &:-webkit-full-screen {

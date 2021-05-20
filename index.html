@@ -2791,6 +2791,8 @@
             carousel.classList.remove(el.dataset.class);
             snippet.textContent = snippet.textContent.replace(` ${el.dataset.class}`, "").trim();
           }
+          let content = carousel.querySelector(":scope > .n-carousel__content");
+          content.nCarouselUpdate(content);
         };
       });
     </script>

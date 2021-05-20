@@ -301,6 +301,12 @@
 
     let current_active = el.querySelector(":scope > [data-active]");
 
+    if (!el.parentElement.classList.contains("n-carousel--auto-height")) {
+      // Dynamic change from auto height to normal
+
+      el.style.height = "";
+    }
+
     if (current_active) {
       if (el.children[active] === current_active) {
         // Scroll snapping back to the same slide. Nothing to do here.
