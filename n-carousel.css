@@ -152,7 +152,7 @@ _:future,
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
+  padding: 0 1ch;
   cursor: not-allowed;
 }
 .n-carousel__index button[disabled],
@@ -350,6 +350,8 @@ _:future,
 }
 .n-carousel.n-carousel--vertical > .n-carousel__index > * {
   display: block;
+  white-space: normal;
+  max-width: 25vw;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-start > .n-carousel__index {
   align-self: start;

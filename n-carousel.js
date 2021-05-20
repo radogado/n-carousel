@@ -706,6 +706,7 @@
         }
         el.dataset.platform = navigator.platform;
       });
+      content.nCarouselUpdate = updateCarousel;
     });
   };
 

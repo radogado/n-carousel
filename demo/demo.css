@@ -145,9 +145,6 @@ pre {
   flex-wrap: nowrap;
   background: var(--control-bg);
 }
-.demo.n-carousel.n-carousel--tabs > .n-carousel__index button {
-  max-width: 25vw;
-}
 .demo .source {
   display: flex;
 }

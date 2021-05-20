@@ -210,7 +210,7 @@ _:future,
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
+    padding: 0 1ch;
     cursor: not-allowed;
 
     &[disabled] {
@@ -507,6 +507,8 @@ _:future,
 
       > * {
         display: block;
+        white-space: normal;
+        max-width: 25vw;
       }
     }
     &.n-carousel--index-align-start {
