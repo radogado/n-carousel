@@ -806,7 +806,7 @@ _:future,
     max-width: 100%;
     object-fit: contain;
     box-sizing: border-box;
-    padding: 0.5px; // Safari: visible pixel from neighbour
+    padding: 0 0.5px; // Safari: visible pixel from neighbour
   }
 
   &:-webkit-full-screen {
