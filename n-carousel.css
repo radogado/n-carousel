@@ -507,6 +507,7 @@ _:future,
 }
 .n-carousel--lightbox {
   flex: 1;
+  --carousel-bg: transparent;
 }
 .n-carousel--lightbox figure {
   height: 100%;

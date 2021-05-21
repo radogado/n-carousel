@@ -92,9 +92,9 @@ pre {
   flex-direction: column;
 }
 
-.demo .n-carousel .n-carousel__content > * {
-  background: aliceblue;
-  color: #027b7b;
+.demo .n-carousel .n-carousel__content > *, .demo .n-carousel .n-carousel__content > * > * {
+  background: var(--carousel-bg, aliceblue);
+  color: var(--carousel-color, #027b7b);
 }
 .demo .n-carousel .n-carousel__content > * > * {
   box-sizing: border-box;

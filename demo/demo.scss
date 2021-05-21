@@ -65,8 +65,10 @@ pre {
 
 .demo .n-carousel .n-carousel__content {
   > * {
-    background: aliceblue;
-    color: #027b7b;
+    &, > * {
+    background: var(--carousel-bg, aliceblue);
+    color: var(--carousel-color, #027b7b);
+  }
     > * {
       // min-height: 100%;
       box-sizing: border-box;
