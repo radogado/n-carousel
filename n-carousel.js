@@ -595,7 +595,16 @@
   const subpixel = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
-        updateSubpixels(e.target);
+        let wrapper = e.target;
+
+        updateSubpixels(wrapper);
+        let el = wrapper.querySelector(':scope > .n-carousel__content');
+console.log('resized', el);
+        let current_height = getComputedStyle(el.querySelector(':scope > [data-active] > *')).height;
+        let previous_height = el.style.getPropertyValue('--height');
+        if (current_height !== previous_height) {
+          el.style.setProperty('--height', current_height);
+        }
       });
     });
   });
@@ -616,7 +625,6 @@
       // Observing the carousel wrapper
       entries.forEach((e) => {
         let el = e.target;
-
         setIndexWidth(el);
       });
     });
