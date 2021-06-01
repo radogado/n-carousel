@@ -175,7 +175,7 @@
 
   const observersOff = (el) => {
     el.removeEventListener("scroll", scrollStop);
-    height_minus_index.unobserve(el.parentNode);
+    height_minus_index.disconnect();
     // el.removeEventListener("mousewheel", detectTrackPad);
     // el.removeEventListener("DOMMouseScroll", detectTrackPad);
   };
@@ -216,7 +216,7 @@
         return;
       }
 
-      subpixel.unobserve(el.parentNode);
+      subpixel.disconnect();
 
       let scroll_changing = true;
 
@@ -598,12 +598,12 @@
         let wrapper = e.target;
 
         updateSubpixels(wrapper);
-        let el = wrapper.querySelector(':scope > .n-carousel__content');
-console.log('resized', el);
-        let current_height = getComputedStyle(el.querySelector(':scope > [data-active] > *')).height;
-        let previous_height = el.style.getPropertyValue('--height');
+        let el = wrapper.querySelector(":scope > .n-carousel__content");
+        console.log("resized", el);
+        let current_height = getComputedStyle(el.querySelector(":scope > [data-active] > *")).height;
+        let previous_height = el.style.getPropertyValue("--height");
         if (current_height !== previous_height) {
-          el.style.setProperty('--height', current_height);
+          el.style.setProperty("--height", current_height);
         }
       });
     });
