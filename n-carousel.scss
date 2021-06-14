@@ -333,7 +333,6 @@ _:future,
 
 .n-carousel {
   --max-height: 100vh;
-  max-height: var(--max-height, 100vh);
 
   // max-height: -webkit-fill-available; // Moved to Safari only
   // overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
@@ -450,6 +449,14 @@ _:future,
   > .n-carousel__full-screen {
     grid-area: f;
     justify-self: baseline;
+  }
+
+  &[data-platform="iPhone"],
+  &[data-platform="iPod"] > {
+    .n-carousel__full-screen {
+      // iPhone doesn't support full screen
+      display: none;
+    }
   }
 
   &.n-carousel--index-start {
@@ -745,6 +752,7 @@ _:future,
 .n-carousel--lightbox {
   flex: 1;
   --carousel-bg: transparent;
+  max-height: var(--max-height, 100vh);
 
   figure {
     height: 100%;

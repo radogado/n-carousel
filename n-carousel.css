@@ -259,7 +259,6 @@ _:future,
 
 .n-carousel {
   --max-height: 100vh;
-  max-height: var(--max-height, 100vh);
   --peek: 0px;
   display: grid;
   grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
@@ -324,6 +323,9 @@ _:future,
 .n-carousel > .n-carousel__full-screen {
   grid-area: f;
   justify-self: baseline;
+}
+.n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
+  display: none;
 }
 .n-carousel.n-carousel--index-start .n-carousel__index {
   justify-content: flex-start;
@@ -508,6 +510,7 @@ _:future,
 .n-carousel--lightbox {
   flex: 1;
   --carousel-bg: transparent;
+  max-height: var(--max-height, 100vh);
 }
 .n-carousel--lightbox figure {
   height: 100%;
