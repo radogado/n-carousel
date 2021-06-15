@@ -401,9 +401,9 @@
 
           if (isVertical(el)) {
             // let new_index = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
-            el.children[new_y].style.height = "auto";
-            new_height = el.children[new_y].scrollHeight;
-            el.children[new_y].style.height = "";
+            // el.children[new_y].style.height = "auto";
+            new_height = el.children[new_y].children[0].scrollHeight; // To do: support multiple children and drop the requirement for a wrapper inside the slide
+            // el.children[new_y].style.height = "";
             offset_y = new_y * new_height - el.scrollTop;
           } else {
             // let new_index = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
