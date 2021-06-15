@@ -1,5 +1,9 @@
-<div style="width: 666.667px">
+<div style="width: 555.555px">
   <div style="width: calc(100% - 0px)">
-    <h1>100% = 666.667px, but calc(100% - 0px) = 666px</h1>
+    <h1>100% = 555.555px</h1>
+    <h2>calc(100% - 0px) =&nbsp;</h2>
+    <script>
+      document.querySelector("h2").insertAdjacentHTML("beforeend", getComputedStyle(document.querySelector("h2")).width);
+    </script>
   </div>
 </div>
