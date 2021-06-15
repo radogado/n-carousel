@@ -601,7 +601,7 @@
         let el = wrapper.querySelector(":scope > .n-carousel__content");
         console.log("resized", el);
         let current_height = getComputedStyle(el.querySelector(":scope > [data-active] > *")).height;
-        let previous_height = el.style.getPropertyValue("--height");
+        let previous_height = getComputedStyle(el).getPropertyValue("--height");
         if (current_height !== previous_height) {
           el.style.setProperty("--height", current_height);
         }
