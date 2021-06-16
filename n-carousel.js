@@ -368,13 +368,15 @@
     let mod_x = scrollStartX(el) % ceilingWidth(el.children[0]);
     let mod_y = el.scrollTop % ceilingHeight(el.children[0]);
 
-    // console.log("while scrolling", mod_x, mod_y);
+    // console.log("mod while scrolling", mod_x, mod_y);
+    // console.log("scroll while scrolling", scrollStartX(el));
 
     const afterScrollTimeout = () => {
       let mod_x = scrollStartX(el) % ceilingWidth(el.children[0]);
       let mod_y = el.scrollTop % ceilingHeight(el.children[0]);
 
-      // console.log("after timeout", mod_x, mod_y);
+      // console.log("mod after timeout", mod_x, mod_y);
+      // console.log("scroll after timeout", scrollStartX(el));
 
       // console.log("scrollStop check", mod_x, mod_y);
 
@@ -384,10 +386,15 @@
       if (!("ontouchstart" in window) && (mod_x !== 0 || mod_y !== 0)) {
         // Stuck bc of Chrome/Safari bug when you scroll in both directions during snapping. Not needed on touch and glitchy there.
 
-        console.log("stuck", new_x, new_y, el);
+        // console.log("stuck", new_x, new_y, el);
         updateCarousel(el);
         slideTo(el, isVertical(el) ? new_y : new_x);
         return;
+      }
+
+      if ("ontouchstart" in window && scrollStartX(el) === el.scrollWidth - el.offsetWidth && mod_x === el.children[0].offsetWidth - 1) {
+        // iPad last slide bug. Set mod_x to 0 so the next check can update the carousel
+        mod_x = 0;
       }
 
       if (lastScrollX === scrollStartX(el) && lastScrollY === el.scrollTop && mod_x === 0 && mod_y === 0) {
@@ -428,10 +435,10 @@
       }
     };
 
-    if (typeof window.ontouchstart !== "undefined" && (mod_x > 1 || mod_y > 1 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content"))) {
-      // It should also set up the timeout in case we're stuck after a while
-      return; // return only on touch Safari. What about iPad Safari with trackpad?
-    }
+    // if ("ontouchstart" in window && (mod_x > 1 || mod_y > 1 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content"))) {
+    //   // It should also set up the timeout in case we're stuck after a while
+    //   // return; // return only on touch Safari. What about iPad Safari with trackpad?
+    // }
 
     clearTimeout(isScrolling);
 
@@ -599,7 +606,7 @@
 
         updateSubpixels(wrapper);
         let el = wrapper.querySelector(":scope > .n-carousel__content");
-        console.log("resized", el);
+        // console.log("resized", el);
         let current_height = getComputedStyle(el.querySelector(":scope > [data-active] > *")).height;
         let previous_height = getComputedStyle(el).getPropertyValue("--height");
         if (current_height !== previous_height) {
