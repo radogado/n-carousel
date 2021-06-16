@@ -30,6 +30,7 @@
 
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
+  width: calc(100% - 0px);
 }
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content:before, .n-carousel:not(.n-carousel--vertical) > .n-carousel__content:after {
   content: "";

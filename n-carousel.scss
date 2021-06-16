@@ -36,6 +36,7 @@
   > .n-carousel__content {
     overflow-x: auto;
     // width: var(--subpixel-compensation);
+    width: calc(100% - 0px); // Using the Safari bug where it floors the floating point value
 
     &:before,
     &:after {
