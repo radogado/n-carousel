@@ -381,8 +381,8 @@
       let new_x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.children[0])));
       let new_y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.children[0])));
 
-      if (mod_x !== 0 || mod_y !== 0) {
-        // Stuck bc of Chrome bug when you scroll in both directions during snapping
+      if (!("ontouchstart" in window) && (mod_x !== 0 || mod_y !== 0)) {
+        // Stuck bc of Chrome/Safari bug when you scroll in both directions during snapping. Not needed on touch and glitchy there.
 
         console.log("stuck", new_x, new_y, el);
         updateCarousel(el);
