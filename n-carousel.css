@@ -288,6 +288,12 @@ _:future,
 .n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
   grid-template-areas: "f i b1 b2 b2" "prev a3 a3 a3 next";
 }
+.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
+  grid-template-areas: "i i i i i" "prev a2 a2 a2 next" "f a3 a3 a3 a3";
+}
+.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen {
+  align-self: end;
+}
 .n-carousel.n-carousel--index-align-center:not(.n-carousel--vertical) > .n-carousel__index {
   justify-self: center;
 }
@@ -296,6 +302,12 @@ _:future,
 }
 .n-carousel.n-carousel--index-align-end.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
   grid-template-areas: "b1 b1 b2 i f" "prev a3 a3 a3 next";
+}
+.n-carousel.n-carousel--index-align-end.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
+  grid-template-areas: "i i i i i" "prev a2 a2 a2 next" "f a3 a3 a3 a3";
+}
+.n-carousel.n-carousel--index-align-end.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen {
+  align-self: end;
 }
 .n-carousel > .n-carousel__content {
   padding: 0;
@@ -473,6 +485,7 @@ _:future,
   text-align: start;
   word-break: break-word;
   outline-offset: -3px;
+  min-width: 1.5em;
 }
 .n-carousel.n-carousel--tabs > .n-carousel__index button:focus {
   z-index: 0;
