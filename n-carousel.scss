@@ -590,7 +590,7 @@ _:future,
 				grid-template-areas:
 					"a1   a1  prev  a2  i"
 					"a3   a3  a3    a3  i"
-					"a4   a4  next  a5  a5";
+					"a4   a4  next  a5  f";
 
 				> .n-carousel__index {
 					align-self: start;
@@ -600,7 +600,7 @@ _:future,
 			&.n-carousel--index-align-end {
 				grid-template: 1fr auto auto/auto auto 1fr auto;
 				grid-template-areas:
-					"a1   a1  prev  a2  a2"
+					"a1   a1  prev  a2  f"
 					"a3   a3  a3    a3  i"
 					"a4   a4  next  a5  i";
 
@@ -622,7 +622,7 @@ _:future,
 			grid-template-areas:
 				"i a1 prev a2 a2"
 				"i a3 a3 a3 a3"
-				"b2 a4 next a5 a5";
+				"b2 a4 next a5 f";
 		}
 
 		&.n-carousel--index-align-end {
@@ -630,7 +630,7 @@ _:future,
 			grid-template-areas:
 				"b1 a1 prev a2 a2"
 				"i a3 a3 a3 a3"
-				"i a4 next a5 a5";
+				"i a4 next a5 f";
 			&.n-carousel--tabs:not(.n-carousel--controls-outside) {
 				grid-template: 1fr auto auto/auto auto 1fr auto;
 			}

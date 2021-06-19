@@ -404,14 +404,14 @@ _:future,
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-start {
   grid-template: 1fr auto auto/auto auto 1fr auto;
-  grid-template-areas: "a1   a1  prev  a2  i" "a3   a3  a3    a3  i" "a4   a4  next  a5  a5";
+  grid-template-areas: "a1   a1  prev  a2  i" "a3   a3  a3    a3  i" "a4   a4  next  a5  f";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-start > .n-carousel__index {
   align-self: start;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-end {
   grid-template: 1fr auto auto/auto auto 1fr auto;
-  grid-template-areas: "a1   a1  prev  a2  a2" "a3   a3  a3    a3  i" "a4   a4  next  a5  i";
+  grid-template-areas: "a1   a1  prev  a2  f" "a3   a3  a3    a3  i" "a4   a4  next  a5  i";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-end > .n-carousel__index {
   align-self: end;
@@ -423,10 +423,10 @@ _:future,
   align-self: end;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-start:not(.n-carousel--index-end):not(.n-carousel--controls-outside) {
-  grid-template-areas: "i a1 prev a2 a2" "i a3 a3 a3 a3" "b2 a4 next a5 a5";
+  grid-template-areas: "i a1 prev a2 a2" "i a3 a3 a3 a3" "b2 a4 next a5 f";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-end {
-  grid-template-areas: "b1 a1 prev a2 a2" "i a3 a3 a3 a3" "i a4 next a5 a5";
+  grid-template-areas: "b1 a1 prev a2 a2" "i a3 a3 a3 a3" "i a4 next a5 f";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-end.n-carousel--tabs:not(.n-carousel--controls-outside) {
   grid-template: 1fr auto auto/auto auto 1fr auto;
