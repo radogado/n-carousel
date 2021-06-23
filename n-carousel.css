@@ -138,6 +138,12 @@ _:future,
   scroll-snap-align: center;
 }
 
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel {
+  overflow-x: hidden;
+}
+
 .n-carousel__index button,
 .n-carousel__previous button,
 .n-carousel__next button,
