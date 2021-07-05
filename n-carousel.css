@@ -338,6 +338,21 @@ _:future,
   justify-content: center;
   overflow: auto;
   white-space: nowrap;
+  vertical-align: middle;
+}
+.n-carousel > .n-carousel__index img {
+  width: 3em;
+  height: 3em;
+  object-fit: cover;
+  padding: 0;
+}
+.n-carousel > .n-carousel__index.n-carousel__index--thumbnails button {
+  padding: 0;
+  vertical-align: middle;
+  margin: 0.25em 0;
+}
+.n-carousel > .n-carousel__index.n-carousel__index--thumbnails button span {
+  padding: 0 1ch;
 }
 .n-carousel > .n-carousel__full-screen {
   grid-area: f;

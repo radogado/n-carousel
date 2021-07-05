@@ -1,184 +1,184 @@
 .n-carousel__content {
-	display: flex;
-	will-change: scroll;
-	outline: 0;
-	box-sizing: border-box;
-	overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
-	list-style: none;
+  display: flex;
+  will-change: scroll;
+  outline: 0;
+  box-sizing: border-box;
+  overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
+  list-style: none;
 
-	@media (prefers-reduced-motion: reduce) {
-		transition: none;
-	}
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
-	scrollbar-width: none;
-	/* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 
-	&::-webkit-scrollbar {
-		display: none;
-	}
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
-	> * {
-		flex: 1 0 auto;
-		width: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
-		padding-inline-end: calc(1px * var(--subpixel-compensation));
-		box-sizing: border-box;
-		overflow: auto;
+  > * {
+    flex: 1 0 auto;
+    width: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
+    padding-inline-end: calc(1px * var(--subpixel-compensation));
+    box-sizing: border-box;
+    overflow: auto;
 
-		> * {
-			overflow: auto; // Collapse inner margins
-		}
-	}
+    > * {
+      overflow: auto; // Collapse inner margins
+    }
+  }
 
-	--height: 0;
+  --height: 0;
 }
 
 .n-carousel:not(.n-carousel--vertical) {
-	> .n-carousel__content {
-		overflow-x: auto;
-		// width: var(--subpixel-compensation);
-		width: calc(100% - 0px); // Using the Safari bug where it floors the floating point value
+  > .n-carousel__content {
+    overflow-x: auto;
+    // width: var(--subpixel-compensation);
+    width: calc(100% - 0px); // Using the Safari bug where it floors the floating point value
 
-		&:before,
-		&:after {
-			content: "";
-			flex-shrink: 0;
-			width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
-			height: 1px;
-		}
-	}
+    &:before,
+    &:after {
+      content: "";
+      flex-shrink: 0;
+      width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
+      height: 1px;
+    }
+  }
 
-	&:not(.n-carousel--auto-height) > {
-		.n-carousel__content > * {
-			overflow: auto;
-		}
-	}
+  &:not(.n-carousel--auto-height) > {
+    .n-carousel__content > * {
+      overflow: auto;
+    }
+  }
 
-	&.n-carousel--auto-height {
-		&:not([data-ready]) {
-			> .n-carousel__content > :not(:first-child) {
-				height: 0;
-				overflow: visible;
-			}
-		}
+  &.n-carousel--auto-height {
+    &:not([data-ready]) {
+      > .n-carousel__content > :not(:first-child) {
+        height: 0;
+        overflow: visible;
+      }
+    }
 
-		> .n-carousel__content {
-			overflow-y: hidden;
-			> * > * {
-				min-height: 9em;
-			}
-		}
-	}
+    > .n-carousel__content {
+      overflow-y: hidden;
+      > * > * {
+        min-height: 9em;
+      }
+    }
+  }
 }
 
 [data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
-	> :not([data-active]) {
-		height: var(--height, 0);
-		overflow: visible;
-	}
+  > :not([data-active]) {
+    height: var(--height, 0);
+    overflow: visible;
+  }
 }
 
 .n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content,
 .n-carousel--vertical[data-ready] > .n-carousel__content {
-	flex-direction: column;
+  flex-direction: column;
 }
 
 .n-carousel:-webkit-full-screen {
-	max-height: 100% !important;
+  max-height: 100% !important;
 }
 
 .n-carousel.n-carousel--vertical {
-	&.n-carousel--auto-height:not([data-ready]) {
-		> .n-carousel__content {
-			> :not(:first-child) {
-				display: none;
-			}
-		}
-	}
-	--max-height: 75vh;
-	height: var(--max-height, 100%);
-	max-height: 100%;
-	> .n-carousel__content {
-		max-height: 100%;
-		// height: var(--max-height); // Working default – overflows lightbox
-	}
+  &.n-carousel--auto-height:not([data-ready]) {
+    > .n-carousel__content {
+      > :not(:first-child) {
+        display: none;
+      }
+    }
+  }
+  --max-height: 75vh;
+  height: var(--max-height, 100%);
+  max-height: 100%;
+  > .n-carousel__content {
+    max-height: 100%;
+    // height: var(--max-height); // Working default – overflows lightbox
+  }
 
-	&:not(.n-carousel--auto-height) {
-		&:-webkit-full-screen {
-			> .n-carousel__content {
-				height: 100% !important;
-			}
-		}
+  &:not(.n-carousel--auto-height) {
+    &:-webkit-full-screen {
+      > .n-carousel__content {
+        height: 100% !important;
+      }
+    }
 
-		&:fullscreen {
-			> .n-carousel__content {
-				height: 100% !important;
-			}
-		}
-	}
+    &:fullscreen {
+      > .n-carousel__content {
+        height: 100% !important;
+      }
+    }
+  }
 
-	> .n-carousel__content {
-		overflow-y: auto;
-		box-sizing: content-box;
+  > .n-carousel__content {
+    overflow-y: auto;
+    box-sizing: content-box;
 
-		> * {
-			margin-inline-end: 0;
-			width: 100%;
-			height: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
-			padding-block-end: calc(1px * var(--subpixel-compensation));
-			padding-inline-end: 0;
-			box-sizing: content-box;
-		}
-		&:before,
-		&:after {
-			content: "";
-			flex-shrink: 0;
-			height: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
-			width: 1px;
-		}
-	}
+    > * {
+      margin-inline-end: 0;
+      width: 100%;
+      height: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
+      padding-block-end: calc(1px * var(--subpixel-compensation));
+      padding-inline-end: 0;
+      box-sizing: content-box;
+    }
+    &:before,
+    &:after {
+      content: "";
+      flex-shrink: 0;
+      height: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
+      width: 1px;
+    }
+  }
 
-	&:not(.n-carousel--controls-outside) {
-		> .n-carousel__index {
-			position: absolute;
-			max-height: 100%;
-			overflow: auto;
-			justify-content: initial;
-			grid-area: auto;
-		}
+  &:not(.n-carousel--controls-outside) {
+    > .n-carousel__index {
+      position: absolute;
+      max-height: 100%;
+      overflow: auto;
+      justify-content: initial;
+      grid-area: auto;
+    }
 
-		&.n-carousel--index-end {
-			> .n-carousel__index {
-				inset-inline-end: 0;
-				inset-inline-start: auto;
-				grid-area: auto;
-			}
-			&.n-carousel--index-align-end {
-				> .n-carousel__index {
-					position: absolute;
-				}
-			}
-		}
-		&.n-carousel--index-align-end {
-			> .n-carousel__index {
-				// position: static;
-			}
-		}
-	}
-	&.n-carousel--auto-height {
-		height: auto;
-		&.n-carousel--peek {
-			// Disable vertical auto-height peeking for the time being
-			> .n-carousel__content {
-				> * {
-					height: calc(100% + 1px * var(--subpixel-compensation, 0));
-				}
-				&:before,
-				&:after {
-					display: none;
-				}
-			}
-		}
-	}
+    &.n-carousel--index-end {
+      > .n-carousel__index {
+        inset-inline-end: 0;
+        inset-inline-start: auto;
+        grid-area: auto;
+      }
+      &.n-carousel--index-align-end {
+        > .n-carousel__index {
+          position: absolute;
+        }
+      }
+    }
+    &.n-carousel--index-align-end {
+      > .n-carousel__index {
+        // position: static;
+      }
+    }
+  }
+  &.n-carousel--auto-height {
+    height: auto;
+    &.n-carousel--peek {
+      // Disable vertical auto-height peeking for the time being
+      > .n-carousel__content {
+        > * {
+          height: calc(100% + 1px * var(--subpixel-compensation, 0));
+        }
+        &:before,
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 // Chrome/FF can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset.
@@ -186,678 +186,696 @@
 _::-webkit-full-page-media,
 _:future,
 :root .n-carousel[data-sliding] > .n-carousel__content {
-	scroll-snap-type: both mandatory;
+  scroll-snap-type: both mandatory;
 }
 
 _::-webkit-full-page-media,
 _:future,
 :root .n-carousel[data-sliding] > .n-carousel__content > * {
-	scroll-snap-align: center;
+  scroll-snap-align: center;
 }
 
 _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
-	overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
+  overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
 }
 
 .n-carousel__index,
 .n-carousel__previous,
 .n-carousel__next,
 .n-carousel__full-screen {
-	button {
-		-webkit-touch-callout: none;
-		-webkit-user-select: none;
-		user-select: none;
-		all: revert;
-		border: none;
-		color: var(--control-color, #333);
-		background: var(--control-bg, #eee);
-		min-width: 2.25em;
-		min-height: 2.25em;
-		border-radius: 2.25em;
-		margin: 0.25em;
-		font: inherit;
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0 1ch;
-		cursor: pointer;
-		span {
-			color: var(--control-color, #333);
-		}
+  button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    all: revert;
+    border: none;
+    color: var(--control-color, #333);
+    background: var(--control-bg, #eee);
+    min-width: 2.25em;
+    min-height: 2.25em;
+    border-radius: 2.25em;
+    margin: 0.25em;
+    font: inherit;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1ch;
+    cursor: pointer;
+    span {
+      color: var(--control-color, #333);
+    }
 
-		&[disabled] {
-			opacity: 0.5;
-			color: blue;
-		}
-	}
+    &[disabled] {
+      opacity: 0.5;
+      color: blue;
+    }
+  }
 }
 
 .n-carousel:not([data-ready]) > * > button {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 [data-ready] > {
-	.n-carousel__index,
-	.n-carousel__previous,
-	.n-carousel__next,
-	.n-carousel__full-screen {
-		button {
-			cursor: pointer;
-		}
-	}
+  .n-carousel__index,
+  .n-carousel__previous,
+  .n-carousel__next,
+  .n-carousel__full-screen {
+    button {
+      cursor: pointer;
+    }
+  }
 }
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
 .n-carousel__previous,
 .n-carousel__next,
 .n-carousel__full-screen {
-	button {
-		span {
-			// Screen readers only
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			padding: 0;
-			margin: -1px;
-			overflow: hidden;
-			clip: rect(0, 0, 0, 0);
-			white-space: nowrap;
-			border: 0;
-		}
+  button {
+    span {
+      // Screen readers only
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
-		&:before {
-			content: "";
-			background-color: var(--control-color, #333);
-			--chevron: url("data:image/svg+xml,%3Csvg height='18' viewBox='0 0 18 18' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m9.003 7.626 7.081-7.081 1.916 1.915-8.997 8.998-9.003-9 1.917-1.916z' transform='translate(0 5)'/%3E%3C/svg%3E");
-			-webkit-mask: var(--chevron) no-repeat 0 0 / contain;
-			mask: var(--chevron) no-repeat 0 0;
-			width: 1em;
-			height: 1em;
-			display: inline-block;
-		}
-	}
+    &:before {
+      content: "";
+      background-color: var(--control-color, #333);
+      --chevron: url("data:image/svg+xml,%3Csvg height='18' viewBox='0 0 18 18' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m9.003 7.626 7.081-7.081 1.916 1.915-8.997 8.998-9.003-9 1.917-1.916z' transform='translate(0 5)'/%3E%3C/svg%3E");
+      -webkit-mask: var(--chevron) no-repeat 0 0 / contain;
+      mask: var(--chevron) no-repeat 0 0;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+    }
+  }
 }
 
 .n-carousel__full-screen {
-	button:before {
-		--chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M0 0v180h60V60h120V0z'/%3E%3Cpath d='M0 0v180h60V60h120V0zM300 0v60h120v120h60V0z'/%3E%3Cpath d='M300 0v60h120v120h60V0zM420 300v120H300v60h180V300z'/%3E%3Cpath d='M420 300v120H300v60h180V300zM0 300v180h180v-60H60V300z'/%3E%3Cpath d='M0 300v180h180v-60H60V300z'/%3E%3C/g%3E%3C/svg%3E");
-	}
+  button:before {
+    --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M0 0v180h60V60h120V0z'/%3E%3Cpath d='M0 0v180h60V60h120V0zM300 0v60h120v120h60V0z'/%3E%3Cpath d='M300 0v60h120v120h60V0zM420 300v120H300v60h180V300z'/%3E%3Cpath d='M420 300v120H300v60h180V300zM0 300v180h180v-60H60V300z'/%3E%3Cpath d='M0 300v180h180v-60H60V300z'/%3E%3C/g%3E%3C/svg%3E");
+  }
 }
 
 .n-carousel__previous,
 [dir="rtl"] .n-carousel__next,
 .n-carousel--rtl > .n-carousel__next {
-	button {
-		transform: rotate(90deg);
-	}
+  button {
+    transform: rotate(90deg);
+  }
 }
 
 .n-carousel__next,
 [dir="rtl"] .n-carousel__previous,
 .n-carousel--rtl > .n-carousel__previous {
-	button {
-		transform: rotate(-90deg);
-	}
+  button {
+    transform: rotate(-90deg);
+  }
 }
 
 .n-carousel--vertical > .n-carousel__next {
-	button {
-		transform: none;
-	}
+  button {
+    transform: none;
+  }
 }
 
 .n-carousel--vertical > .n-carousel__previous {
-	button {
-		transform: rotate(180deg);
-	}
+  button {
+    transform: rotate(180deg);
+  }
 }
 
 .n-carousel--vertical[data-ready].n-carousel--auto-height > .n-carousel__content {
-	overflow: hidden;
-	overflow-y: auto;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 @keyframes carousel-css-only {
-	100% {
-		height: 100%;
-	}
+  100% {
+    height: 100%;
+  }
 }
 
 .n-carousel:not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
-	height: 0;
-	animation: carousel-css-only 2 0.1s linear 1s forwards;
+  height: 0;
+  animation: carousel-css-only 2 0.1s linear 1s forwards;
 }
 
 .n-carousel:not([data-ready]) > .n-carousel--auto-height > :first-child {
-	min-height: 100%;
+  min-height: 100%;
 }
 
 .n-carousel__content > :not([data-active]):not(:last-child) {
-	overflow: auto;
+  overflow: auto;
 }
 
 .n-carousel {
-	--max-height: 100vh;
-
-	// max-height: -webkit-fill-available; // Moved to Safari only
-	// overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
-	--peek: 0px;
-
-	&[data-sliding] {
-		pointer-events: none;
-	}
-
-	&.n-carousel--rtl {
-		direction: rtl;
-	}
-
-	&.n-carousel--peek {
-		--peek: 15%;
-	}
-
-	&:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {
-		// Windows double scrolls
-		scroll-snap-type: both mandatory;
-
-		> * {
-			scroll-snap-align: center;
-			scroll-snap-stop: always;
-		}
-	}
-
-	display: grid;
-	grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
-	position: relative;
-
-	grid-template-areas:
-		"f    a3    a3    a3    a3"
-		"prev   a2    a2    a2    next"
-		"i      i     i     i     i";
-
-	&.n-carousel--index-align-start {
-		// grid-template: auto 1fr auto / auto auto 1fr auto;
-		// grid-template-areas:
-		// 	"a3 a3 a3 a3"
-		// 	"prev a2 a2 next"
-		// 	"i i b2 b2";
-
-		> .n-carousel__index {
-			justify-self: start;
-		}
-
-		&.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
-			grid-template-areas:
-				"f i b1 b2 b2"
-				"prev a3 a3 a3 next";
-
-			&:not(.n-carousel--vertical) {
-				grid-template-areas:
-					"i i i i i"
-					"prev a2 a2 a2 next"
-					"f a3 a3 a3 a3";
-
-				> .n-carousel__full-screen {
-					align-self: end;
-				}
-			}
-		}
-	}
-
-	&.n-carousel--index-align-center:not(.n-carousel--vertical) {
-		// grid-template: 1fr auto 1fr / auto 1fr auto auto;
-		// grid-template-areas:
-		// 	"a3 a3 a3 a3"
-		// 	"prev a2 a2 next"
-		// 	" b2 b2 i i";
-
-		> .n-carousel__index {
-			justify-self: center;
-		}
-	}
-
-	&.n-carousel--index-align-end {
-		// grid-template: 1fr auto 1fr / auto 1fr auto auto;
-		// grid-template-areas:
-		// 	"a3 a3 a3 a3"
-		// 	"prev a2 a2 next"
-		// 	" b2 b2 i i";
-
-		> .n-carousel__index {
-			justify-self: end;
-		}
-
-		&.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
-			grid-template-areas:
-				"b1 b1 b2 i f"
-				"prev a3 a3 a3 next";
-
-			&:not(.n-carousel--vertical) {
-				grid-template-areas:
-					"i i i i i"
-					"prev a2 a2 a2 next"
-					"f a3 a3 a3 a3";
-
-				> .n-carousel__full-screen {
-					align-self: end;
-				}
-			}
-		}
-	}
-
-	> .n-carousel__content {
-		padding: 0;
-		margin: 0;
-		grid-row: 1/-1;
-		grid-column: 1/-1;
-	}
-
-	> :not(.n-carousel__content) {
-		z-index: 1;
-	}
-
-	> .n-carousel__previous {
-		grid-area: prev;
-		align-self: center;
-	}
-
-	> .n-carousel__next {
-		grid-area: next;
-		align-self: center;
-	}
-
-	> .n-carousel__index {
-		grid-area: i;
-		align-self: end;
-		justify-content: center;
-		overflow: auto;
-		white-space: nowrap;
-	}
-
-	> .n-carousel__full-screen {
-		grid-area: f;
-		justify-self: baseline;
-	}
-
-	&[data-platform="iPhone"],
-	&[data-platform="iPod"] > {
-		.n-carousel__full-screen {
-			// iPhone doesn't support full screen
-			display: none;
-		}
-	}
-
-	&.n-carousel--index-start {
-		.n-carousel__index {
-			justify-content: flex-start;
-		}
-	}
-
-	&.n-carousel--index-end {
-		> .n-carousel__index {
-			justify-content: flex-end;
-		}
-	}
-
-	&.n-carousel--index-start {
-		grid-template-areas:
-			"f    i   i   i   i"
-			"prev   a3    a3    a3    next";
-
-		> .n-carousel__index {
-			align-self: start;
-		}
-	}
-
-	&.n-carousel--controls-outside {
-		grid-template-areas:
-			"f      content   a1"
-			"prev   content   next"
-			"a2     content   a3"
-			"i      i         i";
-
-		grid-template-columns: auto 1fr auto;
-
-		> .n-carousel__content {
-			grid-area: content;
-		}
-
-		&.n-carousel--index-start {
-			grid-template-areas:
-				"f      i          i"
-				"b1     content    b2"
-				"prev   content    next"
-				"a1     content    a2";
-			grid-template-rows: auto auto 1fr auto;
-		}
-
-		&.n-carousel--index-align-start > .n-carousel__index {
-			text-align: start;
-		}
-
-		&.n-carousel--index-align-end > .n-carousel__index {
-			text-align: end;
-		}
-	}
-
-	&.n-carousel--vertical {
-		box-sizing: border-box;
-		grid-template-areas:
-			"f a1 prev a2 a2"
-			"i a3 a3 a3 a3"
-			"i a4 next a5 a5";
-		grid-template-rows: auto;
-
-		> .n-carousel__index {
-			align-self: center;
-
-			> * {
-				display: block;
-				white-space: normal;
-				max-width: 25vw;
-			}
-		}
-		&.n-carousel--index-align-start {
-			> .n-carousel__index {
-				align-self: start;
-			}
-		}
-
-		&.n-carousel--index-align-end {
-			> .n-carousel__index {
-				align-self: end;
-				grid-area: i;
-				inset-inline-start: 0;
-			}
-		}
-		&.n-carousel--index-end {
-			grid-template-areas:
-				"f  a1  prev  a2  i"
-				"a3   a3  a3    a3  i"
-				"a4   a4  next  a5  i";
-
-			&.n-carousel--index-align-start:not(.n-carousel--index-end) {
-				grid-template: 1fr auto auto/auto auto 1fr auto;
-				grid-template-areas:
-					"f  a1  prev  a2  i"
-					"a3   a3  a3    a3  i"
-					"a4   a4  next  a5  b2";
-				grid-template-columns: repeat(5, 1fr);
-				grid-template-rows: auto;
-
-				> .n-carousel__index {
-					align-self: start;
-				}
-			}
-
-			&.n-carousel--index-align-start {
-				grid-template: 1fr auto auto/auto auto 1fr auto;
-				grid-template-areas:
-					"a1   a1  prev  a2  i"
-					"a3   a3  a3    a3  i"
-					"a4   a4  next  a5  f";
-
-				> .n-carousel__index {
-					align-self: start;
-				}
-			}
-
-			&.n-carousel--index-align-end {
-				grid-template: 1fr auto auto/auto auto 1fr auto;
-				grid-template-areas:
-					"a1   a1  prev  a2  f"
-					"a3   a3  a3    a3  i"
-					"a4   a4  next  a5  i";
-
-				> .n-carousel__index {
-					align-self: end;
-				}
-			}
-		}
-
-		> .n-carousel__previous {
-			align-self: start;
-		}
-
-		> .n-carousel__next {
-			align-self: end;
-		}
-
-		&.n-carousel--index-align-start:not(.n-carousel--index-end):not(.n-carousel--controls-outside) {
-			grid-template-areas:
-				"i a1 prev a2 a2"
-				"i a3 a3 a3 a3"
-				"b2 a4 next a5 f";
-		}
-
-		&.n-carousel--index-align-end {
-			// grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
-			grid-template-areas:
-				"b1 a1 prev a2 a2"
-				"i a3 a3 a3 a3"
-				"i a4 next a5 f";
-			&.n-carousel--tabs:not(.n-carousel--controls-outside) {
-				grid-template: 1fr auto auto/auto auto 1fr auto;
-			}
-		}
-	}
-
-	&.n-carousel--vertical.n-carousel--controls-outside {
-		grid-template-areas:
-			"f    prev    a2"
-			"i    content   a2"
-			"i    next    a2";
-		grid-template-rows: auto 1fr auto;
-		padding-inline-start: var(--index-width);
-
-		&.n-carousel--index-align-start {
-			> .n-carousel__index {
-				align-self: start;
-			}
-		}
-
-		&.n-carousel--index-align-end {
-			grid-template-columns: auto 1fr auto;
-
-			> .n-carousel__index {
-				align-self: end;
-			}
-		}
-
-		&.n-carousel--index-end {
-			grid-template-areas:
-				"f    prev    i"
-				"a1     content   i"
-				"a1     next    i";
-			padding-inline-end: var(--index-width);
-			padding-inline-start: 0;
-
-			&.n-carousel--index-align-start {
-				grid-template-columns: auto 1fr auto;
-			}
-		}
-
-		> .n-carousel__index {
-			max-height: var(--max-height, 100%);
-		}
-
-		&.n-carousel--auto-height:not([data-ready]) {
-			> .n-carousel__index {
-				max-height: 0;
-			}
-		}
-
-		&.n-carousel--auto-height[data-ready] {
-			overflow: hidden;
-
-			&[data-sliding] > .n-carousel__index {
-				max-height: none;
-			}
-
-			> .n-carousel__index {
-				position: absolute;
-				margin-inline-start: calc(-1 * var(--index-width));
-			}
-
-			&.n-carousel--index-end {
-				> .n-carousel__index {
-					margin-inline-start: calc(-1px * var(--index-width) / 2);
-				}
-			}
-		}
-	}
-
-	&.n-carousel--tabs {
-		> .n-carousel__index {
-			display: flex;
-			// flex-wrap: wrap;
-			justify-content: start;
-
-			button {
-				border-radius: 0;
-				margin: 0;
-				display: flex;
-				justify-content: flex-start;
-				padding: 0.5ch 1ch;
-				text-align: start;
-				word-break: break-word;
-				// color: inherit;
-				outline-offset: -3px;
-				min-width: 1.5em;
-
-				&:focus {
-					z-index: 0;
-				}
-			}
-		}
-
-		&.n-carousel--vertical > .n-carousel__index {
-			display: block;
-
-			> * {
-				width: 100%;
-			}
-		}
-
-		&.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index {
-			> * {
-				white-space: nowrap;
-			}
-		}
-
-		&.n-carousel--tabs-align-end > .n-carousel__index {
-			button {
-				text-align: end;
-			}
-		}
-
-		> .n-carousel__previous,
-		> .n-carousel__next {
-			display: none;
-		}
-	}
-
-	&:-webkit-full-screen {
-		background: #000;
-	}
-
-	&:fullscreen {
-		background: #000;
-	}
+  --max-height: 100vh;
+
+  // max-height: -webkit-fill-available; // Moved to Safari only
+  // overflow: hidden; // To do: fix the real issue, bc overflow might be needed for popups etc.
+  --peek: 0px;
+
+  &[data-sliding] {
+    pointer-events: none;
+  }
+
+  &.n-carousel--rtl {
+    direction: rtl;
+  }
+
+  &.n-carousel--peek {
+    --peek: 15%;
+  }
+
+  &:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {
+    // Windows double scrolls
+    scroll-snap-type: both mandatory;
+
+    > * {
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+    }
+  }
+
+  display: grid;
+  grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
+  position: relative;
+
+  grid-template-areas:
+    "f    a3    a3    a3    a3"
+    "prev   a2    a2    a2    next"
+    "i      i     i     i     i";
+
+  &.n-carousel--index-align-start {
+    // grid-template: auto 1fr auto / auto auto 1fr auto;
+    // grid-template-areas:
+    // 	"a3 a3 a3 a3"
+    // 	"prev a2 a2 next"
+    // 	"i i b2 b2";
+
+    > .n-carousel__index {
+      justify-self: start;
+    }
+
+    &.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
+      grid-template-areas:
+        "f i b1 b2 b2"
+        "prev a3 a3 a3 next";
+
+      &:not(.n-carousel--vertical) {
+        grid-template-areas:
+          "i i i i i"
+          "prev a2 a2 a2 next"
+          "f a3 a3 a3 a3";
+
+        > .n-carousel__full-screen {
+          align-self: end;
+        }
+      }
+    }
+  }
+
+  &.n-carousel--index-align-center:not(.n-carousel--vertical) {
+    // grid-template: 1fr auto 1fr / auto 1fr auto auto;
+    // grid-template-areas:
+    // 	"a3 a3 a3 a3"
+    // 	"prev a2 a2 next"
+    // 	" b2 b2 i i";
+
+    > .n-carousel__index {
+      justify-self: center;
+    }
+  }
+
+  &.n-carousel--index-align-end {
+    // grid-template: 1fr auto 1fr / auto 1fr auto auto;
+    // grid-template-areas:
+    // 	"a3 a3 a3 a3"
+    // 	"prev a2 a2 next"
+    // 	" b2 b2 i i";
+
+    > .n-carousel__index {
+      justify-self: end;
+    }
+
+    &.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
+      grid-template-areas:
+        "b1 b1 b2 i f"
+        "prev a3 a3 a3 next";
+
+      &:not(.n-carousel--vertical) {
+        grid-template-areas:
+          "i i i i i"
+          "prev a2 a2 a2 next"
+          "f a3 a3 a3 a3";
+
+        > .n-carousel__full-screen {
+          align-self: end;
+        }
+      }
+    }
+  }
+
+  > .n-carousel__content {
+    padding: 0;
+    margin: 0;
+    grid-row: 1/-1;
+    grid-column: 1/-1;
+  }
+
+  > :not(.n-carousel__content) {
+    z-index: 1;
+  }
+
+  > .n-carousel__previous {
+    grid-area: prev;
+    align-self: center;
+  }
+
+  > .n-carousel__next {
+    grid-area: next;
+    align-self: center;
+  }
+
+  > .n-carousel__index {
+    grid-area: i;
+    align-self: end;
+    justify-content: center;
+    overflow: auto;
+    white-space: nowrap;
+    vertical-align: middle;
+    img {
+      width: 3em;
+      height: 3em;
+      object-fit: cover;
+      padding: 0;
+    }
+
+    &.n-carousel__index--thumbnails {
+      button {
+        padding: 0;
+        vertical-align: middle;
+        margin: 0.25em 0;
+        span {
+          padding: 0 1ch;
+        }
+      }
+    }
+  }
+
+  > .n-carousel__full-screen {
+    grid-area: f;
+    justify-self: baseline;
+  }
+
+  &[data-platform="iPhone"],
+  &[data-platform="iPod"] > {
+    .n-carousel__full-screen {
+      // iPhone doesn't support full screen
+      display: none;
+    }
+  }
+
+  &.n-carousel--index-start {
+    .n-carousel__index {
+      justify-content: flex-start;
+    }
+  }
+
+  &.n-carousel--index-end {
+    > .n-carousel__index {
+      justify-content: flex-end;
+    }
+  }
+
+  &.n-carousel--index-start {
+    grid-template-areas:
+      "f    i   i   i   i"
+      "prev   a3    a3    a3    next";
+
+    > .n-carousel__index {
+      align-self: start;
+    }
+  }
+
+  &.n-carousel--controls-outside {
+    grid-template-areas:
+      "f      content   a1"
+      "prev   content   next"
+      "a2     content   a3"
+      "i      i         i";
+
+    grid-template-columns: auto 1fr auto;
+
+    > .n-carousel__content {
+      grid-area: content;
+    }
+
+    &.n-carousel--index-start {
+      grid-template-areas:
+        "f      i          i"
+        "b1     content    b2"
+        "prev   content    next"
+        "a1     content    a2";
+      grid-template-rows: auto auto 1fr auto;
+    }
+
+    &.n-carousel--index-align-start > .n-carousel__index {
+      text-align: start;
+    }
+
+    &.n-carousel--index-align-end > .n-carousel__index {
+      text-align: end;
+    }
+  }
+
+  &.n-carousel--vertical {
+    box-sizing: border-box;
+    grid-template-areas:
+      "f a1 prev a2 a2"
+      "i a3 a3 a3 a3"
+      "i a4 next a5 a5";
+    grid-template-rows: auto;
+
+    > .n-carousel__index {
+      align-self: center;
+
+      > * {
+        display: block;
+        white-space: normal;
+        max-width: 25vw;
+      }
+    }
+    &.n-carousel--index-align-start {
+      > .n-carousel__index {
+        align-self: start;
+      }
+    }
+
+    &.n-carousel--index-align-end {
+      > .n-carousel__index {
+        align-self: end;
+        grid-area: i;
+        inset-inline-start: 0;
+      }
+    }
+    &.n-carousel--index-end {
+      grid-template-areas:
+        "f  a1  prev  a2  i"
+        "a3   a3  a3    a3  i"
+        "a4   a4  next  a5  i";
+
+      &.n-carousel--index-align-start:not(.n-carousel--index-end) {
+        grid-template: 1fr auto auto/auto auto 1fr auto;
+        grid-template-areas:
+          "f  a1  prev  a2  i"
+          "a3   a3  a3    a3  i"
+          "a4   a4  next  a5  b2";
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: auto;
+
+        > .n-carousel__index {
+          align-self: start;
+        }
+      }
+
+      &.n-carousel--index-align-start {
+        grid-template: 1fr auto auto/auto auto 1fr auto;
+        grid-template-areas:
+          "a1   a1  prev  a2  i"
+          "a3   a3  a3    a3  i"
+          "a4   a4  next  a5  f";
+
+        > .n-carousel__index {
+          align-self: start;
+        }
+      }
+
+      &.n-carousel--index-align-end {
+        grid-template: 1fr auto auto/auto auto 1fr auto;
+        grid-template-areas:
+          "a1   a1  prev  a2  f"
+          "a3   a3  a3    a3  i"
+          "a4   a4  next  a5  i";
+
+        > .n-carousel__index {
+          align-self: end;
+        }
+      }
+    }
+
+    > .n-carousel__previous {
+      align-self: start;
+    }
+
+    > .n-carousel__next {
+      align-self: end;
+    }
+
+    &.n-carousel--index-align-start:not(.n-carousel--index-end):not(.n-carousel--controls-outside) {
+      grid-template-areas:
+        "i a1 prev a2 a2"
+        "i a3 a3 a3 a3"
+        "b2 a4 next a5 f";
+    }
+
+    &.n-carousel--index-align-end {
+      // grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
+      grid-template-areas:
+        "b1 a1 prev a2 a2"
+        "i a3 a3 a3 a3"
+        "i a4 next a5 f";
+      &.n-carousel--tabs:not(.n-carousel--controls-outside) {
+        grid-template: 1fr auto auto/auto auto 1fr auto;
+      }
+    }
+  }
+
+  &.n-carousel--vertical.n-carousel--controls-outside {
+    grid-template-areas:
+      "f    prev    a2"
+      "i    content   a2"
+      "i    next    a2";
+    grid-template-rows: auto 1fr auto;
+    padding-inline-start: var(--index-width);
+
+    &.n-carousel--index-align-start {
+      > .n-carousel__index {
+        align-self: start;
+      }
+    }
+
+    &.n-carousel--index-align-end {
+      grid-template-columns: auto 1fr auto;
+
+      > .n-carousel__index {
+        align-self: end;
+      }
+    }
+
+    &.n-carousel--index-end {
+      grid-template-areas:
+        "f    prev    i"
+        "a1     content   i"
+        "a1     next    i";
+      padding-inline-end: var(--index-width);
+      padding-inline-start: 0;
+
+      &.n-carousel--index-align-start {
+        grid-template-columns: auto 1fr auto;
+      }
+    }
+
+    > .n-carousel__index {
+      max-height: var(--max-height, 100%);
+    }
+
+    &.n-carousel--auto-height:not([data-ready]) {
+      > .n-carousel__index {
+        max-height: 0;
+      }
+    }
+
+    &.n-carousel--auto-height[data-ready] {
+      overflow: hidden;
+
+      &[data-sliding] > .n-carousel__index {
+        max-height: none;
+      }
+
+      > .n-carousel__index {
+        position: absolute;
+        margin-inline-start: calc(-1 * var(--index-width));
+      }
+
+      &.n-carousel--index-end {
+        > .n-carousel__index {
+          margin-inline-start: calc(-1px * var(--index-width) / 2);
+        }
+      }
+    }
+  }
+
+  &.n-carousel--tabs {
+    > .n-carousel__index {
+      display: flex;
+      // flex-wrap: wrap;
+      justify-content: start;
+
+      button {
+        border-radius: 0;
+        margin: 0;
+        display: flex;
+        justify-content: flex-start;
+        padding: 0.5ch 1ch;
+        text-align: start;
+        word-break: break-word;
+        // color: inherit;
+        outline-offset: -3px;
+        min-width: 1.5em;
+
+        &:focus {
+          z-index: 0;
+        }
+      }
+    }
+
+    &.n-carousel--vertical > .n-carousel__index {
+      display: block;
+
+      > * {
+        width: 100%;
+      }
+    }
+
+    &.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index {
+      > * {
+        white-space: nowrap;
+      }
+    }
+
+    &.n-carousel--tabs-align-end > .n-carousel__index {
+      button {
+        text-align: end;
+      }
+    }
+
+    > .n-carousel__previous,
+    > .n-carousel__next {
+      display: none;
+    }
+  }
+
+  &:-webkit-full-screen {
+    background: #000;
+  }
+
+  &:fullscreen {
+    background: #000;
+  }
 }
 
 @-moz-document url-prefix() {
-	.n-carousel--vertical > .n-carousel__content {
-		// FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari
+  .n-carousel--vertical > .n-carousel__content {
+    // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari
 
-		display: block;
+    display: block;
 
-		> :last-child {
-			margin-block-end: var(--peek, 0);
-		}
-	}
+    > :last-child {
+      margin-block-end: var(--peek, 0);
+    }
+  }
 }
 
 .n-carousel--lightbox {
-	flex: 1;
-	--carousel-bg: transparent;
-	max-height: var(--max-height, 100vh);
+  flex: 1;
+  --carousel-bg: transparent;
+  max-height: var(--max-height, 100vh);
 
-	figure {
-		height: 100%;
-		margin: 0;
-		display: grid;
-		grid-template: auto 1fr / auto;
-		// border: 0.1px solid transparent;
-		box-sizing: border-box;
+  figure {
+    height: 100%;
+    margin: 0;
+    display: grid;
+    grid-template: auto 1fr / auto;
+    // border: 0.1px solid transparent;
+    box-sizing: border-box;
 
-		> * {
-			grid-row: 1/3;
-			grid-column: 1/1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+    > * {
+      grid-row: 1/3;
+      grid-column: 1/1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-		> figcaption {
-			grid-row: 1/2;
-			justify-self: center;
-			padding: 0.5em 0.75em;
-			background: rgba(0, 0, 0, 0.3);
-			color: #ddd;
-		}
-	}
+    > figcaption {
+      grid-row: 1/2;
+      justify-self: center;
+      padding: 0.5em 0.75em;
+      background: rgba(0, 0, 0, 0.3);
+      color: #ddd;
+    }
+  }
 
-	&.n-carousel--index-start {
-		figure {
-			grid-template: 1fr auto/auto;
-			> figcaption {
-				grid-row: 2/3;
-			}
-		}
-	}
+  &.n-carousel--index-start {
+    figure {
+      grid-template: 1fr auto/auto;
+      > figcaption {
+        grid-row: 2/3;
+      }
+    }
+  }
 
-	&.n-carousel--vertical:not(.n-carousel--controls-outside) {
-		figure {
-			// grid-template: 1fr auto/auto;
-			> figcaption {
-				// grid-row: 2/3;
-				margin-top: 3em;
-			}
-		}
-		&.n-carousel--index-start {
-			figure {
-				// grid-template: 1fr auto/auto;
-				> figcaption {
-					// grid-row: 2/3;
-					margin-top: none;
-					margin-bottom: 3em;
-				}
-			}
-		}
-	}
+  &.n-carousel--vertical:not(.n-carousel--controls-outside) {
+    figure {
+      // grid-template: 1fr auto/auto;
+      > figcaption {
+        // grid-row: 2/3;
+        margin-top: 3em;
+      }
+    }
+    &.n-carousel--index-start {
+      figure {
+        // grid-template: 1fr auto/auto;
+        > figcaption {
+          // grid-row: 2/3;
+          margin-top: none;
+          margin-bottom: 3em;
+        }
+      }
+    }
+  }
 
-	img {
-		display: block;
-		max-height: 100%;
-		max-width: 100%;
-		object-fit: contain;
-		box-sizing: border-box;
-		padding: 0 0.5px; // Safari: visible pixel from neighbour
-	}
+  img {
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    box-sizing: border-box;
+    padding: 0 0.5px; // Safari: visible pixel from neighbour
+  }
 
-	&:-webkit-full-screen {
-		img {
-			max-height: 100%;
-		}
-	}
+  &:-webkit-full-screen {
+    img {
+      max-height: 100%;
+    }
+  }
 
-	iframe,
-	video {
-		border: none;
-		margin: auto;
-		max-width: 100%;
-		max-height: 100%;
-	}
+  iframe,
+  video {
+    border: none;
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
