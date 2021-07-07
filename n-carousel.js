@@ -18,6 +18,13 @@
 	const isChrome = !!navigator.userAgent.match("Chrome");
 	const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
 
+	const nextSlideHeight = el => {
+		el.style.height = 0;
+		const height = el.scrollHeight; // Ceiling when subpixel
+		el.style.height = '';
+		return height;
+	}
+
 	// const scrollableAncestor = (el) => {
 	// 	el = el.parentNode;
 	// 	while (el) {
@@ -423,8 +430,8 @@
 						offset_y = new_y * new_height - el.scrollTop;
 					} else {
 						// let new_index = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
-						new_height = parseFloat(getComputedStyle(el.children[new_x].children[0]).height); // but shouldn't be lower than blank carousel height. worked around by min height of 9em which surpasses the blank carousel height
-
+						// new_height = parseFloat(getComputedStyle(el.children[new_x].children[0]).height); // but shouldn't be lower than blank carousel height. worked around by min height of 9em which surpasses the blank carousel height
+						new_height = nextSlideHeight(el.children[new_x]);
 						scrollTo(el, lastScrollX, lastScrollY);
 					}
 
@@ -478,8 +485,10 @@
 					// el.children[index].style.height = "auto";
 					new_height = el.children[index].firstElementChild.scrollHeight;
 				} else {
-					new_height = parseFloat(getComputedStyle(el.children[index].children[0]).height);
-					let old_height = parseInt(el.dataset.x) === index ? new_height : parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height);
+					// new_height = parseFloat(getComputedStyle(el.children[index].children[0]).height);
+					new_height = nextSlideHeight(el.children[index]);
+					// let old_height = parseInt(el.dataset.x) === index ? new_height : parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height);
+					let old_height = parseInt(el.dataset.x) === index ? new_height : nextSlideHeight(el.children[el.dataset.x]);
 
 					el.style.setProperty("--height", `${old_height}px`);
 					// console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong

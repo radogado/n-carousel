@@ -48,7 +48,7 @@
 .n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content {
   overflow-y: hidden;
 }
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content > * > * {
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content > * {
   min-height: 9em;
 }
 
