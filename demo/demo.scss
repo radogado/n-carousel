@@ -65,15 +65,11 @@ pre {
 
 .demo .n-carousel .n-carousel__content {
   > * {
-    &, > * {
     background: var(--carousel-bg, aliceblue);
     color: var(--carousel-color, #027b7b);
-  }
-    > * {
-      // min-height: 100%;
-      box-sizing: border-box;
-      // display: flex; // Very slow in Safari
-    }
+    // min-height: 100%;
+    box-sizing: border-box;
+    // display: flex; // Very slow in Safari
   }
 
   a[href] {
@@ -99,7 +95,7 @@ pre {
   }
 }
 
-.n-carousel--lightbox > .n-carousel__content > * > * {
+.n-carousel--lightbox > .n-carousel__content > * {
   padding: 0;
   margin: 0;
 }

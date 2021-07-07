@@ -92,11 +92,9 @@ pre {
   flex-direction: column;
 }
 
-.demo .n-carousel .n-carousel__content > *, .demo .n-carousel .n-carousel__content > * > * {
+.demo .n-carousel .n-carousel__content > * {
   background: var(--carousel-bg, aliceblue);
   color: var(--carousel-color, #027b7b);
-}
-.demo .n-carousel .n-carousel__content > * > * {
   box-sizing: border-box;
 }
 .demo .n-carousel .n-carousel__content a[href] {
@@ -112,7 +110,7 @@ pre {
   background: none;
 }
 
-.n-carousel--lightbox > .n-carousel__content > * > * {
+.n-carousel--lightbox > .n-carousel__content > * {
   padding: 0;
   margin: 0;
 }
