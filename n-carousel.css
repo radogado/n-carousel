@@ -47,12 +47,14 @@
 }
 .n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content {
   overflow-y: hidden;
+  height: var(--height);
 }
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content,
 .n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content > * {
   min-height: 9em;
 }
 
-[data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content > :not([data-active]) {
+[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content > :not([data-active]) {
   height: var(--height, 0);
   overflow: visible;
 }

@@ -63,17 +63,25 @@
 
     > .n-carousel__content {
       overflow-y: hidden;
+      height: var(--height);
+      &,
       > * {
-        min-height: 9em;
+        min-height: 9em; // Minimum height to accommodate the controls
       }
     }
   }
 }
 
-[data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
+[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
   > :not([data-active]) {
     height: var(--height, 0);
     overflow: visible;
+  }
+}
+
+[data-sliding][data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
+  > :not([data-active]) {
+    // height: auto;
   }
 }
 
