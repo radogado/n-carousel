@@ -55,7 +55,6 @@
 }
 
 [data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content > :not([data-active]) {
-  height: var(--height, 0);
   overflow: visible;
 }
 
@@ -534,6 +533,22 @@ _:future,
 }
 .n-carousel:fullscreen {
   background: #000;
+}
+.n-carousel.n-carousel--overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  max-height: none;
+  height: 100%;
+  height: -webkit-fill-available;
+  background: rgba(255, 255, 255, 0.9);
+}
+@media (prefers-color-scheme: dark) {
+  .n-carousel.n-carousel--overlay {
+    background: rgba(0, 0, 0, 0.9);
+  }
 }
 
 @-moz-document url-prefix() {
