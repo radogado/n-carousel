@@ -550,6 +550,15 @@ _:future,
     background: rgba(0, 0, 0, 0.9);
   }
 }
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay) {
+  display: block;
+}
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > * {
+  text-align: start;
+}
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > *:not(.n-carousel__index) {
+  display: none;
+}
 
 @-moz-document url-prefix() {
   .n-carousel--vertical > .n-carousel__content {

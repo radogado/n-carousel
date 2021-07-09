@@ -807,6 +807,15 @@ _:future,
       background: rgba(0, 0, 0, 0.9);
     }
   }
+  &.n-carousel--inline:not(.n-carousel--overlay) {
+    display: block;
+    > * {
+      text-align: start;
+      &:not(.n-carousel__index) {
+        display: none;
+      }
+    }
+  }
 }
 
 @-moz-document url-prefix() {
