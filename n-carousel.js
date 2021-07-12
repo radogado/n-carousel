@@ -447,7 +447,9 @@
 				// console.log("stuck", new_x, new_y, el);
 				updateCarousel(el);
 				// console.log("unstucking to ", new_y);
-				// slideTo(el, isVertical(el) ? new_y : new_x);
+				if (!isSafari) {
+					slideTo(el, isVertical(el) ? new_y : new_x);
+				}
 				return;
 			}
 
