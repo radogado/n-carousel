@@ -448,7 +448,8 @@
         // console.log("stuck", new_x, new_y, el);
         updateCarousel(el);
         // console.log("unstucking to ", new_y);
-        if (!isSafari) {
+				let tabbing = false;
+        if (!isSafari || !!el.tabbing) {
           slideTo(el, isVertical(el) ? new_y : new_x);
         }
         return;
@@ -579,6 +580,15 @@
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
 
     let el = e.target;
+
+		if (e.key === 'Tab') {
+
+			let carousel = el.closest('.n-carousel__content');
+			carousel.tabbing = true;
+			// setTimeout(e => { delete carousel.tabbing }, 100);
+		
+		}
+
     if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
 
