@@ -251,10 +251,12 @@
   const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) =>
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
-
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || el.closest(".n-carousel").matches(".n-carousel--instant")) {
+			let wrapper = el.closest(".n-carousel");
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant") || !!wrapper.nextSlideInstant) {
         scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
         el.style.height = `${new_height}px`;
+				delete wrapper.nextSlideInstant;
+				updateCarousel(el);
         resolve(el);
         return;
       }
@@ -640,6 +642,7 @@
       if (carousel.classList.contains("n-carousel--inline") && !carousel.classList.contains("n-carousel--overlay")) {
         carousel.classList.add("n-carousel--overlay");
         trapFocus(carousel);
+				carousel.nextSlideInstant = true;
       }
       slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
     }
