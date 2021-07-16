@@ -328,6 +328,7 @@ _:future,
 .n-carousel > .n-carousel__previous {
   grid-area: prev;
   align-self: center;
+  justify-self: start;
 }
 .n-carousel > .n-carousel__next {
   grid-area: next;
