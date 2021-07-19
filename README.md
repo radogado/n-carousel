@@ -7,24 +7,24 @@
 <div class="n-carousel">
 
 	<div class="n-carousel__content">
-		<div><div>One</div></div>
-		<div><div>Two</div></div>
-		<div><div>Three</div></div>
+		<div>One</div>
+		<div>Two</div>
+		<div>Three</div>
 	</div>
 	
-      <div class="n-carousel__previous">
-        <button><span>Previous</span></button>
-      </div>
+	<div class="n-carousel__previous">
+		<button><span>Previous</span></button>
+	</div>
 
-      <div class="n-carousel__next">
-        <button><span>Next</span></button>
-      </div>
+	<div class="n-carousel__next">
+		<button><span>Next</span></button>
+	</div>
 
-      <div class="n-carousel__index">
-        <button><span>1</span></button>
-        <button><span>2</span></button>
-        <button><span>3</span></button>
-      </div>
+	<div class="n-carousel__index">
+		<button><span>1</span></button>
+		<button><span>2</span></button>
+		<button><span>3</span></button>
+	</div>
 
 </div>
 ```
