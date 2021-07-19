@@ -26,6 +26,7 @@
         <button><span>Right to left</span></button>
         <button><span>Tabs</span></button>
         <button><span>Lightbox</span></button>
+        <button><span>Inline lightbox</span></button>
         <button><span>Vertical</span></button>
         <button><span>Vertical auto height</span></button>
       </span>
@@ -1685,9 +1686,9 @@
               <div class="n-carousel__full-screen">
                 <button><span>Toggle full screen</span></button>
               </div>
-<div class="n-carousel__close">
+<!-- <div class="n-carousel__close">
   <button><span>Close modal window</span></button>
-</div>
+</div> -->
 
               <ul class="n-carousel__content">
                 <li>
@@ -1837,94 +1838,98 @@
               </div>
             </div>
 
-            <h2>Inline</h2>
+          </div>
+        </section>
+        <section>
+  <div>
+    <h2>Inline lightbox</h2>
 
-            <div class="n-carousel n-carousel--lightbox n-carousel--inline">
-              <div class="n-carousel__previous">
-                <button><span>Previous</span></button>
-              </div>
+    <div class="n-carousel n-carousel--lightbox n-carousel--inline">
+      <div class="n-carousel__previous">
+        <button><span>Previous</span></button>
+      </div>
 
-              <div class="n-carousel__next">
-                <button><span>Next</span></button>
-              </div>
+      <div class="n-carousel__next">
+        <button><span>Next</span></button>
+      </div>
 
-              <div class="n-carousel__index n-carousel__index--thumbnails">
-                <button><img src="demo/DSC01832.jpg" alt="Thumbnail" /></button>
-                <button><img src="demo/DSC01293-Pano.jpg" alt="Thumbnail 2" /></button>
-                <button><img src="demo/DSC04308.jpg" alt="Thumbnail 3" /></button>
-                <button><img src="demo/IMG_1761-188x188.jpg" alt="Thumbnail 4" /></button>
-                <button><span>5</span></button>
-              </div>
-              <div class="n-carousel__full-screen">
-                <button><span>Toggle full screen</span></button>
-              </div>
+      <div class="n-carousel__index n-carousel__index--thumbnails">
+        <button><img src="demo/DSC01832.jpg" alt="Thumbnail" /></button>
+        <button><img src="demo/DSC01293-Pano.jpg" alt="Thumbnail 2" /></button>
+        <button><img src="demo/DSC04308.jpg" alt="Thumbnail 3" /></button>
+        <button><img src="demo/IMG_1761-188x188.jpg" alt="Thumbnail 4" /></button>
+        <button><span>5</span></button>
+      </div>
+      <div class="n-carousel__full-screen">
+        <button><span>Toggle full screen</span></button>
+      </div>
 
-              <ul class="n-carousel__content">
-                <li>
-                  <figure>
-                    <picture>
-                      <img width="3840" height="2560" src="demo/DSC01832.jpg" alt="Demo Image 1" loading="lazy" />
-                    </picture>
-                    <figcaption>Kaohsiung, Taiwan</figcaption>
-                  </figure>
-                </li>
+      <ul class="n-carousel__content">
+        <li>
+          <figure>
+            <picture>
+              <img width="3840" height="2560" src="demo/DSC01832.jpg" alt="Demo Image 1" loading="lazy" />
+            </picture>
+            <figcaption>Kaohsiung, Taiwan</figcaption>
+          </figure>
+        </li>
 
-                <li>
-                  <figure>
-                    <picture>
-                      <img width="3840" height="2560" src="demo/DSC01293-Pano.jpg" alt="Demo Image 2" loading="lazy" />
-                    </picture>
-                    <figcaption>Bastia, Corsica</figcaption>
-                  </figure>
-                </li>
+        <li>
+          <figure>
+            <picture>
+              <img width="3840" height="2560" src="demo/DSC01293-Pano.jpg" alt="Demo Image 2" loading="lazy" />
+            </picture>
+            <figcaption>Bastia, Corsica</figcaption>
+          </figure>
+        </li>
 
-                <li>
-                  <figure>
-                    <picture>
-                      <img width="3840" height="2560" src="demo/DSC04308.jpg" alt="Demo Image 2" loading="lazy" />
-                    </picture>
-                    <figcaption>Financial District, Manhattan</figcaption>
-                  </figure>
-                </li>
+        <li>
+          <figure>
+            <picture>
+              <img width="3840" height="2560" src="demo/DSC04308.jpg" alt="Demo Image 2" loading="lazy" />
+            </picture>
+            <figcaption>Financial District, Manhattan</figcaption>
+          </figure>
+        </li>
 
-                <li>
-                  <figure>
-                    <picture>
-                      <img width="188" height="188" src="demo/IMG_1761-188x188.jpg" alt="Demo Image 2" loading="lazy" />
-                    </picture>
-                    <figcaption>Smaller image</figcaption>
-                  </figure>
-                </li>
+        <li>
+          <figure>
+            <picture>
+              <img width="188" height="188" src="demo/IMG_1761-188x188.jpg" alt="Demo Image 2" loading="lazy" />
+            </picture>
+            <figcaption>Smaller image</figcaption>
+          </figure>
+        </li>
 
-                <li>
-                  <figure>
-                    <iframe
-                      width="960"
-                      height="540"
-                      src="https://www.youtube-nocookie.com/embed/g2Ehv4wOPvA"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen
-                      loading="lazy"
-                    ></iframe>
-                    <figcaption>YouTube embed</figcaption>
-                  </figure>
-                </li>
-              </ul>
-            </div>
+        <li>
+          <figure>
+            <iframe
+              width="960"
+              height="540"
+              src="https://www.youtube-nocookie.com/embed/g2Ehv4wOPvA"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+            <figcaption>YouTube embed</figcaption>
+          </figure>
+        </li>
+      </ul>
+    </div>
 
-            <div>
-              <div>
-                <h2>Code</h2>
+    <div>
+      <div>
+        <h2>Code</h2>
 
-                <div class="code">
-                  <pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--lightbox n-carousel--inline"&gt;
+        <div class="code">
+          <pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--lightbox n-carousel--inline"&gt;
   &lt;ul class="n-carousel__content"&gt;
     &lt;li&gt;
       &lt;figure&gt;
         &lt;picture&gt;
           &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
         &lt;/picture&gt;
-        &lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
+      &lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
       &lt;/figure&gt;
     &lt;/li&gt;
     ...
@@ -1943,11 +1948,11 @@
     &lt;button&gt;&lt;span&gt;Toggle full screen&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
         <section>
           <div>
             <h2>Vertical</h2>
