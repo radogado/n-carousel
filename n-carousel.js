@@ -251,12 +251,12 @@
   const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) =>
     new Promise((resolve, reject) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
-			let wrapper = el.closest(".n-carousel");
+      let wrapper = el.closest(".n-carousel");
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant") || !!wrapper.nextSlideInstant) {
         scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
         el.style.height = `${new_height}px`;
-				delete wrapper.nextSlideInstant;
-				updateCarousel(el);
+        delete wrapper.nextSlideInstant;
+        updateCarousel(el);
         resolve(el);
         return;
       }
@@ -450,7 +450,7 @@
         // console.log("stuck", new_x, new_y, el);
         updateCarousel(el);
         // console.log("unstucking to ", new_y);
-				let tabbing = false;
+        let tabbing = false;
         if (!isSafari || !!el.tabbing) {
           slideTo(el, isVertical(el) ? new_y : new_x);
         }
@@ -583,13 +583,11 @@
 
     let el = e.target;
 
-		if (e.key === 'Tab') {
-
-			let carousel = el.closest('.n-carousel__content');
-			carousel.tabbing = true;
-			// setTimeout(e => { delete carousel.tabbing }, 100);
-		
-		}
+    if (e.key === "Tab") {
+      let carousel = el.closest(".n-carousel__content");
+      carousel.tabbing = true;
+      // setTimeout(e => { delete carousel.tabbing }, 100);
+    }
 
     if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
@@ -642,7 +640,7 @@
       if (carousel.classList.contains("n-carousel--inline") && !carousel.classList.contains("n-carousel--overlay")) {
         carousel.classList.add("n-carousel--overlay");
         trapFocus(carousel);
-				carousel.nextSlideInstant = true;
+        carousel.nextSlideInstant = true;
       }
       slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
     }
@@ -801,7 +799,13 @@
             delete carousel.dataset.xx;
             delete carousel.dataset.yy;
 
-            scrollTo(carousel, carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]), carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y]));
+            if (carousel.dataset.x !== "undefined" && carousel.dataset.y !== "undefined") {
+              scrollTo(
+                carousel,
+                carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]),
+                carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y])
+              );
+            }
           });
         };
       }
