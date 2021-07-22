@@ -460,12 +460,12 @@ _:future,
 
     &.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
       grid-template-areas:
-        "b1 b1 b2 i c f"
-        "prev a3 a3 a3 a3 next";
-
+        "f c i i i i"
+        "prev a2 a2 a2 a2 next"
+        "a3 a3 a3 a3 a3 a3";
       > .n-carousel__full-screen,
       > .n-carousel__close {
-        align-self: end;
+        // align-self: end;
       }
     }
   }

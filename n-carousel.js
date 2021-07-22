@@ -646,6 +646,13 @@
     }
   };
 
+  const closeModal = (e) => {
+    if (document.fullscreen || document.webkitIsFullScreen) {
+      !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
+    }
+    e.target.closest(".n-carousel").classList.remove("n-carousel--overlay");
+  };
+
   const verticalAutoObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
@@ -734,9 +741,11 @@
 
   const init = (host = document) => {
     host.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
-      let previous = getControl(el, ".n-carousel__previous");
-      let next = getControl(el, ".n-carousel__next");
-      let index = getControl(el, ".n-carousel__index");
+      const previous = getControl(el, ".n-carousel__previous");
+      const next = getControl(el, ".n-carousel__next");
+      const index = getControl(el, ".n-carousel__index");
+      const close_modal = getControl(el, ".n-carousel__close");
+      const full_screen = getControl(el, ".n-carousel__full-screen");
 
       if (!!previous) {
         previous.onclick = slidePreviousEvent;
@@ -750,28 +759,11 @@
         index.onclick = slideIndexEvent;
       }
 
-      el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
-      el.parentNode.addEventListener("keyup", (e) => {
-        if (e.key === "Escape") {
-          e.target.closest(".n-carousel").classList.remove("n-carousel--overlay");
-        }
-      });
-
-      let content = el.querySelector(":scope > .n-carousel__content");
-      content.tabIndex = 0;
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        content.style.height = getComputedStyle(content).height;
-        el.dataset.ready = true;
-        content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+      if (!!close_modal) {
+        close_modal.onclick = closeModal;
       }
 
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        // Vertical auto has a specified height which needs update on resize
-        content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
-      }
-
-      const full_screen = el.querySelector(":scope > .n-carousel__full-screen button");
-      if (full_screen) {
+      if (!!full_screen) {
         full_screen.onclick = (e) => {
           let carousel = e.target.closest(".n-carousel").querySelector(":scope > .n-carousel__content");
           carousel.dataset.xx = carousel.dataset.x;
@@ -808,6 +800,26 @@
             }
           });
         };
+      }
+
+      el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
+      el.parentNode.addEventListener("keyup", (e) => {
+        if (e.key === "Escape") {
+          closeModal(e);
+        }
+      });
+
+      let content = el.querySelector(":scope > .n-carousel__content");
+      content.tabIndex = 0;
+      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+        content.style.height = getComputedStyle(content).height;
+        el.dataset.ready = true;
+        content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+      }
+
+      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+        // Vertical auto has a specified height which needs update on resize
+        content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
       }
 
       window.requestAnimationFrame(() => {
