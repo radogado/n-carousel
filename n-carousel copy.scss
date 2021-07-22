@@ -294,16 +294,24 @@ _:future,
 }
 
 .n-carousel__full-screen {
+  grid-area: f;
+  justify-self: baseline;
   button:before {
     --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M0 0v180h60V60h120V0z'/%3E%3Cpath d='M0 0v180h60V60h120V0zM300 0v60h120v120h60V0z'/%3E%3Cpath d='M300 0v60h120v120h60V0zM420 300v120H300v60h180V300z'/%3E%3Cpath d='M420 300v120H300v60h180V300zM0 300v180h180v-60H60V300z'/%3E%3Cpath d='M0 300v180h180v-60H60V300z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  ~ .n-carousel__close {
+    grid-area: c;
   }
 }
 
 .n-carousel__close {
-  grid-area: c;
+  grid-area: f;
   justify-self: baseline;
   button:before {
     --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M68.88 368.693l42.427 42.427L411.12 111.307 368.693 68.88 168.818 268.756z'/%3E%3Cpath d='M111.307 68.88L68.88 111.307 368.693 411.12l42.427-42.427-199.876-199.875z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  ~ .n-carousel__full-screen {
+    grid-area: c;
   }
 }
 
@@ -508,11 +516,6 @@ _:future,
         }
       }
     }
-  }
-
-  > .n-carousel__full-screen {
-    grid-area: f;
-    justify-self: baseline;
   }
 
   &[data-platform="iPhone"],
