@@ -148,7 +148,8 @@ _:future,
 .n-carousel__index button,
 .n-carousel__previous button,
 .n-carousel__next button,
-.n-carousel__full-screen button {
+.n-carousel__full-screen button,
+.n-carousel__close button {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -170,13 +171,15 @@ _:future,
 .n-carousel__index button span,
 .n-carousel__previous button span,
 .n-carousel__next button span,
-.n-carousel__full-screen button span {
+.n-carousel__full-screen button span,
+.n-carousel__close button span {
   color: var(--control-color, #333);
 }
 .n-carousel__index button[disabled],
 .n-carousel__previous button[disabled],
 .n-carousel__next button[disabled],
-.n-carousel__full-screen button[disabled] {
+.n-carousel__full-screen button[disabled],
+.n-carousel__close button[disabled] {
   opacity: 0.5;
   color: blue;
 }
@@ -188,13 +191,22 @@ _:future,
 [data-ready] > .n-carousel__index button,
 [data-ready] > .n-carousel__previous button,
 [data-ready] > .n-carousel__next button,
-[data-ready] > .n-carousel__full-screen button {
+[data-ready] > .n-carousel__full-screen button,
+[data-ready] > .n-carousel__close button {
   cursor: pointer;
 }
 
+.n-carousel__previous,
+.n-carousel__next,
+.n-carousel__full-screen,
+.n-carousel__close {
+  height: 2.85em;
+  width: 2.85em;
+}
 .n-carousel__previous button span,
 .n-carousel__next button span,
-.n-carousel__full-screen button span {
+.n-carousel__full-screen button span,
+.n-carousel__close button span {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -207,7 +219,8 @@ _:future,
 }
 .n-carousel__previous button:before,
 .n-carousel__next button:before,
-.n-carousel__full-screen button:before {
+.n-carousel__full-screen button:before,
+.n-carousel__close button:before {
   content: "";
   background-color: var(--control-color, #333);
   --chevron: url("data:image/svg+xml,%3Csvg height='18' viewBox='0 0 18 18' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m9.003 7.626 7.081-7.081 1.916 1.915-8.997 8.998-9.003-9 1.917-1.916z' transform='translate(0 5)'/%3E%3C/svg%3E");
@@ -218,8 +231,26 @@ _:future,
   display: inline-block;
 }
 
+.n-carousel__full-screen {
+  grid-area: f;
+  justify-self: baseline;
+}
 .n-carousel__full-screen button:before {
   --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M0 0v180h60V60h120V0z'/%3E%3Cpath d='M0 0v180h60V60h120V0zM300 0v60h120v120h60V0z'/%3E%3Cpath d='M300 0v60h120v120h60V0zM420 300v120H300v60h180V300z'/%3E%3Cpath d='M420 300v120H300v60h180V300zM0 300v180h180v-60H60V300z'/%3E%3Cpath d='M0 300v180h180v-60H60V300z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.n-carousel__full-screen ~ .n-carousel__close {
+  grid-area: c;
+}
+
+.n-carousel__close {
+  grid-area: f;
+  justify-self: baseline;
+}
+.n-carousel__close button:before {
+  --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M68.88 368.693l42.427 42.427L411.12 111.307 368.693 68.88 168.818 268.756z'/%3E%3Cpath d='M111.307 68.88L68.88 111.307 368.693 411.12l42.427-42.427-199.876-199.875z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.n-carousel__close ~ .n-carousel__full-screen {
+  grid-area: c;
 }
 
 .n-carousel__previous button,
@@ -269,9 +300,9 @@ _:future,
   --max-height: 100vh;
   --peek: 0px;
   display: grid;
-  grid-template: 1fr auto 1fr/auto 1fr auto 1fr auto;
+  grid-template: 1fr auto 1fr/auto auto auto 1fr auto auto;
   position: relative;
-  grid-template-areas: "f    a3    a3    a3    a3" "prev   a2    a2    a2    next" "i      i     i     i     i";
+  grid-template-areas: "f    		c			a3    a3    a3    a3" "prev   	a2		a2    a2    a2    next" "i      	i			i     i     i     i";
 }
 .n-carousel[data-sliding] {
   pointer-events: none;
@@ -293,12 +324,13 @@ _:future,
   justify-self: start;
 }
 .n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
-  grid-template-areas: "f i b1 b2 b2" "prev a3 a3 a3 next";
+  grid-template-areas: "f c i b1 b2 b2" "prev a3 a3 a3 a3 next";
 }
 .n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
-  grid-template-areas: "i i i i i" "prev a2 a2 a2 next" "f a3 a3 a3 a3";
+  grid-template-areas: "i i i i i i" "prev a2 a2 a2 a2 next" "f c a3 a3 a3 a3";
 }
-.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen {
+.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen,
+.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__close {
   align-self: end;
 }
 .n-carousel.n-carousel--index-align-center:not(.n-carousel--vertical) > .n-carousel__index {
@@ -308,10 +340,7 @@ _:future,
   justify-self: end;
 }
 .n-carousel.n-carousel--index-align-end.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
-  grid-template-areas: "b1 b1 b2 i f" "prev a3 a3 a3 next";
-}
-.n-carousel.n-carousel--index-align-end.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen {
-  align-self: end;
+  grid-template-areas: "f c i i i i" "prev a2 a2 a2 a2 next" "a3 a3 a3 a3 a3 a3";
 }
 .n-carousel > .n-carousel__content {
   padding: 0;
@@ -325,11 +354,12 @@ _:future,
 .n-carousel > .n-carousel__previous {
   grid-area: prev;
   align-self: center;
-  justify-self: start;
+  justify-self: center;
 }
 .n-carousel > .n-carousel__next {
   grid-area: next;
   align-self: center;
+  justify-self: center;
 }
 .n-carousel > .n-carousel__index {
   grid-area: i;
@@ -348,14 +378,10 @@ _:future,
 .n-carousel > .n-carousel__index.n-carousel__index--thumbnails button {
   padding: 0;
   vertical-align: middle;
-  margin: 0.25em 0;
+  margin: 0.25em auto;
 }
 .n-carousel > .n-carousel__index.n-carousel__index--thumbnails button span {
   padding: 0 1ch;
-}
-.n-carousel > .n-carousel__full-screen {
-  grid-area: f;
-  justify-self: baseline;
 }
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
   display: none;
@@ -367,20 +393,20 @@ _:future,
   justify-content: flex-end;
 }
 .n-carousel.n-carousel--index-start {
-  grid-template-areas: "f    i   i   i   i" "prev   a3    a3    a3    next";
+  grid-template-areas: "f    c i   i   i   i" "prev   a3 a3    a3    a3    next";
 }
 .n-carousel.n-carousel--index-start > .n-carousel__index {
   align-self: start;
 }
 .n-carousel.n-carousel--controls-outside {
-  grid-template-areas: "f      content   a1" "prev   content   next" "a2     content   a3" "i      i         i";
-  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "f      c	content   a1" "prev   c2 content   next" "a2     c2   content a3" "i      i			i         i";
+  grid-template-columns: auto auto 1fr auto;
 }
 .n-carousel.n-carousel--controls-outside > .n-carousel__content {
   grid-area: content;
 }
 .n-carousel.n-carousel--controls-outside.n-carousel--index-start {
-  grid-template-areas: "f      i          i" "b1     content    b2" "prev   content    next" "a1     content    a2";
+  grid-template-areas: "f      c i          i" "b1     c2 content    b2" "prev   c2 content    next" "a1     c2 content    a2";
   grid-template-rows: auto auto 1fr auto;
 }
 .n-carousel.n-carousel--controls-outside.n-carousel--index-align-start > .n-carousel__index {
@@ -391,7 +417,7 @@ _:future,
 }
 .n-carousel.n-carousel--vertical {
   box-sizing: border-box;
-  grid-template-areas: "f a1 prev a2 a2" "i a3 a3 a3 a3" "i a4 next a5 a5";
+  grid-template-areas: "f c a1 prev a2 a2" "i a3 a3 a3 a3 a3" "i a4 a4 next a5 a5";
   grid-template-rows: auto;
 }
 .n-carousel.n-carousel--vertical > .n-carousel__index {
@@ -407,15 +433,14 @@ _:future,
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-end > .n-carousel__index {
   align-self: end;
-  grid-area: i;
   inset-inline-start: 0;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end {
-  grid-template-areas: "f  a1  prev  a2  i" "a3   a3  a3    a3  i" "a4   a4  next  a5  i";
+  grid-template-areas: "f  c a1  prev  a2  i" "a3   a3 a3  a3    a3  i" "a4   a4 a4  next  a5  i";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-start:not(.n-carousel--index-end) {
-  grid-template: 1fr auto auto/auto auto 1fr auto;
-  grid-template-areas: "f  a1  prev  a2  i" "a3   a3  a3    a3  i" "a4   a4  next  a5  b2";
+  grid-template: 1fr auto auto/auto auto auto 1fr auto auto;
+  grid-template-areas: "f  c a1  prev  a2  i" "a3   a3 a3  a3    a3  i" "a4   a4 a4  next  a5  b2";
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
 }
@@ -423,8 +448,8 @@ _:future,
   align-self: start;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-start {
-  grid-template: 1fr auto auto/auto auto 1fr auto;
-  grid-template-areas: "a1   a1  prev  a2  i" "a3   a3  a3    a3  i" "a4   a4  next  a5  f";
+  grid-template: 1fr auto auto/auto auto 1fr auto auto;
+  grid-template-areas: "f   c  prev  a2  a2 i" "a3   a3  a3    a3  a3 i" "a4   a4  next  a5  a5 a5";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-start > .n-carousel__index {
   align-self: start;
@@ -433,8 +458,8 @@ _:future,
   justify-self: center;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-end {
-  grid-template: 1fr auto auto/auto auto 1fr auto;
-  grid-template-areas: "a1   a1  prev  a2  f" "a3   a3  a3    a3  i" "a4   a4  next  a5  i";
+  grid-template: 1fr auto auto/auto auto 1fr auto auto;
+  grid-template-areas: "f   c  prev  a2  a2 a2" "a3   a3  a3    a3  a3 i" "a4   a4  next  a5  a5 i";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-end.n-carousel--index-align-end > .n-carousel__index {
   align-self: end;
@@ -449,17 +474,14 @@ _:future,
   align-self: end;
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-start:not(.n-carousel--index-end):not(.n-carousel--controls-outside) {
-  grid-template-areas: "i a1 prev a2 a2" "i a3 a3 a3 a3" "b2 a4 next a5 f";
+  grid-template-areas: "a1 a1 a1 prev c f" "i a3 a3 a3 a3 a3" "i a4 a4 next a5 a5";
 }
 .n-carousel.n-carousel--vertical.n-carousel--index-align-end {
-  grid-template-areas: "b1 a1 prev a2 a2" "i a3 a3 a3 a3" "i a4 next a5 f";
-}
-.n-carousel.n-carousel--vertical.n-carousel--index-align-end.n-carousel--tabs:not(.n-carousel--controls-outside) {
-  grid-template: 1fr auto auto/auto auto 1fr auto;
+  grid-template-areas: "a1 a1 a1 prev c f" "i a3 a3 a3 a3 a3" "i a4 a4 next a5 a5";
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside {
-  grid-template-areas: "f    prev    a2" "i    content   a2" "i    next    a2";
-  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "f    c prev    a2" "i    c2 content   a2" "i    c2 next    a2";
+  grid-template-rows: auto auto 1fr auto;
   padding-inline-start: var(--index-width);
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--index-align-start > .n-carousel__index {
@@ -472,12 +494,12 @@ _:future,
   align-self: end;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--index-end {
-  grid-template-areas: "f    prev    i" "a1     content   i" "a1     next    i";
+  grid-template-areas: "f    c prev    i" "a1   c2  content   i" "a1   c2  next    i";
   padding-inline-end: var(--index-width);
   padding-inline-start: 0;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--index-end.n-carousel--index-align-start {
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto;
 }
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
   max-height: var(--max-height, 100%);
