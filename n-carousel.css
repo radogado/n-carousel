@@ -66,6 +66,9 @@
 .n-carousel:-webkit-full-screen {
   max-height: 100% !important;
 }
+.n-carousel:-webkit-full-screen > .n-carousel__close {
+  display: none;
+}
 
 .n-carousel.n-carousel--vertical {
   --max-height: 75vh;
