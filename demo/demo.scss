@@ -84,6 +84,8 @@ pre {
   @media (min-width: 900px) {
     p {
       columns: 1;
+      max-width: 60ch;
+      margin: auto;
     }
   }
 }
