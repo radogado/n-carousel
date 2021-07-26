@@ -70,6 +70,13 @@
   display: none;
 }
 
+.n-carousel:fullscreen {
+  max-height: 100% !important;
+}
+.n-carousel:fullscreen > .n-carousel__close {
+  display: none;
+}
+
 .n-carousel.n-carousel--vertical {
   --max-height: 75vh;
   height: var(--max-height, 100%);
