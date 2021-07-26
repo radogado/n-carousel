@@ -861,10 +861,12 @@ _:future,
     }
   }
   .n-carousel__close button:before {
+    // Firefox can't display the "Close" SVG
     mask: none;
     background: none;
     content: "⤫";
     line-height: 0.75;
+    color: var(--control-color, #333);
   }
 }
 

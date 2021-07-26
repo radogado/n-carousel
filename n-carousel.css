@@ -610,6 +610,7 @@ _:future,
     background: none;
     content: "⤫";
     line-height: 0.75;
+    color: var(--control-color, #333);
   }
 }
 .n-carousel--lightbox {
