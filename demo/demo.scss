@@ -78,12 +78,14 @@ pre {
       columns: 2;
     }
   }
+}
 
-  // @media (min-width: 1200px) {
-  //  p {
-  //    columns: 3;
-  //  }
-  // }
+.demo .n-carousel.n-carousel--overlay .n-carousel__content {
+  @media (min-width: 900px) {
+    p {
+      columns: 1;
+    }
+  }
 }
 
 .demo .n-carousel.n-carousel--lightbox .n-carousel__content {

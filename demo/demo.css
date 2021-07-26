@@ -111,6 +111,12 @@ pre {
   }
 }
 
+@media (min-width: 900px) {
+  .demo .n-carousel.n-carousel--overlay .n-carousel__content p {
+    columns: 1;
+  }
+}
+
 .demo .n-carousel.n-carousel--lightbox .n-carousel__content > * {
   background: none;
 }
