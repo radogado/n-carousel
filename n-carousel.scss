@@ -166,6 +166,16 @@
       grid-area: auto;
     }
 
+    &.n-carousel--inline:not(.n-carousel--overlay) {
+      height: auto;
+      > .n-carousel__index {
+        position: static;
+        button {
+          display: initial;
+        }
+      }
+    }
+
     &.n-carousel--index-end {
       > .n-carousel__index {
         inset-inline-end: 0;
@@ -527,6 +537,7 @@ _:future,
         padding: 0;
         vertical-align: middle;
         margin: 0.25em auto;
+        border-radius: 0;
         span {
           padding: 0 1ch;
         }
@@ -605,6 +616,7 @@ _:future,
 
     > .n-carousel__index {
       align-self: center;
+      justify-self: initial;
 
       > * {
         display: block;
