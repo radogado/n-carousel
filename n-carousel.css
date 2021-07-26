@@ -375,6 +375,7 @@ _:future,
 .n-carousel > .n-carousel__index {
   grid-area: i;
   align-self: end;
+  justify-self: center;
   justify-content: center;
   overflow: auto;
   white-space: nowrap;
