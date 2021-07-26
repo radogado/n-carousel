@@ -81,7 +81,7 @@ pre {
   overflow: auto;
 }
 
-.n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > * {
+.n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
   padding: 0 1em;
 }
 
