@@ -546,6 +546,9 @@ _:future,
 .n-carousel.n-carousel--tabs > .n-carousel__index {
   display: flex;
   justify-content: start;
+  overflow: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 .n-carousel.n-carousel--tabs > .n-carousel__index button {
   border-radius: 0;
@@ -557,6 +560,7 @@ _:future,
   word-break: break-word;
   outline-offset: -3px;
   min-width: 1.5em;
+  min-inline-size: min-content;
 }
 .n-carousel.n-carousel--tabs > .n-carousel__index button:focus {
   z-index: 0;
