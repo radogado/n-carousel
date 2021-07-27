@@ -44,12 +44,12 @@ pre {
 }
 
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
-  padding: 0 1em;
+  padding: 0 1rem;
 }
 
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :first-child,
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :last-child {
-  padding: 1em;
+  padding: 1rem;
 }
 
 .demo .n-carousel:not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > *,
