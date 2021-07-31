@@ -61,6 +61,9 @@ pre {
 	// aspect-ratio: 2;
 }
 
+html {
+	-webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
+}
 .demo .n-carousel .n-carousel__content {
 	> * {
 		background: var(--carousel-bg, aliceblue);
