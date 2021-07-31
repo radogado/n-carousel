@@ -83,6 +83,7 @@ pre {
 
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
   padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :first-child,
