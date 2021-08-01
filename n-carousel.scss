@@ -1,3 +1,7 @@
+body[data-frozen] {
+	overflow: hidden;
+}
+
 .n-carousel__content {
 	display: flex;
 	will-change: scroll;

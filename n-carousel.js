@@ -639,6 +639,7 @@
 			const carousel = el.closest(".n-carousel");
 			if (carousel.classList.contains("n-carousel--inline") && !carousel.classList.contains("n-carousel--overlay")) {
 				carousel.classList.add("n-carousel--overlay");
+				document.body.dataset.frozen = document.body.scrollTop;
 				// carousel.animate([{ transform: "translateY(-100%)" }, { transform: "none" }], { duration: 200, fill: "forwards" });
 				trapFocus(carousel);
 				// carousel.nextSlideInstant = true;
@@ -660,6 +661,7 @@
 		//   };
 		// }
 		carousel.classList.remove("n-carousel--overlay");
+		delete document.body.dataset.frozen;
 	};
 
 	const verticalAutoObserver = new ResizeObserver((entries) => {
