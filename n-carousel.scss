@@ -551,6 +551,9 @@ _:future,
 			// iPhone doesn't support full screen
 			display: none;
 		}
+		.n-carousel__close {
+			grid-area: f;
+		}
 	}
 
 	&.n-carousel--index-start {

@@ -408,6 +408,9 @@ _:future,
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
   display: none;
 }
+.n-carousel[data-platform=iPhone] .n-carousel__close, .n-carousel[data-platform=iPod] > .n-carousel__close {
+  grid-area: f;
+}
 .n-carousel.n-carousel--index-start .n-carousel__index {
   justify-content: flex-start;
 }
