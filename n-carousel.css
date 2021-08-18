@@ -167,6 +167,7 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
   overflow-x: hidden;
+  --peek: 0.0001px;
 }
 
 .n-carousel__index button,

@@ -233,6 +233,7 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
   overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
+  --peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
 }
 
 .n-carousel__index,

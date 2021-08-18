@@ -106,7 +106,6 @@ html {
 .demo .n-carousel .n-carousel__content > * {
   background: var(--carousel-bg, aliceblue);
   color: var(--carousel-color, #027b7b);
-  box-sizing: border-box;
 }
 .demo .n-carousel .n-carousel__content a[href] {
   color: #4d64bd;
