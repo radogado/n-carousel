@@ -9,13 +9,11 @@
   },
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "clean-css-cli": "^4.3.0",
     "gzip-size": "^6.0.0",
     "gzip-size-cli": "^4.0.0",
-    "terser": "^5.4.0"
-  },
-  "devDependencies": {
+    "terser": "^5.4.0",
     "sass": "^1.32.8"
   }
 }

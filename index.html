@@ -35,7 +35,7 @@
 
 <h1>Native Carousel</h1>
 
-<p>A carousel component which uses the native scroll snapping functionality with enhancements and customisation. It is lightweight with vertical, auto height, tabs, lightbox options, RTL support and no dependencies. <a href="//rado.bg/2021/07/introducing-native-carousel/">Announcement blog post</a>.
+<p style="max-width: 60ch;">A carousel component which uses the native scroll snapping functionality with enhancements and customisation. It is lightweight with vertical, auto height, tabs, lightbox options, RTL support and no dependencies. <a href="//rado.bg/2021/07/introducing-native-carousel/">Announcement blog post</a>.
 
 </p>
 
@@ -163,6 +163,10 @@
 							Vertical
 						</label>
 					</div>
+					
+					<h2>How to use</h2>
+					
+					<p style="max-width: 60ch;">Get the <a href="https://www.npmjs.com/package/n-carousel">n-carousel NPM module</a> and either add <b>n-carousel.js</b> and <b>n-carousel.scss</b> to your project<br> or use <a href="n-carousel.min.js">n-carousel.min.js</a> and <a href="n-carousel.min.css">n-carousel.min.css</a> on your page.</p>
 
 <!-- <div class="n-carousel n-carousel--inline n-carousel--tabs n-carousel--index-start n-carousel--index-align-start">
 	<div class="n-carousel__index">
@@ -185,11 +189,13 @@
 						<div>
 							<h2>Code</h2>
 
-							<div class="code">
-								<pre class="language-markup"><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
-&lt;script src="n-carousel.min.js" type="module"&gt;&lt;/script&gt;
+<div class="code">
+	<pre class="language-markup"><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
+&lt;script src="n-carousel.min.js" type="module"&gt;&lt;/script&gt;</code></pre>
+</div>
 
-&lt;div class="n-carousel"&gt;
+							<div class="code">
+								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel"&gt;
   &lt;ul class="n-carousel__content"&gt;
     &lt;li&gt;One&lt;/li&gt;
     &lt;li&gt;Two&lt;/li&gt;
@@ -235,15 +241,15 @@
 							<h2>Source</h2>
 
 							<div class="source">
-								<span>
+								<!-- <span>
 									<a href="n-carousel.min.css"><b>CSS</b></a
 									><br /><br />
 									<a href="n-carousel.min.js"><b>JS</b></a>
-								</span>
+								</span> -->
 
 								<span>
 									<pre>
-                <a href="https://www.npmjs.com/package/n-carousel">npm i n-carousel</a>
+                <a href="https://www.npmjs.com/package/n-carousel">npm i --save-dev n-carousel</a>
               </pre>
 								</span>
 								<a href="https://github.com/radogado/n-carousel">GitHub</a>
