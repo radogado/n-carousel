@@ -1,4 +1,4 @@
-(function () {
+(function() {
 	const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
 	const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
 
@@ -89,9 +89,23 @@
 			}
 		};
 
-		if (document.fullscreen || document.webkitIsFullScreen) {
+		if (document.fullscreen || document.webkitIsFullScreen) { // Exit full screen
 			!!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
-		} else {
+			if (isSafari) { // When exit finishes, update the carousel because on Safari 14, position is wrong or the slide is invisible
+				setTimeout(() => {
+
+					// console.log('updating', el);
+					// updateCarousel(el);
+					el.style.display = 'none';
+					window.requestAnimationFrame(() => {
+
+						el.style.display = '';
+					});
+
+
+				}, 0);
+			}
+		} else { // Enter full screen
 			if (isSafari) {
 				el.nuiAncestors = scrolledAncestors(el);
 				el.nuiAncestors.forEach((el) => {
@@ -99,8 +113,7 @@
 					el.nuiScrollY = el.scrollTop;
 				});
 				el.addEventListener("webkitfullscreenchange", restoreScroll, false);
-			}
-			!!el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen();
+			}!!el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen();
 		}
 
 		// updateCarousel(carousel);
@@ -127,7 +140,7 @@
 		const focusableContent = modal.querySelectorAll(focusableElements);
 		const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
 
-		document.addEventListener("keydown", function (e) {
+		document.addEventListener("keydown", function(e) {
 			let isTabPressed = e.key === "Tab" || e.keyCode === 9;
 
 			if (!isTabPressed) {
@@ -785,12 +798,13 @@
 
 					toggleFullScreen(e.target);
 				};
-				el.onfullscreenchange = (e) => {
+
+				const fullScreenEvent = (e) => {
 					// Chrome: Keep and update the real scroll here
 					let carousel = e.target.querySelector(":scope > .n-carousel__content");
 					// let x = carousel.dataset.x;
 					// let y = carousel.dataset.y;
-					// console.log(x, carousel.scrollLeft);
+					// console.log('full screen change', x, carousel.scrollLeft);
 
 					// $0.scrollTo($0.dataset.xx * Math.ceil(parseFloat(getComputedStyle($0.firstElementChild).width)), 0); delete $0.dataset.xx;
 
@@ -811,6 +825,13 @@
 						}
 					});
 				};
+
+				if (isSafari) {
+					el.onwebkitfullscreenchange = fullScreenEvent;
+				} else {
+					el.onfullscreenchange = fullScreenEvent;
+
+				}
 			}
 
 			el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
@@ -866,5 +887,5 @@
 
 	window.nCarouselInit = init;
 
-	typeof registerComponent === "function" ? registerComponent("n-select", init) : init();
+	typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
 })();

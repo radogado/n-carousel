@@ -21,14 +21,14 @@ body[data-frozen] {
     display: none;
   }
 
-  > * {
+  >* {
     flex: 1 0 auto;
     width: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)) + 1px * var(--subpixel-compensation, 0));
     padding-inline-end: calc(1px * var(--subpixel-compensation));
     box-sizing: border-box;
     overflow: auto;
 
-    > * {
+    >* {
       overflow: auto; // Collapse inner margins
     }
   }
@@ -37,7 +37,7 @@ body[data-frozen] {
 }
 
 .n-carousel:not(.n-carousel--vertical) {
-  > .n-carousel__content {
+  >.n-carousel__content {
     overflow-x: auto;
     // width: var(--subpixel-compensation);
     width: calc(100% - 0px); // Using the Safari bug where it floors the floating point value
@@ -51,53 +51,55 @@ body[data-frozen] {
     }
   }
 
-  &:not(.n-carousel--auto-height) > {
-    .n-carousel__content > * {
+  &:not(.n-carousel--auto-height)> {
+    .n-carousel__content>* {
       overflow: auto;
     }
   }
 
   &.n-carousel--auto-height {
     &:not([data-ready]) {
-      > .n-carousel__content > :not(:first-child) {
+      >.n-carousel__content> :not(:first-child) {
         height: 0;
         overflow: visible;
       }
     }
 
-    > .n-carousel__content {
+    >.n-carousel__content {
       overflow-y: hidden;
       height: var(--height);
+
       &,
-      > * {
+      >* {
         min-height: 9em; // Minimum height to accommodate the controls
       }
     }
   }
 }
 
-[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
+[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding])>.n-carousel__content {
   > :not([data-active]) {
     // height: var(--height, 0);
     overflow: visible;
   }
 }
 
-[data-sliding][data-ready].n-carousel--auto-height:not(.n-carousel--vertical) > .n-carousel__content {
+[data-sliding][data-ready].n-carousel--auto-height:not(.n-carousel--vertical)>.n-carousel__content {
   > :not([data-active]) {
     // height: auto;
   }
 }
 
-.n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content,
-.n-carousel--vertical[data-ready] > .n-carousel__content {
+.n-carousel--vertical:not(.n-carousel--auto-height)>.n-carousel__content,
+.n-carousel--vertical[data-ready]>.n-carousel__content {
   flex-direction: column;
 }
 
 .n-carousel:-webkit-full-screen {
   // Safari
   max-height: 100% !important;
-  > .n-carousel__close {
+
+  >.n-carousel__close {
     display: none;
   }
 }
@@ -105,46 +107,49 @@ body[data-frozen] {
 .n-carousel:fullscreen {
   // Chrome, Firefox
   max-height: 100% !important;
-  > .n-carousel__close {
+
+  >.n-carousel__close {
     display: none;
   }
 }
 
 .n-carousel.n-carousel--vertical {
   &.n-carousel--auto-height:not([data-ready]) {
-    > .n-carousel__content {
+    >.n-carousel__content {
       > :not(:first-child) {
         display: none;
       }
     }
   }
+
   --max-height: 75vh;
   height: var(--max-height, 100%);
   max-height: 100%;
-  > .n-carousel__content {
+
+  >.n-carousel__content {
     max-height: 100%;
     // height: var(--max-height); // Working default – overflows lightbox
   }
 
   &:not(.n-carousel--auto-height) {
     &:-webkit-full-screen {
-      > .n-carousel__content {
+      >.n-carousel__content {
         height: 100% !important;
       }
     }
 
     &:fullscreen {
-      > .n-carousel__content {
+      >.n-carousel__content {
         height: 100% !important;
       }
     }
   }
 
-  > .n-carousel__content {
+  >.n-carousel__content {
     overflow-y: auto;
     box-sizing: content-box;
 
-    > * {
+    >* {
       margin-inline-end: 0;
       width: 100%;
       height: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0)));
@@ -152,6 +157,7 @@ body[data-frozen] {
       padding-inline-end: 0;
       box-sizing: content-box;
     }
+
     &:before,
     &:after {
       content: "";
@@ -162,7 +168,7 @@ body[data-frozen] {
   }
 
   &:not(.n-carousel--controls-outside) {
-    > .n-carousel__index {
+    >.n-carousel__index {
       position: absolute;
       max-height: 100%;
       overflow: auto;
@@ -172,8 +178,10 @@ body[data-frozen] {
 
     &.n-carousel--inline:not(.n-carousel--overlay) {
       height: auto;
-      > .n-carousel__index {
+
+      >.n-carousel__index {
         position: static;
+
         button {
           display: initial;
         }
@@ -181,31 +189,37 @@ body[data-frozen] {
     }
 
     &.n-carousel--index-end {
-      > .n-carousel__index {
+      >.n-carousel__index {
         inset-inline-end: 0;
         inset-inline-start: auto;
         grid-area: auto;
       }
+
       &.n-carousel--index-align-end {
-        > .n-carousel__index {
+        >.n-carousel__index {
           position: absolute;
         }
       }
     }
+
     &.n-carousel--index-align-end {
-      > .n-carousel__index {
+      >.n-carousel__index {
         // position: static;
       }
     }
   }
+
   &.n-carousel--auto-height {
     height: auto;
+
     &.n-carousel--peek {
+
       // Disable vertical auto-height peeking for the time being
-      > .n-carousel__content {
-        > * {
+      >.n-carousel__content {
+        >* {
           height: calc(100% + 1px * var(--subpixel-compensation, 0));
         }
+
         &:before,
         &:after {
           display: none;
@@ -222,14 +236,14 @@ body[data-frozen] {
 
   _::-webkit-full-page-media,
   _:future,
-  :root .n-carousel[data-sliding] > .n-carousel__content {
+  :root .n-carousel[data-sliding]>.n-carousel__content {
     scroll-snap-type: both mandatory;
   }
 }
 
 _::-webkit-full-page-media,
 _:future,
-:root .n-carousel[data-sliding] > .n-carousel__content > * {
+:root .n-carousel[data-sliding]>.n-carousel__content>* {
   scroll-snap-align: center;
 }
 
@@ -263,6 +277,7 @@ _:future,
     align-items: center;
     padding: 0 1ch;
     cursor: pointer;
+
     span {
       color: var(--control-color, #333);
     }
@@ -274,11 +289,12 @@ _:future,
   }
 }
 
-.n-carousel:not([data-ready]) > * > button {
+.n-carousel:not([data-ready])>*>button {
   cursor: not-allowed;
 }
 
-[data-ready] > {
+[data-ready]> {
+
   .n-carousel__index,
   .n-carousel__previous,
   .n-carousel__next,
@@ -289,6 +305,7 @@ _:future,
     }
   }
 }
+
 // LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 
 .n-carousel__previous,
@@ -297,6 +314,7 @@ _:future,
 .n-carousel__close {
   height: 2.85em;
   width: 2.85em;
+
   button {
     span {
       // Screen readers only
@@ -327,11 +345,13 @@ _:future,
 .n-carousel__full-screen {
   grid-area: f;
   justify-self: baseline;
+
   button:before {
     // --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M0 0v180h60V60h120V0z'/%3E%3Cpath d='M0 0v180h60V60h120V0zM300 0v60h120v120h60V0z'/%3E%3Cpath d='M300 0v60h120v120h60V0zM420 300v120H300v60h180V300z'/%3E%3Cpath d='M420 300v120H300v60h180V300zM0 300v180h180v-60H60V300z'/%3E%3Cpath d='M0 300v180h180v-60H60V300z'/%3E%3C/g%3E%3C/svg%3E");
     --chevron: url("data:image/svg+xml,%3Csvg viewBox='0 0 46 46' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='nonzero'%3E%3Cpath d='M.778 17.444h5.555V6.334h11.111V.777H.778zM28.556.778v5.555h11.11v11.111h5.556V.778zM39.667 39.667H28.556v5.555h16.666V28.556h-5.555zM6.333 28.556H.778v16.666h16.666v-5.555H6.334z'/%3E%3C/g%3E%3C/svg%3E");
   }
-  ~ .n-carousel__close {
+
+  ~.n-carousel__close {
     grid-area: c;
   }
 }
@@ -339,17 +359,19 @@ _:future,
 .n-carousel__close {
   grid-area: f;
   justify-self: baseline;
+
   button:before {
     --chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M68.88 368.693l42.427 42.427L411.12 111.307 368.693 68.88 168.818 268.756z'/%3E%3Cpath d='M111.307 68.88L68.88 111.307 368.693 411.12l42.427-42.427-199.876-199.875z'/%3E%3C/g%3E%3C/svg%3E");
   }
-  ~ .n-carousel__full-screen {
+
+  ~.n-carousel__full-screen {
     grid-area: c;
   }
 }
 
 .n-carousel__previous,
 [dir="rtl"] .n-carousel__next,
-.n-carousel--rtl > .n-carousel__next {
+.n-carousel--rtl>.n-carousel__next {
   button {
     transform: rotate(90deg);
   }
@@ -357,25 +379,25 @@ _:future,
 
 .n-carousel__next,
 [dir="rtl"] .n-carousel__previous,
-.n-carousel--rtl > .n-carousel__previous {
+.n-carousel--rtl>.n-carousel__previous {
   button {
     transform: rotate(-90deg);
   }
 }
 
-.n-carousel--vertical > .n-carousel__next {
+.n-carousel--vertical>.n-carousel__next {
   button {
     transform: none;
   }
 }
 
-.n-carousel--vertical > .n-carousel__previous {
+.n-carousel--vertical>.n-carousel__previous {
   button {
     transform: rotate(180deg);
   }
 }
 
-.n-carousel--vertical[data-ready].n-carousel--auto-height > .n-carousel__content {
+.n-carousel--vertical[data-ready].n-carousel--auto-height>.n-carousel__content {
   overflow: hidden;
   overflow-y: auto;
 }
@@ -386,16 +408,16 @@ _:future,
   }
 }
 
-.n-carousel:not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
+.n-carousel:not([data-ready])>.n-carousel--auto-height> :not(:first-child) {
   height: 0;
   animation: carousel-css-only 2 0.1s linear 1s forwards;
 }
 
-.n-carousel:not([data-ready]) > .n-carousel--auto-height > :first-child {
+.n-carousel:not([data-ready])>.n-carousel--auto-height> :first-child {
   min-height: 100%;
 }
 
-.n-carousel__content > :not([data-active]):not(:last-child) {
+.n-carousel__content> :not([data-active]):not(:last-child) {
   overflow: auto;
 }
 
@@ -418,11 +440,11 @@ _:future,
     --peek: 15%;
   }
 
-  &:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {
+  &:not([data-sliding]):not([data-platform*="Win"])>.n-carousel__content {
     // Windows double scrolls
     scroll-snap-type: both mandatory;
 
-    > * {
+    >* {
       scroll-snap-align: center;
       scroll-snap-stop: always;
     }
@@ -432,10 +454,9 @@ _:future,
   grid-template: 1fr auto 1fr / auto auto auto 1fr auto auto;
   position: relative;
 
-  grid-template-areas:
-    "f    		c			a3    a3    a3    a3"
-    "prev   	a2		a2    a2    a2    next"
-    "i      	i			i     i     i     i";
+  grid-template-areas: "f    		c			a3    a3    a3    a3"
+  "prev   	a2		a2    a2    a2    next"
+  "i      	i			i     i     i     i";
 
   &.n-carousel--index-align-start {
     // grid-template: auto 1fr auto / auto auto 1fr auto;
@@ -444,7 +465,7 @@ _:future,
     // 	"prev a2 a2 next"
     // 	"i i b2 b2";
 
-    > .n-carousel__index {
+    >.n-carousel__index {
       justify-self: start;
     }
 
@@ -459,8 +480,8 @@ _:future,
           "prev a2 a2 a2 a2 next"
           "f c a3 a3 a3 a3";
 
-        > .n-carousel__full-screen,
-        > .n-carousel__close {
+        >.n-carousel__full-screen,
+        >.n-carousel__close {
           align-self: end;
         }
       }
@@ -474,7 +495,7 @@ _:future,
     // 	"prev a2 a2 next"
     // 	" b2 b2 i i";
 
-    > .n-carousel__index {
+    >.n-carousel__index {
       justify-self: center;
     }
   }
@@ -486,7 +507,7 @@ _:future,
     // 	"prev a2 a2 next"
     // 	" b2 b2 i i";
 
-    > .n-carousel__index {
+    >.n-carousel__index {
       justify-self: end;
     }
 
@@ -495,14 +516,15 @@ _:future,
         "f c i i i i"
         "prev a2 a2 a2 a2 next"
         "a3 a3 a3 a3 a3 a3";
-      > .n-carousel__full-screen,
-      > .n-carousel__close {
+
+      >.n-carousel__full-screen,
+      >.n-carousel__close {
         // align-self: end;
       }
     }
   }
 
-  > .n-carousel__content {
+  >.n-carousel__content {
     padding: 0;
     margin: 0;
     grid-row: 1/-1;
@@ -513,20 +535,20 @@ _:future,
     z-index: 1;
   }
 
-  > .n-carousel__previous {
+  >.n-carousel__previous {
     grid-area: prev;
     align-self: center;
     // justify-self: start;
     justify-self: center;
   }
 
-  > .n-carousel__next {
+  >.n-carousel__next {
     grid-area: next;
     align-self: center;
     justify-self: center;
   }
 
-  > .n-carousel__index {
+  >.n-carousel__index {
     grid-area: i;
     align-self: end;
     justify-self: center;
@@ -534,6 +556,7 @@ _:future,
     overflow: auto;
     white-space: nowrap;
     vertical-align: middle;
+
     img {
       width: 3em;
       height: 3em;
@@ -547,6 +570,7 @@ _:future,
         vertical-align: middle;
         margin: 0.25em auto;
         border-radius: 0;
+
         span {
           padding: 0 1ch;
         }
@@ -555,11 +579,12 @@ _:future,
   }
 
   &[data-platform="iPhone"],
-  &[data-platform="iPod"] > {
+  &[data-platform="iPod"]> {
     .n-carousel__full-screen {
       // iPhone doesn't support full screen
       display: none;
     }
+
     .n-carousel__close {
       grid-area: f;
     }
@@ -572,7 +597,7 @@ _:future,
   }
 
   &.n-carousel--index-end {
-    > .n-carousel__index {
+    >.n-carousel__index {
       justify-content: flex-end;
     }
   }
@@ -582,7 +607,7 @@ _:future,
       "f    c i   i   i   i"
       "prev   a3 a3    a3    a3    next";
 
-    > .n-carousel__index {
+    >.n-carousel__index {
       align-self: start;
     }
   }
@@ -596,7 +621,7 @@ _:future,
 
     grid-template-columns: auto auto 1fr auto;
 
-    > .n-carousel__content {
+    >.n-carousel__content {
       grid-area: content;
     }
 
@@ -609,11 +634,11 @@ _:future,
       grid-template-rows: auto auto 1fr auto;
     }
 
-    &.n-carousel--index-align-start > .n-carousel__index {
+    &.n-carousel--index-align-start>.n-carousel__index {
       text-align: start;
     }
 
-    &.n-carousel--index-align-end > .n-carousel__index {
+    &.n-carousel--index-align-end>.n-carousel__index {
       text-align: end;
     }
   }
@@ -626,29 +651,31 @@ _:future,
       "i a4 a4 next a5 a5";
     grid-template-rows: auto;
 
-    > .n-carousel__index {
+    >.n-carousel__index {
       align-self: center;
       justify-self: initial;
 
-      > * {
+      >* {
         display: block;
         white-space: normal;
         max-width: 25vw;
       }
     }
+
     &.n-carousel--index-align-start {
-      > .n-carousel__index {
+      >.n-carousel__index {
         align-self: start;
       }
     }
 
     &.n-carousel--index-align-end {
-      > .n-carousel__index {
+      >.n-carousel__index {
         align-self: end;
         // grid-area: i;
         inset-inline-start: 0;
       }
     }
+
     &.n-carousel--index-end {
       grid-template-areas:
         "f  c a1  prev  a2  i"
@@ -664,7 +691,7 @@ _:future,
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: auto;
 
-        > .n-carousel__index {
+        >.n-carousel__index {
           align-self: start;
         }
       }
@@ -675,10 +702,12 @@ _:future,
           "f   c  prev  a2  a2 i"
           "a3   a3  a3    a3  a3 i"
           "a4   a4  next  a5  a5 a5";
-        > .n-carousel__index {
+
+        >.n-carousel__index {
           align-self: start;
         }
-        > .n-carousel__previous {
+
+        >.n-carousel__previous {
           justify-self: center;
         }
       }
@@ -690,20 +719,21 @@ _:future,
           "a3   a3  a3    a3  a3 i"
           "a4   a4  next  a5  a5 i";
 
-        > .n-carousel__index {
+        >.n-carousel__index {
           align-self: end;
         }
-        > .n-carousel__previous {
+
+        >.n-carousel__previous {
           justify-self: center;
         }
       }
     }
 
-    > .n-carousel__previous {
+    >.n-carousel__previous {
       align-self: start;
     }
 
-    > .n-carousel__next {
+    >.n-carousel__next {
       align-self: end;
     }
 
@@ -720,6 +750,7 @@ _:future,
         "a1 a1 a1 prev c f"
         "i a3 a3 a3 a3 a3"
         "i a4 a4 next a5 a5";
+
       &.n-carousel--tabs:not(.n-carousel--controls-outside) {
         // grid-template: 1fr auto auto/auto auto auto 1fr auto auto;
       }
@@ -735,7 +766,7 @@ _:future,
     padding-inline-start: var(--index-width);
 
     &.n-carousel--index-align-start {
-      > .n-carousel__index {
+      >.n-carousel__index {
         align-self: start;
       }
     }
@@ -743,7 +774,7 @@ _:future,
     &.n-carousel--index-align-end {
       grid-template-columns: auto 1fr auto;
 
-      > .n-carousel__index {
+      >.n-carousel__index {
         align-self: end;
       }
     }
@@ -761,12 +792,12 @@ _:future,
       }
     }
 
-    > .n-carousel__index {
+    >.n-carousel__index {
       max-height: var(--max-height, 100%);
     }
 
     &.n-carousel--auto-height:not([data-ready]) {
-      > .n-carousel__index {
+      >.n-carousel__index {
         max-height: 0;
       }
     }
@@ -774,17 +805,17 @@ _:future,
     &.n-carousel--auto-height[data-ready] {
       overflow: hidden;
 
-      &[data-sliding] > .n-carousel__index {
+      &[data-sliding]>.n-carousel__index {
         max-height: none;
       }
 
-      > .n-carousel__index {
+      >.n-carousel__index {
         position: absolute;
         margin-inline-start: calc(-1 * var(--index-width));
       }
 
       &.n-carousel--index-end {
-        > .n-carousel__index {
+        >.n-carousel__index {
           margin-inline-start: calc(-1px * var(--index-width) / 2);
         }
       }
@@ -792,7 +823,7 @@ _:future,
   }
 
   &.n-carousel--tabs {
-    > .n-carousel__index {
+    >.n-carousel__index {
       display: flex;
       // flex-wrap: wrap;
       justify-content: start;
@@ -819,28 +850,28 @@ _:future,
       }
     }
 
-    &.n-carousel--vertical > .n-carousel__index {
+    &.n-carousel--vertical>.n-carousel__index {
       display: block;
 
-      > * {
+      >* {
         width: 100%;
       }
     }
 
-    &.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index {
-      > * {
+    &.n-carousel--vertical.n-carousel--auto-height>.n-carousel__index {
+      >* {
         white-space: nowrap;
       }
     }
 
-    &.n-carousel--tabs-align-end > .n-carousel__index {
+    &.n-carousel--tabs-align-end>.n-carousel__index {
       button {
         text-align: end;
       }
     }
 
-    > .n-carousel__previous,
-    > .n-carousel__next {
+    >.n-carousel__previous,
+    >.n-carousel__next {
       display: none;
     }
   }
@@ -868,10 +899,13 @@ _:future,
       background: rgba(0, 0, 0, 0.9);
     }
   }
+
   &.n-carousel--inline:not(.n-carousel--overlay) {
     display: block;
-    > * {
+
+    >* {
       text-align: start;
+
       &:not(.n-carousel__index) {
         display: none;
       }
@@ -880,7 +914,7 @@ _:future,
 }
 
 @-moz-document url-prefix() {
-  .n-carousel--vertical > .n-carousel__content {
+  .n-carousel--vertical>.n-carousel__content {
     // FF doesn't respect the end padding of the vertical carousel. Can't use this for all, bc it breaks Safari
 
     display: block;
@@ -889,6 +923,7 @@ _:future,
       margin-block-end: var(--peek, 0);
     }
   }
+
   .n-carousel__close button:before {
     // Firefox can't display the "Close" SVG
     mask: none;
@@ -912,7 +947,7 @@ _:future,
     // border: 0.1px solid transparent;
     box-sizing: border-box;
 
-    > * {
+    >* {
       grid-row: 1/3;
       grid-column: 1/1;
       display: flex;
@@ -920,7 +955,7 @@ _:future,
       align-items: center;
     }
 
-    > figcaption {
+    >figcaption {
       grid-row: 1/2;
       justify-self: center;
       padding: 0.5em 0.75em;
@@ -932,7 +967,8 @@ _:future,
   &.n-carousel--index-start {
     figure {
       grid-template: 1fr auto/auto;
-      > figcaption {
+
+      >figcaption {
         grid-row: 2/3;
       }
     }
@@ -940,16 +976,19 @@ _:future,
 
   &.n-carousel--vertical:not(.n-carousel--controls-outside) {
     figure {
+
       // grid-template: 1fr auto/auto;
-      > figcaption {
+      >figcaption {
         // grid-row: 2/3;
         margin-top: 3em;
       }
     }
+
     &.n-carousel--index-start {
       figure {
+
         // grid-template: 1fr auto/auto;
-        > figcaption {
+        >figcaption {
           // grid-row: 2/3;
           margin-top: none;
           margin-bottom: 3em;
