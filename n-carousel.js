@@ -416,6 +416,12 @@
 		}
 
 		observersOn(el);
+		
+		let hash = el.children[active].id;
+		if (!!hash) {
+			location.hash = `#${hash}`;
+		}
+		
 	};
 
 	// Setup isScrolling variable
