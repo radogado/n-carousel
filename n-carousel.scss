@@ -981,6 +981,7 @@ _:future,
   &.n-carousel--auto-height {
     figure, video, iframe {
       height: auto;
+      max-height: none;
     }
   }
 

@@ -682,6 +682,7 @@ _:future,
 }
 .n-carousel--lightbox.n-carousel--auto-height figure, .n-carousel--lightbox.n-carousel--auto-height video, .n-carousel--lightbox.n-carousel--auto-height iframe {
   height: auto;
+  max-height: none;
 }
 .n-carousel--lightbox.n-carousel--index-start figure {
   grid-template: 1fr auto/auto;
