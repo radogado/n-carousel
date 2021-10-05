@@ -79,18 +79,6 @@ body[data-frozen] {
       }
     }
   }
-
-  &:-webkit-full-screen,
-  &.n-carousel--overlay {
-    > .n-carousel__content {
-      height: 100% !important;
-
-      figure,
-      img {
-        max-height: 100%;
-      }
-    }
-  }
 }
 
 [data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
@@ -112,11 +100,27 @@ body[data-frozen] {
 }
 
 .n-carousel:-webkit-full-screen {
-  // Safari
-  max-height: 100% !important;
-
   > .n-carousel__close {
     display: none;
+  }
+}
+
+.n-carousel {
+
+  &:-webkit-full-screen,
+  &.n-carousel--overlay {
+    max-height: 100% !important;
+
+    > .n-carousel__content {
+      height: 100% !important;
+
+      figure,
+      img,
+      video,
+      iframe {
+        max-height: 100%;
+      }
+    }
   }
 }
 
@@ -975,7 +979,7 @@ _:future,
   }
 
   &.n-carousel--auto-height {
-    figure {
+    figure, video, iframe {
       height: auto;
     }
   }
@@ -1046,5 +1050,7 @@ _:future,
     margin: auto;
     max-width: 100%;
     max-height: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
   }
 }
