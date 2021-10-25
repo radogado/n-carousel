@@ -339,7 +339,7 @@
 		let hash = el.children[active].id;
 		// console.log(hash);
 		if (!!hash) {
-			console.log(hash);
+			// console.log(hash);
 			location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
 		}
 	};
