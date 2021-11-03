@@ -342,6 +342,34 @@
 			// console.log(hash);
 			location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
 		}
+		// Disable focus on children of non-active slides
+		// To do: active slides of nested carousels should also have disabled focus
+		// To do: Save the tabindex only if the attribute is available beforehand
+		// To do: restore previous tabindex without taking into account the tabindex just added by the script
+		[...el.children].forEach(slide => {
+			if (slide !== el.children[active]) {
+				slide.querySelectorAll('a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])').forEach(el2 => {
+					if (el2.closest('.n-carousel__content > :not([data-active])')) {
+						// if (el2.getAttribute('tabindex')) {
+						// 	el2.dataset.oldTabIndex = el2.tabIndex;
+						// }
+						el2.tabIndex = -1;
+					}
+				});
+				slide.dataset.disabledChildrenFocus = true;
+			}
+		});
+		console.log(el.children[active]);
+		el.children[active].querySelectorAll('[tabindex="-1"]').forEach(el2 => {
+			if (!el2.closest('.n-carousel__content > :not([data-active])')) {
+				el2.removeAttribute('tabindex');
+				// if (!!el2.dataset.oldTabIndex) {
+				// 	el2.tabIndex = el2.dataset.oldTabIndex;
+				// 	delete el2.dataset.oldTabIndex;
+				// }
+			}
+		});
+		delete el.children[active].dataset.disabledChildrenFocus;
 	};
 	// Setup isScrolling variable
 	var isScrolling;
@@ -691,7 +719,7 @@
 				}
 			});
 			let content = el.querySelector(":scope > .n-carousel__content");
-			content.tabIndex = 0;
+			// content.tabIndex = 0;
 			let hashed_slide = !!location.hash ? content.querySelector(':scope > ' + location.hash) : false;
 			if (hashed_slide) {
 				// console.log(hashed_slide);
