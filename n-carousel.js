@@ -1,6 +1,7 @@
 (function () {
 	const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
 	const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
+	const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
 
 	function isElementInViewport(el) {
 		let rect = el.getBoundingClientRect();
@@ -102,7 +103,6 @@
 	const trapFocus = (modal) => {
 		// FROM: https://uxdesign.cc/how-to-trap-focus-inside-modal-to-make-it-ada-compliant-6a50f9a70700
 		// add all the elements inside modal which you want to make focusable
-		const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 		const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
 		const focusableContent = modal.querySelectorAll(focusableElements);
 		const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
@@ -343,15 +343,16 @@
 			location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
 		}
 		// Disable focus on children of non-active slides
-		// active slides of nested carousels should also have disabled focus
-		// To do: restore previous tabindex without taking into account the tabindex just added by the script
+		// Active slides of nested carousels should also have disabled focus
+		// Restore previous tabindex without taking into account the tabindex just added by the script
 		[...el.children].forEach(slide => {
 			if (slide !== el.children[active]) {
-				slide.querySelectorAll('a[href], button, input, textarea, select, details, summary, video, [tabindex]:not([tabindex="-1"])').forEach(el2 => {
+				slide.querySelectorAll(focusableElements).forEach(el2 => {
 					if (el2.closest('.n-carousel__content > :not([data-active])')) {
-						// if (el2.getAttribute('tabindex')) {
-						// 	el2.dataset.oldTabIndex = el2.tabIndex;
-						// }
+						if (el2.getAttribute('tabindex') && !el2.dataset.focusDisabled) {
+							el2.dataset.oldTabIndex = el2.tabIndex;
+						}
+						el2.dataset.focusDisabled = true;
 						el2.tabIndex = -1;
 					}
 				});
@@ -359,13 +360,14 @@
 			}
 		});
 		// console.log(el.children[active]);
-		el.children[active].querySelectorAll('[tabindex="-1"]').forEach(el2 => {
+		el.children[active].querySelectorAll('[data-focus-disabled]').forEach(el2 => {
 			if (!el2.closest('.n-carousel__content > :not([data-active])')) {
 				el2.removeAttribute('tabindex');
-				// if (!!el2.dataset.oldTabIndex) {
-				// 	el2.tabIndex = el2.dataset.oldTabIndex;
-				// 	delete el2.dataset.oldTabIndex;
-				// }
+				delete el2.dataset.focusDisabled;
+				if (!!el2.dataset.oldTabIndex) {
+					el2.tabIndex = el2.dataset.oldTabIndex;
+					delete el2.dataset.oldTabIndex;
+				}
 			}
 		});
 		// delete el.children[active].dataset.disabledChildrenFocus;
