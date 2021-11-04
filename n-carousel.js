@@ -343,8 +343,7 @@
 			location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
 		}
 		// Disable focus on children of non-active slides
-		// To do: active slides of nested carousels should also have disabled focus
-		// To do: Save the tabindex only if the attribute is available beforehand
+		// active slides of nested carousels should also have disabled focus
 		// To do: restore previous tabindex without taking into account the tabindex just added by the script
 		[...el.children].forEach(slide => {
 			if (slide !== el.children[active]) {
@@ -356,7 +355,7 @@
 						el2.tabIndex = -1;
 					}
 				});
-				slide.dataset.disabledChildrenFocus = true;
+				// slide.dataset.disabledChildrenFocus = true;
 			}
 		});
 		console.log(el.children[active]);
@@ -369,7 +368,7 @@
 				// }
 			}
 		});
-		delete el.children[active].dataset.disabledChildrenFocus;
+		// delete el.children[active].dataset.disabledChildrenFocus;
 	};
 	// Setup isScrolling variable
 	var isScrolling;
