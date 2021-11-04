@@ -347,7 +347,7 @@
 		// To do: restore previous tabindex without taking into account the tabindex just added by the script
 		[...el.children].forEach(slide => {
 			if (slide !== el.children[active]) {
-				slide.querySelectorAll('a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])').forEach(el2 => {
+				slide.querySelectorAll('a[href], button, input, textarea, select, details, summary, video, [tabindex]:not([tabindex="-1"])').forEach(el2 => {
 					if (el2.closest('.n-carousel__content > :not([data-active])')) {
 						// if (el2.getAttribute('tabindex')) {
 						// 	el2.dataset.oldTabIndex = el2.tabIndex;
@@ -358,7 +358,7 @@
 				// slide.dataset.disabledChildrenFocus = true;
 			}
 		});
-		console.log(el.children[active]);
+		// console.log(el.children[active]);
 		el.children[active].querySelectorAll('[tabindex="-1"]').forEach(el2 => {
 			if (!el2.closest('.n-carousel__content > :not([data-active])')) {
 				el2.removeAttribute('tabindex');
