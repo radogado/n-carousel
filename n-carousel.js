@@ -575,13 +575,10 @@
 			!!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
 		}
 		let carousel = e.target.closest(".n-carousel");
-		// if (carousel.classList.contains("n-carousel--overlay")) {
-		//   carousel.animate([{ transform: "none" }, { transform: "translateY(-100%)" }], { duration: 200 }).onfinish = () => {
-		//     carousel.classList.remove("n-carousel--overlay");
-		//   };
-		// }
-		carousel.classList.remove("n-carousel--overlay");
-		delete document.body.dataset.frozen;
+		if (carousel) {
+			carousel.classList.remove("n-carousel--overlay");
+			delete document.body.dataset.frozen;
+		}
 	};
 	const verticalAutoObserver = new ResizeObserver((entries) => {
 		window.requestAnimationFrame(() => {
