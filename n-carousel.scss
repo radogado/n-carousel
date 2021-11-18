@@ -94,6 +94,12 @@ body[data-frozen] {
   }
 }
 
+[data-sliding][data-ready].n-carousel--auto-height > .n-carousel__content {
+  > * {
+    overflow: hidden;
+  }
+}
+
 .n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content,
 .n-carousel--vertical[data-ready] > .n-carousel__content {
   flex-direction: column;
@@ -106,7 +112,6 @@ body[data-frozen] {
 }
 
 .n-carousel {
-
   &:-webkit-full-screen,
   &.n-carousel--overlay {
     max-height: 100% !important;
@@ -233,7 +238,6 @@ body[data-frozen] {
     height: auto;
 
     &.n-carousel--peek {
-
       // Disable vertical auto-height peeking for the time being
       > .n-carousel__content {
         > * {
@@ -251,7 +255,6 @@ body[data-frozen] {
 
 // Chrome/FF (and now Safari 15) can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset. Fixed in Safari 15
 @supports not (aspect-ratio: 1) {
-
   // Safari 14 only
   _::-webkit-full-page-media,
   _:future,
@@ -313,7 +316,6 @@ _:future,
 }
 
 [data-ready] > {
-
   .n-carousel__index,
   .n-carousel__previous,
   .n-carousel__next,
@@ -470,12 +472,12 @@ _:future,
   display: grid;
   grid-template: 1fr auto 1fr / auto auto auto 1fr auto auto;
   position: relative;
-  grid-template-areas: "f    		c			a3    a3    a3    a3"
-  "prev   	a2		a2    a2    a2    next"
-  "i      	i			i     i     i     i";
+  grid-template-areas:
+    "f    		c			a3    a3    a3    a3"
+    "prev   	a2		a2    a2    a2    next"
+    "i      	i			i     i     i     i";
 
   &.n-carousel--index-align-start {
-
     // grid-template: auto 1fr auto / auto auto 1fr auto;
     // grid-template-areas:
     // 	"a3 a3 a3 a3"
@@ -505,7 +507,6 @@ _:future,
   }
 
   &.n-carousel--index-align-center:not(.n-carousel--vertical) {
-
     // grid-template: 1fr auto 1fr / auto 1fr auto auto;
     // grid-template-areas:
     // 	"a3 a3 a3 a3"
@@ -517,7 +518,6 @@ _:future,
   }
 
   &.n-carousel--index-align-end {
-
     // grid-template: 1fr auto 1fr / auto 1fr auto auto;
     // grid-template-areas:
     // 	"a3 a3 a3 a3"
@@ -979,7 +979,9 @@ _:future,
   }
 
   &.n-carousel--auto-height {
-    figure, video, iframe {
+    figure,
+    video,
+    iframe {
       height: auto;
       max-height: none;
     }
@@ -997,7 +999,6 @@ _:future,
 
   &.n-carousel--vertical:not(.n-carousel--controls-outside) {
     figure {
-
       // grid-template: 1fr auto/auto;
       > figcaption {
         // grid-row: 2/3;
@@ -1007,7 +1008,6 @@ _:future,
 
     &.n-carousel--index-start {
       figure {
-
         // grid-template: 1fr auto/auto;
         > figcaption {
           // grid-row: 2/3;

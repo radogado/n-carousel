@@ -1,7 +1,6 @@
 (function () {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
-  const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
 
   function isElementInViewport(el) {
     let rect = el.getBoundingClientRect();
@@ -109,6 +108,7 @@
   const getScroll = (el) => (el === window ? { x: el.scrollX, y: el.scrollY } : { x: scrollStartX(el), y: el.scrollTop });
   const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
   const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
+  const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
   const trapFocus = (modal) => {
     // FROM: https://uxdesign.cc/how-to-trap-focus-inside-modal-to-make-it-ada-compliant-6a50f9a70700
     // add all the elements inside modal which you want to make focusable
@@ -317,9 +317,9 @@
     let active_slide = el.children[active];
 
     // Endless carousel
-	// To do: on initial load, scroll to second one
-	// To do: fix index
-	// To do: scroll end by timeout detection, when snapping to next slide, glitches
+    // To do: on initial load, scroll to second one
+    // To do: fix index
+    // To do: scroll end by timeout detection, when snapping to next slide, glitches
     if (el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless")) {
       if (active === 0) {
         if (!active_slide.dataset.first) {
@@ -334,26 +334,27 @@
           el.append(el.firstElementChild);
         }
       } else {
-      	if (active === el.children.length - 1) {
-        	if (!active_slide.dataset.last) {
-          	// Move the first one to the back as [data-last]
-          	el.firstElementChild.dataset.last = true;
-          	el.append(el.firstElementChild);
-        	} else {
-          	// Landed on fake last slide. Move it to the front, remove its [data-last] and move the last one to the front as [data-first]
-          	delete el.lastElementChild.dataset.last;
-          	el.prepend(el.lastElementChild);
-          	el.lastElementChild.dataset.first = true;
-          	el.prepend(el.lastElementChild);
-        	}
-      	} else { // Middle slide
-			  let leftover = el.querySelector(':scope > [data-first][data-last]');
-			  if (leftover) {
-					delete leftover.dataset.first;				  
-					delete leftover.dataset.last;				  
-			  }
-	  	}
-  	  }
+        if (active === el.children.length - 1) {
+          if (!active_slide.dataset.last) {
+            // Move the first one to the back as [data-last]
+            el.firstElementChild.dataset.last = true;
+            el.append(el.firstElementChild);
+          } else {
+            // Landed on fake last slide. Move it to the front, remove its [data-last] and move the last one to the front as [data-first]
+            delete el.lastElementChild.dataset.last;
+            el.prepend(el.lastElementChild);
+            el.lastElementChild.dataset.first = true;
+            el.prepend(el.lastElementChild);
+          }
+        } else {
+          // Middle slide
+          let leftover = el.querySelector(":scope > [data-first][data-last]");
+          if (leftover) {
+            delete leftover.dataset.first;
+            delete leftover.dataset.last;
+          }
+        }
+      }
     }
 
     if (current_active) {
