@@ -128,11 +128,6 @@ html {
   background: none;
 }
 
-.n-carousel--lightbox > .n-carousel__content > * {
-  padding: 0;
-  margin: 0;
-}
-
 @media (min-width: 600px) {
   .demo-grid {
     display: grid;

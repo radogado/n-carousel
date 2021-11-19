@@ -666,16 +666,20 @@
 		let carousel = el.querySelector(":scope > .n-carousel__content");
 		carousel.style.setProperty("--subpixel-compensation-peeking", 0);
 		carousel.style.setProperty("--subpixel-compensation", 0);
-		if (isVertical(el)) {
-			let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
-			carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-			carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
-		} else {
-			let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
-			carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-			carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel.firstElementChild) - parseFloat(getComputedStyle(carousel.firstElementChild).width));
-		}
-		// console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
+if (isVertical(el)) {
+	  let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
+	  carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
+	  carousel.style.setProperty("--ceiling-height", "100%");
+	  carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
+	  carousel.style.setProperty("--ceiling-height", `${ceilingHeight(carousel)}px`);
+	} else {
+	  let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
+	  carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
+	  carousel.style.setProperty("--ceiling-width", "100%");
+	  carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel.firstElementChild) - parseFloat(getComputedStyle(carousel.firstElementChild).width));
+	  carousel.style.setProperty("--ceiling-width", `${ceilingWidth(carousel.firstElementChild)}px`);
+	}
+			// console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
 		let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
 		scrollTo(carousel, offset * ceilingWidth(carousel.firstElementChild), offset * ceilingHeight(carousel.firstElementChild));
 	};
