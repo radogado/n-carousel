@@ -194,11 +194,18 @@
 				height_minus_index.observe(el.parentNode);
 			}
 			el.addEventListener("scroll", scrollStop, { passive: true });
+			// subpixel_observer.observe(el);
+			mutation_observer.observe(el.parentNode, {
+				attributes: true,
+				attributeFilter: ["class"],
+			});
 		});
 	};
 	const observersOff = (el) => {
 		el.removeEventListener("scroll", scrollStop);
 		height_minus_index.disconnect();
+		subpixel_observer.disconnect();
+		mutation_observer.disconnect();
 		// el.removeEventListener("mousewheel", detectTrackPad);
 		// el.removeEventListener("DOMMouseScroll", detectTrackPad);
 	};
@@ -232,8 +239,7 @@
 				resolve(el);
 				return;
 			}
-			subpixel.disconnect();
-			// mutation.disconnect();
+			observersOff(el);
 			let scroll_changing = true;
 			if (distanceX === 0 && distanceY === 0) {
 				scroll_changing = false;
@@ -264,11 +270,7 @@
 					if (new_height) {
 						el.style.height = `${new_height}px`;
 					}
-					subpixel.observe(el.parentNode);
-					mutation.observe(el.parentNode, {
-						attributes: true,
-						attributeFilter: ["class"],
-					});
+					observersOn(el);
 					window.requestAnimationFrame(() => {
 						updateCarousel(el);
 						resolve(el);
@@ -401,7 +403,6 @@
 			index.children[active].disabled = true;
 		}
 
-		observersOn(el);
 		// Sliding to a slide with a hash? Update the URI
 		let hash = active_slide.id;
 		// console.log(hash);
@@ -438,6 +439,8 @@
 			}
 		});
 		// delete active_slide.dataset.disabledChildrenFocus;
+
+		observersOn(el);
 	};
 	// Setup isScrolling variable
 	var isScrolling;
@@ -659,50 +662,58 @@
 		});
 	});
 	const updateSubpixels = (el) => {
-		if (el.matches(".n-carousel--auto-height") && !!el.parentNode.dataset.sliding) {
-			return;
+		if (!el.parentNode.dataset.sliding) {
+			// Round down the padding, because sub pixel padding + scrolling is a problem
+			let carousel = el;
+			console.log(carousel);
+			carousel.style.removeProperty("--subpixel-compensation-peeking");
+			carousel.style.removeProperty("--subpixel-compensation");
+			carousel.style.removeProperty("--ceiling-height");
+			carousel.style.removeProperty("--ceiling-width");
+			window.requestAnimationFrame(() => {
+				if (isVertical(el)) {
+					let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
+					carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
+					carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
+					carousel.style.setProperty("--ceiling-height", `${ceilingHeight(carousel)}px`);
+				} else {
+					let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
+					carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
+					carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
+					carousel.style.setProperty("--ceiling-width", `${ceilingWidth(carousel)}px`);
+				}
+				// console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
+				let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
+				scrollTo(carousel, offset * ceilingWidth(carousel.firstElementChild), offset * ceilingHeight(carousel.firstElementChild));
+			});
 		}
-		// Round down the padding, because sub pixel padding + scrolling is a problem
-		let carousel = el.querySelector(":scope > .n-carousel__content");
-		carousel.style.setProperty("--subpixel-compensation-peeking", 0);
-		carousel.style.setProperty("--subpixel-compensation", 0);
-if (isVertical(el)) {
-	  let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
-	  carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-	  carousel.style.setProperty("--ceiling-height", "100%");
-	  carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
-	  carousel.style.setProperty("--ceiling-height", `${ceilingHeight(carousel)}px`);
-	} else {
-	  let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
-	  carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-	  carousel.style.setProperty("--ceiling-width", "100%");
-	  carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel.firstElementChild) - parseFloat(getComputedStyle(carousel.firstElementChild).width));
-	  carousel.style.setProperty("--ceiling-width", `${ceilingWidth(carousel.firstElementChild)}px`);
-	}
-			// console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
-		let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
-		scrollTo(carousel, offset * ceilingWidth(carousel.firstElementChild), offset * ceilingHeight(carousel.firstElementChild));
 	};
 	const updateObserver = (el) => {
+		// el = el.querySelector(":scope > .n-carousel__content");
+		observersOff(el);
 		updateSubpixels(el);
-		el = el.querySelector(":scope > .n-carousel__content");
-		// console.log("resized", el);
-		// let current_height = getComputedStyle(el.querySelector(":scope > [data-active] > *")).height;
-		let current_height = el.querySelector(":scope > [data-active]").scrollHeight + "px";
-		let previous_height = getComputedStyle(el).getPropertyValue("--height");
-		if (current_height !== previous_height) {
-			el.style.setProperty("--height", current_height);
-		}
+		window.requestAnimationFrame(() => {
+			// console.log("resized", el);
+			// let current_height = getComputedStyle(el.querySelector(":scope > [data-active] > *")).height;
+			let current_height = el.querySelector(":scope > [data-active]").scrollHeight + "px";
+			let previous_height = getComputedStyle(el).getPropertyValue("--height");
+			if (current_height !== previous_height) {
+				el.style.setProperty("--height", current_height);
+			}
+			observersOn(el);
+		});
 	};
-	const subpixel = new ResizeObserver((entries) => {
+	const subpixel_observer = new ResizeObserver((entries) => {
+		// return;
 		window.requestAnimationFrame(() => {
 			entries.forEach((e) => {
 				updateObserver(e.target);
 			});
 		});
 	});
-	const mutation = new MutationObserver((mutations) => {
-		// console.log("mutations", mutations);
+	const mutation_observer = new MutationObserver((mutations) => {
+		// return;
+		console.log("mutations", mutations);
 		for (let mutation of mutations) {
 			// console.log("mutated ", mutation.target);
 			if (mutation.target) {
@@ -721,6 +732,7 @@ if (isVertical(el)) {
 		}
 	};
 	const height_minus_index = new ResizeObserver((entries) => {
+		// Limit outside index height to carousel height
 		window.requestAnimationFrame(() => {
 			// Observing the carousel wrapper
 			entries.forEach((e) => {
@@ -815,11 +827,7 @@ if (isVertical(el)) {
 				content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
 			}
 			window.requestAnimationFrame(() => {
-				subpixel.observe(el);
-				mutation.observe(el, {
-					attributes: true,
-					attributeFilter: ["class"],
-				});
+				observersOn(content);
 				el.dataset.ready = true;
 				if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
 					setIndexWidth(el);
