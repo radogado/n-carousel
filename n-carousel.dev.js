@@ -691,6 +691,7 @@
   };
 
   const updateObserver = (el) => {
+    // console.log('observer fired at ', el, el.observerStarted);
     // el = el.querySelector(":scope > .n-carousel__content");
     if (!!el.observerStarted) {
       el.observerStarted = false;
@@ -723,7 +724,7 @@
   });
   const mutation_observer = new MutationObserver((mutations) => {
     // return;
-    console.log("mutations", mutations);
+    // console.log("mutations", mutations);
     for (let mutation of mutations) {
       // console.log("mutated ", mutation.target);
       if (mutation.target) {
