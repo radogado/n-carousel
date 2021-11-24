@@ -74,6 +74,7 @@
         el.removeEventListener("webkitfullscreenchange", restoreScroll);
       }
     };
+
     if (document.fullscreen || document.webkitIsFullScreen) {
       // Exit full screen
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
@@ -790,6 +791,8 @@
           // $0.scrollTo($0.dataset.xx * Math.ceil(parseFloat(getComputedStyle($0.firstElementChild).width)), 0); delete $0.dataset.xx;
           // console.log(carousel.dataset.xx, carousel.dataset.xx * ceilingWidth(carousel.children[carousel.dataset.xx]));
           window.requestAnimationFrame(() => {
+            // console.log("full screen toggle ", carousel);
+            updateCarousel(carousel);
             carousel.dataset.x = carousel.dataset.xx;
             carousel.dataset.y = carousel.dataset.yy;
             delete carousel.dataset.xx;
