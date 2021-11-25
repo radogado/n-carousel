@@ -632,6 +632,7 @@
       const carousel = el.closest(".n-carousel");
       if (carousel.classList.contains("n-carousel--inline") && !carousel.classList.contains("n-carousel--overlay")) {
         carousel.classList.add("n-carousel--overlay");
+        console.log("open modal");
         document.body.dataset.frozen = document.body.scrollTop;
         // carousel.animate([{ transform: "translateY(-100%)" }, { transform: "none" }], { duration: 200, fill: "forwards" });
         trapFocus(carousel);
@@ -672,6 +673,9 @@
       carousel.style.removeProperty("--subpixel-compensation");
       carousel.style.removeProperty("--ceiling-height");
       carousel.style.removeProperty("--ceiling-width");
+      if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
+        return;
+      }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
           let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
