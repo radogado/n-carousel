@@ -24,9 +24,9 @@ body[data-frozen] {
 }
 .n-carousel__content > * {
   flex: 1 0 auto;
-  width: calc(var(--ceiling-width, 100%) - 2 * var(--peek, 0));
+  width: calc(100% - 2 * var(--peek, 0));
   padding-inline-end: calc(1px * var(--subpixel-compensation, 0));
-  box-sizing: border-box;
+  box-sizing: content-box;
   overflow: auto;
 }
 .n-carousel__content > * > * {

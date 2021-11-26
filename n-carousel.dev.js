@@ -5,12 +5,7 @@
 
   function isElementInViewport(el) {
     let rect = el.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */ &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
-    );
+    return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */ && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */ );
   }
   const default_duration = 500;
   const default_interval = 4000;
@@ -74,7 +69,6 @@
         el.removeEventListener("webkitfullscreenchange", restoreScroll);
       }
     };
-
     if (document.fullscreen || document.webkitIsFullScreen) {
       // Exit full screen
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
@@ -98,8 +92,7 @@
           el.nuiScrollY = el.scrollTop;
         });
         el.addEventListener("webkitfullscreenchange", restoreScroll, false);
-      }
-      !!el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen();
+      }!!el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen();
     }
     // updateCarousel(carousel);
   };
@@ -188,7 +181,6 @@
   //     }
   //     // }
   //   };
-
   const observersOn = (el) => {
     delete el.parentNode.dataset.sliding;
     window.requestAnimationFrame(() => {
@@ -229,76 +221,74 @@
     }
   };
   const closestCarousel = (el) => (document.getElementById(el.closest('[class*="n-carousel"]').dataset.for) || el.closest(".n-carousel")).querySelector(".n-carousel__content");
-  const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) =>
-    new Promise((resolve, reject) => {
-      // Thanks https://stackoverflow.com/posts/46604409/revisions
-      let wrapper = el.closest(".n-carousel");
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant") || !!wrapper.nextSlideInstant) {
-        scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
-        el.style.height = `${new_height}px`;
-        delete wrapper.nextSlideInstant;
-        updateCarousel(el);
-        resolve(el);
+  const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) => new Promise((resolve, reject) => {
+    // Thanks https://stackoverflow.com/posts/46604409/revisions
+    let wrapper = el.closest(".n-carousel");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant") || !!wrapper.nextSlideInstant) {
+      scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
+      el.style.height = `${new_height}px`;
+      delete wrapper.nextSlideInstant;
+      updateCarousel(el);
+      resolve(el);
+      return;
+    }
+    observersOff(el);
+    let scroll_changing = true;
+    if (distanceX === 0 && distanceY === 0) {
+      scroll_changing = false;
+    }
+    if (!!new_height) {
+      el.style.height = `${old_height}px`;
+    } else {
+      if (!isVertical(el)) {
+        el.style.height = "";
+      }
+    }
+    var stop = false;
+    var startx = getScroll(el).x;
+    var starty = getScroll(el).y;
+    var starth = parseInt(el.style.height);
+    var distanceH = new_height - starth;
+    var duration = parseFloat(el.parentNode.dataset.duration) * 1000 || default_duration;
+    var start = null;
+    var end = null;
+    let startAnim = (timeStamp) => {
+      start = timeStamp;
+      end = start + duration;
+      draw(timeStamp);
+    };
+    let draw = (now) => {
+      if (stop) {
+        scrollTo(el, startx + distanceX, starty + distanceY);
+        if (new_height) {
+          el.style.height = `${new_height}px`;
+        }
+        observersOn(el);
+        window.requestAnimationFrame(() => {
+          updateCarousel(el);
+          resolve(el);
+        });
         return;
       }
-      observersOff(el);
-      let scroll_changing = true;
-      if (distanceX === 0 && distanceY === 0) {
-        scroll_changing = false;
+      if (now - start >= duration) stop = true;
+      var p = (now - start) / duration;
+      var val = inOutSine(p);
+      var x = startx + distanceX * val;
+      var y = starty + distanceY * val;
+      if (scroll_changing) {
+        scrollTo(el, x, y);
       }
-      if (!!new_height) {
-        el.style.height = `${old_height}px`;
-      } else {
-        if (!isVertical(el)) {
-          el.style.height = "";
-        }
+      if (new_height) {
+        window.requestAnimationFrame(() => {
+          el.style.height = `${starth + distanceH * val}px`;
+        }); // Timeout because Safari can't do scroll and height at once
       }
-      var stop = false;
-      var startx = getScroll(el).x;
-      var starty = getScroll(el).y;
-      var starth = parseInt(el.style.height);
-      var distanceH = new_height - starth;
-      var duration = parseFloat(el.parentNode.dataset.duration) * 1000 || default_duration;
-      var start = null;
-      var end = null;
-      let startAnim = (timeStamp) => {
-        start = timeStamp;
-        end = start + duration;
-        draw(timeStamp);
-      };
-      let draw = (now) => {
-        if (stop) {
-          scrollTo(el, startx + distanceX, starty + distanceY);
-          if (new_height) {
-            el.style.height = `${new_height}px`;
-          }
-          observersOn(el);
-          window.requestAnimationFrame(() => {
-            updateCarousel(el);
-            resolve(el);
-          });
-          return;
-        }
-        if (now - start >= duration) stop = true;
-        var p = (now - start) / duration;
-        var val = inOutSine(p);
-        var x = startx + distanceX * val;
-        var y = starty + distanceY * val;
-        if (scroll_changing) {
-          scrollTo(el, x, y);
-        }
-        if (new_height) {
-          window.requestAnimationFrame(() => {
-            el.style.height = `${starth + distanceH * val}px`;
-          }); // Timeout because Safari can't do scroll and height at once
-        }
-        requestAnimationFrame(draw);
-      };
-      requestAnimationFrame(startAnim);
-    });
+      requestAnimationFrame(draw);
+    };
+    requestAnimationFrame(startAnim);
+  });
   const updateCarousel = (el) => {
     // Called on init and scroll end
-    let container_height = getComputedStyle(el).height;
     observersOff(el);
     el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
     el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
@@ -309,7 +299,6 @@
     if (el.dataset.y === "NaN") {
       el.dataset.y = 0;
     }
-
     let active = getIndex(el);
     if (active >= el.children.length) {
       active = el.children.length - 1;
@@ -320,17 +309,14 @@
       el.style.height = "";
     }
     let active_slide = el.children[active];
-
     if (el.querySelector(":scope > [data-first]")) {
       el.dataset.x--;
       el.dataset.y--;
     }
-
     if (el.querySelector(":scope > [data-last]")) {
       el.dataset.x++;
       el.dataset.y++;
     }
-
     // Endless carousel
     // To do: on initial load, scroll to second one
     // To do: fix index
@@ -371,9 +357,7 @@
         }
       }
     }
-
     // el.scrollTo(active * active_slide.scrollWidth, active * active_slide.scrollHeight);
-
     if (current_active) {
       // console.log("updateCarousel bailing on unchanged slide");
       if (active_slide === current_active) {
@@ -390,7 +374,7 @@
     // console.log("updateCarousel working");
     active_slide.dataset.active = true;
     active_slide.style.height = "";
-    el.style.setProperty("--height", container_height);
+    el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
     window.requestAnimationFrame(() => {
       if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
@@ -404,7 +388,6 @@
       }
       index.children[active].disabled = true;
     }
-
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
     // console.log(hash);
@@ -441,7 +424,6 @@
       }
     });
     // delete active_slide.dataset.disabledChildrenFocus;
-
     observersOn(el);
   };
   // Setup isScrolling variable
@@ -631,8 +613,9 @@
     if (el) {
       const carousel = el.closest(".n-carousel");
       if (carousel.classList.contains("n-carousel--inline") && !carousel.classList.contains("n-carousel--overlay")) {
-        carousel.classList.add("n-carousel--overlay");
-        console.log("open modal");
+        carousel.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+        // updateCarousel(carousel);
+        // console.log("open modal");
         document.body.dataset.frozen = document.body.scrollTop;
         // carousel.animate([{ transform: "translateY(-100%)" }, { transform: "none" }], { duration: 200, fill: "forwards" });
         trapFocus(carousel);
@@ -669,24 +652,24 @@
       // Round down the padding, because sub pixel padding + scrolling is a problem
       let carousel = el;
       // console.log(carousel);
-      carousel.style.removeProperty("--subpixel-compensation-peeking");
-      carousel.style.removeProperty("--subpixel-compensation");
-      carousel.style.removeProperty("--ceiling-height");
-      carousel.style.removeProperty("--ceiling-width");
-      if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
-        return;
-      }
+      // carousel.style.removeProperty("--subpixel-compensation-peeking");
+      // carousel.style.removeProperty("--subpixel-compensation");
+      // carousel.style.removeProperty("--ceiling-height");
+      // carousel.style.removeProperty("--ceiling-width");
+      // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
+      //   return;
+      // }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
           let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
           carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
           carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - parseFloat(getComputedStyle(carousel).height));
-          carousel.style.setProperty("--ceiling-height", `${ceilingHeight(carousel)}px`);
+          // carousel.style.setProperty("--ceiling-height", `${ceilingHeight(carousel)}px`);
         } else {
           let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
           carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-          carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width));
-          carousel.style.setProperty("--ceiling-width", `${ceilingWidth(carousel)}px`);
+          carousel.style.setProperty("--subpixel-compensation", (ceilingWidth(carousel) - parseFloat(getComputedStyle(carousel).width)).toFixed(3));
+          // carousel.style.setProperty("--ceiling-width", `${ceilingWidth(carousel)}px`);
         }
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
         let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
@@ -694,7 +677,6 @@
       });
     }
   };
-
   const updateObserver = (el) => {
     // console.log('observer fired at ', el, el.observerStarted);
     // el = el.querySelector(":scope > .n-carousel__content");
@@ -703,7 +685,6 @@
       // console.log("observers already started");
       return;
     }
-
     observersOff(el);
     updateSubpixels(el);
     el.observerStarted = true;
@@ -802,11 +783,7 @@
             delete carousel.dataset.xx;
             delete carousel.dataset.yy;
             if (carousel.dataset.x !== "undefined" && carousel.dataset.y !== "undefined") {
-              scrollTo(
-                carousel,
-                carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]),
-                carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y])
-              );
+              scrollTo(carousel, carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]), carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y]));
             }
           });
         };
