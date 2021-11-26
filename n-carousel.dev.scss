@@ -23,10 +23,10 @@ body[data-frozen] {
 
 	> * {
 		flex: 1 0 auto;
-		width: calc(100% - 2 * var(--peek, 0));
-		padding-inline-end: calc(1px * var(--subpixel-compensation, 0));
 		box-sizing: content-box;
 		overflow: auto;
+		width: calc(100% - 2 * var(--peek, 0));
+		padding-inline-end: calc(1px * var(--subpixel-compensation, 0));
 
 		> * {
 			overflow: auto; // Collapse inner margins
@@ -175,12 +175,10 @@ body[data-frozen] {
 		box-sizing: content-box;
 
 		> * {
-			margin-inline-end: 0;
 			width: 100%;
-			height: calc(var(--ceiling-height, 100%) - 2 * var(--peek, 0));
-			padding-block-end: calc(1px * var(--subpixel-compensation, 0));
 			padding-inline-end: 0;
-			box-sizing: content-box;
+			height: calc(100% - 2 * var(--peek, 0));
+			padding-block-end: calc(1px * var(--subpixel-compensation, 0));
 		}
 
 		&:before,
