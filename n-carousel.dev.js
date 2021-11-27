@@ -1,4 +1,4 @@
-(function () {
+(function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
@@ -100,7 +100,13 @@
   const scrollTo = (el, x, y) => {
     el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y); // Scroll to correct scroll position for LTR and RTL
   };
-  const getScroll = (el) => (el === window ? { x: el.scrollX, y: el.scrollY } : { x: scrollStartX(el), y: el.scrollTop });
+  const getScroll = (el) => (el === window ? {
+    x: el.scrollX,
+    y: el.scrollY
+  } : {
+    x: scrollStartX(el),
+    y: el.scrollTop
+  });
   const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
   const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
   const trapFocus = (modal) => {
@@ -109,7 +115,7 @@
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", function(e) {
       let isTabPressed = e.key === "Tab" || e.keyCode === 9;
       if (!isTabPressed) {
         return;
@@ -187,7 +193,9 @@
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
       }
-      el.addEventListener("scroll", scrollStop, { passive: true });
+      el.addEventListener("scroll", scrollStop, {
+        passive: true
+      });
       subpixel_observer.observe(el);
       mutation_observer.observe(el.parentNode, {
         attributes: true,
@@ -653,20 +661,24 @@
       let carousel = el;
       // console.log(carousel);
       carousel.style.removeProperty("--subpixel-compensation-peeking");
-      // carousel.style.removeProperty("--subpixel-compensation");
+      carousel.style.removeProperty("--subpixel-compensation");
       // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
       //   return;
       // }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
-          let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
-          carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-          carousel.style.setProperty("--subpixel-compensation", ceilingHeight(carousel) - carousel.getBoundingClientRect().height);
+          var subpixel_compensation = ceilingHeight(carousel) - carousel.getBoundingClientRect().height;
+          var peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
         } else {
-          let peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
-          carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_compensation) - peeking_compensation);
-          carousel.style.setProperty("--subpixel-compensation", ceilingWidth(carousel) - carousel.getBoundingClientRect().width);
+          var subpixel_compensation = ceilingWidth(carousel) - carousel.getBoundingClientRect().width;
+          var peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
         }
+        let subpixel_compensation_peeking = 2 * (Math.ceil(peeking_compensation) - peeking_compensation);
+        if (subpixel_compensation_peeking !== 0) {
+          subpixel_compensation_peeking -= subpixel_compensation;
+        }
+        carousel.style.setProperty("--subpixel-compensation", subpixel_compensation);
+        carousel.style.setProperty("--subpixel-compensation-peeking", subpixel_compensation_peeking);
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
         let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
         scrollTo(carousel, offset * ceilingWidth(carousel), offset * ceilingHeight(carousel));
