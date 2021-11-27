@@ -50,7 +50,8 @@ body[data-frozen] {
 		&:after {
 			content: "";
 			flex-shrink: 0;
-			width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
+			// width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0) + 2px * var(--subpixel-compensation, 0));
+			width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking-original, 0));
 			height: 1px;
 		}
 	}
