@@ -636,21 +636,18 @@
       // Round down the padding, because sub pixel padding + scrolling is a problem
       let carousel = el;
       // console.log(carousel);
-      carousel.style.removeProperty("--subpixel-compensation-peeking");
-      carousel.style.removeProperty("--subpixel-compensation");
+      // carousel.style.removeProperty("--subpixel-compensation-peeking");
+      // carousel.style.removeProperty("--subpixel-compensation");
       // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
       //   return;
       // }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
-          var peeking_size = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
-          var slide_size = carousel.getBoundingClientRect().height - 2 * Math.ceil(peeking_size);
+          carousel.style.setProperty("--subpixel-compensation", Math.ceil(carousel.getBoundingClientRect().height) - carousel.getBoundingClientRect().height);
         } else {
-          var peeking_size = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
-          var slide_size = carousel.getBoundingClientRect().width - 2 * Math.ceil(peeking_size);
+          carousel.style.setProperty("--subpixel-compensation", Math.ceil(carousel.getBoundingClientRect().width) - carousel.getBoundingClientRect().width);
         }
-        carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_size) - peeking_size);
-        carousel.style.setProperty("--subpixel-compensation", Math.ceil(slide_size) - slide_size);
+        // carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_size) - peeking_size);
         // let slide_width = 936.312 - 2*(140.438 + .5625); // carousel_width - 2 * Math.ceil(peek_width)
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
         let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides

@@ -26,7 +26,7 @@ body[data-frozen] {
   flex: 1 0 auto;
   box-sizing: content-box;
   overflow: auto;
-  width: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking,0)));
+  width: 100%;
   padding-inline-end: calc(1px * var(--subpixel-compensation, 0));
 }
 .n-carousel__content > * > * {
@@ -39,12 +39,7 @@ body[data-frozen] {
 .n-carousel:not(.n-carousel--vertical) > .n-carousel__content {
   overflow-x: auto;
   width: calc(100% - 0px);
-}
-.n-carousel:not(.n-carousel--vertical) > .n-carousel__content:before, .n-carousel:not(.n-carousel--vertical) > .n-carousel__content:after {
-  content: "";
-  flex-shrink: 0;
-  width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
-  height: 1px;
+  padding: 0 var(--peek, 0);
 }
 .n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height) > .n-carousel__content > * {
   overflow: auto;
@@ -122,18 +117,13 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical > .n-carousel__content {
   overflow-y: auto;
   box-sizing: content-box;
+  padding: var(--peek, 0) 0;
 }
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   width: 100%;
   padding-inline-end: 0;
-  height: calc(100% - 2 * var(--peek, 0));
+  height: 100%;
   padding-block-end: calc(1px * var(--subpixel-compensation, 0));
-}
-.n-carousel.n-carousel--vertical > .n-carousel__content:before, .n-carousel.n-carousel--vertical > .n-carousel__content:after {
-  content: "";
-  flex-shrink: 0;
-  height: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
-  width: 1px;
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside) > .n-carousel__index {
   position: absolute;
@@ -187,6 +177,7 @@ _:future,
 :root .n-carousel {
   overflow-x: hidden;
   --peek: 0.0001px;
+  --peek: 0;
 }
 
 .n-carousel__index button,
