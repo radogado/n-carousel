@@ -641,6 +641,9 @@
       // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
       //   return;
       // }
+      carousel.style.padding = '';
+      carousel.style.padding = isVertical(carousel) ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0` : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px`;
+
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
           carousel.style.setProperty("--subpixel-compensation", Math.ceil(carousel.getBoundingClientRect().height) - carousel.getBoundingClientRect().height);
@@ -681,7 +684,7 @@
     // el.removeEventListener("DOMMouseScroll", detectTrackPad);
   };
   const updateObserver = (el) => {
-    console.log('observer fired at ', el, el.observerStarted);
+    // console.log('observer fired at ', el, el.observerStarted);
     // el = el.querySelector(":scope > .n-carousel__content");
     observersOff(el);
     const doUpdate = el => {
@@ -707,7 +710,7 @@
         let el = e.target;
         if (!!el.observerStarted) {
           el.observerStarted = false;
-          console.log("observers already started", el);
+          // console.log("observers already started", el);
           return;
         }
         updateObserver(el);
