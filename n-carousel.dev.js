@@ -636,7 +636,6 @@
       // Round down the padding, because sub pixel padding + scrolling is a problem
       let carousel = el;
       // console.log(carousel);
-      carousel.style.removeProperty("--subpixel-compensation-peeking_original");
       carousel.style.removeProperty("--subpixel-compensation-peeking");
       carousel.style.removeProperty("--subpixel-compensation");
       // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
@@ -644,20 +643,15 @@
       // }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
-          var subpixel_compensation = ceilingHeight(carousel) - carousel.getBoundingClientRect().height;
-          var peeking_compensation = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
+          var peeking_size = carousel.firstElementChild.getBoundingClientRect().y - carousel.getBoundingClientRect().y;
+          var slide_size = carousel.getBoundingClientRect().height - 2 * Math.ceil(peeking_size);
         } else {
-          var subpixel_compensation = ceilingWidth(carousel) - carousel.getBoundingClientRect().width;
-          var peeking_compensation = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
+          var peeking_size = carousel.firstElementChild.getBoundingClientRect().x - carousel.getBoundingClientRect().x;
+          var slide_size = carousel.getBoundingClientRect().width - 2 * Math.ceil(peeking_size);
         }
-        let subpixel_compensation_peeking_original = Math.ceil(peeking_compensation) - peeking_compensation;
-        let subpixel_compensation_peeking = 2 * subpixel_compensation_peeking_original;
-        if (subpixel_compensation_peeking !== 0) {
-          subpixel_compensation_peeking -= subpixel_compensation;
-        }
-        carousel.style.setProperty("--subpixel-compensation", subpixel_compensation);
-        carousel.style.setProperty("--subpixel-compensation-peeking", subpixel_compensation_peeking);
-        carousel.style.setProperty("--subpixel-compensation-peeking-original", subpixel_compensation_peeking_original);
+        carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_size) - peeking_size);
+        carousel.style.setProperty("--subpixel-compensation", Math.ceil(slide_size) - slide_size);
+        // let slide_width = 936.312 - 2*(140.438 + .5625); // carousel_width - 2 * Math.ceil(peek_width)
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
         let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
         scrollTo(carousel, offset * ceilingWidth(carousel), offset * ceilingHeight(carousel));

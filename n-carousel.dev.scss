@@ -25,7 +25,7 @@ body[data-frozen] {
 		flex: 1 0 auto;
 		box-sizing: content-box;
 		overflow: auto;
-		width: calc(100% - 2 * var(--peek, 0) - 1px * var(--subpixel-compensation-peeking, 0));
+		width: calc(100% - 2 * (var(--peek, 0) + 1px * var(--subpixel-compensation-peeking,0)));
 		padding-inline-end: calc(1px * var(--subpixel-compensation, 0));
 
 		> * {
@@ -51,7 +51,7 @@ body[data-frozen] {
 			content: "";
 			flex-shrink: 0;
 			// width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0) + 2px * var(--subpixel-compensation, 0));
-			width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking-original, 0));
+			width: calc(var(--peek, 0) + 1px * var(--subpixel-compensation-peeking, 0));
 			height: 1px;
 		}
 	}
