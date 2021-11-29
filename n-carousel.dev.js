@@ -641,9 +641,11 @@
       // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
       //   return;
       // }
-      carousel.style.padding = '';
+      carousel.style.padding = ''; // Subpixel peeking fix
       carousel.style.padding = isVertical(carousel) ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0` : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px`;
-
+      if (carousel.style.padding === '0px') {
+        carousel.style.padding = '';
+      }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {
           carousel.style.setProperty("--subpixel-compensation", Math.ceil(carousel.getBoundingClientRect().height) - carousel.getBoundingClientRect().height);
@@ -678,7 +680,7 @@
     el.removeEventListener("scroll", scrollStop);
     height_minus_index.unobserve(el.parentNode);
     subpixel_observer.unobserve(el);
-    mutation_observer.disconnect();
+    // mutation_observer.disconnect();
     el.observerStarted = true;
     // el.removeEventListener("mousewheel", detectTrackPad);
     // el.removeEventListener("DOMMouseScroll", detectTrackPad);
@@ -722,7 +724,7 @@
     // return;
     // console.log("mutations", mutations);
     for (let mutation of mutations) {
-      // console.log("mutated ", mutation.target);
+      console.log("mutated ", mutation.target);
       if (mutation.target) {
         updateObserver(mutation.target.querySelector(":scope > .n-carousel__content"));
       }
