@@ -910,6 +910,10 @@ _:future,
 	&.n-carousel--inline:not(.n-carousel--overlay) {
 		display: block;
 
+		> .n-carousel__index button[disabled] {
+			opacity: 1;
+		}
+
 		> * {
 			text-align: start;
 

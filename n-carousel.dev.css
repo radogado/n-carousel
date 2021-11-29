@@ -624,6 +624,9 @@ _:future,
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) {
   display: block;
 }
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index button[disabled] {
+  opacity: 1;
+}
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) > * {
   text-align: start;
 }

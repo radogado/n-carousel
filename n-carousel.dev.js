@@ -366,7 +366,7 @@
     });
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
-    if (!!index && !el.parentNode.classList.contains("n-carousel--inline")) {
+    if (!!index) {
       if (index.querySelector("[disabled]")) {
         index.querySelector("[disabled]").disabled = false;
       }
