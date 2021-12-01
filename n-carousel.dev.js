@@ -283,30 +283,45 @@
     if (el.dataset.y === "NaN") {
       el.dataset.y = 0;
     }
-    let active = getIndex(el);
-    if (active >= el.children.length) {
-      active = el.children.length - 1;
+    let active_index = getIndex(el);
+    if (active_index >= el.children.length) {
+      active_index = el.children.length - 1;
     }
-    let current_active = el.querySelector(":scope > [data-active]");
+    let old_active_slide = el.querySelector(":scope > [data-active]");
     if (!el.parentElement.classList.contains("n-carousel--auto-height")) {
       // Dynamic change from auto height to normal
       el.style.height = "";
     }
-    let active_slide = el.children[active];
-    if (el.querySelector(":scope > [data-first]")) {
-      el.dataset.x--;
-      el.dataset.y--;
-    }
-    if (el.querySelector(":scope > [data-last]")) {
-      el.dataset.x++;
-      el.dataset.y++;
+    let active_slide = el.children[active_index];
+    if (old_active_slide) {
+      // console.log("updateCarousel bailing on unchanged slide");
+      if (active_slide === old_active_slide) {
+        // Scroll snapping back to the same slide. Nothing to do here.
+        observersOn(el);
+        return;
+      }
+      delete old_active_slide.dataset.active;
+      old_active_slide.style.height = "";
+      if (!isVertical(el)) {
+        el.style.height = "";
+      }
     }
     // Endless carousel
     // To do: on initial load, scroll to second one
     // To do: fix index
     // To do: scroll end by timeout detection, when snapping to next slide, glitches
+    if (el.querySelector(":scope > [data-first]")) {
+      el.dataset.x--;
+      el.dataset.y--;
+      // active_index--;
+    }
+    if (el.querySelector(":scope > [data-last]")) {
+      el.dataset.x++;
+      el.dataset.y++;
+      // active_index++;
+    }
     if (el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless")) {
-      if (active === 0) {
+      if (active_index === 0) {
         if (!active_slide.dataset.first) {
           // Move the last one to the front as [data-first]
           el.lastElementChild.dataset.first = true;
@@ -319,7 +334,7 @@
           el.append(el.firstElementChild);
         }
       } else {
-        if (active === el.children.length - 1) {
+        if (active_index === el.children.length - 1) {
           if (!active_slide.dataset.last) {
             // Move the first one to the back as [data-last]
             el.firstElementChild.dataset.last = true;
@@ -341,20 +356,7 @@
         }
       }
     }
-    // el.scrollTo(active * active_slide.scrollWidth, active * active_slide.scrollHeight);
-    if (current_active) {
-      // console.log("updateCarousel bailing on unchanged slide");
-      if (active_slide === current_active) {
-        // Scroll snapping back to the same slide. Nothing to do here.
-        observersOn(el);
-        return;
-      }
-      delete current_active.dataset.active;
-      current_active.style.height = "";
-      if (!isVertical(el)) {
-        el.style.height = "";
-      }
-    }
+    // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
     // console.log("updateCarousel working");
     active_slide.dataset.active = true;
     active_slide.style.height = "";
@@ -370,7 +372,7 @@
       if (index.querySelector("[disabled]")) {
         index.querySelector("[disabled]").disabled = false;
       }
-      index.children[active].disabled = true;
+      index.children[active_index].disabled = true;
     }
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
