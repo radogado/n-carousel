@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
@@ -115,7 +115,7 @@
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function(e) {
+    document.addEventListener("keydown", function (e) {
       let isTabPressed = e.key === "Tab" || e.keyCode === 9;
       if (!isTabPressed) {
         return;
@@ -310,21 +310,27 @@
     // To do: on initial load, scroll to second one
     // To do: fix index
     // To do: scroll end by timeout detection, when snapping to next slide, glitches
-    if (el.querySelector(":scope > [data-first]")) {
-      el.dataset.x--;
-      el.dataset.y--;
-      // active_index--;
-    }
-    if (el.querySelector(":scope > [data-last]")) {
-      el.dataset.x++;
-      el.dataset.y++;
-      // active_index++;
-    }
     if (el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless")) {
+      let active_index_logical = active_index;
+      if (el.querySelector(":scope > [data-first]")) {
+        el.dataset.x--;
+        el.dataset.y--;
+        active_index_logical--;
+      }
+      if (el.querySelector(":scope > [data-last]")) {
+        el.dataset.x++;
+        el.dataset.y++;
+        active_index_logical++;
+      }
+      console.log(active_index, active_index_logical);
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
           // Move the last one to the front as [data-first]
-          el.lastElementChild.dataset.first = true;
+          if (el.lastElementChild.dataset.last) {
+            delete el.lastElementChild.dataset.last;
+          } else {
+            el.lastElementChild.dataset.first = true;
+          }
           el.prepend(el.lastElementChild);
         } else {
           // Landed on fake first slide. Move it to the back, remove its [data-first] and move the first one to the back as [data-last]
@@ -337,7 +343,11 @@
         if (active_index === el.children.length - 1) {
           if (!active_slide.dataset.last) {
             // Move the first one to the back as [data-last]
-            el.firstElementChild.dataset.last = true;
+            if (el.firstElementChild.dataset.first) {
+              delete el.firstElementChild.dataset.first;
+            } else {
+              el.firstElementChild.dataset.last = true;
+            }
             el.append(el.firstElementChild);
           } else {
             // Landed on fake last slide. Move it to the front, remove its [data-last] and move the last one to the front as [data-first]
@@ -346,13 +356,16 @@
             el.lastElementChild.dataset.first = true;
             el.prepend(el.lastElementChild);
           }
-        } else {
+        } else { // if both first and last exist:
           // Middle slide
-          let leftover = el.querySelector(":scope > [data-first][data-last]");
-          if (leftover) {
-            delete leftover.dataset.first;
-            delete leftover.dataset.last;
-          }
+          el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
+            el.append(el.firstElementChild);
+            delete el2.dataset.first;
+          });
+          el.querySelectorAll(":scope > [data-last]").forEach(el2 => {
+            el.prepend(el.lastElementChild);
+            delete el2.dataset.last;
+          });
         }
       }
     }
