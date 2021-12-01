@@ -30,6 +30,11 @@
   // 	return false;
   // };
   const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
+  const getIndexReal = (el) => {
+    let active_slide = el.querySelector(':scope > [data-active]');
+    return active_slide ? [...el.children].indexOf(active_slide) : 0;
+    
+  };
   const scrolledAncestor = (el) => {
     el = el.parentNode;
     while (el) {
@@ -518,7 +523,7 @@
     observersOff(el);
     if (!el.parentNode.dataset.sliding) {
       el.parentNode.dataset.sliding = true;
-      let old_height = el.children[getIndex(el)].clientHeight;
+      let old_height = el.children[getIndexReal(el)].clientHeight;
       let new_height = old_height;
       let scroll_to_y = 0;
       if (isAuto(el)) {
@@ -548,11 +553,11 @@
     }
   };
   const slideNext = (el) => {
-    let index = getIndex(el);
+    let index = getIndexReal(el);
     slideTo(el, index >= el.children.length - 1 ? 0 : index + 1);
   };
   const slidePrevious = (el) => {
-    let index = getIndex(el);
+    let index = getIndexReal(el);
     slideTo(el, index === 0 ? el.children.length - 1 : index - 1);
   };
   const slideTo = (el, index) => {
