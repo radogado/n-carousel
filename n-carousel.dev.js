@@ -33,7 +33,6 @@
   const getIndexReal = (el) => {
     let active_slide = el.querySelector(':scope > [data-active]');
     return active_slide ? [...el.children].indexOf(active_slide) : 0;
-    
   };
   const scrolledAncestor = (el) => {
     el = el.parentNode;
@@ -311,11 +310,9 @@
         el.style.height = "";
       }
     }
-    
     var active_index_logical = active_index;
     active_slide.dataset.active = true;
     active_index_logical = getIndexReal(el);
-    
     // Endless carousel
     // To do: on initial load, scroll to second one
     // To do: fix index
@@ -380,7 +377,6 @@
         }
       }
     }
-
     el.dataset.x = el.dataset.y = active_index_logical;
     console.log(active_index_logical);
     // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
@@ -436,7 +432,9 @@
       }
     });
     // delete active_slide.dataset.disabledChildrenFocus;
-    observersOn(el);
+    window.requestAnimationFrame(() => {
+      observersOn(el);
+    });
   };
   // Setup isScrolling variable
   var isScrolling;
