@@ -311,23 +311,26 @@
         el.style.height = "";
       }
     }
+    
+    var active_index_logical = active_index;
+    active_slide.dataset.active = true;
+    active_index_logical = getIndexReal(el);
+    
     // Endless carousel
     // To do: on initial load, scroll to second one
     // To do: fix index
     // To do: scroll end by timeout detection, when snapping to next slide, glitches
     if (el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless")) {
-      let active_index_logical = active_index;
-      if (el.querySelector(":scope > [data-first]")) {
-        el.dataset.x--;
-        el.dataset.y--;
-        active_index_logical--;
-      }
-      if (el.querySelector(":scope > [data-last]")) {
-        el.dataset.x++;
-        el.dataset.y++;
-        active_index_logical++;
-      }
-      console.log(active_index, active_index_logical);
+      // if (el.querySelector(":scope > [data-first]")) {
+      //   el.dataset.x--;
+      //   el.dataset.y--;
+      //   active_index_logical--;
+      // }
+      // if (el.querySelector(":scope > [data-last]")) {
+      //   el.dataset.x++;
+      //   el.dataset.y++;
+      //   active_index_logical++;
+      // }
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
           // Move the last one to the front as [data-first]
@@ -343,6 +346,7 @@
           el.append(el.firstElementChild);
           el.firstElementChild.dataset.last = true;
           el.append(el.firstElementChild);
+          active_index_logical = el.children.length - 1;
         }
       } else {
         if (active_index === el.children.length - 1) {
@@ -360,8 +364,9 @@
             el.prepend(el.lastElementChild);
             el.lastElementChild.dataset.first = true;
             el.prepend(el.lastElementChild);
+            active_index_logical = 0;
           }
-        } else { // if both first and last exist:
+        } else {
           // Middle slide
           el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
             el.append(el.firstElementChild);
@@ -371,12 +376,15 @@
             el.prepend(el.lastElementChild);
             delete el2.dataset.last;
           });
+          active_index_logical = getIndexReal(el);
         }
       }
     }
+
+    el.dataset.x = el.dataset.y = active_index_logical;
+    console.log(active_index_logical);
     // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
     // console.log("updateCarousel working");
-    active_slide.dataset.active = true;
     active_slide.style.height = "";
     el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
     window.requestAnimationFrame(() => {
@@ -390,7 +398,7 @@
       if (index.querySelector("[disabled]")) {
         index.querySelector("[disabled]").disabled = false;
       }
-      index.children[active_index].disabled = true;
+      index.children[active_index_logical].disabled = true;
     }
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
