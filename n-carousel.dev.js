@@ -251,11 +251,11 @@
         if (new_height) {
           el.style.height = `${new_height}px`;
         }
-        observersOn(el);
-        window.requestAnimationFrame(() => {
+        // observersOn(el); // done inside updateCarousel() below?
+        // window.requestAnimationFrame(() => {
           updateCarousel(el);
           resolve(el);
-        });
+        // });
         return;
       }
       if (now - start >= duration) stop = true;
@@ -276,6 +276,7 @@
     requestAnimationFrame(startAnim);
   });
   const updateCarousel = (el) => {
+    // console.log('updateCarousel ', el);
     // Called on init and scroll end
     observersOff(el);
     el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
@@ -345,6 +346,7 @@
           el.append(el.firstElementChild);
           active_index_logical = el.children.length - 1;
         }
+        active_index = 1;
       } else {
         if (active_index === el.children.length - 1) {
           if (!active_slide.dataset.last) {
@@ -363,22 +365,27 @@
             el.prepend(el.lastElementChild);
             active_index_logical = 0;
           }
+          active_index = el.children.length - 2;
         } else {
           // Middle slide
           el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
             el.append(el.firstElementChild);
             delete el2.dataset.first;
+            active_index--;
           });
           el.querySelectorAll(":scope > [data-last]").forEach(el2 => {
             el.prepend(el.lastElementChild);
             delete el2.dataset.last;
+            active_index++;
           });
           active_index_logical = getIndexReal(el);
         }
       }
+      console.log(active_index);
+      // scrollTo(el, el.firstElementChild.scrollWidth * active_index, 0);
     }
     el.dataset.x = el.dataset.y = active_index_logical;
-    console.log(active_index_logical);
+    // console.log(active_index_logical);
     // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
     // console.log("updateCarousel working");
     active_slide.style.height = "";
