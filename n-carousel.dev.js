@@ -1,4 +1,4 @@
-(function () {
+(function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
@@ -119,7 +119,7 @@
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", function(e) {
       let isTabPressed = e.key === "Tab" || e.keyCode === 9;
       if (!isTabPressed) {
         return;
@@ -253,8 +253,8 @@
         }
         // observersOn(el); // done inside updateCarousel() below?
         // window.requestAnimationFrame(() => {
-          updateCarousel(el);
-          resolve(el);
+        updateCarousel(el);
+        resolve(el);
         // });
         return;
       }
@@ -338,6 +338,7 @@
             el.lastElementChild.dataset.first = true;
           }
           el.prepend(el.lastElementChild);
+          active_index = 1;
         } else {
           // Landed on fake first slide. Move it to the back, remove its [data-first] and move the first one to the back as [data-last]
           delete el.firstElementChild.dataset.first;
@@ -345,8 +346,8 @@
           el.firstElementChild.dataset.last = true;
           el.append(el.firstElementChild);
           active_index_logical = el.children.length - 1;
+          active_index = el.children.length - 2;
         }
-        active_index = 1;
       } else {
         if (active_index === el.children.length - 1) {
           if (!active_slide.dataset.last) {
@@ -357,6 +358,7 @@
               el.firstElementChild.dataset.last = true;
             }
             el.append(el.firstElementChild);
+            active_index = el.children.length - 2;
           } else {
             // Landed on fake last slide. Move it to the front, remove its [data-last] and move the last one to the front as [data-first]
             delete el.lastElementChild.dataset.last;
@@ -364,8 +366,8 @@
             el.lastElementChild.dataset.first = true;
             el.prepend(el.lastElementChild);
             active_index_logical = 0;
+            active_index = 1;
           }
-          active_index = el.children.length - 2;
         } else {
           // Middle slide
           el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
@@ -382,7 +384,7 @@
         }
       }
       console.log(active_index);
-      // scrollTo(el, el.firstElementChild.scrollWidth * active_index, 0);
+      scrollTo(el, ceilingWidth(el) * active_index, 0);
     }
     el.dataset.x = el.dataset.y = active_index_logical;
     // console.log(active_index_logical);
@@ -628,18 +630,29 @@
   const slideIndexEvent = (e) => {
     let el = e.target.closest("button");
     if (el) {
-      const carousel = el.closest(".n-carousel");
-      if (carousel.classList.contains("n-carousel--inline") && !carousel.classList.contains("n-carousel--overlay")) {
-        carousel.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+      const wrapper = el.closest(".n-carousel");
+      if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
+        wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
         // updateCarousel(carousel);
         // console.log("open modal");
         document.body.dataset.frozen = document.body.scrollTop;
         // carousel.animate([{ transform: "translateY(-100%)" }, { transform: "none" }], { duration: 200, fill: "forwards" });
-        trapFocus(carousel);
+        trapFocus(wrapper);
         // carousel.nextSlideInstant = true;
       }
       window.requestAnimationFrame(() => {
-        slideTo(closestCarousel(el), [...el.parentNode.children].indexOf(el));
+        let new_index = [...el.parentNode.children].indexOf(el);
+        let carousel = wrapper.querySelector(":scope > .n-carousel__content");
+        if (wrapper.classList.contains("n-carousel--endless")) {
+          let old_index = parseInt(isVertical(carousel) ? carousel.dataset.y : carousel.dataset.x);
+          if (old_index === 0) {
+            new_index++;
+          }
+          if (old_index === carousel.children.length - 1) {
+            new_index--;
+          }
+        }
+        slideTo(carousel, new_index);
       });
     }
   };
