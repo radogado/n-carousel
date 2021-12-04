@@ -383,7 +383,7 @@
           active_index_logical = getIndexReal(el);
         }
       }
-      console.log(active_index);
+      // console.log(active_index);
       scrollTo(el, ceilingWidth(el) * active_index, 0);
     }
     el.dataset.x = el.dataset.y = active_index_logical;
@@ -643,15 +643,24 @@
       window.requestAnimationFrame(() => {
         let new_index = [...el.parentNode.children].indexOf(el);
         let carousel = wrapper.querySelector(":scope > .n-carousel__content");
-        if (wrapper.classList.contains("n-carousel--endless")) {
-          let old_index = parseInt(isVertical(carousel) ? carousel.dataset.y : carousel.dataset.x);
+        if (carousel.children.length > 2 && wrapper.classList.contains("n-carousel--endless")) {
+          var old_index = getIndex(carousel);
           if (old_index === 0) {
-            new_index++;
+            if (new_index === carousel.children.length - 1) {
+              new_index = 0;
+            } else {
+              new_index++;
+            }
           }
           if (old_index === carousel.children.length - 1) {
-            new_index--;
+            if (new_index === 0) {
+              new_index = carousel.children.length - 1;
+            } else {
+              new_index--;
+            }
           }
         }
+        console.log('old index', old_index, 'new index', new_index);
         slideTo(carousel, new_index);
       });
     }
