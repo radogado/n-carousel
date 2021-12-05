@@ -180,6 +180,14 @@ _:future,
   --peek: 0;
 }
 
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel.n-carousel--peek:not(.n-carousel--vertical) > .n-carousel__content:after {
+  content: "";
+  width: var(--peek, 0);
+  flex-shrink: 0;
+}
+
 .n-carousel__index button,
 .n-carousel__previous button,
 .n-carousel__next button,

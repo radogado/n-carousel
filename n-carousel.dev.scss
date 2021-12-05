@@ -265,6 +265,15 @@ _:future,
 	--peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
 }
 
+// Safari not supporting inline end padding on scrollable element
+_::-webkit-full-page-media,
+_:future,
+:root .n-carousel.n-carousel--peek:not(.n-carousel--vertical) > .n-carousel__content:after {
+	content: '';
+	width: var(--peek, 0);
+	flex-shrink: 0;
+}
+
 .n-carousel__index,
 .n-carousel__previous,
 .n-carousel__next,
