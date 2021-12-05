@@ -358,7 +358,7 @@
               el.firstElementChild.dataset.last = true;
             }
             el.append(el.firstElementChild);
-            active_index = el.children.length - 2;
+            active_index_logical = active_index = el.children.length - 2;
           } else {
             // Landed on fake last slide. Move it to the front, remove its [data-last] and move the last one to the front as [data-first]
             delete el.lastElementChild.dataset.last;
@@ -380,14 +380,18 @@
             delete el2.dataset.last;
             active_index++;
           });
-          active_index_logical = getIndexReal(el);
+          active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]"));
         }
       }
+      // active_slide = el.querySelector(":scope > [data-active]");
+      console.log(el.querySelector(":scope > [data-active]"));
       // console.log(active_index);
       scrollTo(el, ceilingWidth(el) * active_index, 0);
     }
+    // If landed on middle slide from 0, active_index_logical--
+    // If landed on middle slide from last one, active_index_logical++
     el.dataset.x = el.dataset.y = active_index_logical;
-    // console.log(active_index_logical);
+    console.log('new index logical', active_index_logical);
     // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
     // console.log("updateCarousel working");
     active_slide.style.height = "";
