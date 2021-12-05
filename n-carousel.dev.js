@@ -334,6 +334,7 @@
           // Move the last one to the front as [data-first]
           if (el.lastElementChild.dataset.last) {
             delete el.lastElementChild.dataset.last;
+            active_index_logical = 1;
           } else {
             el.lastElementChild.dataset.first = true;
           }
@@ -354,11 +355,12 @@
             // Move the first one to the back as [data-last]
             if (el.firstElementChild.dataset.first) {
               delete el.firstElementChild.dataset.first;
+              active_index_logical = el.children.length - 2;
             } else {
               el.firstElementChild.dataset.last = true;
             }
             el.append(el.firstElementChild);
-            active_index_logical = active_index = el.children.length - 2;
+            active_index = el.children.length - 2;
           } else {
             // Landed on fake last slide. Move it to the front, remove its [data-last] and move the last one to the front as [data-first]
             delete el.lastElementChild.dataset.last;
@@ -380,18 +382,18 @@
             delete el2.dataset.last;
             active_index++;
           });
-          active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]"));
+          active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
         }
       }
       // active_slide = el.querySelector(":scope > [data-active]");
-      console.log(el.querySelector(":scope > [data-active]"));
+      // console.log(el.querySelector(":scope > [data-active]"));
       // console.log(active_index);
       scrollTo(el, ceilingWidth(el) * active_index, 0);
     }
     // If landed on middle slide from 0, active_index_logical--
     // If landed on middle slide from last one, active_index_logical++
     el.dataset.x = el.dataset.y = active_index_logical;
-    console.log('new index logical', active_index_logical);
+    // console.log('new index logical', active_index_logical);
     // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
     // console.log("updateCarousel working");
     active_slide.style.height = "";
@@ -664,7 +666,7 @@
             }
           }
         }
-        console.log('old index', old_index, 'new index', new_index);
+        // console.log('old index', old_index, 'new index', new_index);
         slideTo(carousel, new_index);
       });
     }
