@@ -318,17 +318,19 @@
     // To do: on initial load, scroll to second one
     // To do: fix index
     // To do: scroll end by timeout detection, when snapping to next slide, glitches
+    const restoreDisplacedSlides = el => {
+      el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
+        el.append(el.firstElementChild);
+        delete el2.dataset.first;
+        active_index--;
+      });
+      el.querySelectorAll(":scope > [data-last]").forEach(el2 => {
+        el.prepend(el.lastElementChild);
+        delete el2.dataset.last;
+        active_index++;
+      });
+    }
     if (el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless")) {
-      // if (el.querySelector(":scope > [data-first]")) {
-      //   el.dataset.x--;
-      //   el.dataset.y--;
-      //   active_index_logical--;
-      // }
-      // if (el.querySelector(":scope > [data-last]")) {
-      //   el.dataset.x++;
-      //   el.dataset.y++;
-      //   active_index_logical++;
-      // }
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
           // Move the last one to the front as [data-first]
@@ -372,29 +374,19 @@
           }
         } else {
           // Middle slide
-          el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
-            el.append(el.firstElementChild);
-            delete el2.dataset.first;
-            active_index--;
-          });
-          el.querySelectorAll(":scope > [data-last]").forEach(el2 => {
-            el.prepend(el.lastElementChild);
-            delete el2.dataset.last;
-            active_index++;
-          });
+          restoreDisplacedSlides(el);
           active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
         }
       }
       // active_slide = el.querySelector(":scope > [data-active]");
       // console.log(el.querySelector(":scope > [data-active]"));
       // console.log(active_index);
-      scrollTo(el, ceilingWidth(el) * active_index, 0);
+      scrollTo(el, ceilingWidth(el) * active_index, ceilingHeight(el) * active_index);
+    } else { // Check and restore dynamically disabled endless option
+      restoreDisplacedSlides(el);
     }
-    // If landed on middle slide from 0, active_index_logical--
-    // If landed on middle slide from last one, active_index_logical++
     el.dataset.x = el.dataset.y = active_index_logical;
     // console.log('new index logical', active_index_logical);
-    // el.scrollTo(active_index * active_slide.scrollWidth, active_index * active_slide.scrollHeight);
     // console.log("updateCarousel working");
     active_slide.style.height = "";
     el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
