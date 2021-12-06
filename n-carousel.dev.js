@@ -381,7 +381,7 @@
       // active_slide = el.querySelector(":scope > [data-active]");
       // console.log(el.querySelector(":scope > [data-active]"));
       // console.log(active_index);
-      scrollTo(el, ceilingWidth(el) * active_index, ceilingHeight(el) * active_index);
+      scrollTo(el, ceilingWidth(el.firstElementChild) * active_index, ceilingHeight(el.firstElementChild) * active_index); // First element size, because when Peeking, it differs from carousel size
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
     }
