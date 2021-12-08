@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
@@ -11,6 +11,7 @@
   const default_interval = 4000;
   const isChrome = !!navigator.userAgent.match("Chrome");
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
+  const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const nextSlideHeight = (el) => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -119,7 +120,7 @@
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function(e) {
+    document.addEventListener("keydown", function (e) {
       let isTabPressed = e.key === "Tab" || e.keyCode === 9;
       if (!isTabPressed) {
         return;
@@ -334,7 +335,7 @@
         active_index++;
       });
     }
-    if (el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless")) {
+    if (isEndless(el)) {
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
           // Move the last one to the front as [data-first]
@@ -641,7 +642,7 @@
       window.requestAnimationFrame(() => {
         let new_index = [...el.parentNode.children].indexOf(el);
         let carousel = wrapper.querySelector(":scope > .n-carousel__content");
-        if (carousel.children.length > 2 && wrapper.classList.contains("n-carousel--endless")) {
+        if (isEndless(carousel)) {
           var old_index = getIndex(carousel);
           if (old_index === 0) {
             if (new_index === carousel.children.length - 1) {
