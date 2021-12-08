@@ -279,6 +279,8 @@
     // console.log('updateCarousel ', el);
     // Called on init and scroll end
     observersOff(el);
+    let saved_x = el.dataset.x; // On displaced slides and no change
+    let saved_y = el.dataset.y;
     el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
     el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
     // When inline
@@ -302,6 +304,8 @@
       // console.log("updateCarousel bailing on unchanged slide");
       if (active_slide === old_active_slide) {
         // Scroll snapping back to the same slide. Nothing to do here.
+        el.dataset.x = saved_x;
+        el.dataset.y = saved_y;
         observersOn(el);
         return;
       }
@@ -543,17 +547,13 @@
         let old_scroll_left = scrollStartX(el);
         let old_scroll_top = el.scrollTop;
         if (isVertical(el)) {
-          // el.children[index].style.height = "auto";
           new_height = el.children[index].firstElementChild.scrollHeight;
         } else {
-          // new_height = parseFloat(getComputedStyle(el.children[index].children[0]).height);
           new_height = nextSlideHeight(el.children[index]);
-          // let old_height = parseInt(el.dataset.x) === index ? new_height : parseFloat(getComputedStyle(el.children[el.dataset.x].children[0]).height);
-          let old_height = parseInt(el.dataset.x) === index ? new_height : nextSlideHeight(el.children[el.dataset.x]);
+          let old_height = getIndexReal(el) === index ? new_height : nextSlideHeight(el.children[getIndexReal(el)]);
           el.style.setProperty("--height", `${old_height}px`);
           // console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
         }
-        // el.children[index].style.width = el.children[index].style.height = "";
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
@@ -708,8 +708,8 @@
         // carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_size) - peeking_size);
         // let slide_width = 936.312 - 2*(140.438 + .5625); // carousel_width - 2 * Math.ceil(peek_width)
         // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
-        let offset = [...carousel.children].indexOf(carousel.querySelector(":scope > [data-active]")); // Real offset including displaced first/last slides
-        scrollTo(carousel, offset * ceilingWidth(carousel), offset * ceilingHeight(carousel));
+        let offset = getIndexReal(carousel); // Real offset including displaced first/last slides
+        scrollTo(carousel, offset * ceilingWidth(carousel.firstElementChild), offset * ceilingHeight(carousel.firstElementChild));
       });
     }
   };
@@ -777,7 +777,7 @@
     // return;
     // console.log("mutations", mutations);
     for (let mutation of mutations) {
-      console.log("mutated ", mutation.target);
+      // console.log("mutated ", mutation.target);
       if (mutation.target) {
         updateObserver(mutation.target.querySelector(":scope > .n-carousel__content"));
       }
