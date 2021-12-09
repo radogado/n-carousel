@@ -65,6 +65,10 @@ body[data-frozen] {
   overflow: hidden;
 }
 
+[data-sliding] .n-carousel__content > * {
+  overflow: hidden !important;
+}
+
 .n-carousel--vertical:not(.n-carousel--auto-height) > .n-carousel__content,
 .n-carousel--vertical[data-ready] > .n-carousel__content {
   flex-direction: column;

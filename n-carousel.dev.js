@@ -276,7 +276,7 @@
     };
     requestAnimationFrame(startAnim);
   });
-  const updateCarousel = (el) => {
+  const updateCarousel = (el, forced = false) => { // Forced means never skip unnecessary update
     // console.log('updateCarousel ', el);
     // Called on init and scroll end
     observersOff(el);
@@ -301,7 +301,7 @@
       el.style.height = "";
     }
     let active_slide = el.children[active_index];
-    if (old_active_slide) {
+    if (old_active_slide && !forced) {
       // console.log("updateCarousel bailing on unchanged slide");
       if (active_slide === old_active_slide) {
         // Scroll snapping back to the same slide. Nothing to do here.
@@ -780,7 +780,9 @@
     for (let mutation of mutations) {
       // console.log("mutated ", mutation.target);
       if (mutation.target) {
-        updateObserver(mutation.target.querySelector(":scope > .n-carousel__content"));
+        let carousel = mutation.target.querySelector(":scope > .n-carousel__content");
+        updateObserver(carousel);
+        updateCarousel(carousel, true);
       }
     }
   });
