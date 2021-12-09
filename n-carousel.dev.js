@@ -629,7 +629,7 @@
   const slideIndexEvent = (e) => {
     let el = e.target.closest("button");
     if (el) {
-      const wrapper = el.closest(".n-carousel");
+      const wrapper = document.getElementById(el.parentNode.dataset.for) || el.closest(".n-carousel");
       if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
         wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
         // updateCarousel(carousel);
