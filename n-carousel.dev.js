@@ -413,7 +413,7 @@
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
     // console.log(hash);
-    if (!!hash) {
+    if (!!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
       // console.log(hash);
       location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
     }
@@ -918,5 +918,13 @@
     });
   };
   window.nCarouselInit = init;
+  window.addEventListener('popstate', e => { // Hash navigation support
+    let el = document.querySelector(location.hash);
+    let carousel = el?.parentNode;
+    if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
+      // console.log('navigated to ', el);
+      slideTo(carousel, [...carousel.children].indexOf(el));
+    }
+  });
   typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
 })();
