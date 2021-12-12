@@ -1,4 +1,4 @@
-(function () {
+(function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
@@ -120,7 +120,7 @@
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", function(e) {
       let isTabPressed = e.key === "Tab" || e.keyCode === 9;
       if (!isTabPressed) {
         return;
@@ -319,6 +319,7 @@
     var active_index_logical = active_index;
     active_slide.dataset.active = true;
     active_index_logical = getIndexReal(el);
+    el.dataset.x = el.dataset.y = active_index_logical;
     // Endless carousel
     // To do: on initial load, scroll to second one
     // To do: fix index
@@ -387,10 +388,11 @@
       // console.log(el.querySelector(":scope > [data-active]"));
       // console.log(active_index);
       scrollTo(el, ceilingWidth(el.firstElementChild) * active_index, ceilingHeight(el.firstElementChild) * active_index); // First element size, because when Peeking, it differs from carousel size
+      el.dataset.x = el.dataset.y = active_index_logical;
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
+      active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
     }
-    el.dataset.x = el.dataset.y = active_index_logical;
     // console.log('new index logical', active_index_logical);
     // console.log("updateCarousel working");
     active_slide.style.height = "";
