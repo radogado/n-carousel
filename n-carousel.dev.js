@@ -666,11 +666,11 @@
       });
     }
   };
-  const closeModal = (e) => {
+  const closeModal = (el) => {
     if (document.fullscreen || document.webkitIsFullScreen) {
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
     }
-    let carousel = e.target.closest(".n-carousel");
+    let carousel = el.closest(".n-carousel");
     if (carousel) {
       carousel.classList.remove("n-carousel--overlay");
       delete document.body.dataset.frozen;
@@ -825,7 +825,7 @@
         index.onclick = slideIndexEvent;
       }
       if (!!close_modal) {
-        close_modal.onclick = closeModal;
+        close_modal.onclick = e => closeModal(e.target);
       }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
@@ -866,7 +866,13 @@
       el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
       el.parentNode.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
-          closeModal(e);
+          let el = e.target;
+          if (!el.closest('.n-carousel--overlay')) {
+            el = document.querySelector('.n-carousel--overlay');
+          }
+          if (el) {
+            closeModal(el);
+          }
         }
       });
       let content = el.querySelector(":scope > .n-carousel__content");
