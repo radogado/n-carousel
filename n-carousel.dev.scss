@@ -844,60 +844,6 @@ _:future,
 		}
 	}
 
-	&.n-carousel--tabs {
-		> .n-carousel__index {
-			display: flex;
-			// flex-wrap: wrap;
-			justify-content: start;
-			overflow: auto;
-			max-width: 100%;
-			max-height: 100%;
-
-			button {
-				border-radius: 0;
-				margin: 0;
-				display: flex;
-				justify-content: flex-start;
-				padding: 0.5ch 1ch;
-				text-align: start;
-				word-break: break-word;
-				// color: inherit;
-				outline-offset: -3px;
-				min-width: 1.5em;
-				min-inline-size: min-content;
-
-				&:focus {
-					z-index: 0;
-				}
-			}
-		}
-
-		&.n-carousel--vertical > .n-carousel__index {
-			display: block;
-
-			> * {
-				width: 100%;
-			}
-		}
-
-		&.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index {
-			> * {
-				white-space: nowrap;
-			}
-		}
-
-		&.n-carousel--tabs-align-end > .n-carousel__index {
-			button {
-				text-align: end;
-			}
-		}
-
-		> .n-carousel__previous,
-		> .n-carousel__next {
-			display: none;
-		}
-	}
-
 	&:-webkit-full-screen {
 		background: #000;
 	}
@@ -935,6 +881,62 @@ _:future,
 			&:not(.n-carousel__index) {
 				display: none;
 			}
+		}
+	}
+}
+
+.n-carousel--tabs {
+
+	&.n-carousel > .n-carousel__index,
+	&.n-carousel__index { // For normal and detached controls
+		display: flex;
+		justify-content: start;
+		overflow: auto;
+		max-width: 100%;
+		max-height: 100%;
+
+		button {
+			border-radius: 0;
+			margin: 0;
+			display: flex;
+			justify-content: flex-start;
+			padding: 0.5ch 1ch;
+			text-align: start;
+			word-break: break-word;
+			outline-offset: -3px;
+			min-width: 1.5em;
+			min-inline-size: min-content;
+
+			&:focus {
+				z-index: 0;
+			}
+		}
+	}
+
+	&.n-carousel {
+		&.n-carousel--vertical > .n-carousel__index {
+			display: block;
+
+			> * {
+				width: 100%;
+			}
+		}
+
+		&.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index {
+			> * {
+				white-space: nowrap;
+			}
+		}
+
+		&.n-carousel--tabs-align-end > .n-carousel__index {
+			button {
+				text-align: end;
+			}
+		}
+
+		> .n-carousel__previous,
+		> .n-carousel__next {
+			display: none;
 		}
 	}
 }
