@@ -405,10 +405,8 @@
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
-      if (index.querySelector("[disabled]")) {
-        index.querySelector("[disabled]").disabled = false;
-      }
-      index.children[active_index_logical].disabled = true;
+      delete index.querySelector("[data-active]")?.dataset.active;
+      index.children[active_index_logical].dataset.active = true;
     }
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
@@ -629,7 +627,7 @@
   const slidePreviousEvent = (e) => slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
   const slideNextEvent = (e) => slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
   const slideIndexEvent = (e) => {
-    let el = e.target.closest("button");
+    let el = e.target.closest("a, button");
     if (el) {
       const wrapper = document.getElementById(el.parentNode.dataset.for) || el.closest(".n-carousel");
       if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
@@ -664,6 +662,7 @@
         // console.log('old index', old_index, 'new index', new_index);
         slideTo(carousel, new_index);
       });
+      return false;
     }
   };
   const closeModal = (el) => {
@@ -925,11 +924,13 @@
   };
   window.nCarouselInit = init;
   window.addEventListener('popstate', e => { // Hash navigation support
-    let el = document.querySelector(location.hash);
-    let carousel = el?.parentNode;
-    if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
-      // console.log('navigated to ', el);
-      slideTo(carousel, [...carousel.children].indexOf(el));
+    if (!!location.hash) {
+      let el = document.querySelector(location.hash);
+      let carousel = el?.parentNode;
+      if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
+        // console.log('navigated to ', el);
+        slideTo(carousel, [...carousel.children].indexOf(el));
+      }
     }
   });
   typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();

@@ -199,7 +199,7 @@ body[data-frozen] {
 			> .n-carousel__index {
 				position: static;
 
-				button {
+				> * {
 					display: initial;
 				}
 			}
@@ -219,11 +219,6 @@ body[data-frozen] {
 			}
 		}
 
-		&.n-carousel--index-align-end {
-			> .n-carousel__index {
-				// position: static;
-			}
-		}
 	}
 
 	&.n-carousel--auto-height {
@@ -285,7 +280,9 @@ _:future,
 .n-carousel__next,
 .n-carousel__full-screen,
 .n-carousel__close {
-	button {
+	> * {
+		box-sizing: border-box;
+		text-decoration: none !important;
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
 		user-select: none;
@@ -308,7 +305,7 @@ _:future,
 			color: var(--control-color, #333);
 		}
 
-		&[disabled] {
+		&[data-active] {
 			opacity: 0.5;
 			color: blue;
 		}
@@ -326,7 +323,7 @@ _:future,
 	.n-carousel__next,
 	.n-carousel__full-screen,
 	.n-carousel__close {
-		button {
+		> * {
 			cursor: pointer;
 		}
 	}
@@ -588,7 +585,7 @@ _:future,
 		}
 
 		&.n-carousel__index--thumbnails {
-			button {
+			> * {
 				padding: 0;
 				vertical-align: middle;
 				margin: 0.25em auto;
@@ -871,7 +868,7 @@ _:future,
 	&.n-carousel--inline:not(.n-carousel--overlay) {
 		display: block;
 
-		> .n-carousel__index button[disabled] {
+		> .n-carousel__index > [data-active] {
 			opacity: 1;
 		}
 
@@ -894,8 +891,10 @@ _:future,
 		overflow: auto;
 		max-width: 100%;
 		max-height: 100%;
+		color: var(--control-color, #333);
 
-		button {
+		> * {
+			box-sizing: border-box;
 			border-radius: 0;
 			margin: 0;
 			display: flex;
@@ -929,7 +928,7 @@ _:future,
 		}
 
 		&.n-carousel--tabs-align-end > .n-carousel__index {
-			button {
+			> * {
 				text-align: end;
 			}
 		}
@@ -952,7 +951,7 @@ _:future,
 	}
 
 	.n-carousel__close button:before {
-		// Firefox can't display the "Close" SVG
+		// Firefox can't display the "Close" SVG 🤷‍♂️
 		mask: none;
 		background: none;
 		content: "⤫";

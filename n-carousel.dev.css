@@ -142,7 +142,7 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index {
   position: static;
 }
-.n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index button {
+.n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > * {
   display: initial;
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--index-end > .n-carousel__index {
@@ -192,11 +192,13 @@ _:future,
   flex-shrink: 0;
 }
 
-.n-carousel__index button,
-.n-carousel__previous button,
-.n-carousel__next button,
-.n-carousel__full-screen button,
-.n-carousel__close button {
+.n-carousel__index > *,
+.n-carousel__previous > *,
+.n-carousel__next > *,
+.n-carousel__full-screen > *,
+.n-carousel__close > * {
+  box-sizing: border-box;
+  text-decoration: none !important;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -215,18 +217,18 @@ _:future,
   padding: 0 1ch;
   cursor: pointer;
 }
-.n-carousel__index button span,
-.n-carousel__previous button span,
-.n-carousel__next button span,
-.n-carousel__full-screen button span,
-.n-carousel__close button span {
+.n-carousel__index > * span,
+.n-carousel__previous > * span,
+.n-carousel__next > * span,
+.n-carousel__full-screen > * span,
+.n-carousel__close > * span {
   color: var(--control-color, #333);
 }
-.n-carousel__index button[disabled],
-.n-carousel__previous button[disabled],
-.n-carousel__next button[disabled],
-.n-carousel__full-screen button[disabled],
-.n-carousel__close button[disabled] {
+.n-carousel__index > *[data-active],
+.n-carousel__previous > *[data-active],
+.n-carousel__next > *[data-active],
+.n-carousel__full-screen > *[data-active],
+.n-carousel__close > *[data-active] {
   opacity: 0.5;
   color: blue;
 }
@@ -235,11 +237,11 @@ _:future,
   cursor: not-allowed;
 }
 
-[data-ready] > .n-carousel__index button,
-[data-ready] > .n-carousel__previous button,
-[data-ready] > .n-carousel__next button,
-[data-ready] > .n-carousel__full-screen button,
-[data-ready] > .n-carousel__close button {
+[data-ready] > .n-carousel__index > *,
+[data-ready] > .n-carousel__previous > *,
+[data-ready] > .n-carousel__next > *,
+[data-ready] > .n-carousel__full-screen > *,
+[data-ready] > .n-carousel__close > * {
   cursor: pointer;
 }
 
@@ -423,13 +425,13 @@ _:future,
   object-fit: cover;
   padding: 0;
 }
-.n-carousel > .n-carousel__index.n-carousel__index--thumbnails button {
+.n-carousel > .n-carousel__index.n-carousel__index--thumbnails > * {
   padding: 0;
   vertical-align: middle;
   margin: 0.25em auto;
   border-radius: 0;
 }
-.n-carousel > .n-carousel__index.n-carousel__index--thumbnails button span {
+.n-carousel > .n-carousel__index.n-carousel__index--thumbnails > * span {
   padding: 0 1ch;
 }
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
@@ -598,7 +600,7 @@ _:future,
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) {
   display: block;
 }
-.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index button[disabled] {
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > [data-active] {
   opacity: 1;
 }
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) > * {
@@ -614,8 +616,10 @@ _:future,
   overflow: auto;
   max-width: 100%;
   max-height: 100%;
+  color: var(--control-color, #333);
 }
-.n-carousel--tabs.n-carousel > .n-carousel__index button, .n-carousel--tabs.n-carousel__index button {
+.n-carousel--tabs.n-carousel > .n-carousel__index > *, .n-carousel--tabs.n-carousel__index > * {
+  box-sizing: border-box;
   border-radius: 0;
   margin: 0;
   display: flex;
@@ -627,7 +631,7 @@ _:future,
   min-width: 1.5em;
   min-inline-size: min-content;
 }
-.n-carousel--tabs.n-carousel > .n-carousel__index button:focus, .n-carousel--tabs.n-carousel__index button:focus {
+.n-carousel--tabs.n-carousel > .n-carousel__index > *:focus, .n-carousel--tabs.n-carousel__index > *:focus {
   z-index: 0;
 }
 .n-carousel--tabs.n-carousel.n-carousel--vertical > .n-carousel__index {
@@ -639,7 +643,7 @@ _:future,
 .n-carousel--tabs.n-carousel.n-carousel--vertical.n-carousel--auto-height > .n-carousel__index > * {
   white-space: nowrap;
 }
-.n-carousel--tabs.n-carousel.n-carousel--tabs-align-end > .n-carousel__index button {
+.n-carousel--tabs.n-carousel.n-carousel--tabs-align-end > .n-carousel__index > * {
   text-align: end;
 }
 .n-carousel--tabs.n-carousel > .n-carousel__previous,
