@@ -233,7 +233,6 @@
         el.style.height = "";
       }
     }
-    var stop = false;
     var startx = getScroll(el).x;
     var starty = getScroll(el).y;
     var starth = parseInt(el.style.height);
@@ -247,7 +246,7 @@
       draw(timeStamp);
     };
     let draw = (now) => {
-      if (stop) {
+      if (now - start >= duration) {
         scrollTo(el, startx + distanceX, starty + distanceY);
         if (new_height) {
           el.style.height = `${new_height}px`;
@@ -259,12 +258,12 @@
         // });
         return;
       }
-      if (now - start >= duration) stop = true;
       var p = (now - start) / duration;
       var val = inOutSine(p);
       var x = startx + distanceX * val;
       var y = starty + distanceY * val;
       if (scroll_changing) {
+        console.log(y);
         scrollTo(el, x, y);
       }
       if (new_height) {
