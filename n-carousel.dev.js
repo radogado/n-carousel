@@ -263,7 +263,7 @@
       var x = startx + distanceX * val;
       var y = starty + distanceY * val;
       if (scroll_changing) {
-        console.log(y);
+        // console.log(y);
         scrollTo(el, x, y);
       }
       if (new_height) {
