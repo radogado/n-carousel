@@ -412,7 +412,7 @@
     // console.log(hash);
     if (!!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
       // console.log(hash);
-      location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
+      // location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
@@ -916,7 +916,7 @@
           content.nCarouselTimeout = setTimeout(carouselTimeout, parseFloat(el.dataset.interval) * 1000 || default_interval);
           content.addEventListener("pointerenter", (e) => clearTimeout(e.target.nCarouselTimeout));
         }
-        el.dataset.platform = navigator.platform;
+        el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
     });
