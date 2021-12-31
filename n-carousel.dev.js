@@ -410,9 +410,9 @@
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
     // console.log(hash);
-    if (!!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
+    if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
       // console.log(hash);
-      // location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
+      location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
@@ -900,11 +900,11 @@
       window.requestAnimationFrame(() => {
         // console.log('observing ', content);
         observersOn(content);
-        el.dataset.ready = true;
         if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
           setIndexWidth(el);
         }
         updateCarousel(content);
+        el.dataset.ready = true;
         if (el.matches(".n-carousel--auto-slide")) {
           let auto_delay = (parseFloat(el.dataset.interval) * 1000 || default_interval) + (parseFloat(el.dataset.duration) * 1000 || default_duration);
           let carouselTimeout = () => {
