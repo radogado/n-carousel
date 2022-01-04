@@ -213,10 +213,10 @@
   const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) => new Promise((resolve, reject) => {
     // Thanks https://stackoverflow.com/posts/46604409/revisions
     let wrapper = el.closest(".n-carousel");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant") || !!wrapper.nextSlideInstant) {
+    if (!wrapper.dataset.ready || window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant")) {
       scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
       el.style.height = `${new_height}px`;
-      delete wrapper.nextSlideInstant;
+      // delete wrapper.nextSlideInstant;
       updateCarousel(el);
       resolve(el);
       return;
