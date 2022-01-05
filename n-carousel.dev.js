@@ -589,33 +589,35 @@
     let el = e.target.closest("a, button");
     if (el) {
       const wrapper = document.getElementById(el.parentNode.dataset.for) || el.closest(".n-carousel");
-      if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
-        wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
-        scrollTo(wrapper, wrapper.offsetWidth * wrapper.dataset.x, wrapper.offsetHeight * wrapper.dataset.y);
-        document.body.dataset.frozen = document.body.scrollTop;
-        trapFocus(wrapper);
-        wrapper.nextSlideInstant = true;
-      }
-      window.requestAnimationFrame(() => {
-        let new_index = [...el.parentNode.children].indexOf(el);
-        let carousel = wrapper.querySelector(":scope > .n-carousel__content");
-        if (isEndless(carousel)) {
-          var old_index = getIndex(carousel);
-          if (old_index === 0) {
-            if (new_index === carousel.children.length - 1) {
-              new_index = 0;
-            } else {
-              new_index++;
-            }
-          }
-          if (old_index === carousel.children.length - 1) {
-            if (new_index === 0) {
-              new_index = carousel.children.length - 1;
-            } else {
-              new_index--;
-            }
+      const carousel = wrapper.querySelector(":scope > .n-carousel__content");
+      let new_index = [...el.parentNode.children].indexOf(el);
+      if (isEndless(carousel)) {
+        var old_index = getIndex(carousel);
+        if (old_index === 0) {
+          if (new_index === carousel.children.length - 1) {
+            new_index = 0;
+          } else {
+            new_index++;
           }
         }
+        if (old_index === carousel.children.length - 1) {
+          if (new_index === 0) {
+            new_index = carousel.children.length - 1;
+          } else {
+            new_index--;
+          }
+        }
+      }
+      if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
+        wrapper.nextSlideInstant = true;
+        wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+        // Set new x, y
+        carousel.dataset.x = carousel.dataset.y = new_index;
+        scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
+        document.body.dataset.frozen = document.body.scrollTop;
+        trapFocus(wrapper);
+      }
+      window.requestAnimationFrame(() => {
         slideTo(carousel, new_index);
       });
       return false;
@@ -718,7 +720,7 @@
   });
   const mutation_observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
-      if (mutation.target) {
+      if (mutation.target && !mutation.target.nextSlideInstant) {
         let carousel = mutation.target.querySelector(":scope > .n-carousel__content");
         updateObserver(carousel);
         updateCarousel(carousel, true);
