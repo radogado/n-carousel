@@ -29,4 +29,4 @@
 </div>
 ```
 
-[Demo](https://radogado.github.io/n-carousel/)
+[Demo](https://nativecarousel.com/)

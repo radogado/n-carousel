@@ -696,9 +696,12 @@
       //   return;
       // }
       carousel.style.padding = ''; // Subpixel peeking fix
+      carousel.style.removeProperty("--peek-int");
       carousel.style.padding = isVertical(carousel) ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0` : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px`;
       if (carousel.style.padding === '0px') {
         carousel.style.padding = '';
+      } else {
+        carousel.style.setProperty("--peek-int", isVertical(carousel) ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0 0 0` : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px 0 0`);
       }
       window.requestAnimationFrame(() => {
         if (isVertical(el)) {

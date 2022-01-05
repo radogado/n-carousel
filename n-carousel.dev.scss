@@ -271,7 +271,8 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel.n-carousel--peek:not(.n-carousel--vertical) > .n-carousel__content:after {
 	content: '';
-	width: var(--peek, 0);
+	// width: var(--peek, 0);
+	padding: var(--peek-int, 0);
 	flex-shrink: 0;
 }
 
