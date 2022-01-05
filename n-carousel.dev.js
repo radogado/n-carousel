@@ -80,8 +80,6 @@
       if (isSafari) {
         // When exit finishes, update the carousel because on Safari 14, position is wrong or the slide is invisible
         setTimeout(() => {
-          // console.log('updating', el);
-          // updateCarousel(el);
           el.style.display = "none";
           window.requestAnimationFrame(() => {
             el.style.display = "";
@@ -99,7 +97,6 @@
         el.addEventListener("webkitfullscreenchange", restoreScroll, false);
       }!!el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen();
     }
-    // updateCarousel(carousel);
   };
   const scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
   const scrollTo = (el, x, y) => {
@@ -213,10 +210,10 @@
   const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) => new Promise((resolve, reject) => {
     // Thanks https://stackoverflow.com/posts/46604409/revisions
     let wrapper = el.closest(".n-carousel");
-    if (!wrapper.dataset.ready || window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant")) {
+    if (!!wrapper.nextSlideInstant || !wrapper.dataset.ready || window.matchMedia("(prefers-reduced-motion: reduce)").matches || wrapper.matches(".n-carousel--instant")) {
       scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
       el.style.height = `${new_height}px`;
-      // delete wrapper.nextSlideInstant;
+      delete wrapper.nextSlideInstant;
       updateCarousel(el);
       resolve(el);
       return;
@@ -251,11 +248,8 @@
         if (new_height) {
           el.style.height = `${new_height}px`;
         }
-        // observersOn(el); // done inside updateCarousel() below?
-        // window.requestAnimationFrame(() => {
         updateCarousel(el);
         resolve(el);
-        // });
         return;
       }
       var p = (now - start) / duration;
@@ -263,7 +257,6 @@
       var x = startx + distanceX * val;
       var y = starty + distanceY * val;
       if (scroll_changing) {
-        // console.log(y);
         scrollTo(el, x, y);
       }
       if (new_height) {
@@ -276,7 +269,6 @@
     requestAnimationFrame(startAnim);
   });
   const updateCarousel = (el, forced = false) => { // Forced means never skip unnecessary update
-    // console.log('updateCarousel ', el);
     // Called on init and scroll end
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
@@ -301,7 +293,6 @@
     }
     let active_slide = el.children[active_index];
     if (old_active_slide && !forced) {
-      // console.log("updateCarousel bailing on unchanged slide");
       if (active_slide === old_active_slide) {
         // Scroll snapping back to the same slide. Nothing to do here.
         el.dataset.x = saved_x;
@@ -320,9 +311,6 @@
     active_index_logical = getIndexReal(el);
     el.dataset.x = el.dataset.y = active_index_logical;
     // Endless carousel
-    // To do: on initial load, scroll to second one
-    // To do: fix index
-    // To do: scroll end by timeout detection, when snapping to next slide, glitches
     const restoreDisplacedSlides = el => {
       el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
         el.append(el.firstElementChild);
@@ -383,17 +371,12 @@
           active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
         }
       }
-      // active_slide = el.querySelector(":scope > [data-active]");
-      // console.log(el.querySelector(":scope > [data-active]"));
-      // console.log(active_index);
       scrollTo(el, ceilingWidth(el.firstElementChild) * active_index, ceilingHeight(el.firstElementChild) * active_index); // First element size, because when Peeking, it differs from carousel size
       el.dataset.x = el.dataset.y = active_index_logical;
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
       active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
     }
-    // console.log('new index logical', active_index_logical);
-    // console.log("updateCarousel working");
     active_slide.style.height = "";
     el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
     window.requestAnimationFrame(() => {
@@ -409,9 +392,7 @@
     }
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
-    // console.log(hash);
     if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
-      // console.log(hash);
       location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
     }
     // Disable focus on children of non-active slides
@@ -428,10 +409,8 @@
             el2.tabIndex = -1;
           }
         });
-        // slide.dataset.disabledChildrenFocus = true;
       }
     });
-    // console.log(active_slide);
     active_slide.querySelectorAll("[data-focus-disabled]").forEach((el2) => {
       if (!el2.closest(".n-carousel__content > :not([data-active])")) {
         el2.removeAttribute("tabindex");
@@ -442,7 +421,6 @@
         }
       }
     });
-    // delete active_slide.dataset.disabledChildrenFocus;
     window.requestAnimationFrame(() => {
       observersOn(el);
     });
@@ -453,7 +431,6 @@
   var lastScrollY;
   var isResizing;
   const scrollStop = (e) => {
-    // return;
     //     if (!!navigator.platform.match(/Win/)) {
     //       // Scrolling is broken on Windows
     //       // console.log("scroll Windows", e);
@@ -462,27 +439,18 @@
     //       e.preventDefault();
     //       return;
     //     }
-    // return;
     // Clear our timeout throughout the scroll
-    // console.log("scrolling", e, e.target.scrollLeft);
     let el = e.target;
     let mod_x = scrollStartX(el) % ceilingWidth(el.firstElementChild);
     let mod_y = el.scrollTop % ceilingHeight(el.firstElementChild);
-    // console.log("mod while scrolling", mod_x, mod_y);
-    // console.log("scroll while scrolling", scrollStartX(el));
     const afterScrollTimeout = () => {
       let mod_x = scrollStartX(el) % ceilingWidth(el.firstElementChild);
       let mod_y = el.scrollTop % ceilingHeight(el.firstElementChild);
-      // console.log("mod after timeout", mod_x, mod_y);
-      // console.log("scroll after timeout", scrollStartX(el));
-      // console.log("scrollStop check", mod_x, mod_y);
       let new_x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
       let new_y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
       if (!("ontouchstart" in window) && (mod_x !== 0 || mod_y !== 0)) {
         // Stuck bc of Chrome/Safari bug when you scroll in both directions during snapping. Not needed on touch and glitchy there.
-        // console.log("stuck", new_x, new_y, el);
         updateCarousel(el);
-        // console.log("unstucking to ", new_y);
         let tabbing = false;
         if (!isSafari || !!el.tabbing) {
           slideTo(el, isVertical(el) ? new_y : new_x);
@@ -501,21 +469,15 @@
           let new_height;
           let offset_y = 0;
           if (isVertical(el)) {
-            // let new_index = Math.abs(Math.round(el.scrollTop / (el.offsetHeight - paddingY(el))));
-            // el.children[new_y].style.height = "auto";
             new_height = el.children[new_y].firstElementChild.scrollHeight; // To do: support multiple children and drop the requirement for a wrapper inside the slide
-            // el.children[new_y].style.height = "";
             offset_y = new_y * new_height - el.scrollTop;
           } else {
-            // let new_index = Math.abs(Math.round(scrollStartX(el) / (ceilingWidth(el) - paddingX(el))));
-            // new_height = parseFloat(getComputedStyle(el.children[new_x].children[0]).height); // but shouldn't be lower than blank carousel height. worked around by min height of 9em which surpasses the blank carousel height
             new_height = nextSlideHeight(el.children[new_x]);
             scrollTo(el, lastScrollX, lastScrollY);
           }
           if (old_height === new_height) {
             new_height = false;
           }
-          // console.log("scroll end new height", new_height);
           el.parentNode.dataset.sliding = true;
           window.requestAnimationFrame(() => {
             scrollAnimate(el, 0, offset_y, new_height, old_height);
@@ -552,7 +514,6 @@
           new_height = nextSlideHeight(el.children[index]);
           let old_height = getIndexReal(el) === index ? new_height : nextSlideHeight(el.children[getIndexReal(el)]);
           el.style.setProperty("--height", `${old_height}px`);
-          // console.log("old index", el.dataset.x, "new index", index, "--height (old height):", old_height, "new height", new_height); // old height is wrong
         }
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
@@ -588,7 +549,6 @@
     if (e.key === "Tab") {
       let carousel = el.closest(".n-carousel__content");
       carousel.tabbing = true;
-      // setTimeout(e => { delete carousel.tabbing }, 100);
     }
     if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
@@ -631,12 +591,10 @@
       const wrapper = document.getElementById(el.parentNode.dataset.for) || el.closest(".n-carousel");
       if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
         wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
-        // updateCarousel(carousel);
-        // console.log("open modal");
+        scrollTo(wrapper, wrapper.offsetWidth * wrapper.dataset.x, wrapper.offsetHeight * wrapper.dataset.y);
         document.body.dataset.frozen = document.body.scrollTop;
-        // carousel.animate([{ transform: "translateY(-100%)" }, { transform: "none" }], { duration: 200, fill: "forwards" });
         trapFocus(wrapper);
-        // carousel.nextSlideInstant = true;
+        wrapper.nextSlideInstant = true;
       }
       window.requestAnimationFrame(() => {
         let new_index = [...el.parentNode.children].indexOf(el);
@@ -658,7 +616,6 @@
             }
           }
         }
-        // console.log('old index', old_index, 'new index', new_index);
         slideTo(carousel, new_index);
       });
       return false;
@@ -689,18 +646,13 @@
     if (!el.parentNode.dataset.sliding) {
       // Round down the padding, because sub pixel padding + scrolling is a problem
       let carousel = el;
-      // console.log(carousel);
-      // carousel.style.removeProperty("--subpixel-compensation-peeking");
-      // carousel.style.removeProperty("--subpixel-compensation");
-      // if (el.parentNode.classList.contains("n-carousel--inline") && !el.parentNode.classList.contains("n-carousel--overlay")) {
-      //   return;
-      // }
       carousel.style.padding = ''; // Subpixel peeking fix
       carousel.style.removeProperty("--peek-int");
       carousel.style.padding = isVertical(carousel) ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0` : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px`;
       if (carousel.style.padding === '0px') {
         carousel.style.padding = '';
       } else {
+        // For Safari, which doesn't support inline end padding in a scrollable container
         carousel.style.setProperty("--peek-int", isVertical(carousel) ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0 0 0` : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px 0 0`);
       }
       window.requestAnimationFrame(() => {
@@ -709,9 +661,6 @@
         } else {
           carousel.style.setProperty("--subpixel-compensation", Math.ceil(carousel.getBoundingClientRect().width) - carousel.getBoundingClientRect().width);
         }
-        // carousel.style.setProperty("--subpixel-compensation-peeking", Math.ceil(peeking_size) - peeking_size);
-        // let slide_width = 936.312 - 2*(140.438 + .5625); // carousel_width - 2 * Math.ceil(peek_width)
-        // console.log(carousel.children[carousel.dataset.x], carousel.children[carousel.dataset.y]);
         let offset = getIndexReal(carousel); // Real offset including displaced first/last slides
         scrollTo(carousel, offset * ceilingWidth(carousel.firstElementChild), offset * ceilingHeight(carousel.firstElementChild));
       });
@@ -737,20 +686,13 @@
     el.removeEventListener("scroll", scrollStop);
     height_minus_index.unobserve(el.parentNode);
     subpixel_observer.unobserve(el);
-    // mutation_observer.disconnect();
     el.observerStarted = true;
-    // el.removeEventListener("mousewheel", detectTrackPad);
-    // el.removeEventListener("DOMMouseScroll", detectTrackPad);
   };
   const updateObserver = (el) => {
-    // console.log('observer fired at ', el, el.observerStarted);
-    // el = el.querySelector(":scope > .n-carousel__content");
     observersOff(el);
     const doUpdate = el => {
       updateSubpixels(el);
       window.requestAnimationFrame(() => {
-        // console.log("resized", el);
-        // let current_height = getComputedStyle(el.querySelector(":scope > [data-active] > *")).height;
         let current_height = el.querySelector(":scope > [data-active]").scrollHeight + "px";
         let previous_height = getComputedStyle(el).getPropertyValue("--height");
         if (current_height !== previous_height) {
@@ -763,25 +705,19 @@
     el.querySelectorAll('.n-carousel__content').forEach(el => doUpdate(el));
   };
   const subpixel_observer = new ResizeObserver((entries) => {
-    // return;
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         let el = e.target;
         if (!!el.observerStarted) {
           el.observerStarted = false;
-          // console.log("observers already started", el);
           return;
         }
         updateObserver(el);
-        // console.log(e.target);
       });
     });
   });
   const mutation_observer = new MutationObserver((mutations) => {
-    // return;
-    // console.log("mutations", mutations);
     for (let mutation of mutations) {
-      // console.log("mutated ", mutation.target);
       if (mutation.target) {
         let carousel = mutation.target.querySelector(":scope > .n-carousel__content");
         updateObserver(carousel);
@@ -833,21 +769,11 @@
           let carousel = e.target.closest(".n-carousel").querySelector(":scope > .n-carousel__content");
           carousel.dataset.xx = carousel.dataset.x;
           carousel.dataset.yy = carousel.dataset.y;
-          // let x = carousel.dataset.x;
-          // let y = carousel.dataset.y;
-          // console.log(x, carousel.scrollLeft);
           toggleFullScreen(e.target);
         };
         const fullScreenEvent = (e) => {
-          // Chrome: Keep and update the real scroll here
           let carousel = e.target.querySelector(":scope > .n-carousel__content");
-          // let x = carousel.dataset.x;
-          // let y = carousel.dataset.y;
-          // console.log('full screen change', x, carousel.scrollLeft);
-          // $0.scrollTo($0.dataset.xx * Math.ceil(parseFloat(getComputedStyle($0.firstElementChild).width)), 0); delete $0.dataset.xx;
-          // console.log(carousel.dataset.xx, carousel.dataset.xx * ceilingWidth(carousel.children[carousel.dataset.xx]));
           window.requestAnimationFrame(() => {
-            // console.log("full screen toggle ", carousel);
             updateCarousel(carousel);
             carousel.dataset.x = carousel.dataset.xx;
             carousel.dataset.y = carousel.dataset.yy;
@@ -879,10 +805,8 @@
       let content = el.querySelector(":scope > .n-carousel__content");
       updateSubpixels(content);
       content.observerStarted = true;
-      // content.tabIndex = 0;
       let hashed_slide = !!location.hash ? content.querySelector(":scope > " + location.hash) : false;
       if (hashed_slide) {
-        // console.log(hashed_slide);
         let index = [...hashed_slide.parentNode.children].indexOf(hashed_slide);
         if (isVertical(content)) {
           content.dataset.y = index;
@@ -901,7 +825,6 @@
         content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
       }
       window.requestAnimationFrame(() => {
-        // console.log('observing ', content);
         observersOn(content);
         if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
           setIndexWidth(el);
@@ -930,7 +853,6 @@
       let el = document.querySelector(location.hash);
       let carousel = el?.parentNode;
       if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
-        // console.log('navigated to ', el);
         if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
         }

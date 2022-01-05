@@ -218,7 +218,6 @@ body[data-frozen] {
 				}
 			}
 		}
-
 	}
 
 	&.n-carousel--auto-height {
@@ -877,7 +876,11 @@ _:future,
 			text-align: start;
 
 			&:not(.n-carousel__index) {
-				display: none;
+				// display: none;
+				visibility: hidden;
+				position: absolute;
+				width: 0;
+				height: 0;
 			}
 		}
 	}
@@ -886,7 +889,8 @@ _:future,
 .n-carousel--tabs {
 
 	&.n-carousel > .n-carousel__index,
-	&.n-carousel__index { // For normal and detached controls
+	&.n-carousel__index {
+		// For normal and detached controls
 		display: flex;
 		justify-content: start;
 		overflow: auto;
