@@ -16,8 +16,11 @@
 <body>
 	<div class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--index-align-start n-carousel--controls-outside" data-duration=".5">
 		<span class="n-carousel__index">
+			<!-- <a href=#><span>Home</span></a> -->
 			<button><span>Home</span></button>
-			<button><span>Index</span></button>
+			<a href="#index"><span>Index</span></a>
+			<!-- 			<button><span>Index</span></button> -->
+			<button><span>Endless</span></button>
 			<button><span>Auto height</span></button>
 			<button><span>Auto slide</span></button>
 			<button><span>Peeking</span></button>
@@ -33,7 +36,7 @@
 		<main class="n-carousel__content">
 			<section id="home">
 				<!-- <button>focusable without tabindex</button> <p tabindex="0">tabindex = 0</p>
-				<p tabindex="-1">tabindex = -1</p> -->
+					<p tabindex="-1">tabindex = -1</p> -->
 				<h1>Native Carousel</h1>
 				<p style="max-width: 60ch;">A carousel component which uses the native scroll snapping functionality with enhancements and customisation. It is lightweight and accessible, with vertical, auto height, tabs, lightbox, layout options, RTL support and no dependencies. <a href="//rado.bg/2021/07/introducing-native-carousel/">Announcement</a>. </p>
 				<div class="n-carousel">
@@ -44,17 +47,17 @@
 						<button><span>Next</span></button>
 					</div>
 					<!-- <div class="n-carousel__full-screen">
-                <button><span>Toggle full screen</span></button>
-              </div> -->
-					<ul class="n-carousel__content">
+					<button><span>Toggle full screen</span></button>
+				  </div> -->
+					<ul class="n-carousel__content" id="first">
 						<li>
 							<div class="demo-grid-3">
 								<span class="n-aspect" style="--width: 450; --height: 300">
 									<img loading="lazy" src="demo/pexels-photo-1086584.jpg" alt="Jellyfish" width="450" height="300" />
 								</span>
 								<div>
-<!-- <button>focusable without tabindex</button> <p tabindex="0">tabindex = 0</p>
-<p tabindex="-1">tabindex = -1</p> -->
+									<!-- <button>focusable without tabindex</button> <p tabindex="0">tabindex = 0</p>
+	<p tabindex="-1">tabindex = -1</p> -->
 									<h2>Jellyfish</h2>
 									<p>
 										<b>Jellyfish</b> and <b>sea jellies</b> are the informal common names given to the medusa-phase of certain gelatinous members of the <a href="/wiki/Subphylum" title="Subphylum">subphylum</a>
@@ -67,8 +70,8 @@
 						<li>
 							<div class="demo-grid-3">
 								<div>
-<!-- <button>focusable without tabindex</button> <p tabindex="0">tabindex = 0</p>
-<p tabindex="-1">tabindex = -1</p> -->
+									<!-- <button>focusable without tabindex</button> <p tabindex="0">tabindex = 0</p>
+	<p tabindex="-1">tabindex = -1</p> -->
 									<h2>Sea turtle</h2>
 									<p>
 										<b>Sea turtles</b> (superfamily <b>Chelonioidea</b>), sometimes called <b>marine turtles</b>, are reptiles of the order <a href="/wiki/Testudines" class="mw-redirect" title="Testudines">Testudines</a> and of the suborder <a href="/wiki/Cryptodira" title="Cryptodira">Cryptodira</a>. The seven existing species of sea turtles are the <a href="/wiki/Green_sea_turtle" title="Green sea turtle">green sea turtle</a>, <a href="/wiki/Loggerhead_sea_turtle" title="Loggerhead sea turtle">loggerhead sea turtle</a>, <a href="/wiki/Kemp%27s_ridley_sea_turtle" title="Kemp's ridley sea turtle">Kemp's ridley sea turtle</a>, <a href="/wiki/Olive_ridley_sea_turtle" title="Olive ridley sea turtle">olive ridley sea turtle</a>, <a href="/wiki/Hawksbill_sea_turtle" title="Hawksbill sea turtle">hawksbill sea turtle</a>, <a href="/wiki/Flatback_sea_turtle" title="Flatback sea turtle">flatback sea turtle</a>, and <a href="/wiki/Leatherback_sea_turtle" title="Leatherback sea turtle">leatherback sea turtle</a>.
@@ -105,64 +108,66 @@
 						<input type="checkbox" data-class="n-carousel--peek" /><span></span> Peeking </label>
 					<label>
 						<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
+					<label>
+						<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 				</div>
 				<h2>How to use</h2>
 				<p style="max-width: 60ch;">Get the <a href="https://www.npmjs.com/package/n-carousel">n-carousel NPM module</a> and either add <b>n-carousel.js</b> and <b>n-carousel.scss</b> to your project<br> or use <a href="n-carousel.min.js">n-carousel.min.js</a> and <a href="n-carousel.min.css">n-carousel.min.css</a> on your page.</p>
 				<!-- <div class="n-carousel n-carousel--inline n-carousel--tabs n-carousel--index-start n-carousel--index-align-start">
-	<div class="n-carousel__index">
-		<button><span>What is Native Carousel?</span></button>
-	</div>
-	<div class="n-carousel__close">
-		<button><span>Close modal window</span></button>
-	</div>
-	
-	
-	<div class="n-carousel__content">
+		<div class="n-carousel__index">
+			<button><span>What is Native Carousel?</span></button>
+		</div>
+		<div class="n-carousel__close">
+			<button><span>Close modal window</span></button>
+		</div>
 		
-		<div><br><br><br><p>This is a carousel component which uses the native scroll snapping functionality with enhancements and customisation. It is lightweight and has no dependencies.</p></div>
-	
-	</div>
-	</div> -->
+		
+		<div class="n-carousel__content">
+			
+			<div><br><br><br><p>This is a carousel component which uses the native scroll snapping functionality with enhancements and customisation. It is lightweight and has no dependencies.</p></div>
+		
+		</div>
+		</div> -->
 				<div class="demo-grid-2">
 					<div>
 						<h2>Code</h2>
 						<div class="code">
 							<pre class="language-markup"><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
-&lt;script src="n-carousel.min.js" type="module"&gt;&lt;/script&gt;</code></pre>
+	&lt;script src="n-carousel.min.js" type="module"&gt;&lt;/script&gt;</code></pre>
 						</div>
 						<div class="code">
 							<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel"&gt;
-  &lt;ul class="n-carousel__content"&gt;
-    &lt;li&gt;One&lt;/li&gt;
-    &lt;li&gt;Two&lt;/li&gt;
-    &lt;li&gt;Three&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div class=&quot;n-carousel__previous&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__next&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+	  &lt;ul class="n-carousel__content"&gt;
+		&lt;li&gt;One&lt;/li&gt;
+		&lt;li&gt;Two&lt;/li&gt;
+		&lt;li&gt;Three&lt;/li&gt;
+	  &lt;/ul&gt;
+	  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__next&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 						</div>
 					</div>
 					<div>
 						<h2>Theme</h2>
 						<div class="code">
 							<pre><code class="language-css">.n-carousel {
-  --control-bg: darkorchid;
-  --control-active-bg: darkorchid;
-  --control-highlight: darkblue;
-  --control-color: #a5f9a5;
-  --control-active-color: #a5f9a5;
-  --carousel-bg: black;
-  --carousel-color: white;
-}</code></pre>
+	  --control-bg: darkorchid;
+	  --control-active-bg: darkorchid;
+	  --control-highlight: darkblue;
+	  --control-color: #a5f9a5;
+	  --control-active-color: #a5f9a5;
+	  --carousel-bg: black;
+	  --carousel-color: white;
+	}</code></pre>
 						</div>
 						<h2>Slide duration</h2>
 						<div class="code">
 							<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel" data-duration=".5"&gt;
-</code></pre>
+	</code></pre>
 						</div>
 						<h2>Dynamic initialization</h2>
 						<div class="code">
@@ -173,14 +178,14 @@
 						<h2>Source</h2>
 						<div class="source">
 							<!-- <span>
-									<a href="n-carousel.min.css"><b>CSS</b></a
-									><br /><br />
-									<a href="n-carousel.min.js"><b>JS</b></a>
-								</span> -->
+										<a href="n-carousel.min.css"><b>CSS</b></a
+										><br /><br />
+										<a href="n-carousel.min.js"><b>JS</b></a>
+									</span> -->
 							<span>
 								<pre>
-                <a href="https://www.npmjs.com/package/n-carousel">npm i --save-dev n-carousel</a>
-              </pre>
+					<a href="https://www.npmjs.com/package/n-carousel">npm i --save-dev n-carousel</a>
+				  </pre>
 							</span>
 							<a href="https://github.com/radogado/n-carousel">GitHub</a>
 						</div>
@@ -207,10 +212,10 @@
 							<button><span>3</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-        <button><span>Toggle full screen</span></button>
-      </div> -->
+			<button><span>Toggle full screen</span></button>
+		  </div> -->
 						<ul class="n-carousel__content">
-							<li>
+							<li id="index-1">
 								<div class="demo-grid-3">
 									<span class="n-aspect" style="--width: 450; --height: 300">
 										<img loading="lazy" src="demo/pexels-photo-1086584.jpg" alt="Jellyfish" width="450" height="300" />
@@ -225,7 +230,7 @@
 									</div>
 								</div>
 							</li>
-							<li>
+							<li id="index-2">
 								<div class="demo-grid-3">
 									<div>
 										<h2>Sea turtle</h2>
@@ -238,7 +243,7 @@
 									</span>
 								</div>
 							</li>
-							<li>
+							<li id="index-3">
 								<div class="demo-grid-3">
 									<span class="n-aspect" style="--width: 450; --height: 300">
 										<img loading="lazy" src="demo/pexels-photo-3439576.jpg" alt="Dolphin" width="450" height="300" />
@@ -276,6 +281,135 @@
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
 							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
+					</div>
+					<div>
+						<div>
+							<h2>Code</h2>
+							<div class="code">
+								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel"&gt;
+	  &lt;ul class="n-carousel__content"&gt;
+		&lt;li&gt;One&lt;/li&gt;
+		&lt;li&gt;Two&lt;/li&gt;
+		&lt;li&gt;Three&lt;/li&gt;
+	  &lt;/ul&gt;
+	  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__next&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__index&quot;&gt;
+		&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="endless">
+				<div>
+					<h2>Endless</h2>
+					<div class="n-carousel n-carousel--endless">
+						<div class="n-carousel__previous">
+							<button><span>Previous</span></button>
+						</div>
+						<div class="n-carousel__next">
+							<button><span>Next</span></button>
+						</div>
+						<div class="n-carousel__index">
+							<button><span>1</span></button>
+							<button><span>2</span></button>
+							<button><span>3</span></button>
+							<button><span>4</span></button>
+						</div>
+						<!-- <div class="n-carousel__full-screen">
+		<button><span>Toggle full screen</span></button>
+	  </div> -->
+						<ul class="n-carousel__content">
+							<li>
+								<div class="demo-grid-3">
+									<span class="n-aspect" style="--width: 450; --height: 300">
+										<img loading="lazy" src="demo/pexels-photo-1086584.jpg" alt="Jellyfish" width="450" height="300" />
+									</span>
+									<div>
+										<h2>1. Jellyfish</h2>
+										<p>
+											<b>Jellyfish</b> and <b>sea jellies</b> are the informal common names given to the medusa-phase of certain gelatinous members of the <a href="/wiki/Subphylum" title="Subphylum">subphylum</a>
+											<a href="/wiki/Medusozoa" title="Medusozoa">Medusozoa</a>, a major part of the <a href="/wiki/Phylum" title="Phylum">phylum</a>
+											<a href="/wiki/Cnidaria" title="Cnidaria">Cnidaria</a>. Jellyfish are mainly free-swimming marine <a href="/wiki/Animal" title="Animal">animals</a> with umbrella-shaped bells and trailing <a href="/wiki/Tentacle" title="Tentacle">tentacles</a>, although a few are anchored to the seabed by stalks rather than being mobile. The bell can pulsate to provide propulsion for highly efficient <a href="/wiki/Animal_locomotion" title="Animal locomotion">locomotion</a>. The tentacles are armed with <a href="/wiki/Cnidocyte" title="Cnidocyte">stinging cells</a> and may be used to capture prey and defend against predators. Jellyfish have a complex <a href="/wiki/Biological_life_cycle" title="Biological life cycle">life cycle</a>; the medusa is normally the sexual phase, which produces <a href="/wiki/Planula" title="Planula">planula</a> larva that disperse widely and enter a sedentary <a href="/wiki/Polyp_(zoology)" title="Polyp (zoology)">polyp</a> phase before reaching sexual maturity.
+										</p>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="demo-grid-3">
+									<div>
+										<h2>2. Sea turtle</h2>
+										<p>
+											<b>Sea turtles</b> (superfamily <b>Chelonioidea</b>), sometimes called <b>marine turtles</b>, are reptiles of the order <a href="/wiki/Testudines" class="mw-redirect" title="Testudines">Testudines</a> and of the suborder <a href="/wiki/Cryptodira" title="Cryptodira">Cryptodira</a>. The seven existing species of sea turtles are the <a href="/wiki/Green_sea_turtle" title="Green sea turtle">green sea turtle</a>, <a href="/wiki/Loggerhead_sea_turtle" title="Loggerhead sea turtle">loggerhead sea turtle</a>, <a href="/wiki/Kemp%27s_ridley_sea_turtle" title="Kemp's ridley sea turtle">Kemp's ridley sea turtle</a>, <a href="/wiki/Olive_ridley_sea_turtle" title="Olive ridley sea turtle">olive ridley sea turtle</a>, <a href="/wiki/Hawksbill_sea_turtle" title="Hawksbill sea turtle">hawksbill sea turtle</a>, <a href="/wiki/Flatback_sea_turtle" title="Flatback sea turtle">flatback sea turtle</a>, and <a href="/wiki/Leatherback_sea_turtle" title="Leatherback sea turtle">leatherback sea turtle</a>.
+										</p>
+									</div>
+									<span class="n-aspect" style="--width: 400; --height: 300">
+										<img loading="lazy" src="demo/pexels-photo-847393.jpg" alt="Sea turtle" width="400" height="300" />
+									</span>
+								</div>
+							</li>
+							<li>
+								<div class="demo-grid-3">
+									<div>
+										<h2>3</h2>
+										<p> 3 </p>
+									</div>
+									<span class="n-aspect" style="--width: 400; --height: 300">
+										<img loading="lazy" src="demo/pexels-photo-847393.jpg" alt="Sea turtle" width="400" height="300" />
+									</span>
+								</div>
+							</li>
+							<li>
+								<div class="demo-grid-3">
+									<span class="n-aspect" style="--width: 450; --height: 300">
+										<img loading="lazy" src="demo/pexels-photo-3439576.jpg" alt="Dolphin" width="450" height="300" />
+									</span>
+									<div>
+										<h2>4. Dolphin</h2>
+										<p>
+											<b>Dolphin</b> is a common name of <a href="/wiki/Aquatic_mammal" title="Aquatic mammal">aquatic mammals</a> within the infraorder <a href="/wiki/Cetacea" title="Cetacea">Cetacea</a>. The term dolphin usually refers to the extant families <a href="/wiki/Delphinidae" class="mw-redirect" title="Delphinidae">Delphinidae</a> (the oceanic dolphins), <a href="/wiki/Platanistidae" title="Platanistidae">Platanistidae</a> (the Indian <a href="/wiki/River_dolphin" title="River dolphin">river dolphins</a>), <a href="/wiki/Iniidae" title="Iniidae">Iniidae</a> (the New World river dolphins), and <a href="/wiki/Pontoporiidae" class="mw-redirect" title="Pontoporiidae">Pontoporiidae</a> (the <a href="/wiki/Brackish" class="mw-redirect" title="Brackish">brackish</a> dolphins), and the extinct <a href="/wiki/Lipotidae" title="Lipotidae">Lipotidae</a> (baiji or Chinese river dolphin). There are 40 extant species named as dolphins.
+										</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="n-carousel__options">
+						<label>
+							<input type="checkbox" data-class="n-carousel--controls-outside" /><span></span> Controls outside </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--rtl" /><span></span> Right to left </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--auto-height" /><span></span> Auto height </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--peek" /><span></span> Peeking </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-start" /><span></span> Index start </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-end" /><span></span> Index end </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-align-start" /><span></span> Index align start </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-align-center" /><span></span> Index align center </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-align-end" /><span></span> Index align end </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--endless" checked="true" /><span></span> Endless </label>
 					</div>
 					<div>
 						<div>
@@ -283,20 +417,20 @@
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel"&gt;
   &lt;ul class="n-carousel__content"&gt;
-    &lt;li&gt;One&lt;/li&gt;
-    &lt;li&gt;Two&lt;/li&gt;
-    &lt;li&gt;Three&lt;/li&gt;
+	&lt;li&gt;One&lt;/li&gt;
+	&lt;li&gt;Two&lt;/li&gt;
+	&lt;li&gt;Three&lt;/li&gt;
   &lt;/ul&gt;
   &lt;div class=&quot;n-carousel__previous&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__next&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-    &lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 							</div>
@@ -386,30 +520,32 @@
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
 							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--auto-height"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+		&lt;ul class="n-carousel__content"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;div class=&quot;n-carousel__previous&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;n-carousel__next&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="auto-slide">
 				<div>
 					<h2>Auto slide</h2>
 					<div class="n-carousel n-carousel--auto-slide">
@@ -425,8 +561,8 @@
 							<button><span>3</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-    <button><span>Toggle full screen</span></button>
-  </div> -->
+		<button><span>Toggle full screen</span></button>
+	  </div> -->
 						<ul class="n-carousel__content">
 							<li>
 								<div class="demo-grid-3">
@@ -493,38 +629,39 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--auto-slide"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+		&lt;ul class="n-carousel__content"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;div class=&quot;n-carousel__previous&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;n-carousel__next&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 						<div>
 							<h2>Slide interval</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--auto-slide" data-interval="4"&gt;
-</code></pre>
+	</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="peeking">
 				<div>
 					<h2>Peeking</h2>
 					<div class="n-carousel n-carousel--peek">
@@ -605,31 +742,32 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel"&gt;
-	&lt;ul class="n-carousel__content" style="--peek: 12ch"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-	    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+		&lt;ul class="n-carousel__content" style="--peek: 12ch"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;div class=&quot;n-carousel__previous&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;n-carousel__next&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="outside">
 				<div>
 					<h2>Outside controls</h2>
 					<div class="n-carousel n-carousel--controls-outside">
@@ -645,8 +783,8 @@
 							<button><span>3</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-    <button><span>Toggle full screen</span></button>
-  </div> -->
+		<button><span>Toggle full screen</span></button>
+	  </div> -->
 						<ul class="n-carousel__content">
 							<li>
 								<div class="demo-grid-3">
@@ -713,31 +851,32 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--controls-outside"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+		&lt;ul class="n-carousel__content"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;div class=&quot;n-carousel__previous&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;n-carousel__next&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="detached">
 				<div>
 					<h2>Detached controls</h2>
 					<span class="n-carousel__previous" data-for="carousel-detached">
@@ -799,9 +938,9 @@
 					</div>
 					<div class="n-carousel__options">
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--controls-outside" /><span></span>
-                Controls outside
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--controls-outside" /><span></span>
+					Controls outside
+				  </label> -->
 						<label>
 							<input type="checkbox" data-class="n-carousel--rtl" /><span></span> Right to left </label>
 						<label>
@@ -809,73 +948,75 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--peek" /><span></span> Peeking </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--index-start" /><span></span>
-                Index start
-              </label>
-
-              <label>
-                <input type="checkbox" data-class="n-carousel--index-end" /><span></span>
-                Index end
-              </label>
-
-              <label>
-                <input type="checkbox" data-class="n-carousel--index-align-start" /><span></span>
-                Index align start
-              </label>
-
-              <label>
-                <input type="checkbox" data-class="n-carousel--index-align-center" /><span></span>
-                Index align center
-              </label>
-
-              <label>
-                <input type="checkbox" data-class="n-carousel--index-align-end" /><span></span>
-                Index align end
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--index-start" /><span></span>
+					Index start
+				  </label>
+	
+				  <label>
+					<input type="checkbox" data-class="n-carousel--index-end" /><span></span>
+					Index end
+				  </label>
+	
+				  <label>
+					<input type="checkbox" data-class="n-carousel--index-align-start" /><span></span>
+					Index align start
+				  </label>
+	
+				  <label>
+					<input type="checkbox" data-class="n-carousel--index-align-center" /><span></span>
+					Index align center
+				  </label>
+	
+				  <label>
+					<input type="checkbox" data-class="n-carousel--index-align-end" /><span></span>
+					Index align end
+				  </label> -->
 						<label>
-							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
+							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--tabs" /><span></span>
-                Tabs
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--tabs" /><span></span>
+					Tabs
+				  </label> -->
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--lightbox" /><span></span>
-                Lightbox
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--lightbox" /><span></span>
+					Lightbox
+				  </label> -->
 					</div>
 					<div>
 						<div>
+							<p>For tabs, add the class to the controls instead of the carousel: <b>.n-carousel__index.n-carousel--tabs</b>.</p>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;span class=&quot;n-carousel__previous&quot; data-for=&quot;carousel-detached&quot;&gt;
-	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-&lt;/span&gt;
-
-&lt;span class=&quot;n-carousel__next&quot; data-for=&quot;carousel-detached&quot;&gt;
-	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-&lt;/span&gt;
-
-&lt;div class=&quot;n-carousel__index&quot; data-for=&quot;carousel-detached&quot;&gt;
-	&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
-	&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
-	&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
-&lt;/div&gt;
-
-...
-
-&lt;div class="n-carousel" id="carousel-detached"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-&lt;/div&gt;</code></pre>
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	&lt;/span&gt;
+	
+	&lt;span class=&quot;n-carousel__next&quot; data-for=&quot;carousel-detached&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	&lt;/span&gt;
+	
+	&lt;div class=&quot;n-carousel__index&quot; data-for=&quot;carousel-detached&quot;&gt;
+		&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+	&lt;/div&gt;
+	
+	...
+	
+	&lt;div class="n-carousel" id="carousel-detached"&gt;
+		&lt;ul class="n-carousel__content"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="rtl">
 				<div>
 					<h2>Right to left</h2>
 					<div class="n-carousel n-carousel--rtl">
@@ -891,8 +1032,8 @@
 							<button><span>3</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-<button><span>Toggle full screen</span></button>
-</div> -->
+	<button><span>Toggle full screen</span></button>
+	</div> -->
 						<ul class="n-carousel__content">
 							<li>
 								<div class="demo-grid-3">
@@ -951,37 +1092,38 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--lightbox" /><span></span>
-                Lightbox
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--lightbox" /><span></span>
+					Lightbox
+				  </label> -->
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--rtl"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+		&lt;ul class="n-carousel__content"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;div class=&quot;n-carousel__previous&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;n-carousel__next&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
 	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
+	</code></pre>
 							</div>
 							<p>The RTL class isn't necessary if the carousel is inside an RTL element.</p>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="tabs">
 				<div>
 					<h2>Tabs</h2>
 					<div class="n-carousel n-carousel--tabs">
@@ -997,8 +1139,8 @@
 							<button><span>Dolphin</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-<button><span>Toggle full screen</span></button>
-</div> -->
+	<button><span>Toggle full screen</span></button>
+	</div> -->
 						<ul class="n-carousel__content">
 							<li>
 								<div class="demo-grid-3">
@@ -1065,28 +1207,29 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" checked="true" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" checked="true" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 					</div>
 					<div>
 						<h2>Code</h2>
 						<div class="code">
 							<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--tabs"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__index&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Tab 1&lt;/span&gt;&lt;/button&gt;
-		&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
-		&lt;button&gt;&lt;span&gt;Tab 3&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+		&lt;ul class="n-carousel__content"&gt;
+			&lt;li&gt;One&lt;/li&gt;
+			&lt;li&gt;Two&lt;/li&gt;
+			&lt;li&gt;Three&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;div class=&quot;n-carousel__index&quot;&gt;
+			&lt;button&gt;&lt;span&gt;Tab 1&lt;/span&gt;&lt;/button&gt;
+			&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
+			&lt;button&gt;&lt;span&gt;Tab 3&lt;/span&gt;&lt;/button&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="lightbox">
 				<div>
 					<h2>Lightbox</h2>
 					<div class="n-carousel n-carousel--lightbox n-carousel--auto-height-" style="--max-height: 50vh">
@@ -1107,8 +1250,8 @@
 							<button><span>Toggle full screen</span></button>
 						</div>
 						<!-- <div class="n-carousel__close">
-                <button><span>Close modal window</span></button>
-              </div> -->
+					<button><span>Close modal window</span></button>
+				  </div> -->
 						<ul class="n-carousel__content">
 							<li>
 								<figure>
@@ -1156,9 +1299,9 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--rtl" /><span></span> Right to left </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--auto-height" /><span></span>
-                Auto height
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--auto-height" /><span></span>
+					Auto height
+				  </label> -->
 						<label>
 							<input type="checkbox" data-class="n-carousel--peek" /><span></span> Peeking </label>
 						<label>
@@ -1174,48 +1317,49 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--lightbox" checked="true" /><span></span>
-                Lightbox
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--lightbox" checked="true" /><span></span>
+					Lightbox
+				  </label> -->
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--lightbox"&gt;
-  &lt;ul class="n-carousel__content"&gt;
-    &lt;li&gt;
-      &lt;figure&gt;
-        &lt;picture&gt;
-          &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
-        &lt;/picture&gt;
-        &lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
-      &lt;/figure&gt;
-    &lt;/li&gt;
-    ...
-  &lt;/ul&gt;
-  &lt;div class=&quot;n-carousel__previous&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__next&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__index n-carousel__index--thumbnails&quot;&gt;
-    &lt;button&gt;&lt;img&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Toggle full screen&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+	  &lt;ul class="n-carousel__content"&gt;
+		&lt;li&gt;
+		  &lt;figure&gt;
+			&lt;picture&gt;
+			  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
+			&lt;/picture&gt;
+			&lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
+		  &lt;/figure&gt;
+		&lt;/li&gt;
+		...
+	  &lt;/ul&gt;
+	  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__next&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__index n-carousel__index--thumbnails&quot;&gt;
+		&lt;button&gt;&lt;img&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Toggle full screen&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="inline-lightbox">
 				<div>
 					<h2>Inline lightbox</h2>
 					<div class="n-carousel n-carousel--lightbox n-carousel--inline">
@@ -1226,7 +1370,7 @@
 							<button><span>Next</span></button>
 						</div>
 						<div class="n-carousel__index n-carousel__index--thumbnails">
-							<button><img src="demo/DSC01832.jpg" alt="Thumbnail" /></button>
+							<a href="demo/DSC01832.jpg" target="_blank"><img src="demo/DSC01832.jpg" alt="Thumbnail" /></a>
 							<button><img src="demo/DSC01293-Pano.jpg" alt="Thumbnail 2" /></button>
 							<button><img src="demo/DSC04308.jpg" alt="Thumbnail 3" /></button>
 							<button><img src="demo/IMG_1761-188x188.jpg" alt="Thumbnail 4" /></button>
@@ -1285,40 +1429,40 @@
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--lightbox n-carousel--inline"&gt;
-  &lt;ul class="n-carousel__content"&gt;
-    &lt;li&gt;
-      &lt;figure&gt;
-        &lt;picture&gt;
-          &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
-        &lt;/picture&gt;
-      &lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
-      &lt;/figure&gt;
-    &lt;/li&gt;
-    ...
-  &lt;/ul&gt;
-  &lt;div class=&quot;n-carousel__previous&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__next&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__index n-carousel__index--thumbnails&quot;&gt;
-    &lt;button&gt;&lt;img&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Toggle full screen&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__close&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Close modal window&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+	  &lt;ul class="n-carousel__content"&gt;
+		&lt;li&gt;
+		  &lt;figure&gt;
+			&lt;picture&gt;
+			  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
+			&lt;/picture&gt;
+		  &lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
+		  &lt;/figure&gt;
+		&lt;/li&gt;
+		...
+	  &lt;/ul&gt;
+	  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__next&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__index n-carousel__index--thumbnails&quot;&gt;
+		&lt;button&gt;&lt;img&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Toggle full screen&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__close&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Close modal window&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="vertical">
 				<div>
 					<h2>Vertical</h2>
 					<div class="n-carousel n-carousel--vertical n-carousel--peek-" style="--max-height: 50vh">
@@ -1334,8 +1478,8 @@
 							<button><span>3</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-<button><span>Toggle full screen</span></button>
-</div> -->
+	<button><span>Toggle full screen</span></button>
+	</div> -->
 						<ul class="n-carousel__content">
 							<li>
 								<div class="demo-grid-3">
@@ -1402,7 +1546,8 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" checked="true" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 					</div>
 					<div>
 						<div>
@@ -1412,29 +1557,29 @@
 							</div>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--vertical"&gt;
-  &lt;ul class="n-carousel__content"&gt;
-    &lt;li&gt;One&lt;/li&gt;
-    &lt;li&gt;Two&lt;/li&gt;
-    &lt;li&gt;Three&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div class=&quot;n-carousel__previous&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__next&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__index&quot;&gt;
-    &lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+	  &lt;ul class="n-carousel__content"&gt;
+		&lt;li&gt;One&lt;/li&gt;
+		&lt;li&gt;Two&lt;/li&gt;
+		&lt;li&gt;Three&lt;/li&gt;
+	  &lt;/ul&gt;
+	  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__next&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__index&quot;&gt;
+		&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section>
+			<section id="vertical-auto-height">
 				<div>
 					<h2>Vertical auto height</h2>
 					<div class="n-carousel n-carousel--vertical n-carousel--auto-height">
@@ -1450,8 +1595,8 @@
 							<button><span>3</span></button>
 						</div>
 						<!-- <div class="n-carousel__full-screen">
-<button><span>Toggle full screen</span></button>
-</div> -->
+	<button><span>Toggle full screen</span></button>
+	</div> -->
 						<ul class="n-carousel__content" style="height: 33vh">
 							<li>
 								<div class="demo-grid-3">
@@ -1504,9 +1649,9 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--auto-height" checked="true" /><span></span> Auto height </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--peek" /><span></span>
-                Peeking
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--peek" /><span></span>
+					Peeking
+				  </label> -->
 						<label>
 							<input type="checkbox" data-class="n-carousel--index-start" /><span></span> Index start </label>
 						<label>
@@ -1520,34 +1665,35 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" checked="true" /><span></span> Vertical </label>
 						<label>
-							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
 						<!-- <label>
-                <input type="checkbox" data-class="n-carousel--lightbox" /><span></span>
-                Lightbox
-              </label> -->
+					<input type="checkbox" data-class="n-carousel--lightbox" /><span></span>
+					Lightbox
+				  </label> -->
 					</div>
 					<div>
 						<div>
 							<h2>Code</h2>
 							<div class="code">
 								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--vertical n-carousel--auto-height"&gt;
-  &lt;ul class="n-carousel__content"&gt;
-    &lt;li&gt;One&lt;/li&gt;
-    &lt;li&gt;Two&lt;/li&gt;
-    &lt;li&gt;Three&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div class=&quot;n-carousel__previous&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__next&quot;&gt;
-    &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;n-carousel__index&quot;&gt;
-    &lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
-    &lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+	  &lt;ul class="n-carousel__content"&gt;
+		&lt;li&gt;One&lt;/li&gt;
+		&lt;li&gt;Two&lt;/li&gt;
+		&lt;li&gt;Three&lt;/li&gt;
+	  &lt;/ul&gt;
+	  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__next&quot;&gt;
+		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	  &lt;div class=&quot;n-carousel__index&quot;&gt;
+		&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
+		&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+	  &lt;/div&gt;
+	&lt;/div&gt;</code></pre>
 							</div>
 						</div>
 					</div>
