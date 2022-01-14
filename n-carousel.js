@@ -469,7 +469,10 @@
           let new_height;
           let offset_y = 0;
           if (isVertical(el)) {
-            new_height = el.children[new_y].firstElementChild.scrollHeight; // To do: support multiple children and drop the requirement for a wrapper inside the slide
+            let slide = el.children[new_y];
+            slide.style.height = 'auto';
+            new_height = slide.scrollHeight;
+            slide.style.height = '';
             offset_y = new_y * new_height - el.scrollTop;
           } else {
             new_height = nextSlideHeight(el.children[new_x]);
@@ -508,10 +511,13 @@
       if (isAuto(el)) {
         let old_scroll_left = scrollStartX(el);
         let old_scroll_top = el.scrollTop;
+        let slide = el.children[index];
         if (isVertical(el)) {
-          new_height = el.children[index].firstElementChild.scrollHeight;
+          slide.style.height = 'auto';
+          new_height = slide.scrollHeight;
+          slide.style.height = '';
         } else {
-          new_height = nextSlideHeight(el.children[index]);
+          new_height = nextSlideHeight(slide);
           let old_height = getIndexReal(el) === index ? new_height : nextSlideHeight(el.children[getIndexReal(el)]);
           el.style.setProperty("--height", `${old_height}px`);
         }
@@ -636,10 +642,12 @@
   const verticalAutoObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
-        let slide = e.target;
+        let slide = e.target.closest(".n-carousel__content > *");
         let el = slide.closest(".n-carousel__content");
         if (!!slide.parentNode.dataset.active && !el.parentNode.dataset.sliding) {
+          slide.style.height = 'auto';
           el.style.height = `${slide.scrollHeight}px`;
+          slide.style.height = '';
         }
       });
     });
