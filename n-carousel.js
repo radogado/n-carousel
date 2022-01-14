@@ -261,7 +261,7 @@
       }
       if (new_height) {
         window.requestAnimationFrame(() => {
-          el.style.height = `${starth + distanceH * val}px`;
+          el.style.height = `${starth + distanceH * val}px`;          
         }); // Timeout because Safari can't do scroll and height at once
       }
       requestAnimationFrame(draw);
@@ -826,6 +826,7 @@
         slideTo(content, index);
       }
       if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+        content.style.height = '';
         content.style.height = getComputedStyle(content).height;
         el.dataset.ready = true;
         content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
