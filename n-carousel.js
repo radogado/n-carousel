@@ -470,9 +470,11 @@
           let offset_y = 0;
           if (isVertical(el)) {
             let slide = el.children[new_y];
+            let scroll_offset = el.scrollTop;
             slide.style.height = 'auto';
             new_height = slide.scrollHeight;
             slide.style.height = '';
+            el.scrollTop = scroll_offset;
             offset_y = new_y * new_height - el.scrollTop;
           } else {
             new_height = nextSlideHeight(el.children[new_x]);
