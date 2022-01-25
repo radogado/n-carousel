@@ -261,7 +261,7 @@
       }
       if (new_height) {
         window.requestAnimationFrame(() => {
-          el.style.height = `${starth + distanceH * val}px`;          
+          el.style.height = `${starth + distanceH * val}px`;
         }); // Timeout because Safari can't do scroll and height at once
       }
       requestAnimationFrame(draw);
@@ -287,7 +287,8 @@
       active_index = el.children.length - 1;
     }
     let old_active_slide = el.querySelector(":scope > [data-active]");
-    if (!el.parentElement.classList.contains("n-carousel--auto-height")) {
+    let wrapper = el.parentElement;
+    if (!wrapper.classList.contains("n-carousel--auto-height")) {
       // Dynamic change from auto height to normal
       el.style.height = "";
     }
@@ -421,6 +422,11 @@
         }
       }
     });
+    
+    if (/--vertical.*--auto/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
+      el.scrollTop = el.offsetHeight * active_index_logical;
+    }
+    
     window.requestAnimationFrame(() => {
       observersOn(el);
     });
@@ -502,14 +508,13 @@
     // Set a timeout to run after scrolling ends
     isScrolling = setTimeout(afterScrollTimeout, 166);
   };
-  const slide = (el, offsetX, offsetY, index) => {
+  const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     observersOff(el);
     if (!el.parentNode.dataset.sliding) {
       el.parentNode.dataset.sliding = true;
       let old_height = el.children[getIndexReal(el)].clientHeight;
       let new_height = old_height;
-      let scroll_to_y = 0;
       if (isAuto(el)) {
         let old_scroll_left = scrollStartX(el);
         let old_scroll_top = el.scrollTop;
@@ -527,10 +532,10 @@
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
       if (isVertical(el)) {
-        scroll_to_y = offsetY - index * old_height + index * new_height;
+        offsetY = offsetY - index * old_height + index * new_height;
       }
       window.requestAnimationFrame(() => {
-        scrollAnimate(el, offsetX, scroll_to_y, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
+        scrollAnimate(el, offsetX, offsetY, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
       });
     }
   };
@@ -683,6 +688,8 @@
     window.requestAnimationFrame(() => {
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
+      } else {
+        height_minus_index.unobserve(el.parentNode);
       }
       el.addEventListener("scroll", scrollStop, {
         passive: true
