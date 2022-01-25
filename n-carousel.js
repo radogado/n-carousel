@@ -423,7 +423,7 @@
       }
     });
     
-    if (/--vertical.*--auto/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
+    if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_logical;
     }
     
