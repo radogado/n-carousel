@@ -869,14 +869,19 @@
   };
   window.nCarouselInit = init;
   window.addEventListener('popstate', e => { // Hash navigation support
+    // console.log(e);
     if (!!location.hash) {
       let el = document.querySelector(location.hash);
+      if (!el && window.nCarouselNav) { // Previously navigated to a slide
+        
+      }
       let carousel = el?.parentNode;
       if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
         if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
         }
         slideTo(carousel, [...carousel.children].indexOf(el));
+        window.nCarouselNav = [carousel, location.hash];
       }
     }
   });

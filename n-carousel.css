@@ -61,11 +61,7 @@ body[data-frozen] {
   overflow: visible;
 }
 
-[data-sliding][data-ready].n-carousel--auto-height > .n-carousel__content > * {
-  overflow: hidden;
-}
-
-[data-sliding] .n-carousel__content > * {
+[data-ready].n-carousel--auto-height > .n-carousel__content > * {
   overflow: hidden !important;
 }
 
