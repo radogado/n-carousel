@@ -396,6 +396,10 @@
     if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
       location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
     }
+    if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
+
+      location.hash = '';
+    }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     // Restore previous tabindex without taking into account the tabindex just added by the script
@@ -833,6 +837,7 @@
           content.dataset.x = index;
         }
         slideTo(content, index);
+        window.nCarouselNav = [content, location.hash];
       }
       if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
         content.style.height = '';
