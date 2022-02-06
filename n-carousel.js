@@ -1,4 +1,4 @@
-(function () {
+(function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
@@ -117,7 +117,7 @@
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", function(e) {
       let isTabPressed = e.key === "Tab" || e.keyCode === 9;
       if (!isTabPressed) {
         return;
@@ -422,11 +422,11 @@
         }
       }
     });
-    
+
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_logical;
     }
-    
+
     window.requestAnimationFrame(() => {
       observersOn(el);
     });
@@ -872,9 +872,6 @@
     // console.log(e);
     if (!!location.hash) {
       let el = document.querySelector(location.hash);
-      if (!el && window.nCarouselNav) { // Previously navigated to a slide
-        
-      }
       let carousel = el?.parentNode;
       if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
         if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
@@ -882,6 +879,15 @@
         }
         slideTo(carousel, [...carousel.children].indexOf(el));
         window.nCarouselNav = [carousel, location.hash];
+      }
+    } else {
+      if (window.nCarouselNav) { // Previously navigated to a slide
+        let carousel = window.nCarouselNav[0];
+        delete window.nCarouselNav;
+        if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
+          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
+        }
+        slideTo(carousel, [...carousel.children].indexOf(carousel.querySelector(':scope > :not([id])')));
       }
     }
   });
