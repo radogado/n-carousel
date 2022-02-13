@@ -460,7 +460,9 @@
       let new_y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
       if (!("ontouchstart" in window) && (mod_x !== 0 || mod_y !== 0)) {
         // Stuck bc of Chrome/Safari bug when you scroll in both directions during snapping. Not needed on touch and glitchy there.
-        updateCarousel(el);
+        if (!isAuto(el)) {
+          updateCarousel(el);
+        }
         let tabbing = false;
         if (!isSafari || !!el.tabbing) {
           slideTo(el, isVertical(el) ? new_y : new_x);
