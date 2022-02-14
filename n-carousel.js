@@ -32,7 +32,7 @@
   // };
   const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
   const getIndexReal = (el) => {
-    let active_slide = el.querySelector(':scope > [data-active]');
+    let active_slide = el.querySelector(':scope > [aria-current]');
     return active_slide ? [...el.children].indexOf(active_slide) : 0;
   };
   const scrolledAncestor = (el) => {
@@ -286,7 +286,7 @@
     if (active_index >= el.children.length) {
       active_index = el.children.length - 1;
     }
-    let old_active_slide = el.querySelector(":scope > [data-active]");
+    let old_active_slide = el.querySelector(":scope > [aria-current]");
     let wrapper = el.parentElement;
     if (!wrapper.classList.contains("n-carousel--auto-height")) {
       // Dynamic change from auto height to normal
@@ -301,14 +301,14 @@
         observersOn(el);
         return;
       }
-      delete old_active_slide.dataset.active;
+      old_active_slide.removeAttribute('aria-current');
       old_active_slide.style.height = "";
       if (!isVertical(el)) {
         el.style.height = "";
       }
     }
     var active_index_logical = active_index;
-    active_slide.dataset.active = true;
+    active_slide.ariaCurrent = true;
     active_index_logical = getIndexReal(el);
     el.dataset.x = el.dataset.y = active_index_logical;
     // Endless carousel
@@ -369,14 +369,14 @@
         } else {
           // Middle slide
           restoreDisplacedSlides(el);
-          active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
+          active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [aria-current]")); // Fixes position when sliding to/from first slide
         }
       }
       scrollTo(el, ceilingWidth(el.firstElementChild) * active_index, ceilingHeight(el.firstElementChild) * active_index); // First element size, because when Peeking, it differs from carousel size
       el.dataset.x = el.dataset.y = active_index_logical;
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
-      active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [data-active]")); // Fixes position when sliding to/from first slide
+      active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [aria-current]")); // Fixes position when sliding to/from first slide
     }
     active_slide.style.height = "";
     el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
@@ -388,8 +388,8 @@
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
-      delete index.querySelector("[data-active]")?.dataset.active;
-      index.children[active_index_logical].dataset.active = true;
+      index.querySelector("[aria-current]")?.removeAttribute('aria-current');
+      index.children[active_index_logical].ariaCurrent = true;
     }
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
@@ -406,7 +406,7 @@
     [...el.children].forEach((slide) => {
       if (slide !== active_slide) {
         slide.querySelectorAll(focusableElements).forEach((el2) => {
-          if (el2.closest(".n-carousel__content > :not([data-active])")) {
+          if (el2.closest(".n-carousel__content > :not([aria-current])")) {
             if (el2.getAttribute("tabindex") && !el2.dataset.focusDisabled) {
               el2.dataset.oldTabIndex = el2.tabIndex;
             }
@@ -417,7 +417,7 @@
       }
     });
     active_slide.querySelectorAll("[data-focus-disabled]").forEach((el2) => {
-      if (!el2.closest(".n-carousel__content > :not([data-active])")) {
+      if (!el2.closest(".n-carousel__content > :not([aria-current])")) {
         el2.removeAttribute("tabindex");
         delete el2.dataset.focusDisabled;
         if (!!el2.dataset.oldTabIndex) {
@@ -657,7 +657,7 @@
       entries.forEach((e) => {
         let slide = e.target.closest(".n-carousel__content > *");
         let el = slide.closest(".n-carousel__content");
-        if (!!slide.parentNode.dataset.active && !el.parentNode.dataset.sliding) {
+        if (!!slide.parentNode.ariaCurrent && !el.parentNode.dataset.sliding) {
           slide.style.height = 'auto';
           el.style.height = `${slide.scrollHeight}px`;
           slide.style.height = '';
@@ -718,7 +718,7 @@
     const doUpdate = el => {
       updateSubpixels(el);
       window.requestAnimationFrame(() => {
-        let current_height = el.querySelector(":scope > [data-active]").scrollHeight + "px";
+        let current_height = el.querySelector(":scope > [aria-current]").scrollHeight + "px";
         let previous_height = getComputedStyle(el).getPropertyValue("--height");
         if (current_height !== previous_height) {
           el.style.setProperty("--height", current_height);

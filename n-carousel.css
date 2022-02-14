@@ -57,7 +57,7 @@ body[data-frozen] {
   min-height: 9em;
 }
 
-[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content > :not([data-active]) {
+[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content > :not([aria-current]) {
   overflow: visible;
 }
 
@@ -220,11 +220,11 @@ _:future,
 .n-carousel__close > * span {
   color: var(--control-color, #333);
 }
-.n-carousel__index > *[data-active],
-.n-carousel__previous > *[data-active],
-.n-carousel__next > *[data-active],
-.n-carousel__full-screen > *[data-active],
-.n-carousel__close > *[data-active] {
+.n-carousel__index > *[aria-current],
+.n-carousel__previous > *[aria-current],
+.n-carousel__next > *[aria-current],
+.n-carousel__full-screen > *[aria-current],
+.n-carousel__close > *[aria-current] {
   opacity: 0.5;
   color: blue;
 }
@@ -337,7 +337,7 @@ _:future,
   min-height: 100%;
 }
 
-.n-carousel__content > :not([data-active]):not(:last-child) {
+.n-carousel__content > :not([aria-current]):not(:last-child) {
   overflow: auto;
 }
 
@@ -596,7 +596,7 @@ _:future,
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) {
   display: block;
 }
-.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > [data-active] {
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > [aria-current] {
   opacity: 1;
 }
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) > * {

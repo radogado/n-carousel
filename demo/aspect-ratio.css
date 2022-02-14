@@ -20,15 +20,15 @@
     margin: 0 auto;
   }
   .n-aspect:before {
-    content: '';
-    padding-top: calc(100%*1/(var(--width)/var(--height)));
+    content: "";
+    padding-top: calc(100% / (var(--width) / var(--height)));
   }
-  .n-aspect[style*='--ratio'], .n-aspect.n-aspect--ratio {
+  .n-aspect[style*="--ratio"], .n-aspect.n-aspect--ratio {
     width: calc(1px * var(--width, 10000));
     max-width: 100%;
   }
-  .n-aspect[style*='--ratio']:before, .n-aspect.n-aspect--ratio:before {
-    padding-top: calc(100%*1/var(--ratio, 1.7778));
+  .n-aspect[style*="--ratio"]:before, .n-aspect.n-aspect--ratio:before {
+    padding-top: calc(100% / var(--ratio, 1.7778));
   }
   .n-aspect.n-bottom > * {
     align-self: flex-end;
@@ -39,4 +39,5 @@
     vertical-align: middle;
   }
 }
+
 /*# sourceMappingURL=aspect-ratio.css.map */
