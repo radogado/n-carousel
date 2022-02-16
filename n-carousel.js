@@ -898,5 +898,16 @@
       }
     }
   });
-  typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
+
+  const doInit = () => {
+    typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
+
+  };
+
+  if (document.readyState !== "loading") {
+    doInit();
+  } else {
+    document.addEventListener("DOMContentLoaded", doInit);
+  }
+
 })();
