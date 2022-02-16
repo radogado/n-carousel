@@ -461,7 +461,7 @@
       if (!("ontouchstart" in window) && (mod_x !== 0 || mod_y !== 0)) {
         // Stuck bc of Chrome/Safari bug when you scroll in both directions during snapping. Not needed on touch and glitchy there.
         if (!isAuto(el)) {
-          updateCarousel(el);
+          // updateCarousel(el); // Disabled bc Chrome abruptly jumps to next slide
         }
         let tabbing = false;
         if (!isSafari || !!el.tabbing) {
