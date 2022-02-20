@@ -33,7 +33,13 @@
   const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
   const getIndexReal = (el) => {
     let active_slide = el.querySelector(':scope > [aria-current]');
-    return active_slide ? [...el.children].indexOf(active_slide) : 0;
+    if (active_slide) {
+      return [...el.children].indexOf(active_slide);
+    } else {
+      let hash_slide_index = [...el.children].indexOf(el.querySelector(`:scope > ${location.hash}`));
+      return (hash_slide_index > -1) ? hash_slide_index : 0;
+    }
+    // return active_slide ? [...el.children].indexOf(active_slide) : (el.querySelector(`:scope > ${location.hash}`) || 0);
   };
   const scrolledAncestor = (el) => {
     el = el.parentNode;
