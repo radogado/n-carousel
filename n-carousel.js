@@ -36,7 +36,7 @@
     if (active_slide) {
       return [...el.children].indexOf(active_slide);
     } else {
-      let hash_slide_index = [...el.children].indexOf(el.querySelector(`:scope > ${location.hash}`));
+      let hash_slide_index = (!!location.hash) ? [...el.children].indexOf(el.querySelector(`:scope > ${location.hash}`)) : 0;
       return (hash_slide_index > -1) ? hash_slide_index : 0;
     }
     // return active_slide ? [...el.children].indexOf(active_slide) : (el.querySelector(`:scope > ${location.hash}`) || 0);
