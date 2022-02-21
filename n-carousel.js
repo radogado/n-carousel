@@ -314,7 +314,8 @@
       }
     }
     var active_index_logical = active_index;
-    active_slide.ariaCurrent = true;
+    // active_slide.ariaCurrent = true; // Unsupported by FF
+    active_slide.setAttribute('aria-current', true);
     active_index_logical = getIndexReal(el);
     el.dataset.x = el.dataset.y = active_index_logical;
     // Endless carousel
@@ -375,14 +376,14 @@
         } else {
           // Middle slide
           restoreDisplacedSlides(el);
-          active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [aria-current]")); // Fixes position when sliding to/from first slide
+          active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
       scrollTo(el, ceilingWidth(el.firstElementChild) * active_index, ceilingHeight(el.firstElementChild) * active_index); // First element size, because when Peeking, it differs from carousel size
       el.dataset.x = el.dataset.y = active_index_logical;
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
-      active_index_logical = [...el.children].indexOf(el.querySelector(":scope > [aria-current]")); // Fixes position when sliding to/from first slide
+      active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
     el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
@@ -395,7 +396,8 @@
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute('aria-current');
-      index.children[active_index_logical].ariaCurrent = true;
+      // index.children[active_index_logical].ariaCurrent = true; // Unsupported by FF
+      index.children[active_index_logical].setAttribute('aria-current', true);
     }
     // Sliding to a slide with a hash? Update the URI
     let hash = active_slide.id;
