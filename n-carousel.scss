@@ -33,8 +33,6 @@ body[data-frozen] {
 		}
 	}
 
-	--height: 0;
-
 	img {
 		height: auto;
 	}
@@ -311,6 +309,10 @@ _:future,
 }
 
 [data-ready] > {
+
+	.n-carousel__content {
+		--height: 0;
+	}
 
 	.n-carousel__index,
 	.n-carousel__previous,

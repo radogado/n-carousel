@@ -12,7 +12,6 @@ body[data-frozen] {
   list-style: none;
   scrollbar-width: none;
   /* Firefox */
-  --height: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   .n-carousel__content {
@@ -233,6 +232,9 @@ _:future,
   cursor: not-allowed;
 }
 
+[data-ready] > .n-carousel__content {
+  --height: 0;
+}
 [data-ready] > .n-carousel__index > *,
 [data-ready] > .n-carousel__previous > *,
 [data-ready] > .n-carousel__next > *,
