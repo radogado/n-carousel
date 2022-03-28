@@ -846,7 +846,7 @@
         } else {
           content.dataset.x = index;
         }
-        slideTo(content, index);
+        // slideTo(content, index); // This slides to the wrong slide
         window.nCarouselNav = [content, location.hash];
       }
       if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
