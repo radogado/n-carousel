@@ -522,6 +522,7 @@
     // Set a timeout to run after scrolling ends
     isScrolling = setTimeout(afterScrollTimeout, 166);
   };
+
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     observersOff(el);
@@ -571,6 +572,8 @@
     }
   };
   const carouselKeys = (e) => {
+    console.log('keydown', e);
+    return;
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
     let el = e.target;
     if (e.key === "Tab") {
@@ -823,8 +826,9 @@
           el.onfullscreenchange = fullScreenEvent;
         }
       }
-      el.querySelector(".n-carousel__content").onkeydown = carouselKeys;
-      el.parentNode.addEventListener("keyup", (e) => {
+      let content = el.querySelector(":scope > .n-carousel__content");
+      content.addEventListener("keydown", carouselKeys);
+      el.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
           let el = e.target;
           if (!el.closest('.n-carousel--overlay')) {
@@ -835,7 +839,6 @@
           }
         }
       });
-      let content = el.querySelector(":scope > .n-carousel__content");
       updateSubpixels(content);
       content.observerStarted = true;
       let hashed_slide = !!location.hash ? content.querySelector(":scope > " + location.hash) : false;
@@ -880,6 +883,21 @@
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
+
+      const targets = content.querySelectorAll(':scope > *');
+      const inView = target => {
+        const interSecObs = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              console.log(entry, entry.target, 'is intersecting');
+            }
+          });
+        }, {threshold: .999, root: target.parentElement}); // Vertical auto height not detecting middle slides
+        interSecObs.observe(target);
+        // console.log('intersection observing ', target)
+      };
+      targets.forEach(inView);
+
     });
   };
   window.nCarouselInit = init;
