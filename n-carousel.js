@@ -892,7 +892,7 @@
               console.log(entry, entry.target, 'is intersecting');
             }
           });
-        }, {threshold: .999, root: target.parentElement}); // Vertical auto height not detecting middle slides
+        }, {threshold: .99, root: target.parentElement});
         interSecObs.observe(target);
         // console.log('intersection observing ', target)
       };
