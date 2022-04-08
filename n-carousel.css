@@ -219,12 +219,11 @@ _:future,
 .n-carousel__close > * span {
   color: var(--control-color, #333);
 }
-.n-carousel__index > *[aria-current],
-.n-carousel__previous > *[aria-current],
-.n-carousel__next > *[aria-current],
-.n-carousel__full-screen > *[aria-current],
-.n-carousel__close > *[aria-current] {
-  opacity: 0.5;
+.n-carousel__index > *[aria-current] span,
+.n-carousel__previous > *[aria-current] span,
+.n-carousel__next > *[aria-current] span,
+.n-carousel__full-screen > *[aria-current] span,
+.n-carousel__close > *[aria-current] span {
   color: blue;
 }
 

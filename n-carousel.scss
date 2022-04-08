@@ -297,8 +297,8 @@ _:future,
 			color: var(--control-color, #333);
 		}
 
-		&[aria-current] {
-			opacity: 0.5;
+		&[aria-current] span {
+			// opacity: 0.5;
 			color: blue;
 		}
 	}
