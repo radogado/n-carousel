@@ -299,7 +299,7 @@ _:future,
 
 		&[aria-current] span {
 			// opacity: 0.5;
-			color: blue;
+			color: var(--control-active-color, blue);
 		}
 	}
 }
@@ -379,7 +379,7 @@ _:future,
 	justify-self: baseline;
 
 	button:before {
-		--chevron: url("data:image/svg+xml,%3Csvg width='480' height='480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-rule='evenodd'%3E%3Cpath d='M68.88 368.693l42.427 42.427L411.12 111.307 368.693 68.88 168.818 268.756z'/%3E%3Cpath d='M111.307 68.88L68.88 111.307 368.693 411.12l42.427-42.427-199.876-199.875z'/%3E%3C/g%3E%3C/svg%3E");
+		--chevron: url("data:image/svg+xml,%3Csvg viewBox='0 0 480 480' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2523000' fill-rule='evenodd'%3E%3Cpath d='M68.88 368.693l42.427 42.427L411.12 111.307 368.693 68.88 168.818 268.756z'/%3E%3Cpath d='M111.307 68.88L68.88 111.307 368.693 411.12l42.427-42.427-199.876-199.875z'/%3E%3C/g%3E%3C/svg%3E");
 	}
 
 	~ .n-carousel__full-screen {
@@ -590,6 +590,10 @@ _:future,
 				span {
 					padding: 0 1ch;
 				}
+			}
+
+			[aria-current] {
+				opacity: .5;
 			}
 		}
 	}
@@ -951,14 +955,6 @@ _:future,
 		}
 	}
 
-	.n-carousel__close button:before {
-		// Firefox can't display the "Close" SVG 🤷‍♂️
-		mask: none;
-		background: none;
-		content: "⤫";
-		line-height: 0.75;
-		color: var(--control-color, #333);
-	}
 }
 
 .n-carousel--lightbox {
