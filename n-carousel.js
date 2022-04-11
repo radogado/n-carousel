@@ -405,7 +405,6 @@
       location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
     }
     if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
-
       location.hash = '';
     }
     // Disable focus on children of non-active slides
@@ -434,11 +433,9 @@
         }
       }
     });
-
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_logical;
     }
-
     window.requestAnimationFrame(() => {
       observersOn(el);
     });
@@ -523,7 +520,6 @@
   //   // Set a timeout to run after scrolling ends
   //   isScrolling = setTimeout(afterScrollTimeout, 166);
   // };
-
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     observersOff(el);
@@ -884,7 +880,6 @@
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-
       const targets = content.querySelectorAll(':scope > *');
       const inView = target => {
         const interSecObs = new IntersectionObserver(entries => {
@@ -894,7 +889,6 @@
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding) {
               setTimeout(() => {
                 console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
-
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
                   observersOff(el);
@@ -912,20 +906,22 @@
                     offset_y = index * new_height - carousel.scrollTop;
                   } else {
                     new_height = nextSlideHeight(slide); // ?
-                    scrollTo(carousel, lastScrollX, lastScrollY);
+                    console.log(lastScrollX);
+                    if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
+                      scrollTo(carousel, lastScrollX, lastScrollY);
+                    }
                   }
                   if (old_height === new_height) {
                     new_height = false;
                   }
                   carousel.parentNode.dataset.sliding = true;
+                  // interSecObs.unobserve(slide);
                   window.requestAnimationFrame(() => {
-                    scrollAnimate(carousel, 0, offset_y, new_height, old_height);
+                    scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(() => {});
                   });
                 } else {
                   updateCarousel(carousel);
                 }
-
-
                 // updateCarousel(entry.target.parentNode);
               }, 50);
             }
@@ -935,7 +931,6 @@
         // console.log('intersection observing ', target)
       };
       targets.forEach(inView);
-
     });
   };
   window.nCarouselInit = init;
@@ -962,16 +957,12 @@
       }
     }
   });
-
   const doInit = () => {
     typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
-
   };
-
   if (document.readyState !== "loading") {
     doInit();
   } else {
     document.addEventListener("DOMContentLoaded", doInit);
   }
-
 })();
