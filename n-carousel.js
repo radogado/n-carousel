@@ -407,11 +407,13 @@
     if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
       location.hash = '';
     }
+    active_slide.removeAttribute('aria-hidden');
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     // Restore previous tabindex without taking into account the tabindex just added by the script
     [...el.children].forEach((slide) => {
       if (slide !== active_slide) {
+        slide.setAttribute('aria-hidden', true);
         slide.querySelectorAll(focusableElements).forEach((el2) => {
           if (el2.closest(".n-carousel__content > :not([aria-current])")) {
             if (el2.getAttribute("tabindex") && !el2.dataset.focusDisabled) {
@@ -907,9 +909,9 @@
                   } else {
                     new_height = nextSlideHeight(slide); // ?
                     console.log(lastScrollX);
-                    if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
+                    // if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
                       scrollTo(carousel, lastScrollX, lastScrollY);
-                    }
+                    // }
                   }
                   if (old_height === new_height) {
                     new_height = false;
@@ -926,7 +928,7 @@
               }, 50);
             }
           });
-        }, { threshold: .996, root: target.parentElement }); // .99 works for all, including vertical auto height
+        }, { threshold: .996, root: target.parentElement }); // .996 works for all, including vertical auto height
         interSecObs.observe(target);
         // console.log('intersection observing ', target)
       };
