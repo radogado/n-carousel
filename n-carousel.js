@@ -331,6 +331,7 @@
         active_index++;
       });
     }
+    wrapper.dataset.sliding = true;
     if (isEndless(el)) {
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
@@ -700,8 +701,8 @@
     }
   };
   const observersOn = (el) => {
-    delete el.parentNode.dataset.sliding;
     window.requestAnimationFrame(() => {
+      delete el.parentNode.dataset.sliding;
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
       } else {
@@ -715,6 +716,7 @@
         attributes: true,
         attributeFilter: ["class"],
       });
+
     });
   };
   const observersOff = (el) => {
@@ -909,9 +911,9 @@
                   } else {
                     new_height = nextSlideHeight(slide); // ?
                     console.log(lastScrollX);
-                    // if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
+                    if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
                       scrollTo(carousel, lastScrollX, lastScrollY);
-                    // }
+                    }
                   }
                   if (old_height === new_height) {
                     new_height = false;
@@ -928,7 +930,7 @@
               }, 50);
             }
           });
-        }, { threshold: .996, root: target.parentElement }); // .996 works for all, including vertical auto height
+        }, { threshold: .996, root: target.parentElement }); // .99 works for all, including vertical auto height
         interSecObs.observe(target);
         // console.log('intersection observing ', target)
       };
