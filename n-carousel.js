@@ -393,6 +393,19 @@
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
       }
     });
+
+    // Sliding to a slide with a hash? Update the URI
+    let previously_active = document.activeElement;
+    let hash = active_slide.id;
+    if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
+      location.hash = `#${hash}`;
+    }
+    if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
+      location.hash = '';
+    }
+    active_slide.removeAttribute('aria-hidden');
+    previously_active.focus();
+
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
@@ -400,15 +413,6 @@
       // index.children[active_index_logical].ariaCurrent = true; // Unsupported by FF
       index.children[active_index_logical].setAttribute('aria-current', true);
     }
-    // Sliding to a slide with a hash? Update the URI
-    let hash = active_slide.id;
-    if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
-      location.hash = `#${hash}`; // Doesn't work with soft reload. To do: scroll to relevant slide
-    }
-    if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
-      location.hash = '';
-    }
-    active_slide.removeAttribute('aria-hidden');
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     // Restore previous tabindex without taking into account the tabindex just added by the script
