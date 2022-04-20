@@ -610,6 +610,7 @@ _:future,
   position: absolute;
   width: 0;
   height: 0;
+  overflow: hidden;
 }
 
 .n-carousel--tabs.n-carousel > .n-carousel__index, .n-carousel--tabs.n-carousel__index {
