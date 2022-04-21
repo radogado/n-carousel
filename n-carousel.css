@@ -358,10 +358,10 @@ _:future,
 .n-carousel.n-carousel--peek {
   --peek: 15%;
 }
-.n-carousel:not([data-sliding]):not([data-platform*=Win]) > .n-carousel__content {
+.n-carousel:not([data-sliding]) > .n-carousel__content {
   scroll-snap-type: both mandatory;
 }
-.n-carousel:not([data-sliding]):not([data-platform*=Win]) > .n-carousel__content > * {
+.n-carousel:not([data-sliding]) > .n-carousel__content > * {
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
