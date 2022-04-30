@@ -694,6 +694,9 @@ _:future,
   height: auto;
   max-height: none;
 }
+.n-carousel--lightbox.n-carousel--auto-height > .n-carousel__content {
+  max-height: var(--max-height);
+}
 .n-carousel--lightbox.n-carousel--index-start figure {
   grid-template: 1fr auto/auto;
 }

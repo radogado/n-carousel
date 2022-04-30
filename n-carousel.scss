@@ -458,7 +458,7 @@ _:future,
 	}
 
 	// &:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {
-		// Windows double scrolls – no longer an issue with intersection observer detecting snap
+	// Windows double scrolls – no longer an issue with intersection observer detecting snap
 
 	&:not([data-sliding]) > .n-carousel__content {
 		// Windows double scrolls
@@ -999,6 +999,10 @@ _:future,
 		iframe {
 			height: auto;
 			max-height: none;
+		}
+
+		> .n-carousel__content {
+			max-height: var(--max-height);
 		}
 	}
 
