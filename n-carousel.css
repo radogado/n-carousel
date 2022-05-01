@@ -576,9 +576,11 @@ _:future,
 }
 .n-carousel:-webkit-full-screen {
   background: #000;
+  --max-height: 100vh;
 }
 .n-carousel:fullscreen {
   background: #000;
+  --max-height: 100vh;
 }
 .n-carousel.n-carousel--overlay {
   position: fixed;

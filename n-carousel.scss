@@ -847,10 +847,12 @@ _:future,
 
 	&:-webkit-full-screen {
 		background: #000;
+		--max-height: 100vh;
 	}
 
 	&:fullscreen {
 		background: #000;
+		--max-height: 100vh;
 	}
 
 	&.n-carousel--overlay {
