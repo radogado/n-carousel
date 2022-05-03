@@ -1,9 +1,8 @@
 (function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
-  const focusableElements =         'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
+  const focusableElements = 'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
   // const _focusableElementsString =  'a[href],area[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button:not([disabled]),details,summary,iframe,object,embed,[contenteditable]';
-  
   function isElementInViewport(el) {
     let rect = el.getBoundingClientRect();
     return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */ && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */ );
@@ -232,6 +231,9 @@
     }
     if (!!new_height) {
       el.style.height = `${old_height}px`;
+      if (isVertical(el) && isAuto(el)) {
+        el.style.setProperty('--subpixel-compensation', 0);
+      }
     } else {
       if (!isVertical(el)) {
         el.style.height = "";
@@ -394,7 +396,6 @@
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
       }
     });
-
     // Sliding to a slide with a hash? Update the URI
     let previously_active = document.activeElement;
     let hash = active_slide.id;
@@ -406,7 +407,6 @@
     }
     active_slide.removeAttribute('aria-hidden');
     previously_active.focus();
-
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
@@ -721,7 +721,6 @@
         attributes: true,
         attributeFilter: ["class"],
       });
-
     });
   };
   const observersOff = (el) => {
