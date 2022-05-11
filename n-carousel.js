@@ -12,6 +12,7 @@
   const isChrome = !!navigator.userAgent.match("Chrome");
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
+  const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
   const nextSlideHeight = (el) => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -67,7 +68,7 @@
     el = el.closest(".n-carousel");
     let carousel = el.querySelector(":scope > .n-carousel__content");
     const restoreScroll = () => {
-      if (!document.webkitIsFullScreen) {
+      if (!isFullScreen()) {
         el.nuiAncestors.forEach((el) => {
           window.requestAnimationFrame(() => {
             el.scrollLeft = el.nuiScrollX;
@@ -80,7 +81,7 @@
         el.removeEventListener("webkitfullscreenchange", restoreScroll);
       }
     };
-    if (document.fullscreen || document.webkitIsFullScreen) {
+    if (isFullScreen()) {
       // Exit full screen
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
       if (isSafari) {
@@ -145,56 +146,6 @@
     });
     firstFocusableElement.focus();
   };
-  // Fix snapping with mouse wheel. Thanks https://stackoverflow.com/a/62415754/3278539
-  //   const detectTrackPad = (e) => {
-  //     // console.log(e);
-  //     let el = e.target;
-  //
-  //     // if (!el.matches(".n-carousel__content")) {
-  //     //   return;
-  //     // }
-  //
-  //     var isTrackpad = false;
-  //     if (e.wheelDeltaY) {
-  //       if (e.wheelDeltaY === e.deltaY * -3) {
-  //         isTrackpad = true;
-  //       }
-  //     } else if (e.deltaMode === 0) {
-  //       isTrackpad = true;
-  //     }
-  //
-  //     console.log(isTrackpad ? "Trackpad detected" : "Mousewheel detected");
-  //     // if (!isTrackpad || !!navigator.platform.match(/Win/)) {
-  //     // Trackpad doesn't work properly in Windows, so assume it's mouse wheel
-  //     // Also check if the slide can scroll in the requested direction and let it wheel scroll inside if yes
-  //     observersOff(el);
-  //
-  //     let scrollable_ancestor = scrollableAncestor(e.target);
-  //
-  //     // If scrolled carousel is currently sliding, its scrollable parent will scroll. Should cancel instead.
-  //
-  //     if (e.deltaY < 0) {
-  //       if (
-  //         !scrollable_ancestor ||
-  //         scrollable_ancestor.matches(".n-carousel__content") ||
-  //         scrollable_ancestor.scrollTop === 0
-  //       ) {
-  //         e.preventDefault();
-  //         slidePrevious(el);
-  //       }
-  //     } else {
-  //       if (
-  //         !scrollable_ancestor ||
-  //         scrollable_ancestor.matches(".n-carousel__content") ||
-  //         scrollable_ancestor.scrollTop + scrollable_ancestor.offsetHeight ===
-  //           scrollable_ancestor.scrollHeight
-  //       ) {
-  //         e.preventDefault();
-  //         slideNext(el);
-  //       }
-  //     }
-  //     // }
-  //   };
   const inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
   const paddingX = (el) => parseInt(getComputedStyle(el).paddingInlineStart) * 2;
   const paddingY = (el) => parseInt(getComputedStyle(el).paddingBlockStart) * 2;
@@ -448,86 +399,7 @@
       observersOn(el);
     });
   };
-  // Setup isScrolling variable
-  var isScrolling;
-  var lastScrollX;
-  var lastScrollY;
-  var isResizing;
-  // const scrollStop = (e) => {
-  //   // return;
-  //   //     if (!!navigator.platform.match(/Win/)) {
-  //   //       // Scrolling is broken on Windows
-  //   //       // console.log("scroll Windows", e);
-  //   //
-  //   //       e.stopPropagation();
-  //   //       e.preventDefault();
-  //   //       return;
-  //   //     }
-  //   // Clear our timeout throughout the scroll
-  //   let el = e.target;
-  //   let mod_x = scrollStartX(el) % ceilingWidth(el.firstElementChild);
-  //   let mod_y = el.scrollTop % ceilingHeight(el.firstElementChild);
-  //   const afterScrollTimeout = () => {
-  //     let mod_x = scrollStartX(el) % ceilingWidth(el.firstElementChild);
-  //     let mod_y = el.scrollTop % ceilingHeight(el.firstElementChild);
-  //     let new_x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
-  //     let new_y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
-  //     if (!("ontouchstart" in window) && (mod_x !== 0 || mod_y !== 0)) {
-  //       // Stuck bc of Chrome/Safari bug when you scroll in both directions during snapping. Not needed on touch and glitchy there.
-  //       if (!isAuto(el)) {
-  //         // updateCarousel(el); // Disabled bc Chrome abruptly jumps to next slide
-  //       }
-  //       let tabbing = false;
-  //       if (!isSafari || !!el.tabbing) {
-  //         slideTo(el, isVertical(el) ? new_y : new_x);
-  //       }
-  //       return;
-  //     }
-  //     if ("ontouchstart" in window && scrollStartX(el) === el.scrollWidth - el.offsetWidth && mod_x === el.firstElementChild.offsetWidth - 1) {
-  //       // iPad last slide bug. Set mod_x to 0 so the next check can update the carousel
-  //       mod_x = 0;
-  //     }
-  //     if (lastScrollX === scrollStartX(el) && lastScrollY === el.scrollTop && mod_x === 0 && mod_y === 0) {
-  //       // Snapped to position, not stuck
-  //       if (isAuto(el)) {
-  //         observersOff(el);
-  //         let old_height = parseFloat(getComputedStyle(el).height);
-  //         let new_height;
-  //         let offset_y = 0;
-  //         if (isVertical(el)) {
-  //           let slide = el.children[new_y];
-  //           let scroll_offset = el.scrollTop;
-  //           slide.style.height = 'auto';
-  //           new_height = slide.scrollHeight;
-  //           slide.style.height = '';
-  //           el.scrollTop = scroll_offset;
-  //           offset_y = new_y * new_height - el.scrollTop;
-  //         } else {
-  //           new_height = nextSlideHeight(el.children[new_x]);
-  //           scrollTo(el, lastScrollX, lastScrollY);
-  //         }
-  //         if (old_height === new_height) {
-  //           new_height = false;
-  //         }
-  //         el.parentNode.dataset.sliding = true;
-  //         window.requestAnimationFrame(() => {
-  //           scrollAnimate(el, 0, offset_y, new_height, old_height);
-  //         });
-  //       } else {
-  //         updateCarousel(el);
-  //       }
-  //     }
-  //   };
-  //   // if ("ontouchstart" in window && (mod_x > 1 || mod_y > 1 || !!el.parentNode.dataset.sliding || !el.matches(".n-carousel__content"))) {
-  //   //   // It should also set up the timeout in case we're stuck after a while
-  //   //   // return; // return only on touch Safari. What about iPad Safari with trackpad?
-  //   // }
-  //   clearTimeout(isScrolling);
-  //   lastScrollX = scrollStartX(el);
-  //   lastScrollY = el.scrollTop;
-  //   // Set a timeout to run after scrolling ends
-  //   isScrolling = setTimeout(afterScrollTimeout, 166);
-  // };
+
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     observersOff(el);
@@ -552,6 +424,10 @@
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
       if (isVertical(el)) {
+        if (isFullScreen() && isAuto(el)) {
+          old_height = new_height = el.clientHeight;
+          // alert('full screen');
+        }
         offsetY = offsetY - index * old_height + index * new_height;
       }
       window.requestAnimationFrame(() => {
@@ -577,7 +453,7 @@
     }
   };
   const carouselKeys = (e) => {
-    console.log('keydown', e);
+    // console.log('keydown', e);
     return;
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
     let el = e.target;
@@ -659,7 +535,7 @@
     }
   };
   const closeModal = (el) => {
-    if (document.fullscreen || document.webkitIsFullScreen) {
+    if (isFullScreen()) {
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
     }
     let carousel = el.closest(".n-carousel");
@@ -713,9 +589,6 @@
       } else {
         height_minus_index.unobserve(el.parentNode);
       }
-      // el.addEventListener("scroll", scrollStop, {
-      //   passive: true
-      // });
       subpixel_observer.observe(el);
       mutation_observer.observe(el.parentNode, {
         attributes: true,
@@ -724,7 +597,6 @@
     });
   };
   const observersOff = (el) => {
-    // el.removeEventListener("scroll", scrollStop);
     height_minus_index.unobserve(el.parentNode);
     subpixel_observer.unobserve(el);
     el.observerStarted = true;
@@ -896,7 +768,7 @@
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding) {
               setTimeout(() => {
-                console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
+                // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
                   observersOff(el);
@@ -909,12 +781,16 @@
                     let scroll_offset = carousel.scrollTop;
                     slide.style.height = 'auto';
                     new_height = slide.scrollHeight;
+                    if (isFullScreen()) {
+                      old_height = new_height = carousel.clientHeight;
+                    }
                     slide.style.height = '';
                     carousel.scrollTop = scroll_offset;
                     offset_y = index * new_height - carousel.scrollTop;
+
                   } else {
                     new_height = nextSlideHeight(slide); // ?
-                    console.log(lastScrollX);
+                    // console.log(lastScrollX);
                     if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
                       scrollTo(carousel, lastScrollX, lastScrollY);
                     }
