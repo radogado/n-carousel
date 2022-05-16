@@ -5,7 +5,7 @@
   // const _focusableElementsString =  'a[href],area[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button:not([disabled]),details,summary,iframe,object,embed,[contenteditable]';
   function isElementInViewport(el) {
     let rect = el.getBoundingClientRect();
-    return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */ && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */ );
+    return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.offsetHeight) /* or $(window).height() */ && rect.right <= (window.innerWidth || document.documentElement.offsetWidth) /* or $(window).width() */ );
   }
   const default_duration = 500;
   const default_interval = 4000;
@@ -405,7 +405,7 @@
     observersOff(el);
     if (!el.parentNode.dataset.sliding) {
       el.parentNode.dataset.sliding = true;
-      let old_height = el.children[getIndexReal(el)].clientHeight;
+      let old_height = el.children[getIndexReal(el)].offsetHeight;
       let new_height = old_height;
       if (isAuto(el)) {
         let old_scroll_left = scrollStartX(el);
@@ -425,7 +425,7 @@
       }
       if (isVertical(el)) {
         if (isFullScreen() && isAuto(el)) {
-          old_height = new_height = el.clientHeight;
+          old_height = new_height = el.offsetHeight;
           // alert('full screen');
         }
         offsetY = offsetY - index * old_height + index * new_height;
@@ -782,7 +782,7 @@
                     slide.style.height = 'auto';
                     new_height = slide.scrollHeight;
                     if (isFullScreen()) {
-                      old_height = new_height = carousel.clientHeight;
+                      old_height = new_height = carousel.offsetHeight;
                     }
                     slide.style.height = '';
                     carousel.scrollTop = scroll_offset;
