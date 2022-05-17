@@ -413,7 +413,8 @@
         let slide = el.children[index];
         if (isVertical(el)) {
           slide.style.height = 'auto';
-          new_height = slide.scrollHeight;
+          let max_height = Math.ceil(parseFloat(getComputedStyle(el).maxHeight));
+          new_height = Math.min(slide.scrollHeight, max_height);
           slide.style.height = '';
         } else {
           new_height = nextSlideHeight(slide);
@@ -780,7 +781,10 @@
                   if (isVertical(carousel)) {
                     let scroll_offset = carousel.scrollTop;
                     slide.style.height = 'auto';
-                    new_height = slide.scrollHeight;
+
+                    let max_height = Math.ceil(parseFloat(getComputedStyle(carousel).maxHeight));
+                    new_height = Math.min(slide.scrollHeight, max_height);
+
                     if (isFullScreen()) {
                       old_height = new_height = carousel.offsetHeight;
                     }
