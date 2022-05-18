@@ -849,7 +849,9 @@ _:future,
 			background-color: var(--control-color, #333);
 			--chevron: url("data:image/svg+xml,%3Csvg height='18' viewBox='0 0 18 18' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m9.003 7.626 7.081-7.081 1.916 1.915-8.997 8.998-9.003-9 1.917-1.916z' transform='translate(0 5)'/%3E%3C/svg%3E");
 			-webkit-mask: var(--chevron) no-repeat 0 0 / contain;
+			-webkit-mask-size: 100%;
 			mask: var(--chevron) no-repeat 0 0;
+			mask-size: 100%;
 			width: 1em;
 			height: 1em;
 			display: inline-block;
