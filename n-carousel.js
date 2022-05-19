@@ -204,7 +204,9 @@
     };
     let draw = (now) => {
       if (now - start >= duration) {
-        scrollTo(el, startx + distanceX, starty + distanceY);
+        window.requestAnimationFrame(() => {
+          scrollTo(el, startx + distanceX, starty + distanceY);
+        });
         if (new_height) {
           el.style.height = `${new_height}px`;
         }
@@ -399,7 +401,6 @@
       observersOn(el);
     });
   };
-
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     observersOff(el);
@@ -413,8 +414,11 @@
         let slide = el.children[index];
         if (isVertical(el)) {
           slide.style.height = 'auto';
-          let max_height = Math.ceil(parseFloat(getComputedStyle(el).maxHeight));
-          new_height = Math.min(slide.scrollHeight, max_height);
+          let computed_max_height = getComputedStyle(el).maxHeight;
+          let max_height = computed_max_height.match(/px/) ? Math.ceil(parseFloat(computed_max_height)) : 99999;
+          // new_height = Math.min(slide.scrollHeight, max_height);
+          new_height = Math.min(Math.ceil(parseFloat(getComputedStyle(slide).height)), max_height);
+          // new_height = slide.scrollHeight;
           slide.style.height = '';
         } else {
           new_height = nextSlideHeight(slide);
@@ -781,17 +785,17 @@
                   if (isVertical(carousel)) {
                     let scroll_offset = carousel.scrollTop;
                     slide.style.height = 'auto';
-
-                    let max_height = Math.ceil(parseFloat(getComputedStyle(carousel).maxHeight));
-                    new_height = Math.min(slide.scrollHeight, max_height);
-
+                    let computed_max_height = getComputedStyle(el).maxHeight;
+                    let max_height = computed_max_height.match(/px/) ? Math.ceil(parseFloat(computed_max_height)) : 99999;
+                    // new_height = Math.min(slide.scrollHeight, max_height);
+                    new_height = Math.min(Math.ceil(parseFloat(getComputedStyle(slide).height)), max_height);
+                    // new_height = slide.scrollHeight;
                     if (isFullScreen()) {
                       old_height = new_height = carousel.offsetHeight;
                     }
                     slide.style.height = '';
                     carousel.scrollTop = scroll_offset;
                     offset_y = index * new_height - carousel.scrollTop;
-
                   } else {
                     new_height = nextSlideHeight(slide); // ?
                     // console.log(lastScrollX);
