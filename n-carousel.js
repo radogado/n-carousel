@@ -206,11 +206,11 @@
       if (now - start >= duration) {
         window.requestAnimationFrame(() => {
           scrollTo(el, startx + distanceX, starty + distanceY);
+          if (new_height) {
+            el.style.height = `${new_height}px`;
+          }
+          updateCarousel(el);
         });
-        if (new_height) {
-          el.style.height = `${new_height}px`;
-        }
-        updateCarousel(el);
         resolve(el);
         return;
       }
