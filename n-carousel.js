@@ -13,6 +13,7 @@
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
+  const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
   const nextSlideHeight = (el) => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -429,7 +430,7 @@
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
       if (isVertical(el)) {
-        if (isFullScreen() && isAuto(el)) {
+        if ((isModal(el) || isFullScreen()) && isAuto(el)) {
           old_height = new_height = el.offsetHeight;
           // alert('full screen');
         }
@@ -790,7 +791,7 @@
                     // new_height = Math.min(slide.scrollHeight, max_height);
                     new_height = Math.min(Math.ceil(parseFloat(getComputedStyle(slide).height)), max_height);
                     // new_height = slide.scrollHeight;
-                    if (isFullScreen()) {
+                    if (isModal(carousel) || isFullScreen()) {
                       old_height = new_height = carousel.offsetHeight;
                     }
                     slide.style.height = '';

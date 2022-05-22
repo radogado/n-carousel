@@ -227,7 +227,11 @@ body[data-frozen] {
 		}
 
 		&.n-carousel--auto-height {
-			height: auto;
+
+			&:not(.n-carousel--overlay) {
+
+				height: auto;
+			}
 
 			&.n-carousel--peek {
 
@@ -675,6 +679,7 @@ body[data-frozen] {
 	}
 
 	&.n-carousel--overlay {
+		--max-height: 100vh;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -1012,7 +1017,7 @@ _:future,
 			max-height: none;
 		}
 
-		> .n-carousel__content {
+		:not(:-webkit-full-screen):not(.n-carousel--overlay) > .n-carousel__content {
 			max-height: var(--max-height);
 		}
 	}
@@ -1066,6 +1071,18 @@ _:future,
 	}
 
 	&:-webkit-full-screen {
+		img {
+			max-height: 100%;
+		}
+
+		&.n-carousel--auto-height {
+			figure {
+				height: 100%;
+			}
+		}
+	}
+
+	&.n-carousel--overlay {
 		img {
 			max-height: 100%;
 		}

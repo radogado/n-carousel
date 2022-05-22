@@ -161,7 +161,7 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--index-end.n-carousel--index-align-end > .n-carousel__index {
   position: absolute;
 }
-.n-carousel.n-carousel--vertical.n-carousel--auto-height {
+.n-carousel.n-carousel--vertical.n-carousel--auto-height:not(.n-carousel--overlay) {
   height: auto;
 }
 .n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content > * {
@@ -414,6 +414,7 @@ body[data-frozen] {
   --max-height: 100vh;
 }
 .n-carousel.n-carousel--overlay {
+  --max-height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
@@ -684,7 +685,7 @@ _:future,
   height: auto;
   max-height: none;
 }
-.n-carousel--lightbox.n-carousel--auto-height > .n-carousel__content {
+.n-carousel--lightbox.n-carousel--auto-height :not(:-webkit-full-screen):not(.n-carousel--overlay) > .n-carousel__content {
   max-height: var(--max-height);
 }
 .n-carousel--lightbox.n-carousel--index-start figure {
@@ -715,6 +716,12 @@ _:future,
   max-height: 100%;
 }
 .n-carousel--lightbox:-webkit-full-screen.n-carousel--auto-height figure {
+  height: 100%;
+}
+.n-carousel--lightbox.n-carousel--overlay img {
+  max-height: 100%;
+}
+.n-carousel--lightbox.n-carousel--overlay.n-carousel--auto-height figure {
   height: 100%;
 }
 .n-carousel--lightbox iframe,
