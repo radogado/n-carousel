@@ -359,7 +359,6 @@
     if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
       location.hash = '';
     }
-    active_slide.removeAttribute('aria-hidden');
     previously_active.focus();
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
@@ -371,7 +370,14 @@
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     // Restore previous tabindex without taking into account the tabindex just added by the script
+
+    [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022
+      el.inert = (el === active_slide) ? false : true;
+    });
+    
+    // Obsoleted by inert – start
     [...el.children].forEach((slide) => {
+      slide.inert = (slide === active_slide) ? false : true;
       if (slide !== active_slide) {
         slide.setAttribute('aria-hidden', true);
         slide.querySelectorAll(focusableElements).forEach((el2) => {
@@ -385,6 +391,7 @@
         });
       }
     });
+    active_slide.removeAttribute('aria-hidden');
     active_slide.querySelectorAll("[data-focus-disabled]").forEach((el2) => {
       if (!el2.closest(".n-carousel__content > :not([aria-current])")) {
         el2.removeAttribute("tabindex");
@@ -395,6 +402,8 @@
         }
       }
     });
+    // Obsoleted by inert – end
+
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_logical;
     }
