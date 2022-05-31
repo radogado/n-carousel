@@ -67,6 +67,7 @@ body {
   text-align: center;
   --control-bg: rgb(255, 158, 158);
   --control-color: #670d5b;
+  --control-active-color: blue;
 }
 
 .n-carousel__content {
