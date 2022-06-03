@@ -64,7 +64,6 @@
     return arr;
   };
   const isRTL = (el) => getComputedStyle(el).direction === "rtl";
-  const resize_observer_support = typeof ResizeObserver === "function";
   const toggleFullScreen = (el) => {
     el = el.closest(".n-carousel");
     let carousel = el.querySelector(":scope > .n-carousel__content");
@@ -370,38 +369,39 @@
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     // Restore previous tabindex without taking into account the tabindex just added by the script
+    // console.log(active_slide);
+    if (!isSafari) {
+      [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022. Safari full screen bug because the full screen child lightbox is inside an inert parent
+        el.inert = (el === active_slide) ? false : true; // Safari full screen bug
+      });
+    }
 
-    [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022
-      el.inert = (el === active_slide) ? false : true;
-    });
-    
     // Obsoleted by inert – start
-    [...el.children].forEach((slide) => {
-      slide.inert = (slide === active_slide) ? false : true;
-      if (slide !== active_slide) {
-        slide.setAttribute('aria-hidden', true);
-        slide.querySelectorAll(focusableElements).forEach((el2) => {
-          if (el2.closest(".n-carousel__content > :not([aria-current])")) {
-            if (el2.getAttribute("tabindex") && !el2.dataset.focusDisabled) {
-              el2.dataset.oldTabIndex = el2.tabIndex;
-            }
-            el2.dataset.focusDisabled = true;
-            el2.tabIndex = -1;
-          }
-        });
-      }
-    });
-    active_slide.removeAttribute('aria-hidden');
-    active_slide.querySelectorAll("[data-focus-disabled]").forEach((el2) => {
-      if (!el2.closest(".n-carousel__content > :not([aria-current])")) {
-        el2.removeAttribute("tabindex");
-        delete el2.dataset.focusDisabled;
-        if (!!el2.dataset.oldTabIndex) {
-          el2.tabIndex = el2.dataset.oldTabIndex;
-          delete el2.dataset.oldTabIndex;
-        }
-      }
-    });
+    // [...el.children].forEach((slide) => {
+    //   if (slide !== active_slide) {
+    //     slide.setAttribute('aria-hidden', true);
+    //     slide.querySelectorAll(focusableElements).forEach((el2) => {
+    //       if (el2.closest(".n-carousel__content > :not([aria-current])")) {
+    //         if (el2.getAttribute("tabindex") && !el2.dataset.focusDisabled) {
+    //           el2.dataset.oldTabIndex = el2.tabIndex;
+    //         }
+    //         el2.dataset.focusDisabled = true;
+    //         el2.tabIndex = -1;
+    //       }
+    //     });
+    //   }
+    // });
+    // active_slide.removeAttribute('aria-hidden');
+    // active_slide.querySelectorAll("[data-focus-disabled]").forEach((el2) => {
+    //   if (!el2.closest(".n-carousel__content > :not([aria-current])")) {
+    //     el2.removeAttribute("tabindex");
+    //     delete el2.dataset.focusDisabled;
+    //     if (!!el2.dataset.oldTabIndex) {
+    //       el2.tabIndex = el2.dataset.oldTabIndex;
+    //       delete el2.dataset.oldTabIndex;
+    //     }
+    //   }
+    // });
     // Obsoleted by inert – end
 
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
@@ -822,6 +822,7 @@
                     scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(() => {});
                   });
                 } else {
+                  // console.log(carousel);
                   updateCarousel(carousel);
                 }
                 // updateCarousel(entry.target.parentNode);
