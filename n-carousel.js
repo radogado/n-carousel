@@ -680,6 +680,10 @@
       const index = getControl(el, ".n-carousel__index");
       const close_modal = getControl(el, ".n-carousel__close");
       const full_screen = getControl(el, ".n-carousel__full-screen");
+      const content = el.querySelector(":scope > .n-carousel__content");
+      if (!content) {
+        return;
+      }
       if (!!previous) {
         previous.onclick = slidePreviousEvent;
       }
@@ -718,7 +722,6 @@
           el.onfullscreenchange = fullScreenEvent;
         }
       }
-      let content = el.querySelector(":scope > .n-carousel__content");
       content.addEventListener("keydown", carouselKeys);
       el.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
