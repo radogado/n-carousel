@@ -891,6 +891,10 @@ _:future,
 	}
 }
 
+.n-carousel:not(.n-carousel--overlay) > .n-carousel__close button:before {
+	transform: rotate(45deg);
+}
+
 .n-carousel__previous,
 [dir="rtl"] .n-carousel__next,
 .n-carousel--rtl > .n-carousel__next {

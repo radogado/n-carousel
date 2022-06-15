@@ -375,7 +375,6 @@
         el.inert = (el === active_slide) ? false : true; // Safari full screen bug
       });
     }
-
     // Obsoleted by inert – start
     // [...el.children].forEach((slide) => {
     //   if (slide !== active_slide) {
@@ -403,7 +402,6 @@
     //   }
     // });
     // Obsoleted by inert – end
-
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_logical;
     }
@@ -559,6 +557,12 @@
       delete document.body.dataset.frozen;
     }
   };
+  const openModal = (el) => {
+    let carousel = el.closest(".n-carousel");
+    if (carousel) {
+      carousel.classList.add("n-carousel--overlay");
+    }
+  };
   const verticalAutoObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
@@ -694,7 +698,13 @@
         index.onclick = slideIndexEvent;
       }
       if (!!close_modal) {
-        close_modal.onclick = e => closeModal(e.target);
+        close_modal.onclick = e => {
+          if (e.target.closest('.n-carousel').classList.contains('n-carousel--overlay')) {
+            closeModal(e.target);
+          } else {
+            openModal(e.target);
+          }
+        }
       }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
