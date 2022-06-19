@@ -350,15 +350,17 @@
       }
     });
     // Sliding to a slide with a hash? Update the URI
-    let previously_active = document.activeElement;
-    let hash = active_slide.id;
-    if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
-      location.hash = `#${hash}`;
+    if (getComputedStyle(el).visibility !== 'hidden') {
+      let previously_active = document.activeElement;
+      let hash = active_slide.id;
+      if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
+        location.hash = `#${hash}`;
+      }
+      if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
+        location.hash = '';
+      }
+      previously_active.focus();
     }
-    if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
-      location.hash = '';
-    }
-    previously_active.focus();
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
@@ -797,7 +799,7 @@
           entries.forEach(entry => {
             let slide = entry.target;
             let carousel = slide.parentNode;
-            if (entry.isIntersecting && !carousel.parentNode.dataset.sliding) {
+            if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
               setTimeout(() => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
                 let index = [...carousel.children].indexOf(slide);
