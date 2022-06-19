@@ -94,8 +94,7 @@ pre {
 }
 
 html {
-  -webkit-text-size-adjust: 100%;
-  /* Prevent font scaling in landscape while allowing user zoom */
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
 }
 
 .demo .n-carousel .n-carousel__content > * {
@@ -129,7 +128,6 @@ html {
     grid-gap: 1em;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   }
-
   .demo-grid > * {
     text-align: center;
   }
