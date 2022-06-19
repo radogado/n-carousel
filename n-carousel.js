@@ -748,6 +748,9 @@
       content.observerStarted = true;
       let hashed_slide = !!location.hash ? content.querySelector(":scope > " + location.hash) : false;
       if (hashed_slide) {
+        if (el.classList.contains('n-carousel--inline')) {
+          el.classList.add('n-carousel--overlay');
+        }
         let index = [...hashed_slide.parentNode.children].indexOf(hashed_slide);
         if (isVertical(content)) {
           content.dataset.y = index;
