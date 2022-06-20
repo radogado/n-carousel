@@ -1107,4 +1107,10 @@ _:future,
 		height: auto;
 		aspect-ratio: 16/9;
 	}
+
+	> .n-carousel__content picture {
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
 }
