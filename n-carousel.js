@@ -861,6 +861,12 @@
       let el = document.querySelector(location.hash);
       let carousel = el?.parentNode;
       if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
+        
+        let modal_carousel = document.querySelector('.n-carousel--overlay > .n-carousel__content');
+        if (modal_carousel && modal_carousel !== carousel) {
+          modal_carousel.parentNode.classList.remove('n-carousel--overlay');
+        }
+        
         if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
         }
