@@ -738,6 +738,10 @@ _:future,
   aspect-ratio: 16/9;
 }
 .n-carousel--lightbox > .n-carousel__content picture {
+  background-size: 0;
+}
+.n-carousel--lightbox > .n-carousel__content picture > * {
+  background-image: inherit;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
