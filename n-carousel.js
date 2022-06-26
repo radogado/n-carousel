@@ -235,8 +235,10 @@
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
-    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
-    el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+    if (!isModal(el) && !el.classList.contains("n-carousel--inline")) {
+      el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
+      el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+    }
     // When inline
     if (el.dataset.x === "NaN") {
       el.dataset.x = 0;
@@ -472,10 +474,10 @@
     return;
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
     let el = e.target;
-    if (e.key === "Tab") {
-      let carousel = el.closest(".n-carousel__content");
-      carousel.tabbing = true;
-    }
+    // if (e.key === "Tab") {
+    //   let carousel = el.closest(".n-carousel__content");
+    //   carousel.tabbing = true;
+    // }
     if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
       e.preventDefault();
@@ -534,14 +536,17 @@
           }
         }
       }
-      if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
+      if (wrapper.classList.contains("n-carousel--inline") && !isModal(carousel)) {
         wrapper.nextSlideInstant = true;
-        wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+        // wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+        openModal(carousel);
         // Set new x, y
-        carousel.dataset.x = carousel.dataset.y = new_index;
-        scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
-        document.body.dataset.frozen = document.body.scrollTop;
-        trapFocus(wrapper);
+        window.requestAnimationFrame(() => {
+          carousel.dataset.x = carousel.dataset.y = new_index;
+          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
+          document.body.dataset.frozen = document.body.scrollTop;
+          trapFocus(wrapper);
+        });
       }
       window.requestAnimationFrame(() => {
         slideTo(carousel, new_index);
@@ -751,7 +756,8 @@
       let hashed_slide = !!location.hash ? content.querySelector(":scope > " + location.hash) : false;
       if (hashed_slide) {
         if (el.classList.contains('n-carousel--inline')) {
-          el.classList.add('n-carousel--overlay');
+          openModal(content);
+          // el.classList.add('n-carousel--overlay');
         }
         let index = [...hashed_slide.parentNode.children].indexOf(hashed_slide);
         if (isVertical(content)) {
@@ -861,16 +867,15 @@
       let el = document.querySelector(location.hash);
       let carousel = el?.parentNode;
       if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
-
         let modal_carousel = document.querySelector('.n-carousel--overlay > .n-carousel__content');
         if (modal_carousel && modal_carousel !== carousel) {
-          modal_carousel.parentNode.classList.remove('n-carousel--overlay');
+          closeModal(modal_carousel);
+          // modal_carousel.parentNode.classList.remove('n-carousel--overlay');
         }
-
         if (carousel.parentNode.classList.contains('n-carousel--inline')) {
-          carousel.parentNode.classList.add('n-carousel--overlay');
+          closeModal(carousel);
+          // carousel.parentNode.classList.add('n-carousel--overlay');
         }
-
         if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
         }

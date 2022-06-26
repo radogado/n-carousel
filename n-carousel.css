@@ -257,6 +257,9 @@ body[data-frozen] {
   object-fit: cover;
   padding: 0;
 }
+.n-carousel > .n-carousel__index.n-carousel__index--thumbnails {
+  padding: 1px;
+}
 .n-carousel > .n-carousel__index.n-carousel__index--thumbnails > * {
   padding: 0;
   vertical-align: middle;
@@ -267,7 +270,7 @@ body[data-frozen] {
   padding: 0 1ch;
 }
 .n-carousel > .n-carousel__index.n-carousel__index--thumbnails [aria-current] {
-  opacity: 0.5;
+  box-shadow: 0 0px 0px 1px var(--control-bg, grey);
 }
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
   display: none;
@@ -439,7 +442,7 @@ body[data-frozen] {
   display: block;
 }
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > [aria-current] {
-  opacity: 1;
+  box-shadow: none;
 }
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) > * {
   text-align: start;
