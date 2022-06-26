@@ -235,9 +235,11 @@
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
-    if (!isModal(el) && !el.classList.contains("n-carousel--inline")) {
+    if (!el.openingModal) {
       el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
       el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+    } else {
+      delete el.openingModal;
     }
     // When inline
     if (el.dataset.x === "NaN") {
@@ -565,6 +567,7 @@
     }
   };
   const openModal = (el) => {
+    el.openingModal = true;
     let carousel = el.closest(".n-carousel");
     if (carousel) {
       carousel.classList.add("n-carousel--overlay");
