@@ -224,6 +224,11 @@ body[data-frozen] {
   grid-row: 1/-1;
   grid-column: 1/-1;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .n-carousel > .n-carousel__content {
+    transition: opacity 0.2s ease-in-out;
+  }
+}
 .n-carousel > :not(.n-carousel__content) {
   z-index: 1;
 }
@@ -444,6 +449,7 @@ body[data-frozen] {
   position: absolute;
   width: 0;
   height: 0;
+  opacity: 0;
   overflow: hidden;
 }
 

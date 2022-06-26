@@ -372,6 +372,11 @@ body[data-frozen] {
 		margin: 0;
 		grid-row: 1/-1;
 		grid-column: 1/-1;
+
+		@media (prefers-reduced-motion: no-preference) {
+
+			transition: opacity .2s ease-in-out;
+		}
 	}
 
 	> :not(.n-carousel__content) {
@@ -711,6 +716,7 @@ body[data-frozen] {
 				position: absolute;
 				width: 0;
 				height: 0;
+				opacity: 0;
 				overflow: hidden;
 			}
 		}
