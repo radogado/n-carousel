@@ -691,6 +691,7 @@ _:future,
   padding: 0.5em 0.75em;
   background: rgba(0, 0, 0, 0.3);
   color: #ddd;
+  z-index: 0;
 }
 .n-carousel--lightbox.n-carousel--auto-height figure,
 .n-carousel--lightbox.n-carousel--auto-height video,
