@@ -1118,14 +1118,19 @@ _:future,
 		aspect-ratio: 16/9;
 	}
 
-	> .n-carousel__content picture {
-		background-size: 0;
-
-		> * {
-			background-image: inherit;
+	> .n-carousel__content picture:not([data-loaded]) {
+		position: relative;
+		&:before {
+			content: "";
+			position: absolute;
+			// top: 0;
+			// right: 0;
+			// bottom: 0;
+			// left: 0;
+			inset: 0;
+			filter: blur(4px);
+			background: var(--placeholder, none) center no-repeat;
 			background-size: contain;
-			background-repeat: no-repeat;
-			background-position: center;
 		}
 	}
 }

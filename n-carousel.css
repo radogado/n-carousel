@@ -746,14 +746,16 @@ _:future,
   height: auto;
   aspect-ratio: 16/9;
 }
-.n-carousel--lightbox > .n-carousel__content picture {
-  background-size: 0;
+.n-carousel--lightbox > .n-carousel__content picture:not([data-loaded]) {
+  position: relative;
 }
-.n-carousel--lightbox > .n-carousel__content picture > * {
-  background-image: inherit;
+.n-carousel--lightbox > .n-carousel__content picture:not([data-loaded]):before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  filter: blur(4px);
+  background: var(--placeholder, none) center no-repeat;
   background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 /*# sourceMappingURL=n-carousel.css.map */

@@ -861,6 +861,20 @@
         // console.log('intersection observing ', target)
       };
       targets.forEach(inView);
+      if (el.matches('.n-carousel--lightbox')) {
+        let loaded = img => {
+          img.parentNode.dataset.loaded = true;
+        };
+        content.querySelectorAll("picture > img").forEach(el => {
+          if (el.complete) {
+            loaded(el);
+          } else {
+            el.addEventListener("load", e => {
+              loaded(e.target);
+            });
+          }
+        });
+      }
     });
   };
   window.nCarouselInit = init;
