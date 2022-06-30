@@ -863,9 +863,9 @@
       targets.forEach(inView);
       if (el.matches('.n-carousel--lightbox')) {
         let loaded = img => {
-          img.parentNode.dataset.loaded = true;
+          img.closest('picture').dataset.loaded = true;
         };
-        content.querySelectorAll("picture > img").forEach(el => {
+        content.querySelectorAll("picture img").forEach(el => {
           if (el.complete) {
             loaded(el);
           } else {
