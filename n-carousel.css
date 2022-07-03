@@ -684,6 +684,7 @@ _:future,
   display: flex;
   justify-content: center;
   align-items: center;
+  justify-self: center;
 }
 .n-carousel--lightbox figure > figcaption {
   grid-row: 1/2;
@@ -722,6 +723,7 @@ _:future,
   object-fit: contain;
   box-sizing: border-box;
   padding: 0 0.5px;
+  z-index: 0;
 }
 .n-carousel--lightbox.n-carousel--auto-height img {
   max-height: none;

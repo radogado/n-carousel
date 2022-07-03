@@ -1011,6 +1011,7 @@ _:future,
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			justify-self: center;
 		}
 
 		> figcaption {
@@ -1077,6 +1078,7 @@ _:future,
 		object-fit: contain;
 		box-sizing: border-box;
 		padding: 0 0.5px; // Safari: visible pixel from neighbour
+		z-index: 0;
 	}
 
 	&.n-carousel--auto-height {
