@@ -685,8 +685,6 @@ _:future,
   justify-content: center;
   align-items: center;
   justify-self: center;
-  align-self: center;
-  overflow: hidden;
 }
 .n-carousel--lightbox figure > figcaption {
   grid-row: 1/2;
