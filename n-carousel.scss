@@ -698,6 +698,7 @@ body[data-frozen] {
 		max-height: none;
 		height: 100%;
 		// height: -webkit-fill-available; // creates a bottom gap
+		height: 100dvh;
 		background: rgba(255, 255, 255, 0.9);
 
 		@media (prefers-color-scheme: dark) {
