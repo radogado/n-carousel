@@ -518,7 +518,7 @@
   const slideIndexEvent = (e) => {
     let el = e.target.closest("a, button");
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
-      const wrapper = document.getElementById(el.parentNode.dataset.for) || el.closest(".n-carousel");
+      const wrapper = document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) || el.closest(".n-carousel");
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
       let new_index = [...el.parentNode.children].indexOf(el);
       if (isEndless(carousel)) {
