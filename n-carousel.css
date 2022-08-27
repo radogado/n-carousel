@@ -271,7 +271,7 @@ body[data-frozen] {
   padding: 0 1ch;
 }
 .n-carousel > .n-carousel__index.n-carousel__index--thumbnails [aria-current] {
-  box-shadow: 0 0px 0px 1px var(--control-bg, grey);
+  box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
 }
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
   display: none;
@@ -498,8 +498,8 @@ _:future,
   user-select: none;
   all: revert;
   border: none;
-  color: var(--control-color, #333);
-  background: var(--control-bg, #eee);
+  color: var(--nui-control-color, #333);
+  background: var(--nui-control-bg, #eee);
   min-width: 2.25em;
   min-height: 2.25em;
   border-radius: 2.25em;
@@ -516,14 +516,14 @@ _:future,
 .n-carousel__next > * span,
 .n-carousel__full-screen > * span,
 .n-carousel__close > * span {
-  color: var(--control-color, #333);
+  color: var(--nui-control-color, #333);
 }
 .n-carousel__index > *[aria-current] span,
 .n-carousel__previous > *[aria-current] span,
 .n-carousel__next > *[aria-current] span,
 .n-carousel__full-screen > *[aria-current] span,
 .n-carousel__close > *[aria-current] span {
-  color: var(--control-active-color, blue);
+  color: var(--nui-control-active-color, blue);
 }
 
 [data-ready] > .n-carousel__content {
@@ -569,7 +569,7 @@ _:future,
 .n-carousel__full-screen button:before,
 .n-carousel__close button:before {
   content: "";
-  background-color: var(--control-color, #333);
+  background-color: var(--nui-control-color, #333);
   --chevron: url("data:image/svg+xml,%3Csvg height='18' viewBox='0 0 18 18' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m9.003 7.626 7.081-7.081 1.916 1.915-8.997 8.998-9.003-9 1.917-1.916z' transform='translate(0 5)'/%3E%3C/svg%3E");
   -webkit-mask: var(--chevron) no-repeat 0 0/contain;
   -webkit-mask-size: 100%;
@@ -624,7 +624,7 @@ _:future,
   overflow: auto;
   max-width: 100%;
   max-height: 100%;
-  color: var(--control-color, #333);
+  color: var(--nui-control-color, #333);
 }
 .n-carousel--tabs.n-carousel > .n-carousel__index > *, .n-carousel--tabs.n-carousel__index > * {
   box-sizing: border-box;
@@ -669,7 +669,7 @@ _:future,
 }
 .n-carousel--lightbox {
   flex: 1;
-  --carousel-bg: transparent;
+  --nui-carousel-bg: transparent;
   max-height: var(--max-height, 100vh);
 }
 .n-carousel--lightbox figure {
