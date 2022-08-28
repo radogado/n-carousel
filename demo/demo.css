@@ -65,9 +65,9 @@ body {
 
 .n-carousel {
   text-align: center;
-  --control-bg: rgb(255, 158, 158);
-  --control-color: #670d5b;
-  --control-active-color: blue;
+  --nui-control-bg: rgb(255, 158, 158);
+  --nui-control-color: #670d5b;
+  --nui-control-active-color: blue;
 }
 
 .n-carousel__content {
@@ -94,13 +94,12 @@ pre {
 }
 
 html {
-  -webkit-text-size-adjust: 100%;
-  /* Prevent font scaling in landscape while allowing user zoom */
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
 }
 
 .demo .n-carousel .n-carousel__content > * {
-  background: var(--carousel-bg, aliceblue);
-  color: var(--carousel-color, #027b7b);
+  background: var(--nui-carousel-bg, aliceblue);
+  color: var(--nui-carousel-color, #027b7b);
 }
 .demo .n-carousel .n-carousel__content a[href] {
   color: #4d64bd;
@@ -129,7 +128,6 @@ html {
     grid-gap: 1em;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   }
-
   .demo-grid > * {
     text-align: center;
   }
@@ -149,7 +147,7 @@ html {
   max-height: 100%;
   overflow: auto;
   flex-wrap: nowrap;
-  background: var(--control-bg);
+  background: var(--nui-control-bg);
 }
 .demo .source {
   display: flex;
@@ -312,7 +310,7 @@ _:future,
 }
 .n-carousel__options span {
   display: inline-block;
-  background: var(--control-bg);
+  background: var(--nui-control-bg);
   z-index: -1;
 }
 .n-carousel__options input {
@@ -325,8 +323,8 @@ _:future,
   padding: 0;
 }
 .n-carousel__options input:checked + span {
-  background: var(--control-color);
-  border: 3px solid var(--control-bg);
+  background: var(--nui-control-color);
+  border: 3px solid var(--nui-control-bg);
   box-sizing: border-box;
 }
 

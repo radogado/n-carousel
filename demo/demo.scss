@@ -26,9 +26,9 @@ body {
 
 .n-carousel {
 	text-align: center;
-	--control-bg: rgb(255, 158, 158);
-	--control-color: #670d5b;
-	--control-active-color: blue;
+	--nui-control-bg: rgb(255, 158, 158);
+	--nui-control-color: #670d5b;
+	--nui-control-active-color: blue;
 }
 
 .n-carousel__content {
@@ -67,8 +67,8 @@ html {
 }
 .demo .n-carousel .n-carousel__content {
 	> * {
-		background: var(--carousel-bg, aliceblue);
-		color: var(--carousel-color, #027b7b);
+		background: var(--nui-carousel-bg, aliceblue);
+		color: var(--nui-carousel-color, #027b7b);
 		// min-height: 100%;
 		// box-sizing: border-box;
 		// display: flex; // Very slow in Safari
@@ -138,7 +138,7 @@ html {
 		overflow: auto;
 		flex-wrap: nowrap;
 		// padding: 1ch 0;
-		background: var(--control-bg);
+		background: var(--nui-control-bg);
 
 		button {
 			// max-width: 25vw;
@@ -325,7 +325,7 @@ _:future,
 	}
 	span {
 		display: inline-block;
-		background: var(--control-bg);
+		background: var(--nui-control-bg);
 		z-index: -1;
 	}
 	input {
@@ -337,8 +337,8 @@ _:future,
 		margin: 0;
 		padding: 0;
 		&:checked + span {
-			background: var(--control-color);
-			border: 3px solid var(--control-bg);
+			background: var(--nui-control-color);
+			border: 3px solid var(--nui-control-bg);
 			box-sizing: border-box;
 		}
 	}

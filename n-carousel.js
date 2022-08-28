@@ -235,8 +235,12 @@
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
-    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
-    el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+    if (!el.openingModal) {
+      el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
+      el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+    } else {
+      delete el.openingModal;
+    }
     // When inline
     if (el.dataset.x === "NaN") {
       el.dataset.x = 0;
@@ -350,15 +354,17 @@
       }
     });
     // Sliding to a slide with a hash? Update the URI
-    let previously_active = document.activeElement;
-    let hash = active_slide.id;
-    if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
-      location.hash = `#${hash}`;
+    if (getComputedStyle(el).visibility !== 'hidden') {
+      let previously_active = document.activeElement;
+      let hash = active_slide.id;
+      if (!!el.parentNode.dataset.ready && !!hash && !el.parentNode.closest('.n-carousel__content')) { // Hash works only with top-level carousel
+        location.hash = `#${hash}`;
+      }
+      if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
+        location.hash = '';
+      }
+      previously_active.focus();
     }
-    if (!!el.parentNode.dataset.ready && !hash && !el.parentNode.closest('.n-carousel__content') && window.nCarouselNav) { // Hash works only with top-level carousel
-      location.hash = '';
-    }
-    previously_active.focus();
     // Fix buttons
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
@@ -375,7 +381,6 @@
         el.inert = (el === active_slide) ? false : true; // Safari full screen bug
       });
     }
-
     // Obsoleted by inert – start
     // [...el.children].forEach((slide) => {
     //   if (slide !== active_slide) {
@@ -403,7 +408,6 @@
     //   }
     // });
     // Obsoleted by inert – end
-
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_logical;
     }
@@ -472,10 +476,10 @@
     return;
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
     let el = e.target;
-    if (e.key === "Tab") {
-      let carousel = el.closest(".n-carousel__content");
-      carousel.tabbing = true;
-    }
+    // if (e.key === "Tab") {
+    //   let carousel = el.closest(".n-carousel__content");
+    //   carousel.tabbing = true;
+    // }
     if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
       // Capture relevant keys
       e.preventDefault();
@@ -514,7 +518,7 @@
   const slideIndexEvent = (e) => {
     let el = e.target.closest("a, button");
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
-      const wrapper = document.getElementById(el.parentNode.dataset.for) || el.closest(".n-carousel");
+      const wrapper = document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) || el.closest(".n-carousel");
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
       let new_index = [...el.parentNode.children].indexOf(el);
       if (isEndless(carousel)) {
@@ -534,14 +538,17 @@
           }
         }
       }
-      if (wrapper.classList.contains("n-carousel--inline") && !wrapper.classList.contains("n-carousel--overlay")) {
+      if (wrapper.classList.contains("n-carousel--inline") && !isModal(carousel)) {
         wrapper.nextSlideInstant = true;
-        wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+        // wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
+        openModal(carousel);
         // Set new x, y
-        carousel.dataset.x = carousel.dataset.y = new_index;
-        scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
-        document.body.dataset.frozen = document.body.scrollTop;
-        trapFocus(wrapper);
+        window.requestAnimationFrame(() => {
+          carousel.dataset.x = carousel.dataset.y = new_index;
+          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
+          document.body.dataset.frozen = document.body.scrollTop;
+          trapFocus(wrapper);
+        });
       }
       window.requestAnimationFrame(() => {
         slideTo(carousel, new_index);
@@ -557,6 +564,13 @@
     if (carousel) {
       carousel.classList.remove("n-carousel--overlay");
       delete document.body.dataset.frozen;
+    }
+  };
+  const openModal = (el) => {
+    el.openingModal = true;
+    let carousel = el.closest(".n-carousel");
+    if (carousel) {
+      carousel.classList.add("n-carousel--overlay");
     }
   };
   const verticalAutoObserver = new ResizeObserver((entries) => {
@@ -680,6 +694,10 @@
       const index = getControl(el, ".n-carousel__index");
       const close_modal = getControl(el, ".n-carousel__close");
       const full_screen = getControl(el, ".n-carousel__full-screen");
+      const content = el.querySelector(":scope > .n-carousel__content");
+      if (!content) {
+        return;
+      }
       if (!!previous) {
         previous.onclick = slidePreviousEvent;
       }
@@ -690,7 +708,13 @@
         index.onclick = slideIndexEvent;
       }
       if (!!close_modal) {
-        close_modal.onclick = e => closeModal(e.target);
+        close_modal.onclick = e => {
+          if (e.target.closest('.n-carousel').classList.contains('n-carousel--overlay')) {
+            closeModal(e.target);
+          } else {
+            openModal(e.target);
+          }
+        }
       }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
@@ -718,7 +742,6 @@
           el.onfullscreenchange = fullScreenEvent;
         }
       }
-      let content = el.querySelector(":scope > .n-carousel__content");
       content.addEventListener("keydown", carouselKeys);
       el.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
@@ -735,6 +758,10 @@
       content.observerStarted = true;
       let hashed_slide = !!location.hash ? content.querySelector(":scope > " + location.hash) : false;
       if (hashed_slide) {
+        if (el.classList.contains('n-carousel--inline')) {
+          openModal(content);
+          // el.classList.add('n-carousel--overlay');
+        }
         let index = [...hashed_slide.parentNode.children].indexOf(hashed_slide);
         if (isVertical(content)) {
           content.dataset.y = index;
@@ -781,7 +808,7 @@
           entries.forEach(entry => {
             let slide = entry.target;
             let carousel = slide.parentNode;
-            if (entry.isIntersecting && !carousel.parentNode.dataset.sliding) {
+            if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
               setTimeout(() => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
                 let index = [...carousel.children].indexOf(slide);
@@ -834,6 +861,20 @@
         // console.log('intersection observing ', target)
       };
       targets.forEach(inView);
+      if (el.matches('.n-carousel--lightbox')) {
+        let loaded = img => {
+          img.closest('picture').dataset.loaded = true;
+        };
+        content.querySelectorAll("picture img").forEach(el => {
+          if (el.complete) {
+            loaded(el);
+          } else {
+            el.addEventListener("load", e => {
+              loaded(e.target);
+            });
+          }
+        });
+      }
     });
   };
   window.nCarouselInit = init;
@@ -843,6 +884,15 @@
       let el = document.querySelector(location.hash);
       let carousel = el?.parentNode;
       if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
+        let modal_carousel = document.querySelector('.n-carousel--overlay > .n-carousel__content');
+        if (modal_carousel && modal_carousel !== carousel) {
+          closeModal(modal_carousel);
+          // modal_carousel.parentNode.classList.remove('n-carousel--overlay');
+        }
+        if (carousel.parentNode.classList.contains('n-carousel--inline')) {
+          closeModal(carousel);
+          // carousel.parentNode.classList.add('n-carousel--overlay');
+        }
         if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
         }

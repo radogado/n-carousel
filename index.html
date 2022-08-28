@@ -161,13 +161,13 @@
 							<h2>Theme</h2>
 							<div class="code">
 								<pre><code class="language-css">.n-carousel {
-  --control-bg: darkorchid;
-  --control-active-bg: darkorchid;
-  --control-highlight: darkblue;
-  --control-color: #a5f9a5;
-  --control-active-color: #a5f9a5;
-  --carousel-bg: black;
-  --carousel-color: white;
+  --nui-control-bg: darkorchid;
+  --nui-control-active-bg: darkorchid;
+  --nui-control-highlight: darkblue;
+  --nui-control-color: #a5f9a5;
+  --nui-control-active-color: #a5f9a5;
+  --nui-carousel-bg: black;
+  --nui-carousel-color: white;
 }</code></pre>
 							</div>
 							<h2>Slide duration</h2>
@@ -1257,13 +1257,16 @@
 							<div class="n-carousel__full-screen">
 								<button><span>Toggle full screen</span></button>
 							</div>
+							<div class="n-carousel__close">
+								<button><span>Toggle modal window</span></button>
+							</div>
 							<!-- <div class="n-carousel__close">
 					<button><span>Close modal window</span></button>
 				  </div> -->
 							<ul class="n-carousel__content">
 								<li>
 									<figure>
-										<picture>
+										<picture style="--placeholder: url(demo/DSC01832-.jpg);">
 											<img width="3840" height="2560" src="demo/DSC01832.jpg" alt="Demo Image 1" loading="lazy" />
 										</picture>
 										<figcaption>Kaohsiung, Taiwan</figcaption>
@@ -1287,7 +1290,7 @@
 								</li>
 								<li>
 									<figure>
-										<picture>
+										<picture style="--placeholder: url(demo/IMG_1761-18x18.jpg);">
 											<img width="188" height="188" src="demo/IMG_1761-188x188.jpg" alt="Demo Image 2" loading="lazy" />
 										</picture>
 										<figcaption>Smaller image</figcaption>
@@ -1361,8 +1364,13 @@
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
 	&lt;button&gt;&lt;span&gt;Toggle full screen&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
+  &lt;div class=&quot;n-carousel__close&quot;&gt;
+	  &lt;button&gt;&lt;span&gt;Toggle modal&lt;/span&gt;&lt;/button&gt;
+	&lt;/div&gt;
 &lt;/div&gt;</code></pre>
 								</div>
+								<p>Optional low resolution placeholder as <b>--placeholder</b> on the <b>picture</b>.</p>
+
 							</div>
 						</div>
 					</div>
