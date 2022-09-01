@@ -348,6 +348,8 @@
         el.scroll_x = scroll_x;
         el.scroll_y = scroll_y;
         scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
+        delete el.scroll_x;
+        delete el.scroll_y;
       });
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
