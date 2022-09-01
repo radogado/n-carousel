@@ -340,8 +340,15 @@
           active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
-      scrollTo(el, ceilingWidth(el.firstElementChild) * active_index, ceilingHeight(el.firstElementChild) * active_index); // First element size, because when Peeking, it differs from carousel size
-      el.dataset.x = el.dataset.y = active_index_logical;
+      window.requestAnimationFrame(() => {
+        el.dataset.x = el.dataset.y = active_index_logical;
+        let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
+        let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
+        // console.log('updateCarousel() scrolling at', scroll_x);
+        el.scroll_x = scroll_x;
+        el.scroll_y = scroll_y;
+        scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
+      });
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
@@ -612,7 +619,12 @@
   };
   const observersOn = (el) => {
     window.requestAnimationFrame(() => {
-      delete el.parentNode.dataset.sliding;
+      // setTimeout(() => {
+        if (el.scroll_x && el.scroll_y) {
+          scrollTo(el, el.scroll_x, el.scroll_y);
+        }
+        delete el.parentNode.dataset.sliding;
+      // }, 0);
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
       } else {
@@ -809,11 +821,12 @@
             let slide = entry.target;
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
+              observersOff(el);
+
               setTimeout(() => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
-                  observersOff(el);
                   let old_height = parseFloat(getComputedStyle(carousel).height);
                   let new_height;
                   let offset_y = 0;
@@ -850,7 +863,9 @@
                   });
                 } else {
                   // console.log(carousel);
-                  updateCarousel(carousel);
+                  window.requestAnimationFrame(() => {
+                    updateCarousel(carousel);
+                  });
                 }
                 // updateCarousel(entry.target.parentNode);
               }, 50);
