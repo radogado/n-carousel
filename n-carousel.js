@@ -1,3 +1,5 @@
+// import './node_modules/n-modal/n-modal.js';
+
 (function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
