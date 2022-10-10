@@ -759,5 +759,18 @@ _:future,
   background: var(--placeholder, none) center no-repeat;
   background-size: contain;
 }
+.n-carousel--lightbox > .n-carousel__content.n-aspect {
+  aspect-ratio: var(--ratio, 16/9);
+}
+.n-carousel--lightbox > .n-carousel__content.n-aspect:before {
+  display: none;
+}
+.n-carousel--lightbox > .n-carousel__content.n-aspect > * {
+  position: relative;
+  height: 100%;
+}
+.n-carousel--lightbox > .n-carousel__content.n-aspect > * figure {
+  position: absolute;
+}
 
 /*# sourceMappingURL=n-carousel.css.map */
