@@ -760,17 +760,19 @@ _:future,
   background-size: contain;
 }
 .n-carousel--lightbox > .n-carousel__content.n-aspect {
-  aspect-ratio: var(--ratio, 16/9);
+  align-items: unset;
+  justify-content: unset;
 }
 .n-carousel--lightbox > .n-carousel__content.n-aspect:before {
   display: none;
 }
-.n-carousel--lightbox > .n-carousel__content.n-aspect > * {
-  position: relative;
-  height: 100%;
+.n-carousel--lightbox:not(.n-carousel--overlay) > .n-carousel__content.n-aspect:before {
+  display: none;
 }
-.n-carousel--lightbox > .n-carousel__content.n-aspect > * figure {
-  position: absolute;
+.n-carousel--lightbox:not(.n-carousel--overlay) > .n-carousel__content.n-aspect > * figure {
+  aspect-ratio: var(--ratio, 16/9);
+  position: relative;
+  width: 100%;
 }
 
 /*# sourceMappingURL=n-carousel.css.map */

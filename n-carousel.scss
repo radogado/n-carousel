@@ -1147,19 +1147,30 @@ _:future,
 		}
 
 		&.n-aspect {
-			aspect-ratio: var(--ratio, 16/9);
+			align-items: unset;
+			justify-content: unset;
+
+			&:before {
+				display: none;
+			}
+		}
+	}
+
+	&:not(.n-carousel--overlay) {
+		> .n-carousel__content.n-aspect {
 			&:before {
 				display: none;
 			}
 
 			> * {
-				position: relative;
-				height: 100%;
-				
+
 				figure {
-					position: absolute;
+					aspect-ratio: var(--ratio, 16/9);
+					position: relative;
+					width: 100%;
 				}
 			}
 		}
+
 	}
 }
