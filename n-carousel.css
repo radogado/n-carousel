@@ -759,17 +759,7 @@ _:future,
   background: var(--placeholder, none) center no-repeat;
   background-size: contain;
 }
-.n-carousel--lightbox > .n-carousel__content.n-aspect {
-  align-items: unset;
-  justify-content: unset;
-}
-.n-carousel--lightbox > .n-carousel__content.n-aspect:before {
-  display: none;
-}
-.n-carousel--lightbox:not(.n-carousel--overlay) > .n-carousel__content.n-aspect:before {
-  display: none;
-}
-.n-carousel--lightbox:not(.n-carousel--overlay) > .n-carousel__content.n-aspect > * figure {
+.n-carousel--lightbox:not(.n-carousel--overlay).n-carousel--aspect > .n-carousel__content > * figure {
   aspect-ratio: var(--ratio, 16/9);
   position: relative;
   width: 100%;

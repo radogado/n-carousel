@@ -1146,21 +1146,10 @@ _:future,
 			}
 		}
 
-		&.n-aspect {
-			align-items: unset;
-			justify-content: unset;
-
-			&:before {
-				display: none;
-			}
-		}
 	}
 
-	&:not(.n-carousel--overlay) {
-		> .n-carousel__content.n-aspect {
-			&:before {
-				display: none;
-			}
+	&:not(.n-carousel--overlay).n-carousel--aspect {
+		> .n-carousel__content {
 
 			> * {
 
