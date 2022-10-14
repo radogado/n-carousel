@@ -1161,5 +1161,9 @@ _:future,
 			}
 		}
 
+		&.n-carousel--auto-height img {
+			max-height: 100%;
+		}
+
 	}
 }

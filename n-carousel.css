@@ -764,5 +764,8 @@ _:future,
   position: relative;
   width: 100%;
 }
+.n-carousel--lightbox:not(.n-carousel--overlay).n-carousel--aspect.n-carousel--auto-height img {
+  max-height: 100%;
+}
 
 /*# sourceMappingURL=n-carousel.css.map */
