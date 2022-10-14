@@ -165,7 +165,14 @@
       }
     }
   };
-  const closestCarousel = (el) => (document.getElementById(el.closest('[class*="n-carousel"]').dataset.for) || el.closest(".n-carousel")).querySelector(".n-carousel__content");
+  const closestCarousel = (el) => {
+    var related_by_id = el.closest('[class*="n-carousel"]').dataset.for;
+    if (!!related_by_id) {
+      return document.getElementById(related_by_id).querySelector(".n-carousel__content");
+    } else {
+      return el.closest(".n-carousel").querySelector(".n-carousel__content");
+    }
+  };
   const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) => new Promise((resolve, reject) => {
     // Thanks https://stackoverflow.com/posts/46604409/revisions
     let wrapper = el.closest(".n-carousel");
@@ -624,10 +631,10 @@
   const observersOn = (el) => {
     window.requestAnimationFrame(() => {
       // setTimeout(() => {
-        if (el.scroll_x && el.scroll_y) {
-          scrollTo(el, el.scroll_x, el.scroll_y);
-        }
-        delete el.parentNode.dataset.sliding;
+      if (el.scroll_x && el.scroll_y) {
+        scrollTo(el, el.scroll_x, el.scroll_y);
+      }
+      delete el.parentNode.dataset.sliding;
       // }, 0);
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
