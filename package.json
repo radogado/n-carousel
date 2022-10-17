@@ -1,6 +1,6 @@
 {
   "name": "n-carousel",
-  "version": "1.1.21",
+  "version": "1.1.24",
   "description": "Carousel",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,8 @@
     "clean-css-cli": "^4.3.0",
     "gzip-size": "^6.0.0",
     "gzip-size-cli": "^4.0.0",
+    "n-modal": "^1.0.3",
+    "rollup": "^2.79.0",
     "sass": "^1.49.7",
     "terser": "^5.4.0"
   }

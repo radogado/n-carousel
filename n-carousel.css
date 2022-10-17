@@ -474,8 +474,6 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
   overflow-x: hidden;
-  --peek: 0.0001px;
-  --peek: 0;
 }
 
 _::-webkit-full-page-media,
@@ -760,6 +758,14 @@ _:future,
   filter: blur(4px);
   background: var(--placeholder, none) center no-repeat;
   background-size: contain;
+}
+.n-carousel--lightbox:not(.n-carousel--overlay).n-carousel--aspect > .n-carousel__content > * figure {
+  aspect-ratio: var(--ratio, 16/9);
+  position: relative;
+  width: 100%;
+}
+.n-carousel--lightbox:not(.n-carousel--overlay).n-carousel--aspect.n-carousel--auto-height img {
+  max-height: 100%;
 }
 
 /*# sourceMappingURL=n-carousel.css.map */

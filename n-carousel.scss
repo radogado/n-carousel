@@ -1,3 +1,5 @@
+// @import './node_modules/n-modal/n-modal.scss';
+
 body[data-frozen] {
 	overflow: hidden;
 }
@@ -425,7 +427,7 @@ body[data-frozen] {
 					padding: 0 1ch;
 				}
 			}
-			
+
 			padding: 1px;
 
 			[aria-current] {
@@ -752,8 +754,8 @@ _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
 	overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
-	--peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
-	--peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
+	// --peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
+	// --peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
 }
 
 // Safari not supporting inline end padding on scrollable element
@@ -1126,19 +1128,42 @@ _:future,
 		aspect-ratio: 16/9;
 	}
 
-	> .n-carousel__content picture:not([data-loaded]) {
-		position: relative;
-		&:before {
-			content: "";
-			position: absolute;
-			// top: 0;
-			// right: 0;
-			// bottom: 0;
-			// left: 0;
-			inset: 0;
-			filter: blur(4px);
-			background: var(--placeholder, none) center no-repeat;
-			background-size: contain;
+	> .n-carousel__content {
+		picture:not([data-loaded]) {
+			position: relative;
+
+			&:before {
+				content: "";
+				position: absolute;
+				// top: 0;
+				// right: 0;
+				// bottom: 0;
+				// left: 0;
+				inset: 0;
+				filter: blur(4px);
+				background: var(--placeholder, none) center no-repeat;
+				background-size: contain;
+			}
 		}
+
+	}
+
+	&:not(.n-carousel--overlay).n-carousel--aspect {
+		> .n-carousel__content {
+
+			> * {
+
+				figure {
+					aspect-ratio: var(--ratio, 16/9);
+					position: relative;
+					width: 100%;
+				}
+			}
+		}
+
+		&.n-carousel--auto-height img {
+			max-height: 100%;
+		}
+
 	}
 }

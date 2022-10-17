@@ -1,3 +1,5 @@
+// import './node_modules/n-modal/n-modal.js';
+
 (function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
@@ -163,7 +165,14 @@
       }
     }
   };
-  const closestCarousel = (el) => (document.getElementById(el.closest('[class*="n-carousel"]').dataset.for) || el.closest(".n-carousel")).querySelector(".n-carousel__content");
+  const closestCarousel = (el) => {
+    var related_by_id = el.closest('[class*="n-carousel"]').dataset.for;
+    if (!!related_by_id) {
+      return document.getElementById(related_by_id).querySelector(".n-carousel__content");
+    } else {
+      return el.closest(".n-carousel").querySelector(".n-carousel__content");
+    }
+  };
   const scrollAnimate = (el, distanceX, distanceY, new_height, old_height = false) => new Promise((resolve, reject) => {
     // Thanks https://stackoverflow.com/posts/46604409/revisions
     let wrapper = el.closest(".n-carousel");
@@ -348,6 +357,8 @@
         el.scroll_x = scroll_x;
         el.scroll_y = scroll_y;
         scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
+        delete el.scroll_x;
+        delete el.scroll_y;
       });
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
@@ -620,10 +631,10 @@
   const observersOn = (el) => {
     window.requestAnimationFrame(() => {
       // setTimeout(() => {
-        if (el.scroll_x && el.scroll_y) {
-          scrollTo(el, el.scroll_x, el.scroll_y);
-        }
-        delete el.parentNode.dataset.sliding;
+      if (el.scroll_x && el.scroll_y) {
+        scrollTo(el, el.scroll_x, el.scroll_y);
+      }
+      delete el.parentNode.dataset.sliding;
       // }, 0);
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
