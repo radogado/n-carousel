@@ -459,8 +459,8 @@ body[data-frozen] {
 
 @supports not (aspect-ratio: 1) {
   _::-webkit-full-page-media,
-_:future,
-:root .n-carousel[data-sliding] > .n-carousel__content {
+  _:future,
+  :root .n-carousel[data-sliding] > .n-carousel__content {
     scroll-snap-type: both mandatory;
   }
 }

@@ -1,5 +1,4 @@
 // import './node_modules/n-modal/n-modal.js';
-
 (function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
@@ -578,17 +577,17 @@
     if (isFullScreen()) {
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
     }
-    let carousel = el.closest(".n-carousel");
+    let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.classList.remove("n-carousel--overlay");
+      carousel.closest(".n-carousel").classList.remove("n-carousel--overlay");
       delete document.body.dataset.frozen;
     }
   };
   const openModal = (el) => {
-    el.openingModal = true;
-    let carousel = el.closest(".n-carousel");
+    let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.classList.add("n-carousel--overlay");
+      carousel.openingModal = true;
+      carousel.closest(".n-carousel").classList.add("n-carousel--overlay");
     }
   };
   const verticalAutoObserver = new ResizeObserver((entries) => {
@@ -833,7 +832,6 @@
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
               observersOff(el);
-
               setTimeout(() => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
                 let index = [...carousel.children].indexOf(slide);
