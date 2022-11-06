@@ -391,13 +391,17 @@
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
-    // Restore previous tabindex without taking into account the tabindex just added by the script
-    // console.log(active_slide);
-    if (!isSafari) {
-      [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022. Safari full screen bug because the full screen child lightbox is inside an inert parent
-        el.inert = (el === active_slide) ? false : true; // Safari full screen bug
-      });
-    }
+    [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022. 
+      el.inert = (el === active_slide) ? false : true;
+      if (isSafari && el.querySelector('.n-carousel:-webkit-full-screen')) { 
+        // Safari full screen bug: parent scroll resets to 0, first slide becomes active and the full screen child lightbox is inside an inert parent
+        let current = el.parentNode.querySelector(':scope > [aria-current="true"]');
+        current.inert = true;
+        current.removeAttribute('aria-current');
+        el.inert = false;
+        el.setAttribute('aria-current', true);
+      }
+    });
     // Obsoleted by inert – start
     // [...el.children].forEach((slide) => {
     //   if (slide !== active_slide) {
