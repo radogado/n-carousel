@@ -416,26 +416,28 @@ body[data-frozen] {
 			padding: 0;
 		}
 
-		&.n-carousel__index--thumbnails {
-			> * {
-				padding: 0;
-				vertical-align: middle;
-				margin: 0.25em auto;
-				border-radius: 0;
+	}
 
-				span {
-					padding: 0 1ch;
-				}
-			}
+	&.n-carousel--thumbnails > .n-carousel__index {
+		> * {
+			padding: 0;
+			vertical-align: middle;
+			margin: 0.25em auto;
+			border-radius: 0;
 
-			padding: 1px;
-
-			[aria-current] {
-				// opacity: .5;
-				box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
+			span {
+				padding: 0 1ch;
 			}
 		}
+
+		padding: 1px;
+
+		[aria-current] {
+			// opacity: .5;
+			box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
+		}
 	}
+
 
 	&[data-platform="iPhone"],
 	&[data-platform="iPod"] > {
