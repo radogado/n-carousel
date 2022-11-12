@@ -15,6 +15,10 @@
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
   const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
+  const indexControls = index => {
+    let controls_by_class = index.querySelectorAll('.n-carousel__control');
+    return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
+  }
   const nextSlideHeight = (el) => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -387,13 +391,13 @@
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute('aria-current');
       // index.children[active_index_logical].ariaCurrent = true; // Unsupported by FF
-      index.children[active_index_logical].setAttribute('aria-current', true);
+      indexControls(index)[active_index_logical].setAttribute('aria-current', true);
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022. 
       el.inert = (el === active_slide) ? false : true;
-      if (isSafari && el.querySelector('.n-carousel:-webkit-full-screen')) { 
+      if (isSafari && el.querySelector('.n-carousel:-webkit-full-screen')) {
         // Safari full screen bug: parent scroll resets to 0, first slide becomes active and the full screen child lightbox is inside an inert parent
         let current = el.parentNode.querySelector(':scope > [aria-current="true"]');
         current.inert = true;
@@ -541,7 +545,7 @@
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
       const wrapper = document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) || el.closest(".n-carousel");
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
-      let new_index = [...el.parentNode.children].indexOf(el);
+      let new_index = [...indexControls(el.parentNode)].indexOf(el);
       if (isEndless(carousel)) {
         var old_index = getIndex(carousel);
         if (old_index === 0) {
