@@ -284,18 +284,21 @@ body[data-frozen] {
 		--peek: 15%;
 	}
 
-	// &:not([data-sliding]):not([data-platform*="Win"]) > .n-carousel__content {
-	// Windows double scrolls – no longer an issue with intersection observer detecting snap
-
 	&:not([data-sliding]) > .n-carousel__content {
-		// Windows double scrolls
 
-		scroll-snap-type: both mandatory;
+		scroll-snap-type: x mandatory;
 
 		> * {
 			scroll-snap-align: center;
 			scroll-snap-stop: always;
 		}
+
+	}
+
+	&.n-carousel--vertical:not([data-sliding]) > .n-carousel__content { // Separate 'y', because 'both' crashes Safari 16.2
+
+		scroll-snap-type: y mandatory;
+
 	}
 
 	display: grid;

@@ -191,11 +191,14 @@ body[data-frozen] {
   --peek: 15%;
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content {
-  scroll-snap-type: both mandatory;
+  scroll-snap-type: x mandatory;
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content > * {
   scroll-snap-align: center;
   scroll-snap-stop: always;
+}
+.n-carousel.n-carousel--vertical:not([data-sliding]) > .n-carousel__content {
+  scroll-snap-type: y mandatory;
 }
 .n-carousel.n-carousel--index-align-start > .n-carousel__index {
   justify-self: start;
