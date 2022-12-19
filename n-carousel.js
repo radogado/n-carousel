@@ -1,5 +1,4 @@
 // import './node_modules/n-modal/n-modal.js';
-
 (function() {
   const ceilingWidth = (el) => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) => Math.ceil(parseFloat(getComputedStyle(el).height));
@@ -16,6 +15,10 @@
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
   const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
+  const indexControls = index => {
+    let controls_by_class = index.querySelectorAll('.n-carousel__control');
+    return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
+  }
   const nextSlideHeight = (el) => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -388,17 +391,21 @@
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute('aria-current');
       // index.children[active_index_logical].ariaCurrent = true; // Unsupported by FF
-      index.children[active_index_logical].setAttribute('aria-current', true);
+      indexControls(index)[active_index_logical].setAttribute('aria-current', true);
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
-    // Restore previous tabindex without taking into account the tabindex just added by the script
-    // console.log(active_slide);
-    if (!isSafari) {
-      [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022. Safari full screen bug because the full screen child lightbox is inside an inert parent
-        el.inert = (el === active_slide) ? false : true; // Safari full screen bug
-      });
-    }
+    [...el.children].forEach(el => { // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022. 
+      el.inert = (el === active_slide) ? false : true;
+      if (isSafari && el.querySelector('.n-carousel:-webkit-full-screen')) {
+        // Safari full screen bug: parent scroll resets to 0, first slide becomes active and the full screen child lightbox is inside an inert parent
+        let current = el.parentNode.querySelector(':scope > [aria-current="true"]');
+        current.inert = true;
+        current.removeAttribute('aria-current');
+        el.inert = false;
+        el.setAttribute('aria-current', true);
+      }
+    });
     // Obsoleted by inert – start
     // [...el.children].forEach((slide) => {
     //   if (slide !== active_slide) {
@@ -538,7 +545,7 @@
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
       const wrapper = document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) || el.closest(".n-carousel");
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
-      let new_index = [...el.parentNode.children].indexOf(el);
+      let new_index = [...indexControls(el.parentNode)].indexOf(el);
       if (isEndless(carousel)) {
         var old_index = getIndex(carousel);
         if (old_index === 0) {
@@ -578,17 +585,17 @@
     if (isFullScreen()) {
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
     }
-    let carousel = el.closest(".n-carousel");
+    let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.classList.remove("n-carousel--overlay");
+      carousel.closest(".n-carousel").classList.remove("n-carousel--overlay");
       delete document.body.dataset.frozen;
     }
   };
   const openModal = (el) => {
-    el.openingModal = true;
-    let carousel = el.closest(".n-carousel");
+    let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.classList.add("n-carousel--overlay");
+      carousel.openingModal = true;
+      carousel.closest(".n-carousel").classList.add("n-carousel--overlay");
     }
   };
   const verticalAutoObserver = new ResizeObserver((entries) => {
@@ -833,7 +840,6 @@
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
               observersOff(el);
-
               setTimeout(() => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
                 let index = [...carousel.children].indexOf(slide);

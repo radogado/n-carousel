@@ -191,11 +191,14 @@ body[data-frozen] {
   --peek: 15%;
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content {
-  scroll-snap-type: both mandatory;
+  scroll-snap-type: x mandatory;
 }
 .n-carousel:not([data-sliding]) > .n-carousel__content > * {
   scroll-snap-align: center;
   scroll-snap-stop: always;
+}
+.n-carousel.n-carousel--vertical:not([data-sliding]) > .n-carousel__content {
+  scroll-snap-type: y mandatory;
 }
 .n-carousel.n-carousel--index-align-start > .n-carousel__index {
   justify-self: start;
@@ -258,19 +261,19 @@ body[data-frozen] {
   object-fit: cover;
   padding: 0;
 }
-.n-carousel > .n-carousel__index.n-carousel__index--thumbnails {
+.n-carousel.n-carousel--thumbnails > .n-carousel__index {
   padding: 1px;
 }
-.n-carousel > .n-carousel__index.n-carousel__index--thumbnails > * {
+.n-carousel.n-carousel--thumbnails > .n-carousel__index > * {
   padding: 0;
   vertical-align: middle;
   margin: 0.25em auto;
   border-radius: 0;
 }
-.n-carousel > .n-carousel__index.n-carousel__index--thumbnails > * span {
+.n-carousel.n-carousel--thumbnails > .n-carousel__index > * span {
   padding: 0 1ch;
 }
-.n-carousel > .n-carousel__index.n-carousel__index--thumbnails [aria-current] {
+.n-carousel.n-carousel--thumbnails > .n-carousel__index [aria-current] {
   box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
 }
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
@@ -459,8 +462,8 @@ body[data-frozen] {
 
 @supports not (aspect-ratio: 1) {
   _::-webkit-full-page-media,
-_:future,
-:root .n-carousel[data-sliding] > .n-carousel__content {
+  _:future,
+  :root .n-carousel[data-sliding] > .n-carousel__content {
     scroll-snap-type: both mandatory;
   }
 }
