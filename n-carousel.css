@@ -203,14 +203,14 @@ body[data-frozen] {
 .n-carousel.n-carousel--index-align-start > .n-carousel__index {
   justify-self: start;
 }
-.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
+.n-carousel.n-carousel--index-align-start.n-carousel--index-start:not(.n-carousel--controls-outside) {
   grid-template-areas: "f c i b1 b2 b2" "prev a3 a3 a3 a3 next";
 }
-.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
+.n-carousel.n-carousel--index-align-start.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
   grid-template-areas: "i i i i i i" "prev a2 a2 a2 a2 next" "f c a3 a3 a3 a3";
 }
-.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen,
-.n-carousel.n-carousel--index-align-start.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__close {
+.n-carousel.n-carousel--index-align-start.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__full-screen,
+.n-carousel.n-carousel--index-align-start.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) > .n-carousel__close {
   align-self: end;
 }
 .n-carousel.n-carousel--index-align-center:not(.n-carousel--vertical) > .n-carousel__index {
@@ -282,17 +282,21 @@ body[data-frozen] {
 .n-carousel[data-platform=iPhone] .n-carousel__close, .n-carousel[data-platform=iPod] > .n-carousel__close {
   grid-area: f;
 }
-.n-carousel.n-carousel--index-start .n-carousel__index {
-  justify-content: flex-start;
-}
-.n-carousel.n-carousel--index-end > .n-carousel__index {
-  justify-content: flex-end;
-}
 .n-carousel.n-carousel--index-start {
-  grid-template-areas: "f    c i   i   i   i" "prev   a3 a3    a3    a3    next";
+  grid-template-areas: "i       i   i     i     i     i" "prev    a2  a2    a2    a2    next" "f      c   a3    a3    a3    a3";
 }
 .n-carousel.n-carousel--index-start > .n-carousel__index {
   align-self: start;
+}
+.n-carousel.n-carousel--index-start .n-carousel__index {
+  justify-content: flex-start;
+}
+.n-carousel.n-carousel--index-start > .n-carousel__full-screen,
+.n-carousel.n-carousel--index-start > .n-carousel__close {
+  align-self: end;
+}
+.n-carousel.n-carousel--index-end > .n-carousel__index {
+  justify-content: flex-end;
 }
 .n-carousel.n-carousel--controls-outside {
   grid-template-areas: "f      c	content   a1" "prev   c2 content   next" "a2     c2   content a3" "i      i			i         i";

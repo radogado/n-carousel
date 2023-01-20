@@ -295,7 +295,8 @@ body[data-frozen] {
 
 	}
 
-	&.n-carousel--vertical:not([data-sliding]) > .n-carousel__content { // Separate 'y', because 'both' crashes Safari 16.2
+	&.n-carousel--vertical:not([data-sliding]) > .n-carousel__content {
+		// Separate 'y', because 'both' crashes Safari 16.2
 
 		scroll-snap-type: y mandatory;
 
@@ -319,7 +320,7 @@ body[data-frozen] {
 			justify-self: start;
 		}
 
-		&.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
+		&.n-carousel--index-start:not(.n-carousel--controls-outside) {
 			grid-template-areas:
 				"f c i b1 b2 b2"
 				"prev a3 a3 a3 a3 next";
@@ -455,24 +456,29 @@ body[data-frozen] {
 	}
 
 	&.n-carousel--index-start {
+		grid-template-areas:
+			"i       i   i     i     i     i"
+			"prev    a2  a2    a2    a2    next"
+			"f      c   a3    a3    a3    a3";
+
+		> .n-carousel__index {
+			align-self: start;
+		}
+
 		.n-carousel__index {
 			justify-content: flex-start;
 		}
+
+		> .n-carousel__full-screen,
+		> .n-carousel__close {
+			align-self: end;
+		}
+
 	}
 
 	&.n-carousel--index-end {
 		> .n-carousel__index {
 			justify-content: flex-end;
-		}
-	}
-
-	&.n-carousel--index-start {
-		grid-template-areas:
-			"f    c i   i   i   i"
-			"prev   a3 a3    a3    a3    next";
-
-		> .n-carousel__index {
-			align-self: start;
 		}
 	}
 
