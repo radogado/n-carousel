@@ -120,9 +120,8 @@ body[data-frozen] {
 		max-height: 100% !important;
 
 		> .n-carousel__content {
-			// height: 100% !important;
-			height: 100%;
-			height: 100dvh; // Dynamic viewport height, Safari 15.4
+			height: 100% !important;
+			height: 100dvh !important; // Dynamic viewport height, Safari 15.4
 
 			figure,
 			img,
@@ -139,6 +138,10 @@ body[data-frozen] {
 
 		> .n-carousel__close {
 			display: none;
+		}
+
+		> .n-carousel__content {
+			height: 100% !important;
 		}
 	}
 
