@@ -821,9 +821,7 @@ _:future,
 
 [data-ready] {
 
-	> .n-carousel__content {
-		--height: 0;
-	}
+	--height: 0;
 
 	> .n-carousel__index,
 	> .n-carousel__previous,
@@ -837,7 +835,6 @@ _:future,
 
 	&.n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
 		> :not([aria-current]) {
-			// height: var(--height, 0);
 			overflow: visible;
 		}
 	}
@@ -1149,10 +1146,6 @@ _:future,
 			&:before {
 				content: "";
 				position: absolute;
-				// top: 0;
-				// right: 0;
-				// bottom: 0;
-				// left: 0;
 				inset: 0;
 				filter: blur(4px);
 				background: var(--placeholder, none) center no-repeat;
@@ -1162,7 +1155,9 @@ _:future,
 
 	}
 
-	&:not(.n-carousel--overlay).n-carousel--aspect {
+	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect {
+		--max-height: 100%;
+
 		> .n-carousel__content {
 
 			> * {
@@ -1171,12 +1166,21 @@ _:future,
 					aspect-ratio: var(--ratio, 16/9);
 					position: relative;
 					width: 100%;
+					height: auto;
 				}
 			}
 		}
 
 		&.n-carousel--auto-height img {
 			max-height: 100%;
+		}
+
+		&.n-carousel--vertical {
+			height: var(--height);
+
+			> .n-carousel__content > * {
+				height: auto;
+			}
 		}
 
 	}

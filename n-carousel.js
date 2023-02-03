@@ -368,7 +368,7 @@
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
-    el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
+    wrapper.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
     window.requestAnimationFrame(() => {
       if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
@@ -462,7 +462,7 @@
         } else {
           new_height = nextSlideHeight(slide);
           let old_height = getIndexReal(el) === index ? new_height : nextSlideHeight(el.children[getIndexReal(el)]);
-          el.style.setProperty("--height", `${old_height}px`);
+          el.parentNode.style.setProperty("--height", `${old_height}px`);
         }
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
@@ -668,7 +668,7 @@
         let current_height = el.querySelector(":scope > [aria-current]").scrollHeight + "px";
         let previous_height = getComputedStyle(el).getPropertyValue("--height");
         if (current_height !== previous_height) {
-          el.style.setProperty("--height", current_height);
+          el.parentNode.style.setProperty("--height", current_height);
         }
         observersOn(el);
       });
