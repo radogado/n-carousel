@@ -1155,7 +1155,7 @@ _:future,
 
 	}
 
-	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect {
+	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect, &:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
 		--max-height: 100%;
 
 		> .n-carousel__content {
@@ -1184,4 +1184,35 @@ _:future,
 		}
 
 	}
+
+	&:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
+		--max-height: 100%;
+
+		> .n-carousel__content {
+
+			> * {
+
+				figure {
+					aspect-ratio: var(--ratio, 16/9);
+					position: relative;
+					width: 100%;
+					height: auto;
+				}
+			}
+		}
+
+		&.n-carousel--auto-height img {
+			max-height: 100%;
+		}
+
+		&.n-carousel--vertical {
+			height: var(--height);
+
+			> .n-carousel__content > * {
+				height: auto;
+			}
+		}
+
+	}
+
 }
