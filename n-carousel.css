@@ -804,6 +804,7 @@ _:future,
 }
 .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect.n-carousel--vertical > .n-carousel__content > * {
   height: auto;
+  flex-grow: initial;
 }
 
 /*# sourceMappingURL=n-carousel.css.map */
