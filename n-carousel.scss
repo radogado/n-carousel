@@ -430,7 +430,8 @@ body[data-frozen] {
 			padding: 0;
 			vertical-align: middle;
 			margin: 0.25em auto;
-			border-radius: 0;
+			border-radius: var(--nui-border-radius);
+			overflow: hidden;
 
 			span {
 				padding: 0 1ch;
@@ -799,7 +800,7 @@ _:future,
 		background: var(--nui-control-bg, #eee);
 		min-width: 2.25em;
 		min-height: 2.25em;
-		border-radius: 2.25em;
+		border-radius: var(--nui-border-radius, 2.25em);
 		margin: 0.25em;
 		font: inherit;
 		display: inline-flex;
@@ -819,7 +820,7 @@ _:future,
 	}
 }
 
-[data-ready] {
+.n-carousel[data-ready] {
 
 	--height: 0;
 
@@ -939,8 +940,7 @@ _:future,
 
 .n-carousel--tabs {
 
-	&.n-carousel > .n-carousel__index,
-	&.n-carousel__index {
+	&.n-carousel > .n-carousel__index {
 		// For normal and detached controls
 		display: flex;
 		justify-content: start;
@@ -965,6 +965,17 @@ _:future,
 			&:focus {
 				z-index: 0;
 			}
+
+			&:first-child {
+				border-start-start-radius: var(--nui-border-radius);
+				border-end-start-radius: var(--nui-border-radius);
+			}
+
+			&:last-child {
+				border-start-end-radius: var(--nui-border-radius);
+				border-end-end-radius: var(--nui-border-radius);
+			}
+
 		}
 	}
 
@@ -974,6 +985,19 @@ _:future,
 
 			> * {
 				width: 100%;
+
+				&:first-child {
+					border-radius: 0;
+					border-start-start-radius: var(--nui-border-radius);
+					border-start-end-radius: var(--nui-border-radius);
+				}
+
+				&:last-child {
+					border-radius: 0;
+					border-end-start-radius: var(--nui-border-radius);
+					border-end-end-radius: var(--nui-border-radius);
+				}
+
 			}
 		}
 
@@ -1155,7 +1179,8 @@ _:future,
 
 	}
 
-	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect, &:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
+	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect,
+	&:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
 		--max-height: 100%;
 
 		> .n-carousel__content {
