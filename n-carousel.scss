@@ -1035,7 +1035,10 @@ _:future,
 .n-carousel--lightbox {
 	flex: 1;
 	--nui-carousel-bg: transparent;
-	max-height: var(--max-height, 100vh);
+
+	&:not(.n-carousel--auto-height) {
+		max-height: var(--max-height, 100vh);
+	}
 
 	figure {
 		height: 100%;
