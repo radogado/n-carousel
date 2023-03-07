@@ -723,6 +723,8 @@ _:future,
   background: rgba(0, 0, 0, 0.3);
   color: #ddd;
   z-index: 0;
+  border-radius: var(--nui-border-radius);
+  margin: 0.25em;
 }
 .n-carousel--lightbox.n-carousel--auto-height figure,
 .n-carousel--lightbox.n-carousel--auto-height video,
