@@ -264,7 +264,7 @@
     if (active_index >= el.children.length) {
       active_index = el.children.length - 1;
     }
-    console.log('update at', active_index, el.dataset.x, el.dataset.y);
+    // console.log('update at', active_index, el.dataset.x, el.dataset.y);
     let old_active_slide = el.querySelector(":scope > [aria-current]");
     let wrapper = el.parentElement;
     if (!wrapper.classList.contains("n-carousel--auto-height")) {
@@ -474,10 +474,11 @@
         }
         offsetY = offsetY - index * old_height + index * new_height;
       }
-      console.log(index, offsetX, offsetY);
+      // console.log(index, offsetX, offsetY);
       window.requestAnimationFrame(() => {
         if (!el.parentNode.dataset.duration && !isAuto(el)) { // Unspecified duration, using native smooth scroll
           delete el.parentNode.dataset.sliding;
+          el.dataset.next = index;
           el.scrollTo({
             top: el.scrollTop + offsetY,
             left: el.scrollLeft + offsetX,
@@ -850,17 +851,25 @@
             let slide = entry.target;
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
+              if (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide)) {
+                return;
+              }
+              delete carousel.dataset.next;
               observersOff(el);
               let x = carousel.scrollLeft;
               let y = carousel.scrollTop;
-              let interval = 400; // Get rid of this magic number by timeout comparison with previous scroll offset
+              let interval = 10; // Get rid of this magic number by timeout comparison with previous scroll offset
               let timeout_function = () => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
-                if (x !== carousel.scrollLeft && y !== carousel.scrollTop) {
-                  clearTimeout(timeout);
-                  timeout = setTimeout(timeout_function, interval);
-                  return;
-                }
+                // if (Math.abs(x - carousel.scrollLeft) >= 1) {
+                //   console.log('intersection continue', x, carousel.scrollLeft, y, carousel.scrollLeft);
+                //   clearTimeout(timeout);
+                //   timeout = setTimeout(timeout_function, interval);
+                //   return;
+                // }
+
+                // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
+
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
                   let old_height = parseFloat(getComputedStyle(carousel).height);
