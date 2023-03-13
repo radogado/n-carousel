@@ -482,7 +482,7 @@
           el.scrollTo({
             top: el.scrollTop + offsetY,
             left: el.scrollLeft + offsetX,
-            behavior: "smooth"
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? "auto" : "smooth"
           });
         } else {
           scrollAnimate(el, offsetX, offsetY, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
