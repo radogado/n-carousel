@@ -15,6 +15,8 @@
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
   const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
+  const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
+  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
   const indexControls = index => {
     let controls_by_class = index.querySelectorAll('.n-carousel__control');
     return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
@@ -121,8 +123,6 @@
     x: scrollStartX(el),
     y: el.scrollTop
   });
-  const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
-  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
   const trapFocus = (modal) => {
     // FROM: https://uxdesign.cc/how-to-trap-focus-inside-modal-to-make-it-ada-compliant-6a50f9a70700
     // add all the elements inside modal which you want to make focusable
@@ -264,6 +264,7 @@
     if (active_index >= el.children.length) {
       active_index = el.children.length - 1;
     }
+    console.log('update at', active_index, el.dataset.x, el.dataset.y);
     let old_active_slide = el.querySelector(":scope > [aria-current]");
     let wrapper = el.parentElement;
     if (!wrapper.classList.contains("n-carousel--auto-height")) {
@@ -470,12 +471,21 @@
       if (isVertical(el)) {
         if ((isModal(el) || isFullScreen()) && isAuto(el)) {
           old_height = new_height = el.offsetHeight;
-          // alert('full screen');
         }
         offsetY = offsetY - index * old_height + index * new_height;
       }
+      console.log(index, offsetX, offsetY);
       window.requestAnimationFrame(() => {
-        scrollAnimate(el, offsetX, offsetY, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
+        if (!el.parentNode.dataset.duration && !isAuto(el)) { // Unspecified duration, using native smooth scroll
+          delete el.parentNode.dataset.sliding;
+          el.scrollTo({
+            top: el.scrollTop + offsetY,
+            left: el.scrollLeft + offsetX,
+            behavior: "smooth"
+          });
+        } else {
+          scrollAnimate(el, offsetX, offsetY, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
+        }
       });
     }
   };
@@ -833,6 +843,7 @@
       });
       content.nCarouselUpdate = updateCarousel;
       const targets = content.querySelectorAll(':scope > *');
+      let timeout = 0;
       const inView = target => {
         const interSecObs = new IntersectionObserver(entries => {
           entries.forEach(entry => {
@@ -840,8 +851,16 @@
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
               observersOff(el);
-              setTimeout(() => {
+              let x = carousel.scrollLeft;
+              let y = carousel.scrollTop;
+              let interval = 400; // Get rid of this magic number by timeout comparison with previous scroll offset
+              let timeout_function = () => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
+                if (x !== carousel.scrollLeft && y !== carousel.scrollTop) {
+                  clearTimeout(timeout);
+                  timeout = setTimeout(timeout_function, interval);
+                  return;
+                }
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
                   let old_height = parseFloat(getComputedStyle(carousel).height);
@@ -885,7 +904,8 @@
                   });
                 }
                 // updateCarousel(entry.target.parentNode);
-              }, 50);
+              };
+              timeout = setTimeout(timeout_function, interval);
             }
           });
         }, { threshold: .996, root: target.parentElement }); // .99 works for all, including vertical auto height
