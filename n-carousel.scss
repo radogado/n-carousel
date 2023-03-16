@@ -1257,3 +1257,10 @@ _:future,
 	}
 
 }
+
+// Remove iPad button to exit full screen, because there is a native one
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	.n-carousel:-webkit-full-screen .n-carousel__full-screen {
+		display: none;
+	}
+}

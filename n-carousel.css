@@ -833,4 +833,10 @@ _:future,
   flex-grow: initial;
 }
 
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .n-carousel:-webkit-full-screen .n-carousel__full-screen {
+    display: none;
+  }
+}
+
 /*# sourceMappingURL=n-carousel.css.map */
