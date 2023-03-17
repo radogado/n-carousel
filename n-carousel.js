@@ -585,10 +585,11 @@
           document.body.dataset.frozen = document.body.scrollTop;
           trapFocus(wrapper);
         });
+      } else {
+        window.requestAnimationFrame(() => {
+          slideTo(carousel, new_index);
+        });
       }
-      window.requestAnimationFrame(() => {
-        slideTo(carousel, new_index);
-      });
       return false;
     }
   };
@@ -867,9 +868,7 @@
                 //   timeout = setTimeout(timeout_function, interval);
                 //   return;
                 // }
-
                 // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
-
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
                   let old_height = parseFloat(getComputedStyle(carousel).height);
