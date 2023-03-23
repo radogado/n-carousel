@@ -486,12 +486,6 @@ _:future,
 
 _::-webkit-full-page-media,
 _:future,
-:root .n-carousel {
-  overflow-x: hidden;
-}
-
-_::-webkit-full-page-media,
-_:future,
 :root .n-carousel.n-carousel--peek:not(.n-carousel--vertical) > .n-carousel__content:after {
   content: "";
   padding: var(--peek-int, 0);
@@ -650,6 +644,7 @@ _:future,
   max-width: 100%;
   max-height: 100%;
   color: var(--nui-control-color, #333);
+  border-radius: var(--nui-border-radius);
 }
 .n-carousel--tabs.n-carousel > .n-carousel__index > * {
   box-sizing: border-box;
@@ -666,14 +661,6 @@ _:future,
 }
 .n-carousel--tabs.n-carousel > .n-carousel__index > *:focus {
   z-index: 0;
-}
-.n-carousel--tabs.n-carousel > .n-carousel__index > *:first-child {
-  border-start-start-radius: var(--nui-border-radius);
-  border-end-start-radius: var(--nui-border-radius);
-}
-.n-carousel--tabs.n-carousel > .n-carousel__index > *:last-child {
-  border-start-end-radius: var(--nui-border-radius);
-  border-end-end-radius: var(--nui-border-radius);
 }
 .n-carousel--tabs.n-carousel.n-carousel--vertical > .n-carousel__index {
   display: block;
