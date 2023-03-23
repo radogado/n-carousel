@@ -830,6 +830,19 @@ _:future,
 	}
 }
 
+.n-carousel__index > *,
+.n-carousel__previous > *,
+.n-carousel__next > *,
+.n-carousel__full-screen > *,
+.n-carousel__close > *,
+.n-carousel--tabs > .n-carousel__index {
+	box-shadow: 0 0 0 var(--nui-border-size) var(--nui-border-color), 0 0 var(--nui-shadow-blur) calc(var(--nui-border-size) + var(--nui-shadow-size)) var(--nui-shadow-color);
+}
+
+.n-carousel--tabs > .n-carousel__index > * {
+	box-shadow: none;
+}
+
 .n-carousel[data-ready] {
 
 	--height: 0;

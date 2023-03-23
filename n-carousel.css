@@ -473,8 +473,8 @@ body[data-frozen] {
 
 @supports not (aspect-ratio: 1) {
   _::-webkit-full-page-media,
-  _:future,
-  :root .n-carousel[data-sliding] > .n-carousel__content {
+_:future,
+:root .n-carousel[data-sliding] > .n-carousel__content {
     scroll-snap-type: both mandatory;
   }
 }
@@ -536,6 +536,19 @@ _:future,
 .n-carousel__full-screen > *[aria-current] span,
 .n-carousel__close > *[aria-current] span {
   color: var(--nui-control-active-color, blue);
+}
+
+.n-carousel__index > *,
+.n-carousel__previous > *,
+.n-carousel__next > *,
+.n-carousel__full-screen > *,
+.n-carousel__close > *,
+.n-carousel--tabs > .n-carousel__index {
+  box-shadow: 0 0 0 var(--nui-border-size) var(--nui-border-color), 0 0 var(--nui-shadow-blur) calc(var(--nui-border-size) + var(--nui-shadow-size)) var(--nui-shadow-color);
+}
+
+.n-carousel--tabs > .n-carousel__index > * {
+  box-shadow: none;
 }
 
 .n-carousel[data-ready] {
