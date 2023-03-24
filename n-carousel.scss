@@ -645,8 +645,8 @@ body[data-frozen] {
 			"f    c prev    a2"
 			"i    c2 content   a2"
 			"i    c2 next    a2";
-		grid-template-rows: auto auto 1fr auto;
-		padding-inline-start: var(--index-width);
+		grid-template-rows: auto 1fr auto auto;
+		// padding-inline-start: var(--index-width);
 
 		&.n-carousel--index-align-start {
 			> .n-carousel__index {
@@ -655,7 +655,7 @@ body[data-frozen] {
 		}
 
 		&.n-carousel--index-align-end {
-			grid-template-columns: auto 1fr auto;
+			grid-template-columns: auto auto 1fr auto;
 
 			> .n-carousel__index {
 				align-self: end;
@@ -667,11 +667,12 @@ body[data-frozen] {
 				"f    c prev    i"
 				"a1   c2  content   i"
 				"a1   c2  next    i";
-			padding-inline-end: var(--index-width);
-			padding-inline-start: 0;
+				grid-template-rows: auto 1fr;
+			// padding-inline-end: var(--index-width);
+			// padding-inline-start: 0;
 
 			&.n-carousel--index-align-start {
-				grid-template-columns: auto auto 1fr auto;
+				// grid-template: auto 1fr / auto auto 1fr auto;
 			}
 		}
 
