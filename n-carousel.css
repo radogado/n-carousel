@@ -156,6 +156,7 @@ body[data-frozen] {
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > * {
   display: initial;
+  margin: 0;
 }
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--index-end > .n-carousel__index {
   inset-inline-end: 0;
