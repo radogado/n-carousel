@@ -247,11 +247,12 @@
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
-    if (!el.openingModal) {
+    if (el.openingModal) {
+      delete el.openingModal;
+      scrollTo(el, el.offsetWidth * el.dataset.x, el.offsetHeight * el.dataset.y);
+    } else {
       el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
       el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
-    } else {
-      delete el.openingModal;
     }
     // When inline
     if (el.dataset.x === "NaN") {

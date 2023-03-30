@@ -1,6 +1,5 @@
 (() => {
   if (!!location.hash) {
-    // Height adjustment during DOM population
     let observer = new MutationObserver((mutations) => {
       for (let mutation of mutations) {
         for (let el of mutation.addedNodes) {
