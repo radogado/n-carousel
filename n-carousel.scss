@@ -451,7 +451,7 @@ body[data-frozen] {
 		&.n-carousel--vertical {
 			> .n-carousel__index {
 				> * {
-					margin: var(--nui-border-radius);
+					margin: var(--nui-border-radius, .25em);
 				}
 			}
 		}
