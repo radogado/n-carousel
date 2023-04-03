@@ -85,6 +85,25 @@ body[data-frozen] {
   position: relative;
   grid-template-areas: "f    		c			a3    a3    a3    a3" "prev   	a2		a2    a2    a2    next" "i      	i			i     i     i     i";
 }
+.n-carousel:fullscreen, .n-carousel.n-carousel--overlay {
+  max-height: 100% !important;
+}
+.n-carousel:fullscreen > .n-carousel__content, .n-carousel.n-carousel--overlay > .n-carousel__content {
+  height: 100% !important;
+  height: 100dvh !important;
+}
+.n-carousel:fullscreen > .n-carousel__content figure,
+.n-carousel:fullscreen > .n-carousel__content img,
+.n-carousel:fullscreen > .n-carousel__content video,
+.n-carousel:fullscreen > .n-carousel__content iframe, .n-carousel.n-carousel--overlay > .n-carousel__content figure,
+.n-carousel.n-carousel--overlay > .n-carousel__content img,
+.n-carousel.n-carousel--overlay > .n-carousel__content video,
+.n-carousel.n-carousel--overlay > .n-carousel__content iframe {
+  max-height: 100%;
+}
+.n-carousel:fullscreen > .n-carousel__close {
+  display: none;
+}
 .n-carousel:-webkit-full-screen, .n-carousel.n-carousel--overlay {
   max-height: 100% !important;
 }
@@ -100,15 +119,6 @@ body[data-frozen] {
 .n-carousel.n-carousel--overlay > .n-carousel__content video,
 .n-carousel.n-carousel--overlay > .n-carousel__content iframe {
   max-height: 100%;
-}
-.n-carousel:fullscreen {
-  max-height: 100% !important;
-}
-.n-carousel:fullscreen > .n-carousel__close {
-  display: none;
-}
-.n-carousel:fullscreen > .n-carousel__content {
-  height: 100% !important;
 }
 .n-carousel:-webkit-full-screen > .n-carousel__close {
   display: none;
@@ -734,6 +744,9 @@ _:future,
 .n-carousel--lightbox.n-carousel--auto-height :not(:-webkit-full-screen):not(.n-carousel--overlay) > .n-carousel__content {
   max-height: var(--max-height);
 }
+.n-carousel--lightbox.n-carousel--auto-height :not(:fullscreen):not(.n-carousel--overlay) > .n-carousel__content {
+  max-height: var(--max-height);
+}
 .n-carousel--lightbox.n-carousel--index-start figure {
   grid-template: 1fr auto/auto;
 }
@@ -765,6 +778,12 @@ _:future,
 .n-carousel--lightbox:-webkit-full-screen.n-carousel--auto-height figure {
   height: 100%;
 }
+.n-carousel--lightbox:fullscreen img {
+  max-height: 100%;
+}
+.n-carousel--lightbox:fullscreen.n-carousel--auto-height figure {
+  height: 100%;
+}
 .n-carousel--lightbox.n-carousel--overlay img {
   max-height: 100%;
 }
@@ -791,23 +810,24 @@ _:future,
   background: var(--placeholder, none) center no-repeat;
   background-size: contain;
 }
-.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect, .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
+.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect {
   --max-height: 100%;
 }
-.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect > .n-carousel__content > * figure, .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect > .n-carousel__content > * figure {
+.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect > .n-carousel__content > * figure {
   aspect-ratio: var(--ratio, 16/9);
   position: relative;
   width: 100%;
   height: auto;
 }
-.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect.n-carousel--auto-height img, .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect.n-carousel--auto-height img {
+.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect.n-carousel--auto-height img {
   max-height: 100%;
 }
-.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect.n-carousel--vertical, .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect.n-carousel--vertical {
+.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect.n-carousel--vertical {
   height: var(--height);
 }
-.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect.n-carousel--vertical > .n-carousel__content > *, .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect.n-carousel--vertical > .n-carousel__content > * {
+.n-carousel--lightbox:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect.n-carousel--vertical > .n-carousel__content > * {
   height: auto;
+  flex-grow: initial;
 }
 .n-carousel--lightbox:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
   --max-height: 100%;
@@ -830,7 +850,7 @@ _:future,
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-  .n-carousel:-webkit-full-screen .n-carousel__full-screen {
+  .n-carousel:fullscreen .n-carousel__full-screen {
     display: none;
   }
 }

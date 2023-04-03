@@ -115,7 +115,7 @@ body[data-frozen] {
 
 .n-carousel {
 
-	&:-webkit-full-screen,
+	&:fullscreen,
 	&.n-carousel--overlay {
 		max-height: 100% !important;
 
@@ -133,16 +133,28 @@ body[data-frozen] {
 	}
 
 	&:fullscreen {
-		// Chrome, Firefox
-		max-height: 100% !important;
-
 		> .n-carousel__close {
 			display: none;
 		}
+	}
+
+	&:-webkit-full-screen,
+	&.n-carousel--overlay {
+		// Safari 16.3-
+		max-height: 100% !important;
 
 		> .n-carousel__content {
 			height: 100% !important;
+			height: 100dvh !important; // Dynamic viewport height, Safari 15.4
+
+			figure,
+			img,
+			video,
+			iframe {
+				max-height: 100%;
+			}
 		}
+
 	}
 
 	&:-webkit-full-screen {
@@ -171,6 +183,8 @@ body[data-frozen] {
 
 		&:not(.n-carousel--auto-height) {
 			&:-webkit-full-screen {
+
+				// Safari 16.3-
 				> .n-carousel__content {
 					height: 100% !important;
 				}
@@ -668,7 +682,7 @@ body[data-frozen] {
 				"f    c prev    i"
 				"a1   c2  content   i"
 				"a1   c2  next    i";
-				grid-template-rows: auto 1fr;
+			grid-template-rows: auto 1fr;
 			// padding-inline-end: var(--index-width);
 			// padding-inline-start: 0;
 
@@ -708,6 +722,7 @@ body[data-frozen] {
 	}
 
 	&:-webkit-full-screen {
+		// Safari 16.3-
 		background: #000;
 		--max-height: 100vh;
 	}
@@ -1097,6 +1112,11 @@ _:future,
 		}
 
 		:not(:-webkit-full-screen):not(.n-carousel--overlay) > .n-carousel__content {
+			// Safari 16.3-
+			max-height: var(--max-height);
+		}
+
+		:not(:fullscreen):not(.n-carousel--overlay) > .n-carousel__content {
 			max-height: var(--max-height);
 		}
 	}
@@ -1151,6 +1171,20 @@ _:future,
 	}
 
 	&:-webkit-full-screen {
+
+		// Safari 16.3-
+		img {
+			max-height: 100%;
+		}
+
+		&.n-carousel--auto-height {
+			figure {
+				height: 100%;
+			}
+		}
+	}
+
+	&:fullscreen {
 		img {
 			max-height: 100%;
 		}
@@ -1200,8 +1234,7 @@ _:future,
 
 	}
 
-	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect,
-	&:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
+	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect {
 		--max-height: 100%;
 
 		> .n-carousel__content {
@@ -1226,12 +1259,14 @@ _:future,
 
 			> .n-carousel__content > * {
 				height: auto;
+				flex-grow: initial;
 			}
 		}
 
 	}
 
 	&:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
+		// Safari 16.3-
 		--max-height: 100%;
 
 		> .n-carousel__content {
@@ -1266,7 +1301,7 @@ _:future,
 
 // Remove iPad button to exit full screen, because there is a native one
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-	.n-carousel:-webkit-full-screen .n-carousel__full-screen {
+	.n-carousel:fullscreen .n-carousel__full-screen {
 		display: none;
 	}
 }

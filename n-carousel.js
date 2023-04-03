@@ -580,7 +580,7 @@
           }
         }
       }
-      if (wrapper.classList.contains("n-carousel--inline") && !isModal(carousel)) {
+      if (wrapper.classList.contains("n-carousel--inline") && !isModal(carousel)) { // Opening an inline carousel
         wrapper.nextSlideInstant = true;
         // wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
         openModal(carousel);
@@ -590,6 +590,7 @@
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
           document.body.dataset.frozen = document.body.scrollTop;
           trapFocus(wrapper);
+          updateCarousel(carousel);
         });
       } else {
         window.requestAnimationFrame(() => {
