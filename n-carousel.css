@@ -281,7 +281,7 @@ body[data-frozen] {
 .n-carousel.n-carousel--thumbnails > .n-carousel__index > * {
   padding: 0;
   vertical-align: middle;
-  margin: 0.25em auto;
+  margin: 0.125em;
   border-radius: var(--nui-border-radius);
   overflow: hidden;
 }
@@ -290,9 +290,6 @@ body[data-frozen] {
 }
 .n-carousel.n-carousel--thumbnails > .n-carousel__index [aria-current] {
   box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
-}
-.n-carousel.n-carousel--thumbnails.n-carousel--vertical > .n-carousel__index > * {
-  margin: var(--nui-border-radius, 0.25em);
 }
 .n-carousel[data-platform=iPhone] .n-carousel__full-screen, .n-carousel[data-platform=iPod] > .n-carousel__full-screen {
   display: none;

@@ -445,7 +445,7 @@ body[data-frozen] {
 			> * {
 				padding: 0;
 				vertical-align: middle;
-				margin: 0.25em auto;
+				margin: 0.125em;
 				border-radius: var(--nui-border-radius);
 				overflow: hidden;
 
@@ -462,15 +462,7 @@ body[data-frozen] {
 			}
 		}
 
-		&.n-carousel--vertical {
-			> .n-carousel__index {
-				> * {
-					margin: var(--nui-border-radius, .25em);
-				}
-			}
-		}
 	}
-
 
 	&[data-platform="iPhone"],
 	&[data-platform="iPod"] > {
