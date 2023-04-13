@@ -15,6 +15,8 @@
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
   const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
+  const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
+  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
   const indexControls = index => {
     let controls_by_class = index.querySelectorAll('.n-carousel__control');
     return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
@@ -86,6 +88,7 @@
         el.removeEventListener("webkitfullscreenchange", restoreScroll);
       }
     };
+    carousel.togglingFullScreen = true;
     if (isFullScreen()) {
       // Exit full screen
       !!document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen();
@@ -121,35 +124,41 @@
     x: scrollStartX(el),
     y: el.scrollTop
   });
-  const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
-  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
-  const trapFocus = (modal) => {
+  let firstFocusableElement = null;
+  let focusableContent = null;
+  let lastFocusableElement = null;
+  const focusHandler = e => {
+    let isTabPressed = e.key === "Tab" || e.keyCode === 9;
+    if (!isTabPressed) {
+      return;
+    }
+    if (e.shiftKey) {
+      // if shift key pressed for shift + tab combination
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement.focus(); // add focus for the last focusable element
+        e.preventDefault();
+      }
+    } else {
+      // if tab key is pressed
+      if (document.activeElement === lastFocusableElement) {
+        // if focused has reached to last focusable element then focus first focusable element after pressing tab
+        firstFocusableElement.focus(); // add focus for the first focusable element
+        e.preventDefault();
+      }
+    }
+  }
+  const trapFocus = (modal, off = false) => {
     // FROM: https://uxdesign.cc/how-to-trap-focus-inside-modal-to-make-it-ada-compliant-6a50f9a70700
     // add all the elements inside modal which you want to make focusable
-    const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
-    const focusableContent = modal.querySelectorAll(focusableElements);
-    const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-    document.addEventListener("keydown", function(e) {
-      let isTabPressed = e.key === "Tab" || e.keyCode === 9;
-      if (!isTabPressed) {
-        return;
-      }
-      if (e.shiftKey) {
-        // if shift key pressed for shift + tab combination
-        if (document.activeElement === firstFocusableElement) {
-          lastFocusableElement.focus(); // add focus for the last focusable element
-          e.preventDefault();
-        }
-      } else {
-        // if tab key is pressed
-        if (document.activeElement === lastFocusableElement) {
-          // if focused has reached to last focusable element then focus first focusable element after pressing tab
-          firstFocusableElement.focus(); // add focus for the first focusable element
-          e.preventDefault();
-        }
-      }
-    });
-    firstFocusableElement.focus();
+    firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
+    focusableContent = modal.querySelectorAll(focusableElements);
+    lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+    if (off) {
+      modal.removeEventListener("keydown", focusHandler);
+    } else {
+      modal.addEventListener("keydown", focusHandler);
+      firstFocusableElement.focus();
+    }
   };
   const inOutSine = (n) => (1 - Math.cos(Math.PI * n)) / 2;
   const paddingX = (el) => parseInt(getComputedStyle(el).paddingInlineStart) * 2;
@@ -247,11 +256,16 @@
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
-    if (!el.openingModal) {
-      el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
-      el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+    if (!el.togglingFullScreen) {
+      if (el.openingModal) {
+        delete el.openingModal;
+        scrollTo(el, el.offsetWidth * el.dataset.x, el.offsetHeight * el.dataset.y);
+      } else {
+        el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
+        el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
+      }
     } else {
-      delete el.openingModal;
+      delete el.togglingFullScreen;
     }
     // When inline
     if (el.dataset.x === "NaN") {
@@ -264,6 +278,7 @@
     if (active_index >= el.children.length) {
       active_index = el.children.length - 1;
     }
+    // console.log('update at', active_index, el.dataset.x, el.dataset.y);
     let old_active_slide = el.querySelector(":scope > [aria-current]");
     let wrapper = el.parentElement;
     if (!wrapper.classList.contains("n-carousel--auto-height")) {
@@ -368,7 +383,7 @@
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
-    el.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
+    wrapper.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
     window.requestAnimationFrame(() => {
       if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
@@ -462,7 +477,7 @@
         } else {
           new_height = nextSlideHeight(slide);
           let old_height = getIndexReal(el) === index ? new_height : nextSlideHeight(el.children[getIndexReal(el)]);
-          el.style.setProperty("--height", `${old_height}px`);
+          el.parentNode.style.setProperty("--height", `${old_height}px`);
         }
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
@@ -470,12 +485,22 @@
       if (isVertical(el)) {
         if ((isModal(el) || isFullScreen()) && isAuto(el)) {
           old_height = new_height = el.offsetHeight;
-          // alert('full screen');
         }
         offsetY = offsetY - index * old_height + index * new_height;
       }
+      // console.log(index, offsetX, offsetY);
       window.requestAnimationFrame(() => {
-        scrollAnimate(el, offsetX, offsetY, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
+        if (!el.parentNode.dataset.duration && !isAuto(el)) { // Unspecified duration, using native smooth scroll
+          delete el.parentNode.dataset.sliding;
+          el.dataset.next = index;
+          el.scrollTo({
+            top: el.scrollTop + offsetY,
+            left: el.scrollLeft + offsetX,
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? "auto" : "smooth"
+          });
+        } else {
+          scrollAnimate(el, offsetX, offsetY, new_height === old_height ? false : new_height, old_height); // Vertical version will need ceiling value
+        }
       });
     }
   };
@@ -563,7 +588,7 @@
           }
         }
       }
-      if (wrapper.classList.contains("n-carousel--inline") && !isModal(carousel)) {
+      if (wrapper.classList.contains("n-carousel--inline") && !isModal(carousel)) { // Opening an inline carousel
         wrapper.nextSlideInstant = true;
         // wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
         openModal(carousel);
@@ -572,12 +597,13 @@
           carousel.dataset.x = carousel.dataset.y = new_index;
           scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
           document.body.dataset.frozen = document.body.scrollTop;
-          trapFocus(wrapper);
+          updateCarousel(carousel);
+        });
+      } else {
+        window.requestAnimationFrame(() => {
+          slideTo(carousel, new_index);
         });
       }
-      window.requestAnimationFrame(() => {
-        slideTo(carousel, new_index);
-      });
       return false;
     }
   };
@@ -588,6 +614,7 @@
     let carousel = closestCarousel(el);
     if (carousel) {
       carousel.closest(".n-carousel").classList.remove("n-carousel--overlay");
+      trapFocus(carousel.closest(".n-carousel"), true); // Disable focus trap
       delete document.body.dataset.frozen;
     }
   };
@@ -596,6 +623,7 @@
     if (carousel) {
       carousel.openingModal = true;
       carousel.closest(".n-carousel").classList.add("n-carousel--overlay");
+      trapFocus(carousel.closest(".n-carousel"));
     }
   };
   const verticalAutoObserver = new ResizeObserver((entries) => {
@@ -668,7 +696,7 @@
         let current_height = el.querySelector(":scope > [aria-current]").scrollHeight + "px";
         let previous_height = getComputedStyle(el).getPropertyValue("--height");
         if (current_height !== previous_height) {
-          el.style.setProperty("--height", current_height);
+          el.parentNode.style.setProperty("--height", current_height);
         }
         observersOn(el);
       });
@@ -833,15 +861,30 @@
       });
       content.nCarouselUpdate = updateCarousel;
       const targets = content.querySelectorAll(':scope > *');
+      let timeout = 0;
       const inView = target => {
         const interSecObs = new IntersectionObserver(entries => {
           entries.forEach(entry => {
             let slide = entry.target;
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
+              if (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide)) {
+                return;
+              }
+              delete carousel.dataset.next;
               observersOff(el);
-              setTimeout(() => {
+              let x = carousel.scrollLeft;
+              let y = carousel.scrollTop;
+              let interval = 10; // Get rid of this magic number by timeout comparison with previous scroll offset
+              let timeout_function = () => {
                 // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
+                // if (Math.abs(x - carousel.scrollLeft) >= 1) {
+                //   console.log('intersection continue', x, carousel.scrollLeft, y, carousel.scrollLeft);
+                //   clearTimeout(timeout);
+                //   timeout = setTimeout(timeout_function, interval);
+                //   return;
+                // }
+                // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
                 let index = [...carousel.children].indexOf(slide);
                 if (isAuto(carousel)) {
                   let old_height = parseFloat(getComputedStyle(carousel).height);
@@ -885,7 +928,8 @@
                   });
                 }
                 // updateCarousel(entry.target.parentNode);
-              }, 50);
+              };
+              timeout = setTimeout(timeout_function, interval);
             }
           });
         }, { threshold: .996, root: target.parentElement }); // .99 works for all, including vertical auto height

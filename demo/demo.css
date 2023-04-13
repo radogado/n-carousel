@@ -84,6 +84,7 @@ pre {
 
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
   margin: 1rem;
+  max-width: calc(100% - 2rem);
 }
 
 .demo .n-carousel:not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > *,

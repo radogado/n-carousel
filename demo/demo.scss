@@ -46,6 +46,7 @@ pre {
 
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
 	margin: 1rem;
+	max-width: calc(100% - 2rem);
 	// box-sizing: border-box;
 }
 

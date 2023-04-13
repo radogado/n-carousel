@@ -115,14 +115,13 @@ body[data-frozen] {
 
 .n-carousel {
 
-	&:-webkit-full-screen,
+	&:fullscreen,
 	&.n-carousel--overlay {
 		max-height: 100% !important;
 
 		> .n-carousel__content {
-			// height: 100% !important;
-			height: 100%;
-			height: 100dvh; // Dynamic viewport height, Safari 15.4
+			height: 100% !important;
+			height: 100dvh !important; // Dynamic viewport height, Safari 15.4
 
 			figure,
 			img,
@@ -134,12 +133,28 @@ body[data-frozen] {
 	}
 
 	&:fullscreen {
-		// Chrome, Firefox
-		max-height: 100% !important;
-
 		> .n-carousel__close {
 			display: none;
 		}
+	}
+
+	&:-webkit-full-screen,
+	&.n-carousel--overlay {
+		// Safari 16.3-
+		max-height: 100% !important;
+
+		> .n-carousel__content {
+			height: 100% !important;
+			height: 100dvh !important; // Dynamic viewport height, Safari 15.4
+
+			figure,
+			img,
+			video,
+			iframe {
+				max-height: 100%;
+			}
+		}
+
 	}
 
 	&:-webkit-full-screen {
@@ -168,6 +183,8 @@ body[data-frozen] {
 
 		&:not(.n-carousel--auto-height) {
 			&:-webkit-full-screen {
+
+				// Safari 16.3-
 				> .n-carousel__content {
 					height: 100% !important;
 				}
@@ -211,6 +228,7 @@ body[data-frozen] {
 
 					> * {
 						display: initial;
+						margin: 0;
 					}
 				}
 			}
@@ -295,7 +313,8 @@ body[data-frozen] {
 
 	}
 
-	&.n-carousel--vertical:not([data-sliding]) > .n-carousel__content { // Separate 'y', because 'both' crashes Safari 16.2
+	&.n-carousel--vertical:not([data-sliding]) > .n-carousel__content {
+		// Separate 'y', because 'both' crashes Safari 16.2
 
 		scroll-snap-type: y mandatory;
 
@@ -319,7 +338,7 @@ body[data-frozen] {
 			justify-self: start;
 		}
 
-		&.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside) {
+		&.n-carousel--index-start:not(.n-carousel--controls-outside) {
 			grid-template-areas:
 				"f c i b1 b2 b2"
 				"prev a3 a3 a3 a3 next";
@@ -421,26 +440,29 @@ body[data-frozen] {
 
 	}
 
-	&.n-carousel--thumbnails > .n-carousel__index {
-		> * {
-			padding: 0;
-			vertical-align: middle;
-			margin: 0.25em auto;
-			border-radius: 0;
+	&.n-carousel--thumbnails {
+		> .n-carousel__index {
+			> * {
+				padding: 0;
+				vertical-align: middle;
+				margin: 0.125em;
+				border-radius: var(--nui-border-radius);
+				overflow: hidden;
 
-			span {
-				padding: 0 1ch;
+				span {
+					padding: 0 1ch;
+				}
+			}
+
+			padding: 1px;
+
+			[aria-current] {
+				// opacity: .5;
+				box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
 			}
 		}
 
-		padding: 1px;
-
-		[aria-current] {
-			// opacity: .5;
-			box-shadow: 0 0px 0px 1px var(--nui-control-bg, grey);
-		}
 	}
-
 
 	&[data-platform="iPhone"],
 	&[data-platform="iPod"] > {
@@ -455,24 +477,29 @@ body[data-frozen] {
 	}
 
 	&.n-carousel--index-start {
+		grid-template-areas:
+			"i       i   i     i     i     i"
+			"prev    a2  a2    a2    a2    next"
+			"f      c   a3    a3    a3    a3";
+
+		> .n-carousel__index {
+			align-self: start;
+		}
+
 		.n-carousel__index {
 			justify-content: flex-start;
 		}
+
+		> .n-carousel__full-screen,
+		> .n-carousel__close {
+			align-self: end;
+		}
+
 	}
 
 	&.n-carousel--index-end {
 		> .n-carousel__index {
 			justify-content: flex-end;
-		}
-	}
-
-	&.n-carousel--index-start {
-		grid-template-areas:
-			"f    c i   i   i   i"
-			"prev   a3 a3    a3    a3    next";
-
-		> .n-carousel__index {
-			align-self: start;
 		}
 	}
 
@@ -625,8 +652,8 @@ body[data-frozen] {
 			"f    c prev    a2"
 			"i    c2 content   a2"
 			"i    c2 next    a2";
-		grid-template-rows: auto auto 1fr auto;
-		padding-inline-start: var(--index-width);
+		grid-template-rows: auto 1fr auto auto;
+		// padding-inline-start: var(--index-width);
 
 		&.n-carousel--index-align-start {
 			> .n-carousel__index {
@@ -635,7 +662,7 @@ body[data-frozen] {
 		}
 
 		&.n-carousel--index-align-end {
-			grid-template-columns: auto 1fr auto;
+			grid-template-columns: auto auto 1fr auto;
 
 			> .n-carousel__index {
 				align-self: end;
@@ -647,11 +674,12 @@ body[data-frozen] {
 				"f    c prev    i"
 				"a1   c2  content   i"
 				"a1   c2  next    i";
-			padding-inline-end: var(--index-width);
-			padding-inline-start: 0;
+			grid-template-rows: auto 1fr;
+			// padding-inline-end: var(--index-width);
+			// padding-inline-start: 0;
 
 			&.n-carousel--index-align-start {
-				grid-template-columns: auto auto 1fr auto;
+				// grid-template: auto 1fr / auto auto 1fr auto;
 			}
 		}
 
@@ -686,6 +714,7 @@ body[data-frozen] {
 	}
 
 	&:-webkit-full-screen {
+		// Safari 16.3-
 		background: #000;
 		--max-height: 100vh;
 	}
@@ -758,7 +787,7 @@ _:future,
 _::-webkit-full-page-media,
 _:future,
 :root .n-carousel {
-	overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
+	// overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
 	// --peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
 	// --peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
 }
@@ -790,7 +819,7 @@ _:future,
 		background: var(--nui-control-bg, #eee);
 		min-width: 2.25em;
 		min-height: 2.25em;
-		border-radius: 2.25em;
+		border-radius: var(--nui-border-radius, 2.25em);
 		margin: 0.25em;
 		font: inherit;
 		display: inline-flex;
@@ -810,11 +839,22 @@ _:future,
 	}
 }
 
-[data-ready] {
+.n-carousel__index > *,
+.n-carousel__previous > *,
+.n-carousel__next > *,
+.n-carousel__full-screen > *,
+.n-carousel__close > *,
+.n-carousel--tabs > .n-carousel__index {
+	box-shadow: 0 0 0 var(--nui-border-size) var(--nui-border-color), 0 0 var(--nui-shadow-blur) calc(var(--nui-border-size) + var(--nui-shadow-size)) var(--nui-shadow-color);
+}
 
-	> .n-carousel__content {
-		--height: 0;
-	}
+.n-carousel--tabs > .n-carousel__index > * {
+	box-shadow: none;
+}
+
+.n-carousel[data-ready] {
+
+	--height: 0;
 
 	> .n-carousel__index,
 	> .n-carousel__previous,
@@ -828,7 +868,6 @@ _:future,
 
 	&.n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
 		> :not([aria-current]) {
-			// height: var(--height, 0);
 			overflow: visible;
 		}
 	}
@@ -933,8 +972,7 @@ _:future,
 
 .n-carousel--tabs {
 
-	&.n-carousel > .n-carousel__index,
-	&.n-carousel__index {
+	&.n-carousel > .n-carousel__index {
 		// For normal and detached controls
 		display: flex;
 		justify-content: start;
@@ -942,6 +980,7 @@ _:future,
 		max-width: 100%;
 		max-height: 100%;
 		color: var(--nui-control-color, #333);
+		border-radius: var(--nui-border-radius);
 
 		> * {
 			box-sizing: border-box;
@@ -959,6 +998,7 @@ _:future,
 			&:focus {
 				z-index: 0;
 			}
+
 		}
 	}
 
@@ -968,6 +1008,19 @@ _:future,
 
 			> * {
 				width: 100%;
+
+				&:first-child {
+					border-radius: 0;
+					border-start-start-radius: var(--nui-border-radius);
+					border-start-end-radius: var(--nui-border-radius);
+				}
+
+				&:last-child {
+					border-radius: 0;
+					border-end-start-radius: var(--nui-border-radius);
+					border-end-end-radius: var(--nui-border-radius);
+				}
+
 			}
 		}
 
@@ -1005,7 +1058,10 @@ _:future,
 .n-carousel--lightbox {
 	flex: 1;
 	--nui-carousel-bg: transparent;
-	max-height: var(--max-height, 100vh);
+
+	&:not(.n-carousel--auto-height) {
+		max-height: var(--max-height, 100vh);
+	}
 
 	figure {
 		height: 100%;
@@ -1033,6 +1089,8 @@ _:future,
 			background: rgba(0, 0, 0, 0.3);
 			color: #ddd;
 			z-index: 0;
+			border-radius: var(--nui-border-radius);
+			margin: 0.25em;
 		}
 	}
 
@@ -1046,6 +1104,11 @@ _:future,
 		}
 
 		:not(:-webkit-full-screen):not(.n-carousel--overlay) > .n-carousel__content {
+			// Safari 16.3-
+			max-height: var(--max-height);
+		}
+
+		:not(:fullscreen):not(.n-carousel--overlay) > .n-carousel__content {
 			max-height: var(--max-height);
 		}
 	}
@@ -1100,6 +1163,20 @@ _:future,
 	}
 
 	&:-webkit-full-screen {
+
+		// Safari 16.3-
+		img {
+			max-height: 100%;
+		}
+
+		&.n-carousel--auto-height {
+			figure {
+				height: 100%;
+			}
+		}
+	}
+
+	&:fullscreen {
 		img {
 			max-height: 100%;
 		}
@@ -1140,10 +1217,6 @@ _:future,
 			&:before {
 				content: "";
 				position: absolute;
-				// top: 0;
-				// right: 0;
-				// bottom: 0;
-				// left: 0;
 				inset: 0;
 				filter: blur(4px);
 				background: var(--placeholder, none) center no-repeat;
@@ -1153,7 +1226,9 @@ _:future,
 
 	}
 
-	&:not(.n-carousel--overlay).n-carousel--aspect {
+	&:not(.n-carousel--overlay):not(:fullscreen).n-carousel--aspect {
+		--max-height: 100%;
+
 		> .n-carousel__content {
 
 			> * {
@@ -1162,6 +1237,7 @@ _:future,
 					aspect-ratio: var(--ratio, 16/9);
 					position: relative;
 					width: 100%;
+					height: auto;
 				}
 			}
 		}
@@ -1170,5 +1246,54 @@ _:future,
 			max-height: 100%;
 		}
 
+		&.n-carousel--vertical {
+			height: var(--height);
+
+			> .n-carousel__content > * {
+				height: auto;
+				flex-grow: initial;
+			}
+		}
+
+	}
+
+	&:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
+		// Safari 16.3-
+		--max-height: 100%;
+
+		> .n-carousel__content {
+
+			> * {
+
+				figure {
+					aspect-ratio: var(--ratio, 16/9);
+					position: relative;
+					width: 100%;
+					height: auto;
+				}
+			}
+		}
+
+		&.n-carousel--auto-height img {
+			max-height: 100%;
+		}
+
+		&.n-carousel--vertical {
+			height: var(--height);
+
+			> .n-carousel__content > * {
+				height: auto;
+				flex-grow: initial;
+			}
+		}
+
+	}
+
+}
+
+// Remove iPad button to exit full screen, because there is a native one
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	.n-carousel:fullscreen .n-carousel__full-screen {
+		display: none;
 	}
 }
