@@ -987,7 +987,7 @@
     }
   });
   const doInit = () => {
-    typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
+    (typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-carousel", init) : init();
   };
   if (document.readyState !== "loading") {
     doInit();
