@@ -105,7 +105,7 @@
         let updateExitFullScreen = e => {
           setTimeout(() => {
             let carousel = el.querySelector(":scope > .n-carousel__content");
-            console.log(carousel);
+            // console.log(carousel);
             // el.style.removeProperty('--height');
             // carousel.style.height = '';
             slideTo(carousel, parseInt(carousel.dataset.x));
