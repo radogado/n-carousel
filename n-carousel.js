@@ -14,9 +14,9 @@
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
-  const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
+  const isModal = el => { return el.closest(".n-carousel").classList.contains('n-carousel--overlay') };
   const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
-  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
+  const isAuto = (el) => el.closest(".n-carousel").matches(".n-carousel--auto-height");
   const indexControls = index => {
     let controls_by_class = index.querySelectorAll('.n-carousel__control');
     return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
@@ -100,6 +100,19 @@
             el.style.display = "";
           });
         }, 0);
+      }
+      if (isVertical(el) && isAuto(el)) {
+        let updateExitFullScreen = e => {
+          setTimeout(() => {
+            let carousel = el.querySelector(":scope > .n-carousel__content");
+            console.log(carousel);
+            // el.style.removeProperty('--height');
+            // carousel.style.height = '';
+            slideTo(carousel, parseInt(carousel.dataset.x));
+          }, 100);
+          el.removeEventListener('fullscreenchange', updateExitFullScreen);
+        };
+        el.addEventListener('fullscreenchange', updateExitFullScreen);
       }
     } else {
       // Enter full screen
@@ -987,7 +1000,7 @@
     }
   });
   const doInit = () => {
-    (typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-carousel", init) : init();
+    (typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-carousel", init): init();
   };
   if (document.readyState !== "loading") {
     doInit();
