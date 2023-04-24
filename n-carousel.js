@@ -108,7 +108,7 @@
             // console.log(carousel);
             // el.style.removeProperty('--height');
             // carousel.style.height = '';
-            slideTo(carousel, parseInt(carousel.dataset.x));
+            slideTo(carousel, parseInt(carousel.dataset.y));
           }, 100);
           el.removeEventListener('fullscreenchange', updateExitFullScreen);
         };
