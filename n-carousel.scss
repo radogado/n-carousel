@@ -60,6 +60,17 @@ body[data-frozen] {
 	}
 
 	&.n-carousel--auto-height {
+
+		&:not(.n-carousel--controls-outside) {
+			grid-template: auto/auto;
+			grid-template-areas:
+				"f f f"
+				"a1 a1 a1"
+				"prev a2 next"
+				"a3 a3 a3"
+				"i i i";
+		}
+
 		&:not([data-ready]) {
 			> .n-carousel__content > :not(:first-child) {
 				height: 0;
@@ -340,23 +351,23 @@ body[data-frozen] {
 			justify-self: start;
 		}
 
-// 		&.n-carousel--index-start:not(.n-carousel--controls-outside) {
-// 			grid-template-areas:
-// 				"f c i b1 b2 b2"
-// 				"prev a3 a3 a3 a3 next";
-// 
-// 			&:not(.n-carousel--vertical) {
-// 				grid-template-areas:
-// 					"i i i i i i"
-// 					"prev a2 a2 a2 a2 next"
-// 					"f c a3 a3 a3 a3";
-// 
-// 				.n-carousel__full-screen,
-// 				.n-carousel__close {
-// 					align-self: end;
-// 				}
-// 			}
-// 		}
+		// 		&.n-carousel--index-start:not(.n-carousel--controls-outside) {
+		// 			grid-template-areas:
+		// 				"f c i b1 b2 b2"
+		// 				"prev a3 a3 a3 a3 next";
+		// 
+		// 			&:not(.n-carousel--vertical) {
+		// 				grid-template-areas:
+		// 					"i i i i i i"
+		// 					"prev a2 a2 a2 a2 next"
+		// 					"f c a3 a3 a3 a3";
+		// 
+		// 				.n-carousel__full-screen,
+		// 				.n-carousel__close {
+		// 					align-self: end;
+		// 				}
+		// 			}
+		// 		}
 	}
 
 	&.n-carousel--index-align-center:not(.n-carousel--vertical) {
@@ -382,17 +393,17 @@ body[data-frozen] {
 			justify-self: end;
 		}
 
-// 		&.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
-// 			grid-template-areas:
-// 				"f c i i i i"
-// 				"prev a2 a2 a2 a2 next"
-// 				"a3 a3 a3 a3 a3 a3";
-// 
-// 			.n-carousel__full-screen,
-// 			.n-carousel__close {
-// 				// align-self: end;
-// 			}
-// 		}
+		// 		&.n-carousel.n-carousel--index-start:not(.n-carousel--controls-outside):not(.n-carousel--vertical) {
+		// 			grid-template-areas:
+		// 				"f c i i i i"
+		// 				"prev a2 a2 a2 a2 next"
+		// 				"a3 a3 a3 a3 a3 a3";
+		// 
+		// 			.n-carousel__full-screen,
+		// 			.n-carousel__close {
+		// 				// align-self: end;
+		// 			}
+		// 		}
 	}
 
 	> .n-carousel__content {
@@ -543,8 +554,9 @@ body[data-frozen] {
 			"i a1 prev a3 f"
 			"i a1 a2   a3 f"
 			"i a1 next a3 f";
-			
-		&:has(> .n-carousel__controls):before { // placeholder for the absolutely-positioned index
+
+		&:has(> .n-carousel__controls):before {
+			// placeholder for the absolutely-positioned index
 			content: '';
 			grid-area: i;
 			width: 3em;
@@ -577,9 +589,9 @@ body[data-frozen] {
 
 		&.n-carousel--index-end {
 			grid-template-areas:
-			"f a1 prev a3 i"
-			"f a1 a2   a3 i"
-			"f a1 next a3 i";
+				"f a1 prev a3 i"
+				"f a1 a2   a3 i"
+				"f a1 next a3 i";
 
 			&.n-carousel--index-align-start:not(.n-carousel--index-end) {
 				grid-template: 1fr auto auto/auto auto auto 1fr auto auto;
@@ -636,31 +648,31 @@ body[data-frozen] {
 			align-self: end;
 		}
 
-// 		&.n-carousel--index-align-start:not(.n-carousel--index-end):not(.n-carousel--controls-outside) {
-// 			grid-template-areas:
-// 				"a1 a1 a1 prev c f"
-// 				"i a3 a3 a3 a3 a3"
-// 				"i a4 a4 next a5 a5";
-// 		}
-// 
-// 		&.n-carousel--index-align-end {
-// 			// grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
-// 			grid-template-areas:
-// 				"a1 a1 a1 prev c f"
-// 				"i a3 a3 a3 a3 a3"
-// 				"i a4 a4 next a5 a5";
-// 
-// 			&.n-carousel--tabs:not(.n-carousel--controls-outside) {
-// 				// grid-template: 1fr auto auto/auto auto auto 1fr auto auto;
-// 			}
-// 		}
+		// 		&.n-carousel--index-align-start:not(.n-carousel--index-end):not(.n-carousel--controls-outside) {
+		// 			grid-template-areas:
+		// 				"a1 a1 a1 prev c f"
+		// 				"i a3 a3 a3 a3 a3"
+		// 				"i a4 a4 next a5 a5";
+		// 		}
+		// 
+		// 		&.n-carousel--index-align-end {
+		// 			// grid-template: 1fr auto 1fr / auto 1fr auto 1fr auto;
+		// 			grid-template-areas:
+		// 				"a1 a1 a1 prev c f"
+		// 				"i a3 a3 a3 a3 a3"
+		// 				"i a4 a4 next a5 a5";
+		// 
+		// 			&.n-carousel--tabs:not(.n-carousel--controls-outside) {
+		// 				// grid-template: 1fr auto auto/auto auto auto 1fr auto auto;
+		// 			}
+		// 		}
 	}
 
 	&.n-carousel--vertical.n-carousel--controls-outside {
 		grid-template-areas:
-		"i a1 		prev		a2 		f"
-		"i content 	content   	content f"
-		"i b1 		next 		b2 		f";
+			"i a1 		prev		a2 		f"
+			"i content 	content   	content f"
+			"i b1 		next 		b2 		f";
 		// grid-template-rows: auto 1fr auto auto;
 		// padding-inline-start: var(--index-width);
 
@@ -670,19 +682,19 @@ body[data-frozen] {
 			}
 		}
 
-// 		&.n-carousel--index-align-end {
-// 			grid-template-columns: auto auto 1fr auto;
-// 
-// 			> .n-carousel__index {
-// 				align-self: end;
-// 			}
-// 		}
+		// 		&.n-carousel--index-align-end {
+		// 			grid-template-columns: auto auto 1fr auto;
+		// 
+		// 			> .n-carousel__index {
+		// 				align-self: end;
+		// 			}
+		// 		}
 
 		&.n-carousel--index-end {
 			grid-template-areas:
-			"f a1 		prev		a2 		i"
-			"f content 	content   	content i"
-			"f b1 		next 		b2 		i";
+				"f a1 		prev		a2 		i"
+				"f content 	content   	content i"
+				"f b1 		next 		b2 		i";
 			// grid-template-rows: auto 1fr;
 			// padding-inline-end: var(--index-width);
 			// padding-inline-start: 0;
@@ -974,7 +986,7 @@ _:future,
 	}
 }
 
-.n-carousel:not(.n-carousel--overlay) .n-carousel__close button:before {
+.n-carousel:not(.n-carousel--overlay) > .n-carousel__controls .n-carousel__close button:before {
 	transform: rotate(45deg);
 }
 
