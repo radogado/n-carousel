@@ -645,7 +645,7 @@
         let slide = e.target.querySelector(":scope > [aria-current]");
         let el = slide.closest(".n-carousel__content");
         if (!el.parentElement.dataset.sliding) {
-          console.log(e.target);
+          // console.log(e.target);
           el.parentNode.style.removeProperty('--height');
           if (isVertical(el)) {
             slide.style.height = 'auto';
