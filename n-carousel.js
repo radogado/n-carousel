@@ -639,15 +639,24 @@
       trapFocus(carousel.closest(".n-carousel"));
     }
   };
-  const verticalAutoObserver = new ResizeObserver((entries) => {
+  const autoHeightObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
-        let slide = e.target.closest(".n-carousel__content > *");
+        let slide = e.target.querySelector(":scope > [aria-current]");
         let el = slide.closest(".n-carousel__content");
-        if (!!slide.parentNode.ariaCurrent && !el.parentNode.dataset.sliding) {
-          slide.style.height = 'auto';
-          el.style.height = `${slide.scrollHeight}px`;
-          slide.style.height = '';
+        if (!el.parentElement.dataset.sliding) {
+          console.log(e.target);
+          el.parentNode.style.removeProperty('--height');
+          if (isVertical(el)) {
+            slide.style.height = 'auto';
+            el.style.height = `${slide.scrollHeight}px`;
+            slide.style.height = '';
+            updateCarousel(el);
+          } else {
+            el.style.height = '';
+            el.style.height = `${slide.scrollHeight}px`;
+            updateCarousel(el, true);
+          }
         }
       });
     });
@@ -848,9 +857,9 @@
         el.dataset.ready = true;
         content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
       }
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        // Vertical auto has a specified height which needs update on resize
-        content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
+      if (el.matches(".n-carousel--auto-height")) {
+        // Auto has a specified height which needs update on resize
+        autoHeightObserver.observe(content);
       }
       window.requestAnimationFrame(() => {
         observersOn(content);
