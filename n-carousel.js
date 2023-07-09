@@ -536,14 +536,16 @@
   };
   const carouselKeys = (e) => {
     // console.log('keydown', e);
-    return;
+    // return;
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
-    let el = e.target;
+    let el = e.target.closest('.n-carousel').querySelector(':scope > .n-carousel__content');
     // if (e.key === "Tab") {
     //   let carousel = el.closest(".n-carousel__content");
     //   carousel.tabbing = true;
     // }
-    if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
+    if (
+      // el.matches(".n-carousel__content") && 
+      keys.includes(e.key)) {
       // Capture relevant keys
       e.preventDefault();
       switch (e.key) {
