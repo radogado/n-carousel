@@ -824,7 +824,7 @@
           el.onfullscreenchange = fullScreenEvent;
         }
       }
-      content.addEventListener("keydown", carouselKeys);
+      el.addEventListener("keydown", carouselKeys);
       el.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
           let el = e.target;
