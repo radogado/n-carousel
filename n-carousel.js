@@ -14,9 +14,9 @@
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
   const isEndless = el => el.children.length > 2 && el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
-  const isModal = el => { return el.parentElement.classList.contains('n-carousel--overlay') };
+  const isModal = el => { return el.closest(".n-carousel").classList.contains('n-carousel--overlay') };
   const isVertical = (el) => el.closest(".n-carousel").matches(".n-carousel--vertical");
-  const isAuto = (el) => el.parentNode.matches(".n-carousel--auto-height");
+  const isAuto = (el) => el.closest(".n-carousel").matches(".n-carousel--auto-height");
   const indexControls = index => {
     let controls_by_class = index.querySelectorAll('.n-carousel__control');
     return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
@@ -100,6 +100,19 @@
             el.style.display = "";
           });
         }, 0);
+      }
+      if (isVertical(el) && isAuto(el)) {
+        let updateExitFullScreen = e => {
+          setTimeout(() => {
+            let carousel = el.querySelector(":scope > .n-carousel__content");
+            // console.log(carousel);
+            // el.style.removeProperty('--height');
+            // carousel.style.height = '';
+            slideTo(carousel, parseInt(carousel.dataset.y));
+          }, 100);
+          el.removeEventListener('fullscreenchange', updateExitFullScreen);
+        };
+        el.addEventListener('fullscreenchange', updateExitFullScreen);
       }
     } else {
       // Enter full screen
@@ -523,14 +536,16 @@
   };
   const carouselKeys = (e) => {
     // console.log('keydown', e);
-    return;
+    // return;
     let keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
-    let el = e.target;
+    let el = e.target.closest('.n-carousel').querySelector(':scope > .n-carousel__content');
     // if (e.key === "Tab") {
     //   let carousel = el.closest(".n-carousel__content");
     //   carousel.tabbing = true;
     // }
-    if (el.matches(".n-carousel__content") && keys.includes(e.key)) {
+    if (
+      // el.matches(".n-carousel__content") && 
+      keys.includes(e.key)) {
       // Capture relevant keys
       e.preventDefault();
       switch (e.key) {
@@ -626,15 +641,24 @@
       trapFocus(carousel.closest(".n-carousel"));
     }
   };
-  const verticalAutoObserver = new ResizeObserver((entries) => {
+  const autoHeightObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
-        let slide = e.target.closest(".n-carousel__content > *");
+        let slide = e.target.querySelector(":scope > [aria-current]");
         let el = slide.closest(".n-carousel__content");
-        if (!!slide.parentNode.ariaCurrent && !el.parentNode.dataset.sliding) {
-          slide.style.height = 'auto';
-          el.style.height = `${slide.scrollHeight}px`;
-          slide.style.height = '';
+        if (!el.parentElement.dataset.sliding) {
+          // console.log(e.target);
+          el.parentNode.style.removeProperty('--height');
+          if (isVertical(el)) {
+            slide.style.height = 'auto';
+            el.style.height = `${slide.scrollHeight}px`;
+            slide.style.height = '';
+            updateCarousel(el);
+          } else {
+            el.style.height = '';
+            el.style.height = `${slide.scrollHeight}px`;
+            updateCarousel(el, true);
+          }
         }
       });
     });
@@ -835,9 +859,9 @@
         el.dataset.ready = true;
         content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
       }
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        // Vertical auto has a specified height which needs update on resize
-        content.querySelectorAll(":scope > * > *").forEach((el) => verticalAutoObserver.observe(el));
+      if (el.matches(".n-carousel--auto-height")) {
+        // Auto has a specified height which needs update on resize
+        autoHeightObserver.observe(content);
       }
       window.requestAnimationFrame(() => {
         observersOn(content);
@@ -987,7 +1011,7 @@
     }
   });
   const doInit = () => {
-    typeof registerComponent === "function" ? registerComponent("n-carousel", init) : init();
+    (typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-carousel", init): init();
   };
   if (document.readyState !== "loading") {
     doInit();
