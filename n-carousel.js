@@ -547,7 +547,7 @@
       // el.matches(".n-carousel__content") && 
       keys.includes(e.key)) {
       // Capture relevant keys
-      e.preventDefault();
+      // e.preventDefault();
       switch (e.key) {
         case "ArrowLeft": {
           isRTL(el) ? slideNext(el) : slidePrevious(el);
