@@ -25,6 +25,7 @@
     if (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide)) {
       return;
     }
+    let timeout = 0;
     delete carousel.dataset.next;
     observersOff(carousel);
     let x = carousel.scrollLeft;
@@ -948,7 +949,6 @@
       });
       content.nCarouselUpdate = updateCarousel;
       const targets = content.querySelectorAll(':scope > *');
-      let timeout = 0;
       const inView = target => {
         const interSecObs = new IntersectionObserver(entries => {
           entries.forEach(entry => {
