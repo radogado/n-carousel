@@ -21,6 +21,69 @@
     let controls_by_class = index.querySelectorAll('.n-carousel__control');
     return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
   }
+  const scrollEndAction = (carousel, slide) => {
+    if (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide)) {
+      return;
+    }
+    delete carousel.dataset.next;
+    observersOff(carousel);
+    let x = carousel.scrollLeft;
+    let y = carousel.scrollTop;
+    let interval = 10; // Get rid of this magic number by timeout comparison with previous scroll offset
+    let timeout_function = () => {
+      // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
+      // if (Math.abs(x - carousel.scrollLeft) >= 1) {
+      //   console.log('intersection continue', x, carousel.scrollLeft, y, carousel.scrollLeft);
+      //   clearTimeout(timeout);
+      //   timeout = setTimeout(timeout_function, interval);
+      //   return;
+      // }
+      // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
+      let index = [...carousel.children].indexOf(slide);
+      if (isAuto(carousel)) {
+        let old_height = parseFloat(getComputedStyle(carousel).height);
+        let new_height;
+        let offset_y = 0;
+        let lastScrollX = carousel.scrollLeft;
+        let lastScrollY = carousel.scrollTop;
+        if (isVertical(carousel)) {
+          let scroll_offset = carousel.scrollTop;
+          slide.style.height = 'auto';
+          let computed_max_height = getComputedStyle(carousel).maxHeight;
+          let max_height = computed_max_height.match(/px/) ? Math.ceil(parseFloat(computed_max_height)) : 99999;
+          // new_height = Math.min(slide.scrollHeight, max_height);
+          new_height = Math.min(Math.ceil(parseFloat(getComputedStyle(slide).height)), max_height);
+          // new_height = slide.scrollHeight;
+          if (isModal(carousel) || isFullScreen()) {
+            old_height = new_height = carousel.offsetHeight;
+          }
+          slide.style.height = '';
+          carousel.scrollTop = scroll_offset;
+          offset_y = index * new_height - carousel.scrollTop;
+        } else {
+          new_height = nextSlideHeight(slide); // ?
+          // console.log(lastScrollX);
+          if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
+            scrollTo(carousel, lastScrollX, lastScrollY);
+          }
+        }
+        if (old_height === new_height) {
+          new_height = false;
+        }
+        carousel.parentNode.dataset.sliding = true;
+        // interSecObs.unobserve(slide);
+        window.requestAnimationFrame(() => {
+          scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(() => {});
+        });
+      } else {
+        // console.log(carousel);
+        window.requestAnimationFrame(() => {
+          updateCarousel(carousel);
+        });
+      }
+    };
+    timeout = setTimeout(timeout_function, interval);
+  }
   const nextSlideHeight = (el) => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -892,68 +955,7 @@
             let slide = entry.target;
             let carousel = slide.parentNode;
             if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
-              if (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide)) {
-                return;
-              }
-              delete carousel.dataset.next;
-              observersOff(el);
-              let x = carousel.scrollLeft;
-              let y = carousel.scrollTop;
-              let interval = 10; // Get rid of this magic number by timeout comparison with previous scroll offset
-              let timeout_function = () => {
-                // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
-                // if (Math.abs(x - carousel.scrollLeft) >= 1) {
-                //   console.log('intersection continue', x, carousel.scrollLeft, y, carousel.scrollLeft);
-                //   clearTimeout(timeout);
-                //   timeout = setTimeout(timeout_function, interval);
-                //   return;
-                // }
-                // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
-                let index = [...carousel.children].indexOf(slide);
-                if (isAuto(carousel)) {
-                  let old_height = parseFloat(getComputedStyle(carousel).height);
-                  let new_height;
-                  let offset_y = 0;
-                  let lastScrollX = carousel.scrollLeft;
-                  let lastScrollY = carousel.scrollTop;
-                  if (isVertical(carousel)) {
-                    let scroll_offset = carousel.scrollTop;
-                    slide.style.height = 'auto';
-                    let computed_max_height = getComputedStyle(el).maxHeight;
-                    let max_height = computed_max_height.match(/px/) ? Math.ceil(parseFloat(computed_max_height)) : 99999;
-                    // new_height = Math.min(slide.scrollHeight, max_height);
-                    new_height = Math.min(Math.ceil(parseFloat(getComputedStyle(slide).height)), max_height);
-                    // new_height = slide.scrollHeight;
-                    if (isModal(carousel) || isFullScreen()) {
-                      old_height = new_height = carousel.offsetHeight;
-                    }
-                    slide.style.height = '';
-                    carousel.scrollTop = scroll_offset;
-                    offset_y = index * new_height - carousel.scrollTop;
-                  } else {
-                    new_height = nextSlideHeight(slide); // ?
-                    // console.log(lastScrollX);
-                    if (!!lastScrollX) { // Because RTL auto height landing on first slide creates an infinite intersection observer loop
-                      scrollTo(carousel, lastScrollX, lastScrollY);
-                    }
-                  }
-                  if (old_height === new_height) {
-                    new_height = false;
-                  }
-                  carousel.parentNode.dataset.sliding = true;
-                  // interSecObs.unobserve(slide);
-                  window.requestAnimationFrame(() => {
-                    scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(() => {});
-                  });
-                } else {
-                  // console.log(carousel);
-                  window.requestAnimationFrame(() => {
-                    updateCarousel(carousel);
-                  });
-                }
-                // updateCarousel(entry.target.parentNode);
-              };
-              timeout = setTimeout(timeout_function, interval);
+              scrollEndAction(carousel, slide);
             }
           });
         }, { threshold: .996, root: target.parentElement }); // .99 works for all, including vertical auto height
