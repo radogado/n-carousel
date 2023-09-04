@@ -23,7 +23,11 @@
   }
   const scrollEndAction = (carousel) => {
     carousel = carousel.target || carousel;
-    let index = Math.round((isVertical(carousel) ? carousel.scrollTop / carousel.offsetHeight : carousel.scrollLeft / carousel.offsetWidth), 2);
+    let index = Math.round(
+      (isVertical(carousel) ? 
+      carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart)  - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : 
+      carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart)  - parseFloat(getComputedStyle(carousel).paddingInlineEnd))
+    ), 2);
     let slide = carousel.children[index];
     if (!!carousel.parentNode.sliding || (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide))) {
       return;
