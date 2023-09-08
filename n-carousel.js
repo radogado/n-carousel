@@ -16,13 +16,14 @@
   const isFullScreen = () => { return !!(document.webkitFullscreenElement || document.fullscreenElement) };
   const isModal = el => { return el.closest(".n-carousel").classList.contains('n-carousel--overlay') };
   const isVertical = el => el.closest(".n-carousel").matches(".n-carousel--vertical");
-  const isAuto = el => el.closest(".n-carousel").matches(".n-carousel--auto-height");
+  const isAutoHeight = el => el.closest(".n-carousel").matches(".n-carousel--auto-height");
   const indexControls = index => {
     let controls_by_class = index.querySelectorAll('.n-carousel__control');
     return (controls_by_class.length > 0) ? controls_by_class : index.querySelectorAll('a, button');
   }
-  const scrollEndAction = (carousel) => {
+  const scrollEndAction = carousel => {
     carousel = carousel.target || carousel;
+    // console.log('scroll end', carousel);
     let index = Math.abs(Math.round(
       (isVertical(carousel) ? 
       carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart)  - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : 
@@ -49,7 +50,7 @@
       // }
       // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
       let index = [...carousel.children].indexOf(slide);
-      if (isAuto(carousel)) {
+      if (isAutoHeight(carousel)) {
         let old_height = parseFloat(getComputedStyle(carousel).height);
         let new_height;
         let offset_y = 0;
@@ -173,7 +174,7 @@
           });
         }, 0);
       }
-      if (isVertical(el) && isAuto(el)) {
+      if (isVertical(el) && isAutoHeight(el)) {
         let updateExitFullScreen = e => {
           setTimeout(() => {
             let carousel = el.querySelector(":scope > .n-carousel__content");
@@ -288,7 +289,7 @@
     }
     if (!!new_height) {
       el.style.height = `${old_height}px`;
-      if (isVertical(el) && isAuto(el)) {
+      if (isVertical(el) && isAutoHeight(el)) {
         el.style.setProperty('--subpixel-compensation', 0);
       }
     } else {
@@ -309,7 +310,7 @@
       draw(timeStamp);
     };
     let draw = (now) => {
-      if (now - start >= duration) {
+      if (now - start >= duration) { // sliding ends
         window.requestAnimationFrame(() => {
           scrollTo(el, startx + distanceX, starty + distanceY);
           if (new_height) {
@@ -366,7 +367,7 @@
     // console.log('update at', active_index, el.dataset.x, el.dataset.y);
     let old_active_slide = el.querySelector(":scope > [aria-current]");
     let wrapper = el.parentElement;
-    if (!wrapper.classList.contains("n-carousel--auto-height")) {
+    if (!isAutoHeight(wrapper)) {
       // Dynamic change from auto height to normal
       el.style.height = "";
     }
@@ -468,9 +469,9 @@
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
-    wrapper.style.setProperty("--height", `${el.parentNode.classList.contains("n-carousel--auto-height") ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
+    wrapper.style.setProperty("--height", `${isAutoHeight(el) ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
     window.requestAnimationFrame(() => {
-      if (!el.parentNode.dataset.ready && isAuto(el) && isVertical(el)) {
+      if (!el.parentNode.dataset.ready && isAutoHeight(el) && isVertical(el)) {
         el.style.height = `${parseFloat(getComputedStyle(el).height) - paddingY(el)}px`;
       }
     });
@@ -542,12 +543,11 @@
   };
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
-    observersOff(el);
     if (!el.parentNode.dataset.sliding) {
       el.parentNode.dataset.sliding = true;
       let old_height = el.children[getIndexReal(el)].offsetHeight;
       let new_height = old_height;
-      if (isAuto(el)) {
+      if (isAutoHeight(el)) {
         let old_scroll_left = scrollStartX(el);
         let old_scroll_top = el.scrollTop;
         let slide = el.children[index];
@@ -568,14 +568,14 @@
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
       if (isVertical(el)) {
-        if ((isModal(el) || isFullScreen()) && isAuto(el)) {
+        if ((isModal(el) || isFullScreen()) && isAutoHeight(el)) {
           old_height = new_height = el.offsetHeight;
         }
         offsetY = offsetY - index * old_height + index * new_height;
       }
       // console.log(index, offsetX, offsetY);
       window.requestAnimationFrame(() => {
-        if (!el.parentNode.dataset.duration && !isAuto(el)) { // Unspecified duration, using native smooth scroll
+        if (!el.parentNode.dataset.duration && !isAutoHeight(el)) { // Unspecified duration, no height change – using native smooth scroll
           delete el.parentNode.dataset.sliding;
           el.dataset.next = index;
           el.scrollTo({
@@ -785,14 +785,14 @@
         attributes: true,
         attributeFilter: ["class"],
       });
-      el.parentNode.addEventListener('scrollend', scrollEndAction);
+      el.addEventListener('scrollend', scrollEndAction);
     });
   };
   const observersOff = el => {
     height_minus_index.unobserve(el.parentNode);
     subpixel_observer.unobserve(el);
     el.observerStarted = true;
-    el.parentNode.removeEventListener('scrollend', scrollEndAction);
+    el.removeEventListener('scrollend', scrollEndAction);
   };
   const updateObserver = el => {
     observersOff(el);
@@ -941,7 +941,7 @@
         el.dataset.ready = true;
         content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
       }
-      if (el.matches(".n-carousel--auto-height")) {
+      if (isAutoHeight(el)) {
         // Auto has a specified height which needs update on resize
         autoHeightObserver.observe(content);
       }
