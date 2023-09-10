@@ -386,11 +386,9 @@
         el.style.height = "";
       }
     }
-    var active_index_logical = active_index;
     // active_slide.ariaCurrent = true; // Unsupported by FF
     active_slide.setAttribute('aria-current', true);
-    active_index_logical = getIndexReal(el);
-    el.dataset.x = el.dataset.y = active_index_logical;
+    var active_index_logical = el.dataset.x = el.dataset.y = getIndexReal(el);
     // Endless carousel
     const restoreDisplacedSlides = el => {
       el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
@@ -453,7 +451,7 @@
           active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
-      window.requestAnimationFrame(() => {
+      // window.requestAnimationFrame(() => { // Cause blinking
         el.dataset.x = el.dataset.y = active_index_logical;
         let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
         let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
@@ -463,7 +461,7 @@
         scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
         delete el.scroll_x;
         delete el.scroll_y;
-      });
+      // });
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
