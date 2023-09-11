@@ -29,11 +29,13 @@
       carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart)  - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : 
       carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart)  - parseFloat(getComputedStyle(carousel).paddingInlineEnd))
     ), 2));
+    // console.log('scroll end', index);
     let slide = carousel.children[index];
     if (!!carousel.parentNode.sliding || (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide))) {
       return;
     }
     // console.log(index);
+    carousel.parentNode.dataset.sliding = true;
     let timeout = 0;
     delete carousel.dataset.next;
     observersOff(carousel);
@@ -80,7 +82,6 @@
         if (old_height === new_height) {
           new_height = false;
         }
-        carousel.parentNode.dataset.sliding = true;
         // interSecObs.unobserve(slide);
         window.requestAnimationFrame(() => {
           scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(() => {});
@@ -767,12 +768,12 @@
   };
   const observersOn = el => {
     window.requestAnimationFrame(() => {
-      // setTimeout(() => {
       if (el.scroll_x && el.scroll_y) {
         scrollTo(el, el.scroll_x, el.scroll_y);
       }
-      delete el.parentNode.dataset.sliding;
-      // }, 0);
+      setTimeout(() => {
+        delete el.parentNode.dataset.sliding;
+      }, 50); // Because intersection observer fires again
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
       } else {
