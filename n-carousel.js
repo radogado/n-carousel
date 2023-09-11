@@ -25,10 +25,7 @@
     carousel = carousel.target || carousel;
     // console.log('scroll end', carousel);
     let index = Math.abs(Math.round(
-      (isVertical(carousel) ? 
-      carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart)  - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : 
-      carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart)  - parseFloat(getComputedStyle(carousel).paddingInlineEnd))
-    ), 2));
+      (isVertical(carousel) ? carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart) - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart) - parseFloat(getComputedStyle(carousel).paddingInlineEnd))), 2));
     // console.log('scroll end', index);
     let slide = carousel.children[index];
     if (!!carousel.parentNode.sliding || (carousel.dataset.next && parseInt(carousel.dataset.next) !== [...carousel.children].indexOf(slide))) {
@@ -453,15 +450,15 @@
         }
       }
       // window.requestAnimationFrame(() => { // Cause blinking
-        el.dataset.x = el.dataset.y = active_index_logical;
-        let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
-        let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
-        // console.log('updateCarousel() scrolling at', scroll_x);
-        el.scroll_x = scroll_x;
-        el.scroll_y = scroll_y;
-        scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
-        delete el.scroll_x;
-        delete el.scroll_y;
+      el.dataset.x = el.dataset.y = active_index_logical;
+      let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
+      let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
+      // console.log('updateCarousel() scrolling at', scroll_x);
+      el.scroll_x = scroll_x;
+      el.scroll_y = scroll_y;
+      scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
+      delete el.scroll_x;
+      delete el.scroll_y;
       // });
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
@@ -771,9 +768,6 @@
       if (el.scroll_x && el.scroll_y) {
         scrollTo(el, el.scroll_x, el.scroll_y);
       }
-      setTimeout(() => {
-        delete el.parentNode.dataset.sliding;
-      }, 50); // Because intersection observer fires again
       if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
         height_minus_index.observe(el.parentNode);
       } else {
@@ -785,6 +779,9 @@
         attributeFilter: ["class"],
       });
       el.addEventListener('scrollend', scrollEndAction);
+      // setTimeout(() => {
+      delete el.parentNode.dataset.sliding;
+      // }, 50); // Because intersection observer fires again
     });
   };
   const observersOff = el => {
@@ -965,24 +962,14 @@
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-      if ("onscrollend" in window) {
-        content.addEventListener('scrollend', scrollEndAction);
-      } else {
-        const targets = content.querySelectorAll(':scope > *');
-        const inView = target => {
-          const interSecObs = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-              let slide = entry.target;
-              let carousel = slide.parentNode;
-              if (entry.isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
-                scrollEndAction(carousel);
-              }
-            });
-          }, { threshold: .996, root: target.parentElement }); // .99 works for all, including vertical auto height
-          interSecObs.observe(target);
-          // console.log('intersection observing ', target)
-        };
-        targets.forEach(inView);
+      if (!("onscrollend" in window)) { // scrollend event fallback to intersection observer (for Safari as of 2023)
+        const scrollEndObserver = new IntersectionObserver(entries => {
+          let carousel = entries[0].target.parentNode;
+          if (entries[0].isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
+            scrollEndAction(carousel);
+          }
+        }, { threshold: .996, root: el.parentElement }); // .99 works for all, including vertical auto height?
+        [...content.children].forEach(el => scrollEndObserver.observe(el));
       }
       if (el.matches('.n-carousel--lightbox')) {
         let loaded = img => {
