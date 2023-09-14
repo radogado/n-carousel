@@ -782,6 +782,9 @@
       // setTimeout(() => {
       delete el.parentNode.dataset.sliding;
       // }, 50); // Because intersection observer fires again
+      if (!("onscrollend" in window) && isEndless(el)) { // Fix for browsers without scrollend event (Safari) losing parts of the edge slide
+        scrollTo(el, el.offsetWidth * getIndexReal(el), el.offsetHeight * getIndexReal(el));
+      }
     });
   };
   const observersOff = el => {
