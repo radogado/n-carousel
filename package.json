@@ -1,6 +1,6 @@
 {
   "name": "n-carousel",
-  "version": "1.2.6",
+  "version": "1.2.12",
   "description": "Carousel",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "n-modal": "^1.0.3",
     "rollup": "^2.79.0",
     "sass": "^1.49.7",
+    "scrollyfills": "^1.0.0",
     "terser": "^5.4.0"
   }
 }
