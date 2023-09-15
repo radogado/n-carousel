@@ -1,5 +1,5 @@
 // import './node_modules/n-modal/n-modal.js';
-import {scrollend} from './node_modules/scrollyfills/src/index.js'; // scrollend event polyfill
+import './node_modules/scrollyfills/dist/scrollyfills.module.js'; // scrollend event polyfill
 
 (function() {
   const ceilingWidth = el => Math.ceil(parseFloat(getComputedStyle(el).width));
