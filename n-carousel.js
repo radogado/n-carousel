@@ -1,4 +1,6 @@
 // import './node_modules/n-modal/n-modal.js';
+import {scrollend} from './node_modules/scrollyfills/src/index.js'; // scrollend event polyfill
+
 (function() {
   const ceilingWidth = el => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = el => Math.ceil(parseFloat(getComputedStyle(el).height));
@@ -92,6 +94,38 @@
     };
     timeout = setTimeout(timeout_function, interval);
   }
+  const hashNavigation = e => { // Hash navigation support
+    // console.log(e);
+    if (!!location.hash) {
+      let el = document.querySelector(location.hash);
+      let carousel = el?.parentNode;
+      if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
+        let modal_carousel = document.querySelector('.n-carousel--overlay > .n-carousel__content');
+        if (modal_carousel && modal_carousel !== carousel) {
+          closeModal(modal_carousel);
+          // modal_carousel.parentNode.classList.remove('n-carousel--overlay');
+        }
+        if (carousel.parentNode.classList.contains('n-carousel--inline')) {
+          closeModal(carousel);
+          // carousel.parentNode.classList.add('n-carousel--overlay');
+        }
+        if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
+          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
+        }
+        slideTo(carousel, [...carousel.children].indexOf(el));
+        window.nCarouselNav = [carousel, location.hash];
+      }
+    } else {
+      if (window.nCarouselNav) { // Previously navigated to a slide
+        let carousel = window.nCarouselNav[0];
+        delete window.nCarouselNav;
+        if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
+          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
+        }
+        slideTo(carousel, [...carousel.children].indexOf(carousel.querySelector(':scope > :not([id])')));
+      }
+    }
+  };
   const nextSlideHeight = el => {
     el.style.height = 0;
     el.style.overflow = "auto";
@@ -965,15 +999,17 @@
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-      if (!("onscrollend" in window)) { // scrollend event fallback to intersection observer (for Safari as of 2023)
-        const scrollEndObserver = new IntersectionObserver(entries => {
-          let carousel = entries[0].target.parentNode;
-          if (entries[0].isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
-            scrollEndAction(carousel);
-          }
-        }, { threshold: .996, root: el.parentElement }); // .99 works for all, including vertical auto height?
-        [...content.children].forEach(el => scrollEndObserver.observe(el));
-      }
+      
+      // below replaced by scrollend polyfill
+      // if (!("onscrollend" in window)) { // scrollend event fallback to intersection observer (for Safari as of 2023)
+      //   const scrollEndObserver = new IntersectionObserver(entries => {
+      //     let carousel = entries[0].target.parentNode;
+      //     if (entries[0].isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
+      //       scrollEndAction(carousel);
+      //     }
+      //   }, { threshold: .996, root: el.parentElement }); // .99 works for all, including vertical auto height?
+      //   [...content.children].forEach(el => scrollEndObserver.observe(el));
+      // }
       if (el.matches('.n-carousel--lightbox')) {
         let loaded = img => {
           img.closest('picture').dataset.loaded = true;
@@ -991,38 +1027,7 @@
     });
   };
   window.nCarouselInit = init;
-  window.addEventListener('popstate', e => { // Hash navigation support
-    // console.log(e);
-    if (!!location.hash) {
-      let el = document.querySelector(location.hash);
-      let carousel = el?.parentNode;
-      if (!!carousel && carousel.classList.contains('n-carousel__content') && !carousel.parentNode.closest('.n-carousel__content')) {
-        let modal_carousel = document.querySelector('.n-carousel--overlay > .n-carousel__content');
-        if (modal_carousel && modal_carousel !== carousel) {
-          closeModal(modal_carousel);
-          // modal_carousel.parentNode.classList.remove('n-carousel--overlay');
-        }
-        if (carousel.parentNode.classList.contains('n-carousel--inline')) {
-          closeModal(carousel);
-          // carousel.parentNode.classList.add('n-carousel--overlay');
-        }
-        if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
-          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
-        }
-        slideTo(carousel, [...carousel.children].indexOf(el));
-        window.nCarouselNav = [carousel, location.hash];
-      }
-    } else {
-      if (window.nCarouselNav) { // Previously navigated to a slide
-        let carousel = window.nCarouselNav[0];
-        delete window.nCarouselNav;
-        if (isSafari) { // Safari has already scrolled and needs to rewind it scroll position in order to animate it
-          scrollTo(carousel, carousel.offsetWidth * carousel.dataset.x, carousel.offsetHeight * carousel.dataset.y);
-        }
-        slideTo(carousel, [...carousel.children].indexOf(carousel.querySelector(':scope > :not([id])')));
-      }
-    }
-  });
+  window.addEventListener('popstate', hashNavigation);
   const doInit = () => {
     (typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-carousel", init): init();
   };
