@@ -67,7 +67,7 @@ body {
   text-align: center;
   --nui-control-bg: rgb(255, 158, 158);
   --nui-control-color: #670d5b;
-  --nui-control-active-color: blue;
+  --nui-control-active-color: white;
 }
 
 .n-carousel__content {

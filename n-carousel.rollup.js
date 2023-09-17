@@ -1,7 +1,6 @@
 function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n<t;n++)r[n]=e[n];return r}function t(t,n){var r="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(r)return (r=r.call(t)).next.bind(r);if(Array.isArray(t)||(r=function(t,n){if(t){if("string"==typeof t)return e(t,n);var r=Object.prototype.toString.call(t).slice(8,-1);return "Object"===r&&t.constructor&&(r=t.constructor.name),"Map"===r||"Set"===r?Array.from(t):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?e(t,n):void 0}}(t))||n&&t&&"number"==typeof t.length){r&&(t=r);var o=0;return function(){return o>=t.length?{done:!0}:{done:!1,value:t[o++]}}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}if(!("onscrollend"in window)){var n=function(e,t,n){var r=e[t];e[t]=function(){var e=Array.prototype.slice.apply(arguments,[0]);r.apply(this,e),e.unshift(r),n.apply(this,e);};},r=function(e,t,n,r){if("scroll"==t||"scrollend"==t){var o=this,s=l.get(o);if(void 0===s){var c=0;s={scrollListener:function(e){clearTimeout(c),c=setTimeout(function(){a.size?setTimeout(s.scrollListener,100):(o.dispatchEvent(i),c=0);},100);},listeners:0},e.apply(o,["scroll",s.scrollListener]),l.set(o,s);}s.listeners++;}},o=function(e,t,n){if("scroll"==t||"scrollend"==t){var r=this,o=l.get(r);void 0!==o&&(o[t]--,--o.listeners>0||(e.apply(r,["scroll",o.scrollListener]),l.delete(r)));}},i=new Event("scrollend"),a=new Set;document.addEventListener("touchstart",function(e){for(var n,r=t(e.changedTouches);!(n=r()).done;)a.add(n.value.identifier);},{passive:!0}),document.addEventListener("touchend",function(e){for(var n,r=t(e.changedTouches);!(n=r()).done;)a.delete(n.value.identifier);},{passive:!0});var l=new WeakMap;n(Element.prototype,"addEventListener",r),n(window,"addEventListener",r),n(document,"addEventListener",r),n(Element.prototype,"removeEventListener",o),n(window,"removeEventListener",o),n(document,"removeEventListener",o);}
 
 // import './node_modules/n-modal/n-modal.js';
-
 (function() {
   const ceilingWidth = el => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = el => Math.ceil(parseFloat(getComputedStyle(el).height));
@@ -26,7 +25,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
   };
   const scrollEndAction = carousel => {
     carousel = carousel.target || carousel;
-    // console.log('scroll end', carousel);
+    console.log('scroll end', carousel);
     let index = Math.abs(Math.round(
       (isVertical(carousel) ? carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart) - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart) - parseFloat(getComputedStyle(carousel).paddingInlineEnd))), 2));
     // console.log('scroll end', index);
@@ -481,17 +480,24 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
           active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
-      // window.requestAnimationFrame(() => { // Cause blinking
-      el.dataset.x = el.dataset.y = active_index_logical;
-      let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
-      let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
-      // console.log('updateCarousel() scrolling at', scroll_x);
-      el.scroll_x = scroll_x;
-      el.scroll_y = scroll_y;
-      scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
-      delete el.scroll_x;
-      delete el.scroll_y;
-      // });
+      const updateScroll = () => {
+        el.dataset.x = el.dataset.y = active_index_logical;
+        let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
+        let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
+        // console.log('updateCarousel() scrolling at', scroll_x);
+        el.scroll_x = scroll_x;
+        el.scroll_y = scroll_y;
+        scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
+        delete el.scroll_x;
+        delete el.scroll_y;
+      };
+      if (isVertical(el) && isAutoHeight(el)) {
+        window.requestAnimationFrame(() => { // Causes blinking, but needed for vertical auto height endless
+          updateScroll();
+        });
+      } else {
+        updateScroll();
+      }
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
@@ -997,7 +1003,6 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-      
       // below replaced by scrollend polyfill
       // if (!("onscrollend" in window)) { // scrollend event fallback to intersection observer (for Safari as of 2023)
       //   const scrollEndObserver = new IntersectionObserver(entries => {

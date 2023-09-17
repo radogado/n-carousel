@@ -1,6 +1,5 @@
 // import './node_modules/n-modal/n-modal.js';
-import './node_modules/scrollyfills/dist/scrollyfills.module.js'; // scrollend event polyfill
-
+import './scrollyfills.module.js'; // scrollend event polyfill
 (function() {
   const ceilingWidth = el => Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = el => Math.ceil(parseFloat(getComputedStyle(el).height));
@@ -25,7 +24,7 @@ import './node_modules/scrollyfills/dist/scrollyfills.module.js'; // scrollend e
   }
   const scrollEndAction = carousel => {
     carousel = carousel.target || carousel;
-    // console.log('scroll end', carousel);
+    console.log('scroll end', carousel);
     let index = Math.abs(Math.round(
       (isVertical(carousel) ? carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart) - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart) - parseFloat(getComputedStyle(carousel).paddingInlineEnd))), 2));
     // console.log('scroll end', index);
@@ -483,17 +482,24 @@ import './node_modules/scrollyfills/dist/scrollyfills.module.js'; // scrollend e
           active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
-      // window.requestAnimationFrame(() => { // Cause blinking
-      el.dataset.x = el.dataset.y = active_index_logical;
-      let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
-      let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
-      // console.log('updateCarousel() scrolling at', scroll_x);
-      el.scroll_x = scroll_x;
-      el.scroll_y = scroll_y;
-      scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
-      delete el.scroll_x;
-      delete el.scroll_y;
-      // });
+      const updateScroll = () => {
+        el.dataset.x = el.dataset.y = active_index_logical;
+        let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
+        let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
+        // console.log('updateCarousel() scrolling at', scroll_x);
+        el.scroll_x = scroll_x;
+        el.scroll_y = scroll_y;
+        scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
+        delete el.scroll_x;
+        delete el.scroll_y;
+      }
+      if (isVertical(el) && isAutoHeight(el)) {
+        window.requestAnimationFrame(() => { // Causes blinking, but needed for vertical auto height endless
+          updateScroll();
+        });
+      } else {
+        updateScroll();
+      }
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
       active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
@@ -999,7 +1005,6 @@ import './node_modules/scrollyfills/dist/scrollyfills.module.js'; // scrollend e
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-      
       // below replaced by scrollend polyfill
       // if (!("onscrollend" in window)) { // scrollend event fallback to intersection observer (for Safari as of 2023)
       //   const scrollEndObserver = new IntersectionObserver(entries => {
