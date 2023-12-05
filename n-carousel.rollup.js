@@ -25,7 +25,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
   };
   const scrollEndAction = carousel => {
     carousel = carousel.target || carousel;
-    console.log('scroll end', carousel);
+    // console.log('scroll end', carousel);
     let index = Math.abs(Math.round(
       (isVertical(carousel) ? carousel.scrollTop / (carousel.offsetHeight - parseFloat(getComputedStyle(carousel).paddingBlockStart) - parseFloat(getComputedStyle(carousel).paddingBlockEnd)) : carousel.scrollLeft / (carousel.offsetWidth - parseFloat(getComputedStyle(carousel).paddingInlineStart) - parseFloat(getComputedStyle(carousel).paddingInlineEnd))), 2));
     // console.log('scroll end', index);
@@ -372,13 +372,8 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
     if (!el.togglingFullScreen) {
-      if (el.openingModal) {
-        delete el.openingModal;
-        scrollTo(el, el.offsetWidth * el.dataset.x, el.offsetHeight * el.dataset.y);
-      } else {
-        el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
-        el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
-      }
+      el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
+      el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
     } else {
       delete el.togglingFullScreen;
     }
@@ -417,7 +412,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     }
     // active_slide.ariaCurrent = true; // Unsupported by FF
     active_slide.setAttribute('aria-current', true);
-    var active_index_logical = el.dataset.x = el.dataset.y = getIndexReal(el);
+    var active_index_real = el.dataset.x = el.dataset.y = getIndexReal(el);
     // Endless carousel
     const restoreDisplacedSlides = el => {
       el.querySelectorAll(":scope > [data-first]").forEach(el2 => {
@@ -432,13 +427,13 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
       });
     };
     wrapper.dataset.sliding = true;
-    if (isEndless(el)) {
+    if (isEndless(el) && !forced) {
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
           // Move the last one to the front as [data-first]
           if (el.lastElementChild.dataset.last) {
             delete el.lastElementChild.dataset.last;
-            active_index_logical = 1;
+            active_index_real = 1;
           } else {
             el.lastElementChild.dataset.first = true;
           }
@@ -450,7 +445,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
           el.append(el.firstElementChild);
           el.firstElementChild.dataset.last = true;
           el.append(el.firstElementChild);
-          active_index_logical = el.children.length - 1;
+          active_index_real = el.children.length - 1;
           active_index = el.children.length - 2;
         }
       } else {
@@ -459,7 +454,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
             // Move the first one to the back as [data-last]
             if (el.firstElementChild.dataset.first) {
               delete el.firstElementChild.dataset.first;
-              active_index_logical = el.children.length - 2;
+              active_index_real = el.children.length - 2;
             } else {
               el.firstElementChild.dataset.last = true;
             }
@@ -471,17 +466,17 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
             el.prepend(el.lastElementChild);
             el.lastElementChild.dataset.first = true;
             el.prepend(el.lastElementChild);
-            active_index_logical = 0;
+            active_index_real = 0;
             active_index = 1;
           }
         } else {
           // Middle slide
           restoreDisplacedSlides(el);
-          active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
+          active_index_real = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
       const updateScroll = () => {
-        el.dataset.x = el.dataset.y = active_index_logical;
+        el.dataset.x = el.dataset.y = active_index_real;
         let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
         let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
         // console.log('updateCarousel() scrolling at', scroll_x);
@@ -500,7 +495,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
       }
     } else { // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
-      active_index_logical = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
+      active_index_real = Math.max(0, [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))); // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
     wrapper.style.setProperty("--height", `${isAutoHeight(el) ? nextSlideHeight(active_slide) : active_slide.scrollHeight}px`);
@@ -525,8 +520,8 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute('aria-current');
-      // index.children[active_index_logical].ariaCurrent = true; // Unsupported by FF
-      indexControls(index)[active_index_logical].setAttribute('aria-current', true);
+      // index.children[active_index_real].ariaCurrent = true; // Unsupported by FF
+      indexControls(index)[active_index_real].setAttribute('aria-current', true);
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
@@ -569,7 +564,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     // });
     // Obsoleted by inert – end
     if (/--vertical.*--auto-height/.test(wrapper.classList)) { // Undo jump to wrong slide when sliding to the last one
-      el.scrollTop = el.offsetHeight * active_index_logical;
+      el.scrollTop = el.offsetHeight * active_index_real;
     }
     window.requestAnimationFrame(() => {
       observersOn(el);
@@ -740,6 +735,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     }
     let carousel = closestCarousel(el);
     if (carousel) {
+      carousel.parentNode.toggleModal = true; // skip mutation observer
       carousel.closest(".n-carousel").classList.remove("n-carousel--overlay");
       trapFocus(carousel.closest(".n-carousel"), true); // Disable focus trap
       delete document.body.dataset.frozen;
@@ -749,7 +745,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
   const openModal = el => {
     let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.openingModal = true;
+      carousel.parentNode.toggleModal = true; // skip mutation observer
       carousel.closest(".n-carousel").classList.add("n-carousel--overlay");
       trapFocus(carousel.closest(".n-carousel"));
       setTimeout(() => { document.body.addEventListener('keyup', closeModalOnBodyClick); }, 100);
@@ -861,10 +857,11 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
   });
   const mutation_observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
-      if (mutation.target && !mutation.target.nextSlideInstant) {
+      if (mutation.target && !mutation.target.nextSlideInstant && !mutation.target.toggleModal) {
         let carousel = mutation.target.querySelector(":scope > .n-carousel__content");
         updateObserver(carousel);
         updateCarousel(carousel, true);
+        delete mutation.target.toggleModal;
       }
     }
   });
