@@ -370,15 +370,16 @@ import './scrollyfills.module.js'; // scrollend event polyfill
   });
   const updateCarousel = (el, forced = false) => { // Forced means never skip unnecessary update
     // Called on init and scroll end
+    // console.log(el, el.matches(':fullscreen'));
+    if (el.togglingFullScreen) {
+      // console.log('updateCarousel: toggling Full Screen')
+      return;
+    }
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
-    if (!el.togglingFullScreen) {
-      el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
-      el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
-    } else {
-      delete el.togglingFullScreen;
-    }
+    el.dataset.x = Math.abs(Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild)));
+    el.dataset.y = Math.abs(Math.round(el.scrollTop / ceilingHeight(el.firstElementChild)));
     // When inline
     if (el.dataset.x === "NaN") {
       el.dataset.x = 0;
@@ -924,16 +925,20 @@ import './scrollyfills.module.js'; // scrollend event polyfill
           toggleFullScreen(e.target);
         };
         const fullScreenEvent = e => {
+          // console.log(e, 'full screen');
           let carousel = e.target.querySelector(":scope > .n-carousel__content");
           window.requestAnimationFrame(() => {
-            updateCarousel(carousel);
             carousel.dataset.x = carousel.dataset.xx;
             carousel.dataset.y = carousel.dataset.yy;
             delete carousel.dataset.xx;
             delete carousel.dataset.yy;
             if (carousel.dataset.x !== "undefined" && carousel.dataset.y !== "undefined") {
-              scrollTo(carousel, carousel.dataset.x * ceilingWidth(carousel.children[carousel.dataset.x]), carousel.dataset.y * ceilingHeight(carousel.children[carousel.dataset.y]));
+              scrollTo(carousel, getIndexReal(carousel) * ceilingWidth(carousel.children[getIndexReal(carousel)]), getIndexReal(carousel) * ceilingHeight(carousel.children[getIndexReal(carousel)]));
             }
+            // setTimeout(() => {
+              delete carousel.togglingFullScreen;
+              updateCarousel(carousel);
+            // }, 100);
           });
         };
         if (isSafari) {
