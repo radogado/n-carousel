@@ -1115,6 +1115,7 @@ _:future,
 			justify-content: center;
 			align-items: center;
 			justify-self: center;
+			min-width: 0; // Make flex item's max-width work
 			// align-self: center;
 			// overflow: hidden;
 		}

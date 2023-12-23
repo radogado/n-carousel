@@ -706,6 +706,7 @@ _:future,
   justify-content: center;
   align-items: center;
   justify-self: center;
+  min-width: 0;
 }
 .n-carousel--lightbox figure > figcaption {
   grid-row: 1/2;
