@@ -928,8 +928,8 @@ import './scrollyfills.module.js'; // scrollend event polyfill
           // console.log(e, 'full screen');
           let carousel = e.target.querySelector(":scope > .n-carousel__content");
           window.requestAnimationFrame(() => {
-            carousel.dataset.x = carousel.dataset.xx;
-            carousel.dataset.y = carousel.dataset.yy;
+            carousel.dataset.x = carousel.dataset.xx || carousel.dataset.x;
+            carousel.dataset.y = carousel.dataset.yy || carousel.dataset.y;
             delete carousel.dataset.xx;
             delete carousel.dataset.yy;
             if (carousel.dataset.x !== "undefined" && carousel.dataset.y !== "undefined") {

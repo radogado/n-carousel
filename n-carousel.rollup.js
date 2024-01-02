@@ -926,8 +926,8 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
           // console.log(e, 'full screen');
           let carousel = e.target.querySelector(":scope > .n-carousel__content");
           window.requestAnimationFrame(() => {
-            carousel.dataset.x = carousel.dataset.xx;
-            carousel.dataset.y = carousel.dataset.yy;
+            carousel.dataset.x = carousel.dataset.xx || carousel.dataset.x;
+            carousel.dataset.y = carousel.dataset.yy || carousel.dataset.y;
             delete carousel.dataset.xx;
             delete carousel.dataset.yy;
             if (carousel.dataset.x !== "undefined" && carousel.dataset.y !== "undefined") {
