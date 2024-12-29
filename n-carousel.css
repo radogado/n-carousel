@@ -244,11 +244,15 @@ body[data-frozen] {
 .n-carousel > .n-carousel__previous {
   grid-area: prev;
   align-self: center;
+  position: sticky;
+  top: 0;
 }
 .n-carousel > .n-carousel__next {
   grid-area: next;
   align-self: center;
   justify-self: end;
+  position: sticky;
+  top: 0;
 }
 .n-carousel > .n-carousel__index {
   grid-area: i;
@@ -591,6 +595,8 @@ _:future,
   grid-area: f;
   display: flex;
   justify-self: start;
+  position: sticky;
+  top: 0;
 }
 
 .n-carousel--vertical > .n-carousel__controls {

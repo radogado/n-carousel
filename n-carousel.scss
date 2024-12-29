@@ -409,6 +409,9 @@ body[data-frozen] {
   > .n-carousel__previous {
     grid-area: prev;
     align-self: center;
+    position: sticky;
+    top: 0;
+
     // justify-self: start;
     // justify-self: center;
   }
@@ -418,6 +421,8 @@ body[data-frozen] {
     align-self: center;
     // justify-self: center;
     justify-self: end;
+    position: sticky;
+    top: 0;
   }
 
   > .n-carousel__index {
@@ -947,6 +952,8 @@ _:future,
   grid-area: f;
   display: flex;
   justify-self: start;
+  position: sticky;
+  top: 0;
 }
 
 // .n-carousel--controls-outside > .n-carousel__controls {
