@@ -1,6 +1,6 @@
 {
   "index.enabled" : true,
   "index.symbolicate" : true,
-  "workspace.name" : "n-carousel",
+  "workspace.name" : "Native Carousel",
   "workspace.preview_server_allow_external" : false
 }

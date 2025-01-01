@@ -811,7 +811,7 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     }
   };
   const carouselKeys = (e) => {
-    console.log('keydown', e);
+    console.log("keydown", e);
     // return;
     let keys = [
       "ArrowLeft",
@@ -936,9 +936,18 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
     }
     let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.parentNode.toggleModal = true; // skip mutation observer
-      carousel.closest(".n-carousel").classList.remove("n-carousel--overlay");
-      trapFocus(carousel.closest(".n-carousel"), true); // Disable focus trap
+      let wrapper = carousel.closest(".n-carousel");
+      wrapper.toggleModal = true; // skip mutation observer
+      wrapper.classList.remove("n-carousel--overlay");
+      trapFocus(wrapper, true); // Disable focus trap
+      if (
+        wrapper.nextElementSibling &&
+        wrapper.nextElementSibling.classList.contains(
+          "n-carousel__overlay-placeholder"
+        )
+      ) {
+        wrapper.nextElementSibling.remove();
+      }
       delete document.body.dataset.frozen;
     }
     document.body.removeEventListener("keyup", closeModalOnBodyClick);
@@ -946,9 +955,17 @@ function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,r=new Array(t);n
   const openModal = (el) => {
     let carousel = closestCarousel(el);
     if (carousel) {
-      carousel.parentNode.toggleModal = true; // skip mutation observer
-      carousel.closest(".n-carousel").classList.add("n-carousel--overlay");
-      trapFocus(carousel.closest(".n-carousel"));
+      let wrapper = carousel.closest(".n-carousel");
+      wrapper.toggleModal = true; // skip mutation observer
+      wrapper.insertAdjacentHTML(
+        "afterend",
+        `<div class=n-carousel__overlay-placeholder style="aspect-ratio: ${
+          wrapper.getBoundingClientRect().width /
+          wrapper.getBoundingClientRect().height
+        }"></div>`
+      );
+      wrapper.classList.add("n-carousel--overlay");
+      trapFocus(wrapper);
       setTimeout(() => {
         document.body.addEventListener("keyup", closeModalOnBodyClick);
       }, 100);
