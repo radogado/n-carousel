@@ -21,7 +21,7 @@
     "README.md"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/terser/bin/terser -o n-carousel.min.js --compress --mangle -- n-carousel.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
   },
   "keywords": [
@@ -48,9 +48,19 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.23.3",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "babel-jest": "^29.7.0",
     "clean-css-cli": "^4.3.0",
     "gzip-size": "^6.0.0",
     "gzip-size-cli": "^4.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "n-modal": "^1.0.3",
     "rollup": "^2.79.0",
     "sass": "^1.49.7",

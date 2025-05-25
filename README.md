@@ -22,8 +22,8 @@ npm install n-carousel
 
 ### CDN
 ```html
-<link rel="stylesheet" href="https://unpkg.com/n-carousel@1.2.19/n-carousel.min.css">
-<script src="https://unpkg.com/n-carousel@1.2.19/n-carousel.min.js" type="module" async></script>
+<link rel="stylesheet" href="https://unpkg.com/n-carousel@1.2.20/n-carousel.min.css">
+<script src="https://unpkg.com/n-carousel@1.2.20/n-carousel.min.js" type="module" async></script>
 ```
 
 ## Quick Start
@@ -69,19 +69,17 @@ import NCarousel from 'n-carousel/react/NCarousel';
 
 const MyCarousel = () => {
   return (
-    <NCarousel>
-      <div>
-        <img src="image1.jpg" alt="Slide 1" />
-        <h2>First Slide</h2>
-      </div>
-      <div>
-        <img src="image2.jpg" alt="Slide 2" />
-        <h2>Second Slide</h2>
-      </div>
-      <div>
-        <img src="image3.jpg" alt="Slide 3" />
-        <h2>Third Slide</h2>
-      </div>
+    <NCarousel options={{
+      endless: true,
+      vertical: true,
+      autoHeight: true,
+      controlsOutside: true,
+      tabs: true,
+      indexAlignStart: true
+    }}>
+      <div>Slide 1</div>
+      <div>Slide 2</div>
+      <div>Slide 3</div>
     </NCarousel>
   );
 };
@@ -92,6 +90,30 @@ const MyCarousel = () => {
 - `className`: Additional CSS classes
 - `showNavigation`: Show/hide previous/next buttons (default: true)
 - `showIndex`: Show/hide index dots (default: true)
+- `options`: Object of boolean flags for carousel features (see below)
+
+#### All Available Options
+| Option            | Effect (adds class)                | Description |
+|-------------------|------------------------------------|-------------|
+| `endless`         | `n-carousel--endless`              | Infinite looping |
+| `vertical`        | `n-carousel--vertical`             | Vertical orientation |
+| `autoHeight`      | `n-carousel--auto-height`          | Auto height for slides |
+| `overlay`         | `n-carousel--overlay`              | Overlay modal style |
+| `inline`          | `n-carousel--inline`               | Inline mode |
+| `indexEnd`        | `n-carousel--index-end`            | Index at end |
+| `indexAlignEnd`   | `n-carousel--index-align-end`      | Index alignment end |
+| `peek`            | `n-carousel--peek`                 | Peeking effect |
+| `rtl`             | `n-carousel--rtl`                  | Right-to-left direction |
+| `indexAlignCenter`| `n-carousel--index-align-center`   | Index alignment center |
+| `indexAlignStart` | `n-carousel--index-align-start`    | Index alignment start |
+| `indexStart`      | `n-carousel--index-start`          | Index at start |
+| `controlsOutside` | `n-carousel--controls-outside`     | Controls outside content |
+| `thumbnails`      | `n-carousel--thumbnails`           | Thumbnails for index |
+| `tabs`            | `n-carousel--tabs`                 | Tabs style for index |
+| `lightbox`        | `n-carousel--lightbox`             | Lightbox mode |
+| `autoSlide`       | `n-carousel--auto-slide`           | Auto slide mode |
+| `tabsAlignEnd`    | `n-carousel--tabs-align-end`       | Tabs alignment end |
+| `instant`         | `n-carousel--instant`              | Instant transitions |
 
 ## Customization
 
@@ -135,4 +157,3 @@ Check out the [live demo](https://nativecarousel.com/) to see the carousel in ac
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-```
