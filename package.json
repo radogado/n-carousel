@@ -4,19 +4,28 @@
   "description": "Carousel",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/terser/bin/terser -o n-carousel.min.js --compress --mangle -- n-carousel.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
+    "build": "gulp",
+    "dev": "gulp watch",
+    "serve": "serve .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
   "devDependencies": {
     "clean-css-cli": "^4.3.0",
+    "gulp": "^5.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^6.0.1",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.1.0",
     "gzip-size": "^6.0.0",
     "gzip-size-cli": "^4.0.0",
     "n-modal": "^1.0.3",
     "rollup": "^2.79.0",
-    "sass": "^1.49.7",
+    "sass": "^1.89.0",
     "scrollyfills": "^1.0.0",
+    "serve": "^14.2.4",
     "terser": "^5.4.0"
   }
 }

@@ -5,6 +5,7 @@ body[data-frozen] {
 }
 
 .n-carousel__content {
+	scrollbar-width: none;
 	display: flex;
 	will-change: scroll;
 	outline: 0;
@@ -12,15 +13,13 @@ body[data-frozen] {
 	overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
 	list-style: none;
 
-	@media (prefers-reduced-motion: reduce) {
-		transition: none;
-	}
-
-	scrollbar-width: none;
-
 	/* Firefox */
 	&::-webkit-scrollbar {
 		display: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
 	}
 
 	> * {
@@ -42,7 +41,6 @@ body[data-frozen] {
 	> :not([aria-current]):not(:last-child) {
 		overflow: auto;
 	}
-
 }
 
 .n-carousel:not(.n-carousel--vertical) {
@@ -188,27 +186,7 @@ body[data-frozen] {
 		max-height: 100%;
 
 		> .n-carousel__content {
-			max-height: 100%;
-			// height: var(--max-height); // Working default – overflows lightbox
-		}
-
-		&:not(.n-carousel--auto-height) {
-			&:-webkit-full-screen {
-
-				// Safari 16.3-
-				> .n-carousel__content {
-					height: 100% !important;
-				}
-			}
-
-			&:fullscreen {
-				> .n-carousel__content {
-					height: 100% !important;
-				}
-			}
-		}
-
-		> .n-carousel__content {
+			padding: var(--peek, 0) 0;
 			overflow-y: auto;
 			box-sizing: content-box;
 
@@ -218,8 +196,6 @@ body[data-frozen] {
 				height: 100%;
 				padding-block-end: calc(1px * var(--subpixel-compensation, 0));
 			}
-
-			padding: var(--peek, 0) 0;
 		}
 
 		&:not(.n-carousel--controls-outside) {
@@ -456,6 +432,7 @@ body[data-frozen] {
 
 	&.n-carousel--thumbnails {
 		> .n-carousel__index {
+			padding: 1px;
 			> * {
 				padding: 0;
 				vertical-align: middle;
@@ -467,8 +444,6 @@ body[data-frozen] {
 					padding: 0 1ch;
 				}
 			}
-
-			padding: 1px;
 
 			[aria-current] {
 				// opacity: .5;
@@ -908,7 +883,7 @@ _:future,
 
 }
 
-// LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
+// LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 .n-carousel__previous,
 .n-carousel__next,
 .n-carousel__full-screen,

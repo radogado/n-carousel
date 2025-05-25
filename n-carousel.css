@@ -3,22 +3,22 @@ body[data-frozen] {
 }
 
 .n-carousel__content {
+  scrollbar-width: none;
   display: flex;
   will-change: scroll;
   outline: 0;
   box-sizing: border-box;
   overflow-anchor: none;
   list-style: none;
-  scrollbar-width: none;
   /* Firefox */
+}
+.n-carousel__content::-webkit-scrollbar {
+  display: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .n-carousel__content {
     transition: none;
   }
-}
-.n-carousel__content::-webkit-scrollbar {
-  display: none;
 }
 .n-carousel__content > * {
   flex: 1 0 auto;
@@ -136,18 +136,9 @@ body[data-frozen] {
   display: none;
 }
 .n-carousel.n-carousel--vertical > .n-carousel__content {
-  max-height: 100%;
-}
-.n-carousel.n-carousel--vertical:not(.n-carousel--auto-height):-webkit-full-screen > .n-carousel__content {
-  height: 100% !important;
-}
-.n-carousel.n-carousel--vertical:not(.n-carousel--auto-height):fullscreen > .n-carousel__content {
-  height: 100% !important;
-}
-.n-carousel.n-carousel--vertical > .n-carousel__content {
+  padding: var(--peek, 0) 0;
   overflow-y: auto;
   box-sizing: content-box;
-  padding: var(--peek, 0) 0;
 }
 .n-carousel.n-carousel--vertical > .n-carousel__content > * {
   width: 100%;
@@ -837,5 +828,3 @@ _:future,
     display: none;
   }
 }
-
-/*# sourceMappingURL=n-carousel.css.map */
