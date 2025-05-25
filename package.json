@@ -2,13 +2,35 @@
   "name": "n-carousel",
   "version": "1.2.18",
   "description": "Carousel",
-  "main": "index.js",
+  "main": "n-carousel.js",
+  "files": [
+    "n-carousel.js",
+    "n-carousel.min.js",
+    "n-carousel.css",
+    "n-carousel.min.css",
+    "n-carousel.scss"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/terser/bin/terser -o n-carousel.min.js --compress --mangle -- n-carousel.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
   },
+  "keywords": [
+    "carousel",
+    "slider",
+    "gallery",
+    "lightbox",
+    "responsive"
+  ],
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radogado/n-carousel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/radogado/n-carousel/issues"
+  },
+  "homepage": "https://github.com/radogado/n-carousel#readme",
   "devDependencies": {
     "clean-css-cli": "^4.3.0",
     "gzip-size": "^6.0.0",
