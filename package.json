@@ -15,6 +15,8 @@
     "n-carousel-preload.min.js",
     "n-carousel-preload.min.js.map",
     "scrollyfills.module.js",
+    "react/NCarousel.jsx",
+    "react/example.jsx",
     "LICENSE",
     "README.md"
   ],
@@ -27,7 +29,9 @@
     "slider",
     "gallery",
     "lightbox",
-    "responsive"
+    "responsive",
+    "react",
+    "react-component"
   ],
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
@@ -39,6 +43,10 @@
     "url": "https://github.com/radogado/n-carousel/issues"
   },
   "homepage": "https://github.com/radogado/n-carousel#readme",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
   "devDependencies": {
     "clean-css-cli": "^4.3.0",
     "gzip-size": "^6.0.0",

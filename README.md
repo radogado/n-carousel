@@ -11,6 +11,7 @@ A lightweight, dependency-free carousel component that uses native browser featu
 - ⚡ Performance optimized
 - 🔍 SEO friendly
 - 🛠️ Simple API
+- ⚛️ React support
 
 ## Installation
 
@@ -21,12 +22,13 @@ npm install n-carousel
 
 ### CDN
 ```html
-<link rel="stylesheet" href="https://unpkg.com/n-carousel@1.2.18/n-carousel.min.css">
-<script src="https://unpkg.com/n-carousel@1.2.18/n-carousel.min.js" type="module" async></script>
+<link rel="stylesheet" href="https://unpkg.com/n-carousel@1.2.19/n-carousel.min.css">
+<script src="https://unpkg.com/n-carousel@1.2.19/n-carousel.min.js" type="module" async></script>
 ```
 
 ## Quick Start
 
+### Vanilla JavaScript
 1. Include the CSS and JavaScript files
 2. Add the carousel markup
 3. Initialize the carousel
@@ -59,6 +61,37 @@ npm install n-carousel
     </div>
 </div>
 ```
+
+### React
+```jsx
+import React from 'react';
+import NCarousel from 'n-carousel/react/NCarousel';
+
+const MyCarousel = () => {
+  return (
+    <NCarousel>
+      <div>
+        <img src="image1.jpg" alt="Slide 1" />
+        <h2>First Slide</h2>
+      </div>
+      <div>
+        <img src="image2.jpg" alt="Slide 2" />
+        <h2>Second Slide</h2>
+      </div>
+      <div>
+        <img src="image3.jpg" alt="Slide 3" />
+        <h2>Third Slide</h2>
+      </div>
+    </NCarousel>
+  );
+};
+```
+
+#### React Props
+- `children`: React nodes to be rendered as slides
+- `className`: Additional CSS classes
+- `showNavigation`: Show/hide previous/next buttons (default: true)
+- `showIndex`: Show/hide index dots (default: true)
 
 ## Customization
 
@@ -103,5 +136,3 @@ Check out the [live demo](https://nativecarousel.com/) to see the carousel in ac
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 ```
-
-[Demo](https://nativecarousel.com/)
