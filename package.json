@@ -6,9 +6,17 @@
   "files": [
     "n-carousel.js",
     "n-carousel.min.js",
+    "n-carousel.min.js.map",
     "n-carousel.css",
     "n-carousel.min.css",
-    "n-carousel.scss"
+    "n-carousel.css.map",
+    "n-carousel.scss",
+    "n-carousel-preload.js",
+    "n-carousel-preload.min.js",
+    "n-carousel-preload.min.js.map",
+    "scrollyfills.module.js",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
