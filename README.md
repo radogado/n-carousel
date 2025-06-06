@@ -144,7 +144,6 @@ You can customize the carousel appearance using CSS variables:
 - Chrome (latest)
 - Firefox (latest)
 - Safari (latest)
-- Edge (latest)
 
 ## License
 
