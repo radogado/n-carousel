@@ -795,6 +795,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     slideTo(el, index === 0 ? el.children.length - 1 : index - 1);
   };
   const slideTo = (el, index) => {
+    if (!el || !el.children || !el.children[index]) {
+      console.warn('Invalid element or index in slideTo');
+      return;
+    }
+
     if (isVertical(el)) {
       slide(
         el,
@@ -803,8 +808,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         index
       );
     } else {
+      const targetElement = el.children[index];
+      if (!targetElement || !targetElement.offsetParent) {
+        console.warn('Target element not ready for measurement');
+        return;
+      }
+      
       let width = Math.ceil(
-        parseFloat(getComputedStyle(el.children[index]).width)
+        parseFloat(getComputedStyle(targetElement).width)
       );
       let new_offset = isRTL(el)
         ? Math.abs(scrollStartX(el)) - width * index
