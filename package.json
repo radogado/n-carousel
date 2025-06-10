@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/terser/bin/terser -o n-carousel.min.js --compress --mangle -- n-carousel.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
+    "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/rollup/dist/bin/rollup -c rollup.config.js\n./node_modules/terser/bin/terser -o n-carousel.min.js --source-map \"url='n-carousel.min.js.map'\" --compress --mangle -- n-carousel.rollup.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
   },
   "keywords": [
     "carousel",
@@ -51,6 +51,8 @@
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.23.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",

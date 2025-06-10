@@ -1,0 +1,232 @@
+{
+  "en": {
+    "carousel": "Carousel",
+    "previous": "Previous slide",
+    "next": "Next slide",
+    "navigation": "Navigation",
+    "item": "Go to item {current} of {total}",
+    "current_item": "Item {current} of {total}",
+    "close": "Close",
+    "fullscreen": "Full screen"
+  },
+  "es": {
+    "carousel": "Carrusel de contenido",
+    "previous": "Ir al elemento anterior",
+    "next": "Ir al siguiente elemento",
+    "navigation": "Navegación de elementos",
+    "item": "Ir al elemento {current} de {total}",
+    "close": "Cerrar visor de carrusel",
+    "fullscreen": "Ver en pantalla completa",
+    "current_item": "Elemento {current} de {total}"
+  },
+  "fr": {
+    "carousel": "Carrousel",
+    "previous": "Diapositive précédente",
+    "next": "Diapositive suivante",
+    "navigation": "Navigation",
+    "item": "Aller à l'élément {current} sur {total}",
+    "current_item": "Élément {current} sur {total}",
+    "close": "Fermer",
+    "fullscreen": "Plein écran"
+  },
+  "de": {
+    "carousel": "Inhaltskarussell",
+    "previous": "Zum vorherigen Element",
+    "next": "Zum nächsten Element",
+    "navigation": "Elementnavigation",
+    "item": "Zum Element {current} von {total}",
+    "close": "Karussell-Viewer schließen",
+    "fullscreen": "Im Vollbildmodus anzeigen",
+    "current_item": "Element {current} von {total}"
+  },
+  "it": {
+    "carousel": "Carosello dei contenuti",
+    "previous": "Vai all'elemento precedente",
+    "next": "Vai all'elemento successivo",
+    "navigation": "Navigazione elementi",
+    "item": "Vai all'elemento {current} di {total}",
+    "close": "Chiudi visualizzatore carosello",
+    "fullscreen": "Visualizza a schermo intero",
+    "current_item": "Elemento {current} di {total}"
+  },
+  "pt": {
+    "carousel": "Carrossel de conteúdo",
+    "previous": "Ir para o item anterior",
+    "next": "Ir para o próximo item",
+    "navigation": "Navegação de itens",
+    "item": "Ir para o item {current} de {total}",
+    "close": "Fechar visualizador de carrossel",
+    "fullscreen": "Ver em tela cheia",
+    "current_item": "Item {current} de {total}"
+  },
+  "nl": {
+    "carousel": "Inhoudscarrousel",
+    "previous": "Ga naar vorig item",
+    "next": "Ga naar volgend item",
+    "navigation": "Itemnavigatie",
+    "item": "Ga naar item {current} van {total}",
+    "close": "Sluit carrouselviewer",
+    "fullscreen": "Bekijk op volledig scherm",
+    "current_item": "Item {current} van {total}"
+  },
+  "pl": {
+    "carousel": "Karuzela treści",
+    "previous": "Przejdź do poprzedniego elementu",
+    "next": "Przejdź do następnego elementu",
+    "navigation": "Nawigacja elementów",
+    "item": "Przejdź do elementu {current} z {total}",
+    "close": "Zamknij przeglądarkę karuzeli",
+    "fullscreen": "Zobacz na pełnym ekranie",
+    "current_item": "Element {current} z {total}"
+  },
+  "ru": {
+    "carousel": "Карусель контента",
+    "previous": "Перейти к предыдущему элементу",
+    "next": "Перейти к следующему элементу",
+    "navigation": "Навигация по элементам",
+    "item": "Перейти к элементу {current} из {total}",
+    "close": "Закрыть просмотр карусели",
+    "fullscreen": "Просмотр на весь экран",
+    "current_item": "Элемент {current} из {total}"
+  },
+  "ja": {
+    "carousel": "コンテンツカルーセル",
+    "previous": "前の項目へ",
+    "next": "次の項目へ",
+    "navigation": "項目ナビゲーション",
+    "item": "{total}個中{current}番目の項目へ",
+    "close": "カルーセルビューアーを閉じる",
+    "fullscreen": "全画面表示",
+    "current_item": "{total}個中{current}番目の項目"
+  },
+  "zh": {
+    "carousel": "内容轮播",
+    "previous": "转到上一个项目",
+    "next": "转到下一个项目",
+    "navigation": "项目导航",
+    "item": "转到第 {current} 项，共 {total} 项",
+    "close": "关闭轮播查看器",
+    "fullscreen": "全屏查看",
+    "current_item": "第 {current} 项，共 {total} 项"
+  },
+  "ko": {
+    "carousel": "콘텐츠 캐러셀",
+    "previous": "이전 항목으로 이동",
+    "next": "다음 항목으로 이동",
+    "navigation": "항목 탐색",
+    "item": "{total}개 중 {current}번째 항목으로 이동",
+    "close": "캐러셀 뷰어 닫기",
+    "fullscreen": "전체 화면으로 보기",
+    "current_item": "{total}개 중 {current}번째 항목"
+  },
+  "ar": {
+    "carousel": "عرض الشرائح",
+    "previous": "الانتقال إلى العنصر السابق",
+    "next": "الانتقال إلى العنصر التالي",
+    "navigation": "تنقل العناصر",
+    "item": "الانتقال إلى العنصر {current} من {total}",
+    "close": "إغلاق عارض الشرائح",
+    "fullscreen": "عرض ملء الشاشة",
+    "current_item": "العنصر {current} من {total}"
+  },
+  "hi": {
+    "carousel": "सामग्री कैरोसेल",
+    "previous": "पिछले आइटम पर जाएं",
+    "next": "अगले आइटम पर जाएं",
+    "navigation": "आइटम नेविगेशन",
+    "item": "{total} में से {current} आइटम पर जाएं",
+    "close": "कैरोसेल व्यूअर बंद करें",
+    "fullscreen": "पूर्ण स्क्रीन में देखें",
+    "current_item": "{total} में से {current} आइटम"
+  },
+  "tr": {
+    "carousel": "İçerik kutusu",
+    "previous": "Önceki öğeye git",
+    "next": "Sonraki öğeye git",
+    "navigation": "Öğe gezinme",
+    "item": "{total} öğeden {current}. öğeye git",
+    "close": "Kutu görüntüleyiciyi kapat",
+    "fullscreen": "Tam ekranda görüntüle",
+    "current_item": "{total} öğeden {current}. öğe"
+  },
+  "sv": {
+    "carousel": "Innehållskarussell",
+    "previous": "Gå till föregående objekt",
+    "next": "Gå till nästa objekt",
+    "navigation": "Objektnavigering",
+    "item": "Gå till objekt {current} av {total}",
+    "close": "Stäng karussellvisare",
+    "fullscreen": "Visa i fullskärm",
+    "current_item": "Objekt {current} av {total}"
+  },
+  "da": {
+    "carousel": "Indholdskarussel",
+    "previous": "Gå til forrige element",
+    "next": "Gå til næste element",
+    "navigation": "Elementnavigation",
+    "item": "Gå til element {current} af {total}",
+    "close": "Luk karusselvisning",
+    "fullscreen": "Vis i fuldskærm",
+    "current_item": "Element {current} af {total}"
+  },
+  "fi": {
+    "carousel": "Sisältökaruselli",
+    "previous": "Siirry edelliseen kohteeseen",
+    "next": "Siirry seuraavaan kohteeseen",
+    "navigation": "Kohteenavigointi",
+    "item": "Siirry kohteeseen {current}/{total}",
+    "close": "Sulje karusellinäkymä",
+    "fullscreen": "Näytä koko näytöllä",
+    "current_item": "Kohde {current}/{total}"
+  },
+  "no": {
+    "carousel": "Innholdskarussell",
+    "previous": "Gå til forrige element",
+    "next": "Gå til neste element",
+    "navigation": "Elementnavigasjon",
+    "item": "Gå til element {current} av {total}",
+    "close": "Lukk karusellvisning",
+    "fullscreen": "Vis i fullskjerm",
+    "current_item": "Element {current} av {total}"
+  },
+  "cs": {
+    "carousel": "Obsahový karusel",
+    "previous": "Přejít na předchozí položku",
+    "next": "Přejít na další položku",
+    "navigation": "Navigace položek",
+    "item": "Přejít na položku {current} z {total}",
+    "close": "Zavřít prohlížeč karuselu",
+    "fullscreen": "Zobrazit na celou obrazovku",
+    "current_item": "Položka {current} z {total}"
+  },
+  "hu": {
+    "carousel": "Tartalomkarusszel",
+    "previous": "Ugrás az előző elemre",
+    "next": "Ugrás a következő elemre",
+    "navigation": "Elemnavigáció",
+    "item": "Ugrás a(z) {current}. elemre a {total} elemből",
+    "close": "Karusszel bezárása",
+    "fullscreen": "Teljes képernyős nézet",
+    "current_item": "{current}. elem a {total} elemből"
+  },
+  "el": {
+    "carousel": "Καρουζέλ περιεχομένου",
+    "previous": "Μετάβαση στο προηγούμενο στοιχείο",
+    "next": "Μετάβαση στο επόμενο στοιχείο",
+    "navigation": "Πλοήγηση στοιχείων",
+    "item": "Μετάβαση στο στοιχείο {current} από {total}",
+    "close": "Κλείσιμο προβολέα καρουζέλ",
+    "fullscreen": "Προβολή σε πλήρη οθόνη",
+    "current_item": "Στοιχείο {current} από {total}"
+  },
+  "he": {
+    "carousel": "קרוסלת תוכן",
+    "previous": "עבור לפריט הקודם",
+    "next": "עבור לפריט הבא",
+    "navigation": "ניווט פריטים",
+    "item": "עבור לפריט {current} מתוך {total}",
+    "close": "סגור צפיין קרוסלה",
+    "fullscreen": "צפה במסך מלא",
+    "current_item": "פריט {current} מתוך {total}"
+  }
+} 
