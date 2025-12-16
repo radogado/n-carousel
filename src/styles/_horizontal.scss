@@ -1,0 +1,48 @@
+/**
+ * Horizontal carousel styles
+ */
+
+.n-carousel:not(.n-carousel--vertical) {
+  > .n-carousel__content {
+    overflow-x: auto;
+    width: calc(100% - 0px); // Using the Safari bug where it floors the floating point value
+    padding: 0 var(--peek, 0);
+  }
+
+  &:not(.n-carousel--auto-height) > {
+    .n-carousel__content > * {
+      overflow: auto;
+    }
+  }
+
+  &.n-carousel--auto-height {
+    &:not(.n-carousel--controls-outside) {
+      grid-template: auto/auto;
+      grid-template-areas:
+        "f f f"
+        "a1 a1 a1"
+        "prev a2 next"
+        "a3 a3 a3"
+        "i i i";
+    }
+
+    &:not([data-ready]) {
+      > .n-carousel__content > :not(:first-child) {
+        height: 0;
+        overflow: visible;
+      }
+    }
+
+    > .n-carousel__content {
+      overflow-y: hidden;
+      height: var(--height, auto);
+
+      &,
+      > * {
+        min-height: 9em; // Minimum height to accommodate the controls
+      }
+    }
+  }
+}
+
+

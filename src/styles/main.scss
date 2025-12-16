@@ -1,0 +1,16 @@
+/**
+ * Main SCSS entry point
+ * Imports all modular styles
+ */
+
+@use 'base';
+@use 'horizontal';
+@use 'vertical';
+@use 'fullscreen';
+@use 'controls';
+
+// Additional feature-specific styles can be imported here
+// @import 'lightbox';
+// @import 'tabs';
+// @import 'endless';
+

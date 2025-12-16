@@ -1,0 +1,49 @@
+/**
+ * Base styles
+ * Core carousel structure and layout
+ */
+
+body[data-frozen] {
+  overflow: hidden;
+}
+
+.n-carousel__content {
+  display: flex;
+  will-change: scroll;
+  outline: 0;
+  box-sizing: border-box;
+  overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
+  list-style: none;
+  scrollbar-width: none;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    flex: 1 0 auto;
+    box-sizing: content-box;
+    overflow: auto;
+    width: 100%;
+    padding-inline-end: calc(1px * var(--subpixel-compensation, 0));
+
+    > * {
+      overflow: auto; // Collapse inner margins
+    }
+  }
+
+  img {
+    height: auto;
+  }
+
+  > :not([aria-current]):not(:last-child) {
+    overflow: auto;
+  }
+}
+
+

@@ -1,0 +1,54 @@
+/**
+ * Fullscreen and overlay styles
+ */
+
+.n-carousel {
+  &:fullscreen,
+  &.n-carousel--overlay {
+    max-height: 100% !important;
+
+    > .n-carousel__content {
+      height: 100% !important;
+      height: 100dvh !important; // Dynamic viewport height, Safari 15.4
+
+      figure,
+      img,
+      video,
+      iframe {
+        max-height: 100%;
+      }
+    }
+  }
+
+  &:fullscreen {
+    .n-carousel__close {
+      display: none;
+    }
+  }
+
+  &:-webkit-full-screen,
+  &.n-carousel--overlay {
+    // Safari 16.3-
+    max-height: 100% !important;
+
+    > .n-carousel__content {
+      height: 100% !important;
+      height: 100dvh !important; // Dynamic viewport height, Safari 15.4
+
+      figure,
+      img,
+      video,
+      iframe {
+        max-height: 100%;
+      }
+    }
+  }
+
+  &:-webkit-full-screen {
+    .n-carousel__close {
+      display: none;
+    }
+  }
+}
+
+

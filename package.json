@@ -2,19 +2,22 @@
   "name": "n-carousel",
   "version": "1.2.21",
   "description": "Carousel",
+  "type": "module",
   "main": "n-carousel.js",
   "files": [
     "n-carousel.js",
-    "n-carousel.min.js",
-    "n-carousel.min.js.map",
-    "n-carousel.css",
-    "n-carousel.min.css",
-    "n-carousel.css.map",
+    "dist/n-carousel.rollup.js",
+    "dist/n-carousel.rollup.js.map",
+    "dist/n-carousel.min.js",
+    "dist/n-carousel.min.js.map",
+    "dist/n-carousel.min.css",
+    "dist/n-carousel.css",
+    "dist/n-carousel.css.map",
     "n-carousel.scss",
     "n-carousel-preload.js",
     "n-carousel-preload.min.js",
     "n-carousel-preload.min.js.map",
-    "scrollyfills.module.js",
+    "src/scrollyfills.module.js",
     "react/NCarousel.jsx",
     "react/example.jsx",
     "LICENSE",
@@ -22,7 +25,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/rollup/dist/bin/rollup -c rollup.config.js\n./node_modules/terser/bin/terser -o n-carousel.min.js --source-map \"url='n-carousel.min.js.map'\" --compress --mangle -- n-carousel.rollup.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
+    "build": "sass src/styles/main.scss dist/n-carousel.css --no-source-map\n./node_modules/clean-css-cli/bin/cleancss -o dist/n-carousel.min.css dist/n-carousel.css\n./node_modules/rollup/dist/bin/rollup -c rollup.config.js\n./node_modules/terser/bin/terser -o dist/n-carousel.min.js --source-map \"url='n-carousel.min.js.map'\" --compress --mangle -- dist/n-carousel.rollup.js\ngzip-size --raw dist/n-carousel.min.css > dist/n-carousel.min.css.size\ngzip-size --raw dist/n-carousel.min.js > dist/n-carousel.min.js.size\n"
   },
   "keywords": [
     "carousel",
