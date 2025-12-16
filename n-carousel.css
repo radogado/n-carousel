@@ -10,12 +10,14 @@ body[data-frozen] {
   overflow-anchor: none;
   list-style: none;
   scrollbar-width: none;
-  /* Firefox */
 }
 @media (prefers-reduced-motion: reduce) {
   .n-carousel__content {
     transition: none;
   }
+}
+.n-carousel__content {
+  /* Firefox */
 }
 .n-carousel__content::-webkit-scrollbar {
   display: none;
@@ -80,14 +82,6 @@ body[data-frozen] {
   100% {
     height: 100%;
   }
-}
-.n-carousel {
-  --max-height: 100vh;
-  --peek: 0px;
-  display: grid;
-  grid-template: auto 1fr auto 1fr auto/auto 1fr auto;
-  position: relative;
-  grid-template-areas: "f f f" "a1 a1 a1" "prev    a2  next" "a3 a3 a3" "i       i   i";
 }
 .n-carousel:fullscreen, .n-carousel.n-carousel--overlay {
   max-height: 100% !important;
@@ -199,6 +193,10 @@ body[data-frozen] {
 .n-carousel:not([data-ready]) > .n-carousel--auto-height > :first-child {
   min-height: 100%;
 }
+.n-carousel {
+  --max-height: 100vh;
+  --peek: 0px;
+}
 .n-carousel[data-sliding] {
   pointer-events: none;
 }
@@ -217,6 +215,12 @@ body[data-frozen] {
 }
 .n-carousel.n-carousel--vertical:not([data-sliding]) > .n-carousel__content {
   scroll-snap-type: y mandatory;
+}
+.n-carousel {
+  display: grid;
+  grid-template: auto 1fr auto 1fr auto/auto 1fr auto;
+  position: relative;
+  grid-template-areas: "f f f" "a1 a1 a1" "prev    a2  next" "a3 a3 a3" "i       i   i";
 }
 .n-carousel.n-carousel--index-align-start > .n-carousel__index {
   justify-self: start;

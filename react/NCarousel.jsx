@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import '../n-carousel.min.css';
 
 // Map camelCase option keys to n-carousel--* classes
@@ -24,6 +24,16 @@ const optionClassMap = {
   instant: 'n-carousel--instant',
 };
 
+// Load carousel script once (module-level)
+let carouselScriptLoaded = false;
+const loadCarouselScript = () => {
+  if (!carouselScriptLoaded) {
+    carouselScriptLoaded = true;
+    return import('../n-carousel.min.js');
+  }
+  return Promise.resolve();
+};
+
 const NCarousel = ({
   children,
   className = '',
@@ -35,17 +45,19 @@ const NCarousel = ({
   const carouselRef = useRef(null);
 
   useEffect(() => {
-    // Import the carousel script dynamically
-    import('../n-carousel.min.js').then(() => {
-      // The carousel will initialize automatically
+    // Import the carousel script dynamically (only once)
+    loadCarouselScript().catch((error) => {
+      console.error('Failed to load n-carousel script:', error);
     });
   }, []);
 
-  // Compute option classes
-  const optionClasses = Object.entries(options)
-    .filter(([key, value]) => value && optionClassMap[key])
-    .map(([key]) => optionClassMap[key])
-    .join(' ');
+  // Memoize option classes computation
+  const optionClasses = useMemo(() => {
+    return Object.entries(options)
+      .filter(([key, value]) => value && optionClassMap[key])
+      .map(([key]) => optionClassMap[key])
+      .join(' ');
+  }, [options]);
 
   return (
     <div 
@@ -54,9 +66,13 @@ const NCarousel = ({
       {...props}
     >
       <div className="n-carousel__content">
-        {React.Children.map(children, (child, index) => (
-          <div key={index}>{child}</div>
-        ))}
+        {React.Children.map(children, (child, index) => {
+          // Use stable key based on child's key or index
+          const key = React.isValidElement(child) && child.key != null 
+            ? child.key 
+            : `slide-${index}`;
+          return <div key={key}>{child}</div>;
+        })}
       </div>
       
       {showNavigation && (
@@ -72,9 +88,14 @@ const NCarousel = ({
 
       {showIndex && (
         <div className="n-carousel__index">
-          {React.Children.map(children, (_, index) => (
-            <button key={index}><span>{index + 1}</span></button>
-          ))}
+          {React.Children.map(children, (child, index) => {
+            const key = React.isValidElement(child) && child.key != null 
+              ? child.key 
+              : `index-${index}`;
+            return (
+              <button key={key}><span>{index + 1}</span></button>
+            );
+          })}
         </div>
       )}
     </div>

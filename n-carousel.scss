@@ -1,4 +1,4 @@
-// @import './node_modules/n-modal/n-modal.scss';
+// Note: n-modal integration removed - import separately if needed
 
 body[data-frozen] {
   overflow: hidden;
@@ -686,9 +686,9 @@ body[data-frozen] {
       // padding-inline-end: var(--index-width);
       // padding-inline-start: 0;
 
-      &.n-carousel--index-align-start {
-        // grid-template: auto 1fr / auto auto 1fr auto;
-      }
+      // &.n-carousel--index-align-start {
+      //   grid-template: auto 1fr / auto auto 1fr auto;
+      // }
     }
 
     > .n-carousel__index {
@@ -790,13 +790,14 @@ _:future,
   scroll-snap-align: center;
 }
 
-_::-webkit-full-page-media,
-_:future,
-:root .n-carousel {
-  // overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
-  // --peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
-  // --peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
-}
+// Safari-specific hacks (commented out - uncomment if needed for specific Safari versions)
+// _::-webkit-full-page-media,
+// _:future,
+// :root .n-carousel {
+//   overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
+//   --peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
+//   --peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
+// }
 
 // Safari not supporting inline end padding on scrollable element
 _::-webkit-full-page-media,
@@ -883,12 +884,12 @@ _:future,
     }
   }
 
-  &.n-carousel--auto-height:not(.n-carousel--vertical)[data-sliding]
-    > .n-carousel__content {
-    > :not([aria-current]) {
-      // height: auto;
-    }
-  }
+  // &.n-carousel--auto-height:not(.n-carousel--vertical)[data-sliding]
+  //   > .n-carousel__content {
+  //   > :not([aria-current]) {
+  //     height: auto;
+  //   }
+  // }
 
   &.n-carousel--auto-height > .n-carousel__content {
     > * {

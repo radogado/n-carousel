@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "./node_modules/clean-css-cli/bin/cleancss -o n-carousel.min.css n-carousel.css\n./node_modules/terser/bin/terser -o n-carousel.min.js --compress --mangle -- n-carousel.js\ngzip-size --raw n-carousel.min.css > n-carousel.min.css.size\ngzip-size --raw n-carousel.min.js > n-carousel.min.js.size\n"
+    "build": "./build.sh",
+    "watch": "./watch.sh"
   },
   "keywords": [
     "carousel",
@@ -67,5 +68,8 @@
     "sass": "^1.49.7",
     "scrollyfills": "^1.0.0",
     "terser": "^5.4.0"
+  },
+  "overrides": {
+    "glob": "^9.0.0"
   }
 }

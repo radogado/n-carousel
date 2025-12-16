@@ -7,7 +7,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     Math.ceil(parseFloat(getComputedStyle(el).height));
   const focusableElements =
     'button, [href], input, select, textarea, details, summary, video, [tabindex]:not([tabindex="-1"])';
-  // const _focusableElementsString =  'a[href],area[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button:not([disabled]),details,summary,iframe,object,embed,[contenteditable]';
   function isElementInViewport(el) {
     let rect = el.getBoundingClientRect();
     return (
@@ -21,8 +20,21 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           document.documentElement.offsetWidth) /* or $(window).width() */
     );
   }
-  const default_duration = 500;
-  const default_interval = 4000;
+  // Animation and timing constants
+  const default_duration = 500; // Default animation duration in milliseconds
+  const default_interval = 4000; // Default auto-slide interval in milliseconds
+  const SCROLL_END_TIMEOUT = 10; // Timeout for scroll end detection in milliseconds
+  const FULLSCREEN_UPDATE_DELAY = 100; // Delay for fullscreen updates in milliseconds
+  const MAX_HEIGHT_FALLBACK = 99999; // Fallback max height value in pixels
+
+  // Sanitize hash value to prevent XSS in querySelector
+  const sanitizeHash = (hash) => {
+    if (!hash) return null;
+    // Remove # and extract only valid CSS identifier characters
+    const cleanHash = hash.replace(/^#/, '').replace(/[^a-zA-Z0-9_-]/g, '');
+    return cleanHash ? `#${cleanHash}` : null;
+  };
+
   const isChrome = !!navigator.userAgent.match("Chrome");
   const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
   const isEndless = (el) =>
@@ -46,51 +58,43 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const scrollEndAction = (carousel) => {
     carousel = carousel.target || carousel;
-    // console.log('scroll end', carousel);
+    // Cache computed style to avoid multiple calls
+    const computedStyle = getComputedStyle(carousel);
     let index = Math.abs(
       Math.round(
         isVertical(carousel)
           ? carousel.scrollTop /
               (carousel.offsetHeight -
-                parseFloat(getComputedStyle(carousel).paddingBlockStart) -
-                parseFloat(getComputedStyle(carousel).paddingBlockEnd))
+                parseFloat(computedStyle.paddingBlockStart) -
+                parseFloat(computedStyle.paddingBlockEnd))
           : carousel.scrollLeft /
               (carousel.offsetWidth -
-                parseFloat(getComputedStyle(carousel).paddingInlineStart) -
-                parseFloat(getComputedStyle(carousel).paddingInlineEnd)),
+                parseFloat(computedStyle.paddingInlineStart) -
+                parseFloat(computedStyle.paddingInlineEnd)),
         2
       )
     );
-    // console.log('scroll end', index);
     let slide = carousel.children[index];
     if (
       !!carousel.parentNode.sliding ||
       (carousel.dataset.next &&
         parseInt(carousel.dataset.next) !==
-          [...carousel.children].indexOf(slide))
+          Array.prototype.indexOf.call(carousel.children, slide))
     ) {
       return;
     }
-    // console.log(index);
     carousel.parentNode.dataset.sliding = true;
     let timeout = 0;
     delete carousel.dataset.next;
     observersOff(carousel);
     let x = carousel.scrollLeft;
     let y = carousel.scrollTop;
-    let interval = 10; // Get rid of this magic number by timeout comparison with previous scroll offset
     let timeout_function = () => {
-      // console.log(entry, entry.target, 'is intersecting at', entry.target.parentElement.scrollLeft, entry.target.parentElement.scrollTop);
-      // if (Math.abs(x - carousel.scrollLeft) >= 1) {
-      //   console.log('intersection continue', x, carousel.scrollLeft, y, carousel.scrollLeft);
-      //   clearTimeout(timeout);
-      //   timeout = setTimeout(timeout_function, interval);
-      //   return;
-      // }
-      // console.log('intersection ', x, carousel.scrollLeft, y, carousel.scrollLeft);
-      let index = [...carousel.children].indexOf(slide);
+      let index = Array.prototype.indexOf.call(carousel.children, slide);
       if (isAutoHeight(carousel)) {
-        let old_height = parseFloat(getComputedStyle(carousel).height);
+        // Cache computed styles to avoid repeated calls
+        const carouselStyle = getComputedStyle(carousel);
+        let old_height = parseFloat(carouselStyle.height);
         let new_height;
         let offset_y = 0;
         let lastScrollX = carousel.scrollLeft;
@@ -98,13 +102,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         if (isVertical(carousel)) {
           let scroll_offset = carousel.scrollTop;
           slide.style.height = "auto";
-          let computed_max_height = getComputedStyle(carousel).maxHeight;
+          let computed_max_height = carouselStyle.maxHeight;
           let max_height = computed_max_height.match(/px/)
             ? Math.ceil(parseFloat(computed_max_height))
-            : 99999;
-          // new_height = Math.min(slide.scrollHeight, max_height);
+            : MAX_HEIGHT_FALLBACK;
+          // Cache slide computed style
+          const slideStyle = getComputedStyle(slide);
           new_height = Math.min(
-            Math.ceil(parseFloat(getComputedStyle(slide).height)),
+            Math.ceil(parseFloat(slideStyle.height)),
             max_height
           );
           // new_height = slide.scrollHeight;
@@ -116,7 +121,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           offset_y = index * new_height - carousel.scrollTop;
         } else {
           new_height = nextSlideHeight(slide); // ?
-          // console.log(lastScrollX);
           if (!!lastScrollX) {
             // Because RTL auto height landing on first slide creates an infinite intersection observer loop
             scrollTo(carousel, lastScrollX, lastScrollY);
@@ -132,35 +136,37 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           );
         });
       } else {
-        // console.log(carousel);
         window.requestAnimationFrame(() => {
           updateCarousel(carousel);
         });
       }
     };
-    timeout = setTimeout(timeout_function, interval);
+    timeout = setTimeout(timeout_function, SCROLL_END_TIMEOUT);
   };
   const hashNavigation = (e) => {
     // Hash navigation support
-    // console.log(e);
-    if (!!location.hash) {
-      let el = document.querySelector(location.hash);
+    const safeHash = sanitizeHash(location.hash);
+    if (safeHash) {
+      let el = document.querySelector(safeHash);
       let carousel = el?.parentNode;
       if (
         !!carousel &&
         carousel.classList.contains("n-carousel__content") &&
         !carousel.parentNode.closest(".n-carousel__content")
       ) {
-        let modal_carousel = document.querySelector(
-          ".n-carousel--overlay > .n-carousel__content"
-        );
-        if (modal_carousel && modal_carousel !== carousel) {
-          closeModal(modal_carousel);
-          // modal_carousel.parentNode.classList.remove('n-carousel--overlay');
+        // Only query for modal if we might need to close it
+        if (carousel.parentNode.classList.contains("n-carousel--overlay")) {
+          // Current carousel is already a modal, no need to close another
+        } else {
+          let modal_carousel = document.querySelector(
+            ".n-carousel--overlay > .n-carousel__content"
+          );
+          if (modal_carousel && modal_carousel !== carousel) {
+            closeModal(modal_carousel);
+          }
         }
         if (carousel.parentNode.classList.contains("n-carousel--inline")) {
           closeModal(carousel);
-          // carousel.parentNode.classList.add('n-carousel--overlay');
         }
         if (isSafari) {
           // Safari has already scrolled and needs to rewind it scroll position in order to animate it
@@ -171,7 +177,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           );
         }
         slideTo(carousel, [...carousel.children].indexOf(el));
-        window.nCarouselNav = [carousel, location.hash];
+        window.nCarouselNav = [carousel, safeHash];
       }
     } else {
       if (window.nCarouselNav) {
@@ -186,12 +192,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             carousel.offsetHeight * carousel.dataset.y
           );
         }
-        slideTo(
-          carousel,
-          [...carousel.children].indexOf(
-            carousel.querySelector(":scope > :not([id])")
-          )
-        );
+        const firstSlideWithoutId = carousel.querySelector(":scope > :not([id])");
+        if (firstSlideWithoutId) {
+          slideTo(
+            carousel,
+            Array.prototype.indexOf.call(carousel.children, firstSlideWithoutId)
+          );
+        }
       }
     }
   };
@@ -202,31 +209,25 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     el.style.height = el.style.overflow = "";
     return height;
   };
-  // const scrollableAncestor = el => {
-  // 	el = el.parentNode;
-  // 	while (el) {
-  // 		if (el.scrollHeight > el.offsetHeight || el.scrollWidth > el.offsetWidth) {
-  // 			return el;
-  // 		} else {
-  // 			el = el.parentNode;
-  // 		}
-  // 	}
-  // 	return false;
-  // };
   const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
   const getIndexReal = (el) => {
+    if (!el || !el.children) {
+      return 0;
+    }
     let active_slide = el.querySelector(":scope > [aria-current]");
     if (active_slide) {
-      return [...el.children].indexOf(active_slide);
+      // Use Array.prototype.indexOf for better performance than spread operator
+      return Array.prototype.indexOf.call(el.children, active_slide);
     } else {
-      let hash_slide_index = !!location.hash
-        ? [...el.children].indexOf(
-            el.querySelector(`:scope > ${location.hash}`)
-          )
-        : 0;
-      return hash_slide_index > -1 ? hash_slide_index : 0;
+      const safeHash = sanitizeHash(location.hash);
+      if (safeHash) {
+        const hashSlide = el.querySelector(`:scope > ${safeHash}`);
+        if (hashSlide) {
+          return Array.prototype.indexOf.call(el.children, hashSlide);
+        }
+      }
+      return 0;
     }
-    // return active_slide ? [...el.children].indexOf(active_slide) : (el.querySelector(`:scope > ${location.hash}`) || 0);
   };
   const scrolledAncestor = (el) => {
     el = el.parentNode;
@@ -289,11 +290,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         let updateExitFullScreen = (e) => {
           setTimeout(() => {
             let carousel = el.querySelector(":scope > .n-carousel__content");
-            // console.log(carousel);
-            // el.style.removeProperty('--height');
-            // carousel.style.height = '';
             slideTo(carousel, parseInt(carousel.dataset.y));
-          }, 100);
+          }, FULLSCREEN_UPDATE_DELAY);
           el.removeEventListener("fullscreenchange", updateExitFullScreen);
         };
         el.addEventListener("fullscreenchange", updateExitFullScreen);
@@ -384,13 +382,22 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const closestCarousel = (el) => {
-    var related_by_id = el.closest('[class*="n-carousel"]').dataset.for;
+    if (!el) {
+      return null;
+    }
+    const carouselWrapper = el.closest('[class*="n-carousel"]');
+    if (!carouselWrapper) {
+      return null;
+    }
+    var related_by_id = carouselWrapper.dataset.for;
     if (!!related_by_id) {
-      return document
-        .getElementById(related_by_id)
-        .querySelector(".n-carousel__content");
+      const targetElement = document.getElementById(related_by_id);
+      return targetElement
+        ? targetElement.querySelector(".n-carousel__content")
+        : null;
     } else {
-      return el.closest(".n-carousel").querySelector(".n-carousel__content");
+      const nCarousel = el.closest(".n-carousel");
+      return nCarousel ? nCarousel.querySelector(".n-carousel__content") : null;
     }
   };
   const scrollAnimate = (
@@ -400,7 +407,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     new_height,
     old_height = false
   ) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
       let wrapper = el.closest(".n-carousel");
       if (
@@ -476,19 +483,22 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const updateCarousel = (el, forced = false) => {
     // Forced means never skip unnecessary update
     // Called on init and scroll end
-    // console.log(el, el.matches(':fullscreen'));
     if (el.togglingFullScreen) {
-      // console.log('updateCarousel: toggling Full Screen')
       return;
     }
     observersOff(el);
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
+    const firstChild = el.firstElementChild;
+    if (!firstChild) {
+      observersOn(el);
+      return;
+    }
     el.dataset.x = Math.abs(
-      Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild))
+      Math.round(scrollStartX(el) / ceilingWidth(firstChild))
     );
     el.dataset.y = Math.abs(
-      Math.round(el.scrollTop / ceilingHeight(el.firstElementChild))
+      Math.round(el.scrollTop / ceilingHeight(firstChild))
     );
     // When inline
     if (el.dataset.x === "NaN") {
@@ -501,7 +511,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (active_index >= el.children.length) {
       active_index = el.children.length - 1;
     }
-    // console.log('update at', active_index, el.dataset.x, el.dataset.y);
     let old_active_slide = el.querySelector(":scope > [aria-current]");
     let wrapper = el.parentElement;
     if (!isAutoHeight(wrapper)) {
@@ -509,6 +518,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       el.style.height = "";
     }
     let active_slide = el.children[active_index];
+    if (!active_slide) {
+      observersOn(el);
+      return;
+    }
     if (old_active_slide && !forced) {
       if (active_slide === old_active_slide) {
         // Scroll snapping back to the same slide. Nothing to do here.
@@ -587,7 +600,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           restoreDisplacedSlides(el);
           active_index_real = Math.max(
             0,
-            [...el.children].indexOf(
+            Array.prototype.indexOf.call(
+              el.children,
               el.querySelector(":scope > [aria-current]")
             )
           ); // Fixes position when sliding to/from first slide; max because of FF returning -1
@@ -597,7 +611,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.dataset.x = el.dataset.y = active_index_real;
         let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
         let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
-        // console.log('updateCarousel() scrolling at', scroll_x);
         el.scroll_x = scroll_x;
         el.scroll_y = scroll_y;
         scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
@@ -617,7 +630,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       restoreDisplacedSlides(el);
       active_index_real = Math.max(
         0,
-        [...el.children].indexOf(el.querySelector(":scope > [aria-current]"))
+        Array.prototype.indexOf.call(
+          el.children,
+          el.querySelector(":scope > [aria-current]")
+        )
       ); // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
@@ -640,17 +656,19 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (getComputedStyle(el).visibility !== "hidden") {
       let previously_active = document.activeElement;
       let hash = active_slide.id;
+      // Sanitize hash before setting to prevent XSS
+      const safeHash = hash ? sanitizeHash(`#${hash}`) : null;
       if (
         !!el.parentNode.dataset.ready &&
-        !!hash &&
+        safeHash &&
         !el.parentNode.closest(".n-carousel__content")
       ) {
         // Hash works only with top-level carousel
-        location.hash = `#${hash}`;
+        location.hash = safeHash;
       }
       if (
         !!el.parentNode.dataset.ready &&
-        !hash &&
+        !safeHash &&
         !el.parentNode.closest(".n-carousel__content") &&
         window.nCarouselNav
       ) {
@@ -685,33 +703,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.setAttribute("aria-current", true);
       }
     });
-    // Obsoleted by inert – start
-    // [...el.children].forEach((slide) => {
-    //   if (slide !== active_slide) {
-    //     slide.setAttribute('aria-hidden', true);
-    //     slide.querySelectorAll(focusableElements).forEach((el2) => {
-    //       if (el2.closest(".n-carousel__content > :not([aria-current])")) {
-    //         if (el2.getAttribute("tabindex") && !el2.dataset.focusDisabled) {
-    //           el2.dataset.oldTabIndex = el2.tabIndex;
-    //         }
-    //         el2.dataset.focusDisabled = true;
-    //         el2.tabIndex = -1;
-    //       }
-    //     });
-    //   }
-    // });
-    // active_slide.removeAttribute('aria-hidden');
-    // active_slide.querySelectorAll("[data-focus-disabled]").forEach((el2) => {
-    //   if (!el2.closest(".n-carousel__content > :not([aria-current])")) {
-    //     el2.removeAttribute("tabindex");
-    //     delete el2.dataset.focusDisabled;
-    //     if (!!el2.dataset.oldTabIndex) {
-    //       el2.tabIndex = el2.dataset.oldTabIndex;
-    //       delete el2.dataset.oldTabIndex;
-    //     }
-    //   }
-    // });
-    // Obsoleted by inert – end
+    // Note: Focus management is handled by the native "inert" attribute
+    // Previous manual focus disabling code has been removed (obsoleted June 2022)
     if (/--vertical.*--auto-height/.test(wrapper.classList)) {
       // Undo jump to wrong slide when sliding to the last one
       el.scrollTop = el.offsetHeight * active_index_real;
@@ -732,13 +725,15 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         let slide = el.children[index];
         if (isVertical(el)) {
           slide.style.height = "auto";
-          let computed_max_height = getComputedStyle(el).maxHeight;
+          // Cache computed styles
+          const elStyle = getComputedStyle(el);
+          const slideStyle = getComputedStyle(slide);
+          let computed_max_height = elStyle.maxHeight;
           let max_height = computed_max_height.match(/px/)
             ? Math.ceil(parseFloat(computed_max_height))
-            : 99999;
-          // new_height = Math.min(slide.scrollHeight, max_height);
+            : MAX_HEIGHT_FALLBACK;
           new_height = Math.min(
-            Math.ceil(parseFloat(getComputedStyle(slide).height)),
+            Math.ceil(parseFloat(slideStyle.height)),
             max_height
           );
           // new_height = slide.scrollHeight;
@@ -760,7 +755,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         }
         offsetY = offsetY - index * old_height + index * new_height;
       }
-      // console.log(index, offsetX, offsetY);
       window.requestAnimationFrame(() => {
         if (!el.parentNode.dataset.duration && !isAutoHeight(el)) {
           // Unspecified duration, no height change – using native smooth scroll
@@ -787,16 +781,24 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const slideNext = (el) => {
+    if (!el || !el.children || el.children.length === 0) {
+      console.warn("Invalid element in slideNext");
+      return;
+    }
     let index = getIndexReal(el);
     slideTo(el, index >= el.children.length - 1 ? 0 : index + 1);
   };
   const slidePrevious = (el) => {
+    if (!el || !el.children || el.children.length === 0) {
+      console.warn("Invalid element in slidePrevious");
+      return;
+    }
     let index = getIndexReal(el);
     slideTo(el, index === 0 ? el.children.length - 1 : index - 1);
   };
   const slideTo = (el, index) => {
     if (!el || !el.children || !el.children[index]) {
-      console.warn('Invalid element or index in slideTo');
+      console.warn("Invalid element or index in slideTo");
       return;
     }
 
@@ -810,13 +812,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     } else {
       const targetElement = el.children[index];
       if (!targetElement || !targetElement.offsetParent) {
-        console.warn('Target element not ready for measurement');
+        console.warn("Target element not ready for measurement");
         return;
       }
-      
-      let width = Math.ceil(
-        parseFloat(getComputedStyle(targetElement).width)
-      );
+
+      let width = Math.ceil(parseFloat(getComputedStyle(targetElement).width));
       let new_offset = isRTL(el)
         ? Math.abs(scrollStartX(el)) - width * index
         : width * index - scrollStartX(el);
@@ -824,8 +824,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const carouselKeys = (e) => {
-    console.log("keydown", e);
-    // return;
     let keys = [
       "ArrowLeft",
       "ArrowRight",
@@ -836,17 +834,15 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       "Home",
       "End",
     ];
-    let el = e.target
-      .closest(".n-carousel")
-      .querySelector(":scope > .n-carousel__content");
-    // if (e.key === "Tab") {
-    //   let carousel = el.closest(".n-carousel__content");
-    //   carousel.tabbing = true;
-    // }
-    if (
-      // el.matches(".n-carousel__content") &&
-      keys.includes(e.key)
-    ) {
+    const carousel = e.target.closest(".n-carousel");
+    if (!carousel) {
+      return;
+    }
+    let el = carousel.querySelector(":scope > .n-carousel__content");
+    if (!el) {
+      return;
+    }
+    if (keys.includes(e.key)) {
       // Capture relevant keys
       // e.preventDefault();
       switch (e.key) {
@@ -879,10 +875,18 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
     }
   };
-  const slidePreviousEvent = (e) =>
-    slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
-  const slideNextEvent = (e) =>
-    slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
+  const slidePreviousEvent = (e) => {
+    const carousel = closestCarousel(e.target.closest('[class*="n-carousel"]'));
+    if (carousel) {
+      slidePrevious(carousel);
+    }
+  };
+  const slideNextEvent = (e) => {
+    const carousel = closestCarousel(e.target.closest('[class*="n-carousel"]'));
+    if (carousel) {
+      slideNext(carousel);
+    }
+  };
   const slideIndexEvent = (e) => {
     let el = e.target.closest("a, button");
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
@@ -914,7 +918,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       ) {
         // Opening an inline carousel
         wrapper.nextSlideInstant = true;
-        // wrapper.classList.add("n-carousel--overlay"); // Should trigger mutation and auto update?
         openModal(carousel);
         // Set new x, y
         window.requestAnimationFrame(() => {
@@ -981,7 +984,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       trapFocus(wrapper);
       setTimeout(() => {
         document.body.addEventListener("keyup", closeModalOnBodyClick);
-      }, 100);
+      }, FULLSCREEN_UPDATE_DELAY);
     }
   };
   const autoHeightObserver = new ResizeObserver((entries) => {
@@ -990,7 +993,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         let slide = e.target.querySelector(":scope > [aria-current]");
         let el = slide.closest(".n-carousel__content");
         if (!el.parentElement.dataset.sliding) {
-          // console.log(e.target);
           el.parentNode.style.removeProperty("--height");
           if (isVertical(el)) {
             slide.style.height = "auto";
@@ -1012,9 +1014,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       let carousel = el;
       carousel.style.padding = ""; // Subpixel peeking fix
       carousel.style.removeProperty("--peek-int");
+      // Cache computed style to avoid multiple calls
+      const carouselStyle = getComputedStyle(carousel);
+      const paddingBlockStart = parseInt(carouselStyle.paddingBlockStart);
+      const paddingInlineStart = parseInt(carouselStyle.paddingInlineStart);
       carousel.style.padding = isVertical(carousel)
-        ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0`
-        : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px`;
+        ? `${paddingBlockStart}px 0`
+        : `0 ${paddingInlineStart}px`;
       if (carousel.style.padding === "0px") {
         carousel.style.padding = "";
       } else {
@@ -1022,26 +1028,21 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         carousel.style.setProperty(
           "--peek-int",
           isVertical(carousel)
-            ? `${parseInt(
-                getComputedStyle(carousel).paddingBlockStart
-              )}px 0 0 0`
-            : `0 ${parseInt(
-                getComputedStyle(carousel).paddingInlineStart
-              )}px 0 0`
+            ? `${paddingBlockStart}px 0 0 0`
+            : `0 ${paddingInlineStart}px 0 0`
         );
       }
       window.requestAnimationFrame(() => {
+        const rect = carousel.getBoundingClientRect();
         if (isVertical(el)) {
           carousel.style.setProperty(
             "--subpixel-compensation",
-            Math.ceil(carousel.getBoundingClientRect().height) -
-              carousel.getBoundingClientRect().height
+            Math.ceil(rect.height) - rect.height
           );
         } else {
           carousel.style.setProperty(
             "--subpixel-compensation",
-            Math.ceil(carousel.getBoundingClientRect().width) -
-              carousel.getBoundingClientRect().width
+            Math.ceil(rect.width) - rect.width
           );
         }
         let offset = getIndexReal(carousel); // Real offset including displaced first/last slides
@@ -1097,11 +1098,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     const doUpdate = (el) => {
       updateSubpixels(el);
       window.requestAnimationFrame(() => {
-        let current_height =
-          el.querySelector(":scope > [aria-current]").scrollHeight + "px";
-        let previous_height = getComputedStyle(el).getPropertyValue("--height");
-        if (current_height !== previous_height) {
-          el.parentNode.style.setProperty("--height", current_height);
+        const activeSlide = el.querySelector(":scope > [aria-current]");
+        if (activeSlide) {
+          let current_height = activeSlide.scrollHeight + "px";
+          let previous_height = getComputedStyle(el).getPropertyValue("--height");
+          if (current_height !== previous_height) {
+            el.parentNode.style.setProperty("--height", current_height);
+          }
         }
         observersOn(el);
       });
@@ -1113,7 +1116,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         let el = e.target;
-        if (!!el.observerStarted) {
+        if (el.observerStarted) {
           el.observerStarted = false;
           return;
         }
@@ -1128,11 +1131,17 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         !mutation.target.nextSlideInstant &&
         !mutation.target.toggleModal
       ) {
+        // Early return if target is not a carousel wrapper
+        if (!mutation.target.classList || !mutation.target.classList.contains("n-carousel")) {
+          continue;
+        }
         let carousel = mutation.target.querySelector(
           ":scope > .n-carousel__content"
         );
-        updateObserver(carousel);
-        updateCarousel(carousel, true);
+        if (carousel) {
+          updateObserver(carousel);
+          updateCarousel(carousel, true);
+        }
         delete mutation.target.toggleModal;
       }
     }
@@ -1143,10 +1152,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       el.style.removeProperty("--height-minus-index");
       index.style.position = "absolute";
       el.style.setProperty("--height-minus-index", `${el.offsetHeight}px`);
-      el.style.setProperty(
-        "--index-width",
-        getComputedStyle(el.querySelector(":scope > .n-carousel__index")).width
-      );
+      // Cache computed style instead of querying again
+      const indexStyle = getComputedStyle(index);
+      el.style.setProperty("--index-width", indexStyle.width);
       index.style.position = "";
     }
   };
@@ -1203,7 +1211,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           toggleFullScreen(e.target);
         };
         const fullScreenEvent = (e) => {
-          // console.log(e, 'full screen');
           let carousel = e.target.querySelector(
             ":scope > .n-carousel__content"
           );
@@ -1224,10 +1231,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
                   ceilingHeight(carousel.children[getIndexReal(carousel)])
               );
             }
-            // setTimeout(() => {
             delete carousel.togglingFullScreen;
             updateCarousel(carousel);
-            // }, 100);
           });
         };
         if (isSafari) {
@@ -1250,13 +1255,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       });
       updateSubpixels(content);
       content.observerStarted = true;
-      let hashed_slide = !!location.hash
-        ? content.querySelector(":scope > " + location.hash)
+      const safeHash = sanitizeHash(location.hash);
+      let hashed_slide = safeHash
+        ? content.querySelector(":scope > " + safeHash)
         : false;
       if (hashed_slide) {
         if (el.classList.contains("n-carousel--inline")) {
           openModal(content);
-          // el.classList.add('n-carousel--overlay');
         }
         let index = [...hashed_slide.parentNode.children].indexOf(hashed_slide);
         if (isVertical(content)) {
@@ -1264,8 +1269,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         } else {
           content.dataset.x = index;
         }
-        // slideTo(content, index); // This slides to the wrong slide
-        window.nCarouselNav = [content, location.hash];
+        window.nCarouselNav = [content, safeHash];
       }
       if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
         content.style.height = "";
@@ -1309,16 +1313,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-      // below replaced by scrollend polyfill
-      // if (!("onscrollend" in window)) { // scrollend event fallback to intersection observer (for Safari as of 2023)
-      //   const scrollEndObserver = new IntersectionObserver(entries => {
-      //     let carousel = entries[0].target.parentNode;
-      //     if (entries[0].isIntersecting && !carousel.parentNode.dataset.sliding && getComputedStyle(carousel).visibility !== 'hidden') {
-      //       scrollEndAction(carousel);
-      //     }
-      //   }, { threshold: .996, root: el.parentElement }); // .99 works for all, including vertical auto height?
-      //   [...content.children].forEach(el => scrollEndObserver.observe(el));
-      // }
+      // Note: scrollend event is provided by scrollyfills polyfill
       if (el.matches(".n-carousel--lightbox")) {
         let loaded = (img) => {
           img.closest("picture").dataset.loaded = true;
