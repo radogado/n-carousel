@@ -117,7 +117,14 @@ import './scrollyfills.module.js'; // scrollend event polyfill
     if (active_slide) {
       return [...el.children].indexOf(active_slide);
     } else {
-      let hash_slide = el.querySelector(`:scope > ${location.hash}`);
+      let hash_slide = null;
+      if (location.hash && location.hash.length > 1) {
+        try {
+          hash_slide = el.querySelector(`:scope > ${location.hash}`);
+        } catch (e) {
+          // Invalid selector, ignore
+        }
+      }
       let hash_slide_index = hash_slide ? Array.prototype.indexOf.call(el.children, hash_slide) : -1;
       return (hash_slide_index > -1) ? hash_slide_index : 0;
     }
@@ -884,7 +891,14 @@ import './scrollyfills.module.js'; // scrollend event polyfill
       });
       updateSubpixels(content);
       content.observerStarted = true;
-      let hashed_slide = !!location.hash ? content.querySelector(":scope > " + location.hash) : false;
+      let hashed_slide = false;
+      if (location.hash && location.hash.length > 1) {
+        try {
+          hashed_slide = content.querySelector(":scope > " + location.hash);
+        } catch (e) {
+          // Invalid selector, ignore
+        }
+      }
       if (hashed_slide) {
         if (el.classList.contains('n-carousel--inline')) {
           openModal(content);

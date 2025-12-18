@@ -16,7 +16,7 @@
 	</head>
 
 	<body>
-		<div class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--index-align-start n-carousel--controls-outside" data-duration-="1" style="--nui-border-radius-: .5em;">
+		<div class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--index-align-start n-carousel--controls-outside">
 			<span class="n-carousel__index">
 				<!-- <a href=#><span>Home</span></a> -->
 				<button><span>Home</span></button>
@@ -177,7 +177,29 @@
 							</div>
 							<h2>Dynamic initialization</h2>
 							<div class="code">
-								<pre><code class="language-css">nCarouselInit()</code></pre>
+								<pre><code class="language-javascript">nCarouselInit()</code></pre>
+							</div>
+							<h2>Auto slide interval</h2>
+							<div class="code">
+								<pre class="language-markup"><code class="language-markup">&lt;div class="n-carousel n-carousel--auto-slide" data-interval="4"&gt;</code></pre>
+							</div>
+							<h2>CSS Variables</h2>
+							<div class="code">
+								<pre><code class="language-css">.n-carousel__content {
+  --peek: 12ch; /* Peeking amount */
+}
+
+.n-carousel {
+  --max-height: 75vh; /* Max height for vertical carousel */
+}
+
+.n-carousel--aspect {
+  --ratio: 16 / 9; /* Aspect ratio for lightbox */
+}
+
+picture {
+  --placeholder: url(image.jpg); /* Low-res placeholder */
+}</code></pre>
 							</div>
 						</div>
 						<div>
@@ -1743,7 +1765,7 @@
 				<section id="vertical-auto-height">
 					<div>
 						<h2>Vertical auto height</h2>
-						<div class="n-carousel n-carousel--vertical n-carousel--auto-height n-carousel--endless-" data-duration-="2" style="max-height:900px;">
+						<div class="n-carousel n-carousel--vertical n-carousel--auto-height n-carousel--endless-" data-duration="2" style="max-height:900px;">
 							<div class="n-carousel__previous">
 								<button><span>Previous</span></button>
 							</div>
