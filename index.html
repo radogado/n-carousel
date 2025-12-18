@@ -110,9 +110,23 @@
 						<label>
 							<input type="checkbox" data-class="n-carousel--peek" /><span></span> Peeking </label>
 						<label>
+							<input type="checkbox" data-class="n-carousel--index-start" /><span></span> Index start </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-end" /><span></span> Index end </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-align-start" /><span></span> Index align start </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-align-center" /><span></span> Index align center </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--index-align-end" /><span></span> Index align end </label>
+						<label>
 							<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 						<label>
+							<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+						<label>
 							<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
+						<label>
+							<input type="checkbox" data-class="n-carousel--auto-slide" /><span></span> Auto slide </label>
 					</div>
 					<h2>How to use</h2>
 					<p style="max-width: 60ch;">Get the <a href="https://www.npmjs.com/package/n-carousel">n-carousel NPM module</a> and either add <b>n-carousel.js</b> and <b>n-carousel.scss</b> to your project<br> or use <a href="n-carousel.min.js">n-carousel.min.js</a> and <a href="n-carousel.min.css">n-carousel.min.css</a> on your page.</p>
@@ -191,6 +205,7 @@
 
 .n-carousel {
   --max-height: 75vh; /* Max height for vertical carousel */
+  --nui-border-radius: 0; /* Border radius for controls */
 }
 
 .n-carousel--aspect {
@@ -663,8 +678,11 @@ picture {
 							<label>
 								<input type="checkbox" data-class="n-carousel--vertical" /><span></span> Vertical </label>
 							<label>
-								<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label><label>
+								<input type="checkbox" data-class="n-carousel--tabs" /><span></span> Tabs </label>
+							<label>
 								<input type="checkbox" data-class="n-carousel--endless" /><span></span> Endless </label>
+							<label>
+								<input type="checkbox" data-class="n-carousel--auto-slide" checked /><span></span> Auto slide </label>
 						</div>
 						<div>
 							<div>
@@ -1924,6 +1942,61 @@ picture {
 						snippet.textContent = snippet.textContent.replace(` ${el.dataset.class}`, "").trim();
 					}
 					let content = carousel.querySelector(":scope > .n-carousel__content");
+					
+					// Handle auto-slide toggle dynamically
+					if (el.dataset.class === "n-carousel--auto-slide") {
+						if (el.checked) {
+							// Start auto-slide - use same logic as initialization
+							const default_interval = 4000;
+							const default_duration = 500;
+							let auto_delay = (parseFloat(carousel.dataset.interval) * 1000 || default_interval) + (parseFloat(carousel.dataset.duration) * 1000 || default_duration);
+							let carouselTimeout = () => {
+								function isElementInViewport(el) {
+									let rect = el.getBoundingClientRect();
+									return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.offsetHeight) && rect.right <= (window.innerWidth || document.documentElement.offsetWidth));
+								}
+								if (isElementInViewport(content)) {
+									// Use the carousel's slideNext function
+									// Find the next button and trigger it, or call slideNext directly if available
+									let nextBtn = carousel.querySelector('.n-carousel__next button');
+									if (nextBtn) {
+										nextBtn.click();
+									}
+								}
+								content.nCarouselTimeout = setTimeout(carouselTimeout, auto_delay);
+							};
+							// Clear any existing timeout
+							if (content.nCarouselTimeout) {
+								clearTimeout(content.nCarouselTimeout);
+							}
+							content.nCarouselTimeout = setTimeout(carouselTimeout, parseFloat(carousel.dataset.interval) * 1000 || default_interval);
+							// Add pointerenter listener if not already added (pause on hover)
+							if (!content._autoSlidePointerEnter) {
+								content._autoSlidePointerEnter = (e) => {
+									if (e.target.nCarouselTimeout) {
+										clearTimeout(e.target.nCarouselTimeout);
+									}
+								};
+								content.addEventListener("pointerenter", content._autoSlidePointerEnter);
+							}
+						} else {
+							// Stop auto-slide
+							if (content.nCarouselTimeout) {
+								clearTimeout(content.nCarouselTimeout);
+								content.nCarouselTimeout = null;
+							}
+							// Remove pointerenter/pointerleave listeners
+							if (content._autoSlidePointerEnter) {
+								content.removeEventListener("pointerenter", content._autoSlidePointerEnter);
+								content._autoSlidePointerEnter = null;
+							}
+							if (content._autoSlidePointerLeave) {
+								content.removeEventListener("pointerleave", content._autoSlidePointerLeave);
+								content._autoSlidePointerLeave = null;
+							}
+						}
+					}
+					
 					content.nCarouselUpdate(content);
 				};
 			});
