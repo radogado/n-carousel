@@ -57,7 +57,7 @@ body[data-frozen] {
 		}
 	}
 
-	&.n-carousel--auto-height {
+	&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) {
 
 		&:not(.n-carousel--controls-outside) {
 			grid-template: auto/auto;
@@ -69,7 +69,7 @@ body[data-frozen] {
 				"i i i";
 		}
 
-		&:not([data-ready]) {
+		&:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) {
 			> .n-carousel__content > :not(:first-child) {
 				height: 0;
 				overflow: visible;
@@ -235,7 +235,7 @@ body[data-frozen] {
 			}
 		}
 
-		&.n-carousel--auto-height {
+		&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) {
 
 			&:not(.n-carousel--overlay) {
 
@@ -263,12 +263,12 @@ body[data-frozen] {
 		cursor: not-allowed;
 	}
 
-	&:not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
+	&:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
 		height: 0;
 		animation: carousel-css-only 2 0.1s linear 1s forwards;
 	}
 
-	&:not([data-ready]) > .n-carousel--auto-height > :first-child {
+	&:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel--auto-height > :first-child {
 		min-height: 100%;
 	}
 
@@ -684,13 +684,13 @@ body[data-frozen] {
 			max-height: var(--max-height, 100%);
 		}
 
-		&.n-carousel--auto-height:not([data-ready]) {
+		&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) {
 			> .n-carousel__index {
 				max-height: 0;
 			}
 		}
 
-		&.n-carousel--auto-height[data-ready] {
+		&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen)[data-ready] {
 			overflow: hidden;
 
 			&[data-sliding] > .n-carousel__index {
@@ -863,19 +863,19 @@ _:future,
 		}
 	}
 
-	&.n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
+	&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content {
 		> :not([aria-current]) {
 			overflow: visible;
 		}
 	}
 
-	&.n-carousel--auto-height:not(.n-carousel--vertical)[data-sliding] > .n-carousel__content {
+	&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not(.n-carousel--vertical)[data-sliding] > .n-carousel__content {
 		> :not([aria-current]) {
 			// height: auto;
 		}
 	}
 
-	&.n-carousel--auto-height > .n-carousel__content {
+	&.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__content {
 		> * {
 			overflow: hidden !important;
 		}

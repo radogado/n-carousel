@@ -691,6 +691,11 @@ import './scrollyfills.module.js'; // scrollend event polyfill
       entries.forEach(e => {
         let slide = e.target.querySelector(":scope > [aria-current]");
         let el = slide.closest(".n-carousel__content");
+        let carousel = el.closest(".n-carousel");
+        // Skip auto-height updates in fullscreen/overlay mode
+        if (isModal(carousel) || isFullScreen()) {
+          return;
+        }
         if (!el.parentElement.dataset.sliding) {
           el.parentNode.style.removeProperty('--height');
           if (isVertical(el)) {
@@ -738,10 +743,13 @@ import './scrollyfills.module.js'; // scrollend event polyfill
       if (el.scroll_x && el.scroll_y) {
         scrollTo(el, el.scroll_x, el.scroll_y);
       }
-      if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
-        height_minus_index.observe(el.parentNode);
-      } else {
-        height_minus_index.unobserve(el.parentNode);
+      // Skip auto-height observer setup in fullscreen/overlay mode
+      if (!isModal(el.parentNode) && !isFullScreen()) {
+        if (el.parentNode.matches(".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height")) {
+          height_minus_index.observe(el.parentNode);
+        } else {
+          height_minus_index.unobserve(el.parentNode);
+        }
       }
       subpixel_observer.observe(el);
       mutation_observer.observe(el.parentNode, {
@@ -912,15 +920,18 @@ import './scrollyfills.module.js'; // scrollend event polyfill
         // slideTo(content, index); // This slides to the wrong slide
         window.nCarouselNav = [content, location.hash];
       }
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        content.style.height = '';
-        content.style.height = getComputedStyle(content).height;
-        el.dataset.ready = true;
-        content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
-      }
-      if (isAutoHeight(el)) {
-        // Auto has a specified height which needs update on resize
-        autoHeightObserver.observe(content);
+      // Skip auto-height setup in fullscreen/overlay mode
+      if (!isModal(el) && !isFullScreen()) {
+        if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+          content.style.height = '';
+          content.style.height = getComputedStyle(content).height;
+          el.dataset.ready = true;
+          content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+        }
+        if (isAutoHeight(el)) {
+          // Auto has a specified height which needs update on resize
+          autoHeightObserver.observe(content);
+        }
       }
       window.requestAnimationFrame(() => {
         observersOn(content);

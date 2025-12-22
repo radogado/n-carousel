@@ -45,20 +45,20 @@ body[data-frozen] {
 .n-carousel:not(.n-carousel--vertical):not(.n-carousel--auto-height) > .n-carousel__content > * {
   overflow: auto;
 }
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not(.n-carousel--controls-outside) {
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not(.n-carousel--controls-outside) {
   grid-template: auto/auto;
   grid-template-areas: "f f f" "a1 a1 a1" "prev a2 next" "a3 a3 a3" "i i i";
 }
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not([data-ready]) > .n-carousel__content > :not(:first-child) {
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel__content > :not(:first-child) {
   height: 0;
   overflow: visible;
 }
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content {
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__content {
   overflow-y: hidden;
   height: var(--height, auto);
 }
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content,
-.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height > .n-carousel__content > * {
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__content,
+.n-carousel:not(.n-carousel--vertical).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__content > * {
   min-height: 9em;
 }
 
@@ -171,23 +171,23 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical:not(.n-carousel--controls-outside).n-carousel--index-end.n-carousel--index-align-end > .n-carousel__index {
   position: absolute;
 }
-.n-carousel.n-carousel--vertical.n-carousel--auto-height:not(.n-carousel--overlay) {
+.n-carousel.n-carousel--vertical.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not(.n-carousel--overlay) {
   height: auto;
 }
-.n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content > * {
+.n-carousel.n-carousel--vertical.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--peek > .n-carousel__content > * {
   height: calc(100% + 1px * var(--subpixel-compensation, 0));
 }
-.n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content:before, .n-carousel.n-carousel--vertical.n-carousel--auto-height.n-carousel--peek > .n-carousel__content:after {
+.n-carousel.n-carousel--vertical.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--peek > .n-carousel__content:before, .n-carousel.n-carousel--vertical.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--peek > .n-carousel__content:after {
   display: none;
 }
 .n-carousel:not([data-ready]) > * > button {
   cursor: not-allowed;
 }
-.n-carousel:not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
+.n-carousel:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
   height: 0;
   animation: carousel-css-only 2 0.1s linear 1s forwards;
 }
-.n-carousel:not([data-ready]) > .n-carousel--auto-height > :first-child {
+.n-carousel:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel--auto-height > :first-child {
   min-height: 100%;
 }
 .n-carousel[data-sliding] {
@@ -384,16 +384,16 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__index {
   max-height: var(--max-height, 100%);
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height:not([data-ready]) > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel__index {
   max-height: 0;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height[data-ready] {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen)[data-ready] {
   overflow: hidden;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height[data-ready][data-sliding] > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen)[data-ready][data-sliding] > .n-carousel__index {
   max-height: none;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height[data-ready].n-carousel--index-end > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen)[data-ready].n-carousel--index-end > .n-carousel__index {
   margin-inline-start: calc(-1px * var(--index-width) / 2);
 }
 .n-carousel:-webkit-full-screen {
@@ -523,10 +523,10 @@ _:future,
 .n-carousel[data-ready] .n-carousel__close > * {
   cursor: pointer;
 }
-.n-carousel[data-ready].n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content > :not([aria-current]) {
+.n-carousel[data-ready].n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not(.n-carousel--vertical):not([data-sliding]) > .n-carousel__content > :not([aria-current]) {
   overflow: visible;
 }
-.n-carousel[data-ready].n-carousel--auto-height > .n-carousel__content > * {
+.n-carousel[data-ready].n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__content > * {
   overflow: hidden !important;
 }
 
