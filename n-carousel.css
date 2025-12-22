@@ -294,19 +294,19 @@ body[data-frozen] {
 .n-carousel.n-carousel--index-end > .n-carousel__index {
   justify-content: flex-end;
 }
-.n-carousel.n-carousel--controls-outside {
+.n-carousel.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) {
   grid-template-areas: "f 		f 			f" "a1 	content 		a2" "prev    content  	next" "b1 	content 		b2" "i       i   	i";
 }
-.n-carousel.n-carousel--controls-outside > .n-carousel__content {
+.n-carousel.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__content {
   grid-area: content;
 }
-.n-carousel.n-carousel--controls-outside.n-carousel--index-start {
+.n-carousel.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--index-start {
   grid-template-areas: "i       i   	i" "a1 	content 		a2" "prev    content  	next" "b1 	content 		b2" "f 		f 			f";
 }
-.n-carousel.n-carousel--controls-outside.n-carousel--index-align-start > .n-carousel__index {
+.n-carousel.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--index-align-start > .n-carousel__index {
   text-align: start;
 }
-.n-carousel.n-carousel--controls-outside.n-carousel--index-align-end > .n-carousel__index {
+.n-carousel.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--index-align-end > .n-carousel__index {
   text-align: end;
 }
 .n-carousel.n-carousel--vertical {
@@ -372,28 +372,28 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical > .n-carousel__next {
   align-self: end;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) {
   grid-template-areas: "i a1 		prev		a2 		f" "i content 	content   	content f" "i b1 		next 		b2 		f";
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--index-align-start > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--index-align-start > .n-carousel__index {
   align-self: start;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--index-end {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--index-end {
   grid-template-areas: "f a1 		prev		a2 		i" "f content 	content   	content i" "f b1 		next 		b2 		i";
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) > .n-carousel__index {
   max-height: var(--max-height, 100%);
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height:not([data-ready]) > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height:not([data-ready]) > .n-carousel__index {
   max-height: 0;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready] {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height[data-ready] {
   overflow: hidden;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready][data-sliding] > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height[data-ready][data-sliding] > .n-carousel__index {
   max-height: none;
 }
-.n-carousel.n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height[data-ready].n-carousel--index-end > .n-carousel__index {
+.n-carousel.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--auto-height[data-ready].n-carousel--index-end > .n-carousel__index {
   margin-inline-start: calc(-1px * var(--index-width) / 2);
 }
 .n-carousel:-webkit-full-screen {

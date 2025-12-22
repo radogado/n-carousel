@@ -494,7 +494,7 @@ body[data-frozen] {
 		}
 	}
 
-	&.n-carousel--controls-outside {
+	&.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) {
 		grid-template-areas:
 			"f 		f 			f"
 			"a1 	content 		a2"
@@ -644,7 +644,7 @@ body[data-frozen] {
 		// 		}
 	}
 
-	&.n-carousel--vertical.n-carousel--controls-outside {
+	&.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen) {
 		grid-template-areas:
 			"i a1 		prev		a2 		f"
 			"i content 	content   	content f"
