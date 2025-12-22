@@ -624,6 +624,7 @@ _:future,
   max-height: 100%;
   color: var(--nui-control-color, #333);
   border-radius: var(--nui-border-radius);
+  min-height: max-content;
 }
 .n-carousel--tabs.n-carousel > .n-carousel__index > * {
   box-sizing: border-box;
