@@ -85,6 +85,7 @@ pre {
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
   margin: 1rem;
   max-width: calc(100% - 2rem);
+  width: 100%;
 }
 
 .demo .n-carousel:not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > *,
@@ -101,6 +102,7 @@ html {
 .demo .n-carousel .n-carousel__content > * {
   background: var(--nui-carousel-bg, aliceblue);
   color: var(--nui-carousel-color, #027b7b);
+  align-content: center;
 }
 .demo .n-carousel .n-carousel__content a[href] {
   color: #4d64bd;
@@ -264,6 +266,7 @@ _:future,
 
 .demo-grid-3 {
   align-self: center;
+  justify-self: flex-start;
   max-width: 100%;
   gap: 1em;
   padding: 2em;
@@ -279,6 +282,7 @@ _:future,
   display: flex;
   flex-direction: column;
   justify-content: center;
+  justify-self: flex-start;
 }
 .demo-grid-3 > .n-aspect {
   margin: auto;
@@ -328,3 +332,4 @@ _:future,
   border: 3px solid var(--nui-control-bg);
   box-sizing: border-box;
 }
+/*# sourceMappingURL=demo.css.map */
