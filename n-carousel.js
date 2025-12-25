@@ -53,6 +53,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const scrollEndAction = (carousel) => {
     carousel = carousel.target || carousel;
     const carouselStyle = getComputedStyle(carousel);
+    // Calculate which slide we're on
     let index = Math.abs(
       Math.round(
         isVertical(carousel)
@@ -67,6 +68,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         2
       )
     );
+    if (index >= carousel.children.length) {
+      index = carousel.children.length - 1;
+    }
     let slide = carousel.children[index];
     if (
       !!carousel.parentNode.sliding ||
@@ -83,9 +87,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     let y = carousel.scrollTop;
     let timeout_function = () => {
       let index = Array.prototype.indexOf.call(carousel.children, slide);
+      const el = carousel; // Alias for clarity
       if (isAutoHeight(carousel)) {
         let old_height = parseFloat(getComputedStyle(carousel).height);
         let new_height;
+        let offset_x = 0;
         let offset_y = 0;
         let lastScrollX = carousel.scrollLeft;
         let lastScrollY = carousel.scrollTop;
@@ -108,16 +114,33 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           offset_y = index * new_height - carousel.scrollTop;
         } else {
           new_height = nextSlideHeight(slide);
+          // For horizontal auto-height with peeking, use updateCarousel instead of manual animation
+          // because scroll snap and variable slide widths make manual calculation unreliable
+          const carouselStyle = getComputedStyle(carousel);
+          const hasPeeking = parseFloat(carouselStyle.paddingInlineStart) > 0;
+          if (hasPeeking) {
+            if (old_height !== new_height) {
+              carousel.parentNode.style.setProperty("--height", `${new_height}px`);
+            }
+            setTimeout(() => updateCarousel(carousel, true), SCROLL_END_TIMEOUT + 200);
+            return;
+          }
+          // Without peeking, use the original manual animation approach
           if (!!lastScrollX) {
             // Because RTL auto height landing on first slide creates an infinite intersection observer loop
             scrollTo(carousel, lastScrollX, lastScrollY);
           }
+          // Calculate the correct horizontal offset to reach the target slide
+          let width = Math.ceil(parseFloat(getComputedStyle(slide).width));
+          offset_x = isRTL(carousel)
+            ? Math.abs(scrollStartX(carousel)) - width * index
+            : width * index - scrollStartX(carousel);
         }
         if (old_height === new_height) {
           new_height = false;
         }
         window.requestAnimationFrame(() => {
-          scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(
+          scrollAnimate(carousel, offset_x, offset_y, new_height, old_height).then(
             () => {}
           );
         });
