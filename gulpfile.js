@@ -111,7 +111,13 @@ function scripts() {
         return new Promise((resolveMinify, rejectMinify) => {
           gulp.src('n-carousel.rollup.js')
             .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(terser())
+            .pipe(terser({
+              mangle: {
+                reserved: ['nCarouselInit']
+              },
+              keep_classnames: false,
+              keep_fnames: false
+            }))
             .pipe(rename('n-carousel.min.js'))
             .pipe(sourcemaps.write('.', { 
               sourceRoot: '',

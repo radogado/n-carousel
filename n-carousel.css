@@ -180,7 +180,7 @@ body[data-frozen] {
 .n-carousel.n-carousel--vertical.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--peek > .n-carousel__content:before, .n-carousel.n-carousel--vertical.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--peek > .n-carousel__content:after {
   display: none;
 }
-.n-carousel:not([data-ready]) > * > button {
+.n-carousel:not([data-ready]) [class*=n-carousel__] > button {
   cursor: not-allowed;
 }
 .n-carousel:not(:fullscreen):not(.n-carousel--overlay):not(:-webkit-full-screen):not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {

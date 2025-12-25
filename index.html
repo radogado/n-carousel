@@ -12,9 +12,9 @@
       name="viewport"
       content="width=device-width,initial-scale=1.0,maximum-scale=5,user-scalable=yes"
     />
-    <link href="n-carousel.min.css" rel="styleSheet" />
-    <link href="demo/demo.min.css" rel="styleSheet" />
-    <link href="demo/prism.min.css" rel="styleSheet" />
+    <link href="n-carousel.min.css" rel="stylesheet" />
+    <link href="demo/demo.min.css" rel="stylesheet" />
+    <link href="demo/prism.min.css" rel="stylesheet" />
     <script src="n-carousel-preload.min.js"></script>
     <script src="n-carousel.min.js" type="module"></script>
     <script src="demo/prism.js" defer></script>
@@ -367,7 +367,7 @@
               <div class="code">
                 <pre
                   class="language-markup"
-                ><code class="language-markup">&lt;link rel="styleSheet" href="n-carousel.min.css"&gt;
+                ><code class="language-markup">&lt;link rel="stylesheet" href="n-carousel.min.css"&gt;
 &lt;script src="n-carousel.min.js" type="module"&gt;&lt;/script&gt;</code></pre>
               </div>
               <h3>
@@ -418,7 +418,11 @@
               </div>
               <h2>Dynamic initialization</h2>
               <div class="code">
-                <pre><code class="language-javascript">nCarouselInit()</code></pre>
+                <pre><code class="language-javascript">// Initialize all carousels in the document
+window.nCarouselInit()
+
+// Or initialize carousels within a specific container
+window.nCarouselInit(containerElement)</code></pre>
               </div>
               <h2>Auto slide interval</h2>
               <div class="code">
@@ -1354,17 +1358,17 @@ picture {
                   <pre
                     class="language-markup"
                   ><code class="language-markup">&lt;div class="n-carousel n-carousel--auto-height"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
+  &lt;ul class="n-carousel__content"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;n-carousel__next&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
               </div>
@@ -1668,17 +1672,17 @@ picture {
                   <pre
                     class="language-markup"
                   ><code class="language-markup">&lt;div class="n-carousel n-carousel--auto-slide"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
+  &lt;ul class="n-carousel__content"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;n-carousel__next&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
               </div>
@@ -1983,17 +1987,17 @@ picture {
                   <pre
                     class="language-markup"
                   ><code class="language-markup">&lt;div class="n-carousel"&gt;
-	&lt;ul class="n-carousel__content" style="--peek: 12ch"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
+  &lt;ul class="n-carousel__content" style="--peek: 12ch"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;n-carousel__next&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
               </div>
@@ -2290,17 +2294,17 @@ picture {
                   <pre
                     class="language-markup"
                   ><code class="language-markup">&lt;div class="n-carousel n-carousel--controls-outside"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
+  &lt;ul class="n-carousel__content"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;n-carousel__next&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
               </div>
@@ -2587,27 +2591,27 @@ picture {
                   <pre
                     class="language-markup"
                   ><code class="language-markup">&lt;span class=&quot;n-carousel__previous&quot; data-for=&quot;carousel-detached&quot;&gt;
-	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  &lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
 &lt;/span&gt;
 
 &lt;span class=&quot;n-carousel__next&quot; data-for=&quot;carousel-detached&quot;&gt;
-	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  &lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
 &lt;/span&gt;
 
 &lt;div class=&quot;n-carousel__index&quot; data-for=&quot;carousel-detached&quot;&gt;
-	&lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
-	&lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
-	&lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+  &lt;button&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+  &lt;button&gt;&lt;span&gt;2&lt;/span&gt;&lt;/button&gt;
+  &lt;button&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
 &lt;/div&gt;
 
 ...
 
 &lt;div class="n-carousel" id="carousel-detached"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
+  &lt;ul class="n-carousel__content"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
 &lt;/div&gt;</code></pre>
                 </div>
               </div>
@@ -2807,17 +2811,17 @@ picture {
                   <pre
                     class="language-markup"
                   ><code class="language-markup">&lt;div class="n-carousel n-carousel--rtl"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__previous&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
-	&lt;div class=&quot;n-carousel__next&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
+  &lt;ul class="n-carousel__content"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class=&quot;n-carousel__previous&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Previous&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;n-carousel__next&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
                 <p>
@@ -3117,16 +3121,16 @@ picture {
                 <pre
                   class="language-markup"
                 ><code class="language-markup">&lt;div class="n-carousel n-carousel--tabs"&gt;
-	&lt;ul class="n-carousel__content"&gt;
-		&lt;li&gt;One&lt;/li&gt;
-		&lt;li&gt;Two&lt;/li&gt;
-		&lt;li&gt;Three&lt;/li&gt;
-	&lt;/ul&gt;
-	&lt;div class=&quot;n-carousel__index&quot;&gt;
-		&lt;button&gt;&lt;span&gt;Tab 1&lt;/span&gt;&lt;/button&gt;
-		&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
-		&lt;button&gt;&lt;span&gt;Tab 3&lt;/span&gt;&lt;/button&gt;
-	&lt;/div&gt;
+  &lt;ul class="n-carousel__content"&gt;
+  	&lt;li&gt;One&lt;/li&gt;
+  	&lt;li&gt;Two&lt;/li&gt;
+  	&lt;li&gt;Three&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class=&quot;n-carousel__index&quot;&gt;
+  	&lt;button&gt;&lt;span&gt;Tab 1&lt;/span&gt;&lt;/button&gt;
+  	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
+  	&lt;button&gt;&lt;span&gt;Tab 3&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
               </div>
             </div>
@@ -3178,7 +3182,7 @@ picture {
                         height="2560"
                         src="demo/DSC01832.jpg"
                         alt="Demo Image 1"
-                        loading-="lazy"
+                        loading="lazy"
                       />
                     </picture>
                     <figcaption>Kaohsiung, Taiwan</figcaption>
@@ -3192,7 +3196,7 @@ picture {
                         height="2560"
                         src="demo/DSC01293-Pano.jpg"
                         alt="Demo Image 2"
-                        loading-="lazy"
+                        loading="lazy"
                       />
                     </picture>
                     <figcaption>Bastia, Corsica</figcaption>
@@ -3206,7 +3210,7 @@ picture {
                         height="3840"
                         src="demo/DSC04308.jpg"
                         alt="Demo Image 2"
-                        loading-="lazy"
+                        loading="lazy"
                       />
                     </picture>
                     <figcaption>Financial District, Manhattan</figcaption>
@@ -3222,7 +3226,7 @@ picture {
                         height="188"
                         src="demo/IMG_1761-188x188.jpg"
                         alt="Demo Image 2"
-                        loading-="lazy"
+                        loading="lazy"
                       />
                     </picture>
                     <figcaption>Smaller image</figcaption>
@@ -3236,7 +3240,7 @@ picture {
                       src="https://www.youtube-nocookie.com/embed/g2Ehv4wOPvA"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowfullscreen
-                      loading-="lazy"
+                      loading="lazy"
                       title="Video demo"
                     ></iframe>
                     <figcaption>YouTube embed</figcaption>
@@ -3348,7 +3352,7 @@ picture {
 	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-	&lt;button&gt;&lt;img&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Thumbnail&quot; /&gt;&lt;/button&gt;
 	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
@@ -3583,7 +3587,7 @@ picture {
 	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-	&lt;button&gt;&lt;img&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Thumbnail&quot; /&gt;&lt;/button&gt;
 	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
@@ -3724,7 +3728,7 @@ picture {
 		&lt;picture&gt;
 		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
 		&lt;/picture&gt;
-	  &lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
+		&lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
 	  &lt;/figure&gt;
 	&lt;/li&gt;
 	...
@@ -3736,7 +3740,7 @@ picture {
 	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-	&lt;button&gt;&lt;img&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Thumbnail&quot; /&gt;&lt;/button&gt;
 	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;

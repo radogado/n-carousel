@@ -259,7 +259,7 @@ body[data-frozen] {
     }
   }
 
-  &:not([data-ready]) > * > button {
+  &:not([data-ready]) [class*="n-carousel__"] > button {
     cursor: not-allowed;
   }
 
