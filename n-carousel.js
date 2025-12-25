@@ -31,13 +31,19 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const isFullScreen = () => {
     return !!(document.webkitFullscreenElement || document.fullscreenElement);
   };
+  const exitFullscreen = () => {
+    !!document.exitFullscreen
+      ? document.exitFullscreen()
+      : document.webkitExitFullscreen();
+  };
+  const getCarousel = (el) => el.closest(".n-carousel");
   const isModal = (el) => {
-    return el.closest(".n-carousel").classList.contains("n-carousel--overlay");
+    return getCarousel(el)?.classList.contains("n-carousel--overlay");
   };
   const isVertical = (el) =>
-    el.closest(".n-carousel").matches(".n-carousel--vertical");
+    getCarousel(el)?.matches(".n-carousel--vertical");
   const isAutoHeight = (el) =>
-    el.closest(".n-carousel").matches(".n-carousel--auto-height");
+    getCarousel(el)?.matches(".n-carousel--auto-height");
   const indexControls = (index) => {
     let controls_by_class = index.querySelectorAll(".n-carousel__control");
     return controls_by_class.length > 0
@@ -229,7 +235,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const isRTL = (el) => getComputedStyle(el).direction === "rtl";
   const toggleFullScreen = (el) => {
-    el = el.closest(".n-carousel");
+    el = getCarousel(el);
     let carousel = el.querySelector(":scope > .n-carousel__content");
     const restoreScroll = () => {
       if (!isFullScreen()) {
@@ -248,9 +254,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     carousel.togglingFullScreen = true;
     if (isFullScreen()) {
       // Exit full screen
-      !!document.exitFullscreen
-        ? document.exitFullscreen()
-        : document.webkitExitFullscreen();
+      exitFullscreen();
       if (isSafari) {
         // When exit finishes, update the carousel because on Safari 14, position is wrong or the slide is invisible
         setTimeout(() => {
@@ -374,7 +378,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   ) =>
     new Promise((resolve) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
-      let wrapper = el.closest(".n-carousel");
+      let wrapper = getCarousel(el);
       if (
         !!wrapper.nextSlideInstant ||
         !wrapper.dataset.ready ||
@@ -629,7 +633,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       previously_active.focus();
     }
     // Fix buttons
-    let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
+    let index = getControl(getCarousel(el), ".n-carousel__index");
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute("aria-current");
       // index.children[active_index_real].ariaCurrent = true; // Unsupported by FF
@@ -762,8 +766,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       "Home",
       "End",
     ];
-    let el = e.target
-      .closest(".n-carousel")
+    let el = getCarousel(e.target)
       .querySelector(":scope > .n-carousel__content");
     if (keys.includes(e.key)) {
       // Capture relevant keys
@@ -864,15 +867,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const closeModal = (el) => {
     if (isFullScreen()) {
-      !!document.exitFullscreen
-        ? document.exitFullscreen()
-        : document.webkitExitFullscreen();
+      exitFullscreen();
     }
     let carousel = closestCarousel(el);
     if (carousel) {
+      let wrapper = getCarousel(carousel);
       carousel.parentNode.toggleModal = true; // skip mutation observer
-      carousel.closest(".n-carousel").classList.remove("n-carousel--overlay");
-      trapFocus(carousel.closest(".n-carousel"), true); // Disable focus trap
+      wrapper.classList.remove("n-carousel--overlay");
+      trapFocus(wrapper, true); // Disable focus trap
       delete document.body.dataset.frozen;
     }
     document.body.removeEventListener("keyup", closeModalOnBodyClick);
@@ -880,9 +882,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const openModal = (el) => {
     let carousel = closestCarousel(el);
     if (carousel) {
+      let wrapper = getCarousel(carousel);
       carousel.parentNode.toggleModal = true; // skip mutation observer
-      carousel.closest(".n-carousel").classList.add("n-carousel--overlay");
-      trapFocus(carousel.closest(".n-carousel"));
+      wrapper.classList.add("n-carousel--overlay");
+      trapFocus(wrapper);
       setTimeout(() => {
         document.body.addEventListener("keyup", closeModalOnBodyClick);
       }, 100);
@@ -893,7 +896,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       entries.forEach((e) => {
         let slide = e.target.querySelector(":scope > [aria-current]");
         let el = slide.closest(".n-carousel__content");
-        let carousel = el.closest(".n-carousel");
+        let carousel = getCarousel(el);
         // Skip auto-height updates in fullscreen/overlay mode
         if (isModal(carousel) || isFullScreen()) {
           return;
@@ -1096,8 +1099,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (!!close_modal) {
         close_modal.onclick = (e) => {
           if (
-            e.target
-              .closest(".n-carousel")
+            getCarousel(e.target)
               .classList.contains("n-carousel--overlay")
           ) {
             closeModal(e.target);
@@ -1108,8 +1110,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
-          let carousel = e.target
-            .closest(".n-carousel")
+          let carousel = getCarousel(e.target)
             .querySelector(":scope > .n-carousel__content");
           carousel.dataset.xx = carousel.dataset.x;
           carousel.dataset.yy = carousel.dataset.y;

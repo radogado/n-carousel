@@ -22,11 +22,14 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
 
-// Helper function to report gzip size
+// Helper function to report gzip size and write .size file
 function reportGzipSize(filePath) {
   const content = fs.readFileSync(filePath);
   const size = gzipSize.sync(content);
   console.log(`${path.basename(filePath)}: ${(size / 1024).toFixed(2)} KB (gzipped)`);
+  // Write .size file for demo page
+  const sizeFilePath = `${filePath}.size`;
+  fs.writeFileSync(sizeFilePath, size.toString());
 }
 
 // Helper function to compile SCSS with accurate source maps

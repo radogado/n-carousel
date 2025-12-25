@@ -53,7 +53,7 @@
             functionality with enhancements and customisation. It is lightweight
             and accessible, with vertical, auto height, tabs, lightbox, layout
             options, RTL support and no dependencies.
-            <a href="//rado.bg/2021/07/introducing-native-carousel/"
+            <a href="//rado.bg/introducing-native-carousel/"
               >Announcement</a
             >.
           </p>
@@ -468,7 +468,7 @@ picture {
             </div>
           </div>
           <h3>Changelog</h3>
-          <ul>
+          <ul style="padding: 0;">
             <li>1.1 Endless option, anchors support, tabbing support</li>
             <li>1.0 Initial release</li>
           </ul>
@@ -4352,13 +4352,20 @@ picture {
       });
       ["css", "js"].forEach((el) => {
         fetch(`n-carousel.min.${el}.size`)
-          .then((response) => response.text())
-          .then(
-            (text) =>
-              (document.querySelector(
-                `[href="n-carousel.min.${el}"]`
-              ).dataset.size = `${parseFloat(text / 1024).toFixed(1)} KB`)
-          );
+          .then((response) => {
+            if (!response.ok) throw new Error(`Failed to fetch n-carousel.min.${el}.size`);
+            return response.text();
+          })
+          .then((text) => {
+            const sizeText = `${(parseFloat(text) / 1024).toFixed(1)} KB`;
+            const linkElements = document.querySelectorAll(`[href="n-carousel.min.${el}"]`);
+            linkElements.forEach((linkElement) => {
+              linkElement.dataset.size = sizeText;
+            });
+          })
+          .catch((err) => {
+            console.warn(`Could not load file size for n-carousel.min.${el}:`, err);
+          });
       });
       fetch(`package.json`)
         .then((response) => response.json())
