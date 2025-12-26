@@ -1,1 +1,47 @@
+# Demo files
 demo/
+
+# Test files
+tests/
+test-results/
+playwright-report/
+playwright/.cache/
+coverage/
+.nyc_output/
+
+# Development files
+*.scss
+*.map
+*.size
+*.rollup.js
+*.rollup.js.map
+gulpfile.js
+vitest.config.js
+playwright.config.js
+tsconfig.json
+build.sh
+
+# Source files (keep only minified)
+n-carousel.js
+n-carousel.css
+n-carousel-preload.js
+
+# Documentation (keep README, exclude others)
+TYPESCRIPT.md
+safari-16.2/
+
+# IDE and OS files
+.vscode/
+.nova/
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Other
+index.html
+favicon.ico
+scrollyfills.module.js
