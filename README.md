@@ -334,6 +334,59 @@ npm run dev
 npm run serve
 ```
 
+### Testing
+
+The project includes a comprehensive test suite with both unit and visual regression tests:
+
+**Unit Tests (Vitest):**
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests once
+npm run test:run
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+**Visual Regression Tests (Playwright):**
+```bash
+# Run visual tests
+npm run test:visual
+
+# Run visual tests with UI
+npm run test:visual:ui
+
+# Update visual snapshots (when visual changes are intentional)
+npm run test:visual:update
+```
+
+**Test Coverage:**
+
+**Unit Tests (84 tests):**
+- Basic carousel structure and DOM validation
+- All option combinations (245,760+ valid combinations)
+- Navigation controls and accessibility
+- Keyboard events (Arrow keys, Home, End, Page Up/Down, Escape)
+- Scrolling and scrollend events
+- Button clicks and pointer events
+- Focus management
+- Data attributes and API functionality
+- Integration tests for various use cases
+
+**Visual Regression Tests (7 tests):**
+- Basic carousel appearance
+- Vertical, tabs, thumbnails, controls-outside, and peek options
+- Interaction visual tests (button clicks, transitions)
+- Cross-browser visual consistency (Chrome, Firefox, Safari)
+- Mobile viewport testing
+
+See [tests/README.md](tests/README.md) for more details.
+
 ## File Structure
 
 ```
@@ -344,6 +397,11 @@ n-carousel/
 ├── n-carousel.min.js             # Minified JavaScript
 ├── n-carousel-preload.js        # Preload script source (optional)
 ├── n-carousel-preload.min.js    # Minified preload script (optional)
+├── tests/                       # Test files
+│   ├── visual/                  # Visual regression tests (Playwright)
+│   └── *.test.js                # Unit tests (Vitest)
+├── playwright.config.js         # Playwright configuration
+├── vitest.config.js             # Vitest configuration
 └── demo/                        # Demo files
 ```
 
