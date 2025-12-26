@@ -1,6 +1,6 @@
 {
   "name": "n-carousel",
-  "version": "1.2.21",
+  "version": "1.2.22",
   "description": "Carousel",
   "main": "index.js",
   "types": "n-carousel.d.ts",
