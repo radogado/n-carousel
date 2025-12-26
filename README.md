@@ -13,6 +13,7 @@ A carousel component which uses the native scroll snapping functionality with en
 - 🎨 **Highly customizable** - 245,760+ valid option combinations
 - 🪶 **Lightweight** - ~4.2 KB CSS + ~6.0 KB JS (gzipped)
 - 🚫 **No dependencies** - Pure vanilla JavaScript and CSS
+- 📘 **TypeScript support** - Full type definitions included
 - 🎭 **Multiple modes** - Horizontal, vertical, tabs, lightbox, inline, endless
 - 🖼️ **Auto height** - Automatically adjusts to content height
 - 🎪 **Peeking** - Show partial slides at edges
@@ -27,6 +28,8 @@ A carousel component which uses the native scroll snapping functionality with en
 ```bash
 npm install n-carousel
 ```
+
+**TypeScript users:** Type definitions are included! No additional installation needed. See [TYPESCRIPT.md](TYPESCRIPT.md) for details.
 
 ### CDN
 

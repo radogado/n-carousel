@@ -3,6 +3,7 @@
   "version": "1.2.18",
   "description": "Carousel",
   "main": "index.js",
+  "types": "n-carousel.d.ts",
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
