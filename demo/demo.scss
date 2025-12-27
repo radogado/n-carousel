@@ -20,7 +20,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: darkcyan;
+  background: #007171;
   height: 100%;
   line-height: 1.333;
   color: white;
@@ -29,8 +29,8 @@ body {
 .n-carousel {
   text-align: center;
   --nui-control-bg: rgb(255, 158, 158);
-  --nui-control-color: #670d5b;
-  --nui-control-active-color: white;
+  --nui-control-color: #17436f;
+  --nui-control-active-color: #670d5b;
 }
 
 .n-carousel__content {
@@ -164,7 +164,7 @@ html {
   }
 
   a[href] {
-    color: #cecfd6;
+    color: white;
   }
 
   a[href]:visited {
@@ -199,7 +199,7 @@ code[class*="language-"] {
     margin: 0;
     -webkit-appearance: none;
     appearance: none;
-    background: lightcoral;
+    background: #b15d5d;
     border: none;
     cursor: pointer;
     color: #fff;
