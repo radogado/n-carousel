@@ -101,7 +101,7 @@ html {
 
 .demo .n-carousel .n-carousel__content > * {
   background: var(--nui-carousel-bg, aliceblue);
-  color: var(--nui-carousel-color, #027b7b);
+  color: var(--nui-carousel-color, #026464);
   align-content: center;
 }
 .demo .n-carousel .n-carousel__content a[href] {

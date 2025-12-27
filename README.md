@@ -20,6 +20,8 @@ A carousel component which uses the native scroll snapping functionality with en
 - 🎬 **Auto slide** - Automatic slide progression
 - 🔍 **Fullscreen** - Native fullscreen API support
 - 🖱️ **Touch & mouse** - Works with touch, mouse, and keyboard
+- 🔄 **Dynamic initialization** - Initialize carousels added after page load
+- 🔗 **Hash navigation** - Direct links to specific slides via URL hash
 
 ## Installation
 
@@ -145,6 +147,24 @@ Set the interval for auto-sliding (in seconds):
 <div class="n-carousel n-carousel--auto-slide" data-interval="4">
 ```
 
+### Hash Navigation
+
+Link directly to specific slides using URL hashes. Add an `id` attribute to any slide:
+
+```html
+<div class="n-carousel">
+  <ul class="n-carousel__content">
+    <li id="slide-1">Slide 1</li>
+    <li id="slide-2">Slide 2</li>
+    <li id="slide-3">Slide 3</li>
+  </ul>
+</div>
+```
+
+Then link to slides using `#slide-1`, `#slide-2`, etc. The carousel will automatically navigate to the slide when the page loads or when the hash changes.
+
+**Note:** To avoid flashing when loading a page with a hash, include the preload script (see [Optional Preload Script](#optional-preload-script)).
+
 ## JavaScript API
 
 ### Initialize Carousels
@@ -197,6 +217,18 @@ picture {
   --placeholder: url(image.jpg); /* Low-res placeholder for images */
 }
 ```
+
+### Subpixel Compensation
+
+The `--subpixel-compensation` variable is automatically calculated to ensure precise scroll snapping alignment.
+
+**The Problem:**
+Browsers can't scroll to subpixel positions - they round to whole pixels. When element dimensions are fractional (e.g., `500.7px`), scroll snapping can misalign because the browser rounds the scroll position.
+
+**The Solution:**
+The carousel measures the difference between the ceiling value and the actual fractional dimension, then adds that amount as padding to compensate. For example, if width is `500.3px`, compensation is `0.7` (ceiling `501px` minus actual `500.3px`), and `0.7px` padding is added to ensure perfect alignment.
+
+**Note:** This is handled automatically - no manual configuration needed.
 
 ## Advanced Examples
 
