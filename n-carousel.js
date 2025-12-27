@@ -42,8 +42,15 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const isVertical = (el) =>
     getCarousel(el)?.matches(".n-carousel--vertical");
-  const isAutoHeight = (el) =>
-    getCarousel(el)?.matches(".n-carousel--auto-height");
+  const isAutoHeight = (el) => {
+    const carousel = getCarousel(el);
+    if (!carousel) return false;
+    // Disable auto-height behavior in fullscreen/overlay mode - carousel should use full screen height
+    if (isFullScreen() || carousel.classList.contains("n-carousel--overlay")) {
+      return false;
+    }
+    return carousel.matches(".n-carousel--auto-height");
+  };
   const indexControls = (index) => {
     let controls_by_class = index.querySelectorAll(".n-carousel__control");
     return controls_by_class.length > 0
@@ -583,7 +590,12 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         active_index++;
       });
     };
-    wrapper.dataset.sliding = true;
+    // Only set data-sliding if we're actually changing slides or forced update
+    // This prevents flashing when updateCarousel is called multiple times for the same slide
+    const isSlideChange = active_slide !== old_active_slide;
+    if (isSlideChange || forced) {
+      wrapper.dataset.sliding = true;
+    }
     if (isEndless(el) && !forced) {
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
@@ -745,6 +757,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     });
     if (/--vertical.*--auto-height/.test(wrapper.classList)) {
       // Undo jump to wrong slide when sliding to the last one
+      // Note: In fullscreen/overlay mode, isAutoHeight returns false, so this won't execute
       el.scrollTop = el.offsetHeight * active_index_real;
     }
     window.requestAnimationFrame(() => {
@@ -786,9 +799,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
       if (isVertical(el)) {
-        if ((isModal(el) || isFullScreen()) && isAutoHeight(el)) {
-          old_height = new_height = el.offsetHeight;
-        }
         offsetY = offsetY - index * old_height + index * new_height;
       }
       window.requestAnimationFrame(() => {
@@ -999,26 +1009,37 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         let slide = e.target.querySelector(":scope > [aria-current]");
+        if (!slide) return;
         let el = slide.closest(".n-carousel__content");
+        if (!el) return;
         let carousel = getCarousel(el);
-        // Skip auto-height updates in fullscreen/overlay mode
-        if (isModal(carousel) || isFullScreen()) {
-          return;
-        }
         // Skip if there's any overlay descendant
         if (el.querySelector(":scope .n-carousel--overlay") !== null) {
           return;
         }
-        if (!el.parentElement.dataset.sliding) {
+        // Skip if already sliding to prevent update loops
+        if (el.parentElement.dataset.sliding) {
+          return;
+        }
+        // Prevent infinite loops by checking if height actually changed
+        let currentHeight = parseFloat(getComputedStyle(el).height);
+        let newHeight;
+        if (isVertical(el)) {
+          slide.style.height = "auto";
+          newHeight = slide.scrollHeight;
+          slide.style.height = "";
+        } else {
+          newHeight = nextSlideHeight(slide);
+        }
+        // Only update if height actually changed (with small tolerance for subpixel differences)
+        if (Math.abs(currentHeight - newHeight) > 1) {
           el.parentNode.style.removeProperty("--height");
           if (isVertical(el)) {
-            slide.style.height = "auto";
-            el.style.height = `${slide.scrollHeight}px`;
-            slide.style.height = "";
+            el.style.height = `${newHeight}px`;
             updateCarousel(el);
           } else {
             el.style.height = "";
-            el.style.height = `${slide.scrollHeight}px`;
+            el.style.height = `${newHeight}px`;
             updateCarousel(el, true);
           }
         }
@@ -1289,7 +1310,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         if (e.key === "Escape") {
           let el = e.target;
           if (!el.closest(".n-carousel--overlay")) {
-            el = overlay;
+            let overlay = document.querySelector(".n-carousel--overlay");
+            if (overlay) {
+              let overlayContent = overlay.querySelector(":scope > .n-carousel__content");
+              if (overlayContent) {
+                closeModal(overlayContent);
+              }
+            }
+            return;
           }
           if (el) {
             closeModal(el);
@@ -1396,3 +1424,4 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     document.addEventListener("DOMContentLoaded", doInit);
   }
 })();
+
