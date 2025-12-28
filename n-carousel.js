@@ -57,6 +57,27 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       ? controls_by_class
       : index.querySelectorAll("a, button");
   };
+  // Endless mode reorders slides in the DOM - keep a stable logical index per slide (JS-only, not a data-* attr).
+  const stampOriginalSlideIndices = (carouselContent) => {
+    if (!carouselContent) return;
+    [...carouselContent.children].forEach((slide, i) => {
+      if (!slide) return;
+      // Internal-only index; avoid data-* since it's not meant for CSS/DOM APIs.
+      if (slide._ncIndex === undefined) slide._ncIndex = i;
+    });
+  };
+  const clearSlidingLocks = (node) => {
+    let cur = node;
+    while (cur) {
+      if (cur.dataset && cur.dataset.sliding !== undefined) {
+        delete cur.dataset.sliding;
+      }
+      if (cur.sliding !== undefined) {
+        delete cur.sliding;
+      }
+      cur = cur.parentNode;
+    }
+  };
   const scrollEndAction = (carousel) => {
     carousel = carousel.target || carousel;
     const carouselStyle = getComputedStyle(carousel);
@@ -89,7 +110,15 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
     // Don't set data-sliding on parent if an overlay descendant is entering fullscreen
     const hasOverlayEnteringFullscreen = carousel.parentNode.querySelector && carousel.parentNode.querySelector(".n-carousel[data-enteringFullscreen]") !== null;
-    if (!hasOverlayEnteringFullscreen) {
+    // Also never set data-sliding on an overlay carousel that is currently fullscreen (it must stay clickable).
+    const wrapper = carousel.parentNode;
+    const isOverlayInFullscreen =
+      wrapper &&
+      wrapper.classList &&
+      wrapper.classList.contains("n-carousel--overlay") &&
+      (wrapper === document.fullscreenElement ||
+        wrapper === document.webkitFullscreenElement);
+    if (!hasOverlayEnteringFullscreen && !isOverlayInFullscreen) {
       carousel.parentNode.dataset.sliding = true;
     }
     delete carousel.dataset.next;
@@ -285,12 +314,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.removeEventListener("webkitfullscreenchange", restoreScroll);
       }
     };
-    carousel.togglingFullScreen = true;
     if (isFullScreen()) {
       // Exit full screen
       exitFullscreen();
       if (isSafari) {
-        // When exit finishes, update the carousel because on Safari 14, position is wrong or the slide is invisible
         setTimeout(() => {
           el.style.display = "none";
           window.requestAnimationFrame(() => {
@@ -298,23 +325,19 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           });
         }, 0);
       }
-      if (isVertical(el) && isAutoHeight(el)) {
-        let updateExitFullScreen = (e) => {
-          setTimeout(() => {
-            let carousel = el.querySelector(":scope > .n-carousel__content");
-            slideTo(carousel, parseInt(carousel.dataset.y));
-          }, 100);
-          el.removeEventListener("fullscreenchange", updateExitFullScreen);
-        };
-        el.addEventListener("fullscreenchange", updateExitFullScreen);
-      }
     } else {
+      stampOriginalSlideIndices(carousel);
+      const activeSlide = carousel.querySelector(":scope > [aria-current]");
+      const snapLogical =
+        activeSlide && Number.isFinite(activeSlide._ncIndex)
+          ? activeSlide._ncIndex
+          : getIndexReal(carousel);
+      if (Number.isFinite(snapLogical)) {
+        carousel._fsSnapLogical = snapLogical;
+      }
       // Enter full screen
-      // For inline overlay carousels, prevent parent from setting data-sliding during fullscreen transition
       if (el.classList.contains("n-carousel--inline") && el.classList.contains("n-carousel--overlay")) {
-        // Set flag to prevent parent from setting data-sliding during fullscreen transition
         el.dataset.enteringFullscreen = "true";
-        // Clear data-sliding from parent carousel to ensure it's clickable
         let parentContent = el.closest(".n-carousel__content");
         if (parentContent) {
           let parentCarousel = getCarousel(parentContent);
@@ -499,9 +522,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const updateCarousel = (el, forced = false) => {
     // Forced means never skip unnecessary update
     // Called on init and scroll end
-    if (el.togglingFullScreen) {
-      return;
-    }
     // Skip update entirely if there's ANY overlay carousel descendant
     // Overlay carousels need to remain interactive and shouldn't be managed by parent
     // But if forced, allow update (e.g., when overlay is being closed and we need to refresh parent)
@@ -576,6 +596,17 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
     // active_slide.ariaCurrent = true; // Unsupported by FF
     active_slide.setAttribute("aria-current", true);
+    stampOriginalSlideIndices(el);
+    // While fullscreen is active, keep the restore snapshot aligned with the *current* slide.
+    // Without this, entering fullscreen on slide N, navigating to M, then exiting would restore N.
+    if (
+      active_slide && Number.isFinite(active_slide._ncIndex) &&
+      getCarousel(el) &&
+      (getCarousel(el) === document.fullscreenElement ||
+        getCarousel(el) === document.webkitFullscreenElement)
+    ) {
+      el._fsSnapLogical = active_slide._ncIndex;
+    }
     var active_index_real = (el.dataset.x = el.dataset.y = getIndexReal(el));
     // Endless carousel
     const restoreDisplacedSlides = (el) => {
@@ -592,9 +623,15 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     };
     // Only set data-sliding if we're actually changing slides or forced update
     // This prevents flashing when updateCarousel is called multiple times for the same slide
+    // Never set data-sliding on overlay carousels that are in fullscreen (they need to be clickable)
+    const isOverlayInFullscreen = wrapper.classList.contains("n-carousel--overlay") && 
+      (wrapper === document.fullscreenElement || wrapper === document.webkitFullscreenElement);
     const isSlideChange = active_slide !== old_active_slide;
-    if (isSlideChange || forced) {
+    if (isSlideChange && !isOverlayInFullscreen) {
       wrapper.dataset.sliding = true;
+    } else if (isOverlayInFullscreen) {
+      // Ensure data-sliding is cleared for overlay in fullscreen
+      delete wrapper.dataset.sliding;
     }
     if (isEndless(el) && !forced) {
       if (active_index === 0) {
@@ -720,10 +757,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute("aria-current");
       // index.children[active_index_real].ariaCurrent = true; // Unsupported by FF
-      indexControls(index)[active_index_real].setAttribute(
-        "aria-current",
-        true
-      );
+      const controls = indexControls(index);
+      const rawIdx = Number.isFinite(active_index_real) ? active_index_real : 0;
+      const safeIdx =
+        controls.length > 0
+          ? Math.max(0, Math.min(controls.length - 1, rawIdx))
+          : 0;
+      controls[safeIdx]?.setAttribute("aria-current", true);
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
@@ -731,12 +771,25 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022.
       // NEVER set inert on:
       // 1. Fullscreen elements (they need to be interactive)
-      // 2. Overlay carousels (they need to be interactive)
+      // 2. Slides inside overlay carousels (they need to be interactive)
       // 3. Slides containing overlay carousel descendants
+      // 4. Slides inside a fullscreen carousel wrapper
+      // 5. Slides containing an overlay carousel that is currently in fullscreen
       const isFullscreen = el === document.fullscreenElement || el === document.webkitFullscreenElement;
-      const isOverlayCarousel = el.classList && el.classList.contains("n-carousel--overlay");
+      const wrapper = getCarousel(el);
+      const wrapperIsFullscreen = wrapper && (wrapper === document.fullscreenElement || wrapper === document.webkitFullscreenElement);
+      const wrapperIsOverlay = wrapper && wrapper.classList.contains("n-carousel--overlay");
       const hasOverlayDescendant = el.querySelector && el.querySelector(".n-carousel--overlay") !== null;
-      if (isFullscreen || isOverlayCarousel || hasOverlayDescendant) {
+      // Check if this slide contains an overlay carousel that is currently in fullscreen
+      // The fullscreen element is the wrapper (.n-carousel), not the content
+      let overlayInFullscreen = false;
+      if (hasOverlayDescendant) {
+        const overlayWrapper = el.querySelector(".n-carousel--overlay");
+        if (overlayWrapper && (overlayWrapper === document.fullscreenElement || overlayWrapper === document.webkitFullscreenElement)) {
+          overlayInFullscreen = true;
+        }
+      }
+      if (isFullscreen || wrapperIsFullscreen || wrapperIsOverlay || hasOverlayDescendant || overlayInFullscreen) {
         // These should never be inert - always remove it
         el.inert = false;
         el.removeAttribute('inert');
@@ -909,25 +962,20 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) ||
         el.closest(".n-carousel");
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
-      let new_index = Array.prototype.indexOf.call(
+      const logical_index = Array.prototype.indexOf.call(
         indexControls(el.parentNode),
         el
       );
+      let new_index = logical_index;
       if (isEndless(carousel)) {
-        var old_index = getIndex(carousel);
-        if (old_index === 0) {
-          if (new_index === carousel.children.length - 1) {
-            new_index = 0;
-          } else {
-            new_index++;
-          }
-        }
-        if (old_index === carousel.children.length - 1) {
-          if (new_index === 0) {
-            new_index = carousel.children.length - 1;
-          } else {
-            new_index--;
-          }
+        // Map logical index button -> current DOM index of that original slide.
+        // This avoids off-by-one errors near the edges when slides are displaced.
+        stampOriginalSlideIndices(carousel);
+        const targetSlide = [...carousel.children].find(
+          (s) => s && Number.isFinite(s._ncIndex) && s._ncIndex === logical_index
+        );
+        if (targetSlide) {
+          new_index = Array.prototype.indexOf.call(carousel.children, targetSlide);
         }
       }
       if (
@@ -1097,6 +1145,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const observersOn = (el) => {
     window.requestAnimationFrame(() => {
+      // Always clear sliding lock when (re)enabling observers.
+      // Important: we may early-return below when an overlay descendant exists, but we must still
+      // clear data-sliding; otherwise the carousel can remain unclickable (pointer-events: none).
+      delete el.parentNode.dataset.sliding;
+      delete el.parentNode.sliding;
       // Don't enable observers on parent carousel if there's ANY overlay carousel descendant
       // Overlay carousels need to remain interactive
       const hasOverlayDescendant = el.querySelector(":scope .n-carousel--overlay") !== null;
@@ -1125,9 +1178,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         attributeFilter: ["class"],
       });
       el.addEventListener("scrollend", scrollEndAction);
-      // setTimeout(() => {
-      delete el.parentNode.dataset.sliding;
-      // }, 50); // Because intersection observer fires again
       if (!("onscrollend" in window) && isEndless(el)) {
         // Fix for browsers without scrollend event (Safari) losing parts of the edge slide
         scrollTo(
@@ -1230,6 +1280,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (!content) {
         return;
       }
+      // Stamp original indices before any endless-mode DOM shuffling can occur.
+      stampOriginalSlideIndices(content);
       if (!!previous) {
         previous.onclick = slidePreviousEvent;
       }
@@ -1253,10 +1305,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
-          let carousel = getCarousel(e.target)
-            .querySelector(":scope > .n-carousel__content");
-          carousel.dataset.xx = carousel.dataset.x;
-          carousel.dataset.yy = carousel.dataset.y;
           toggleFullScreen(e.target);
         };
         const fullScreenEvent = (e) => {
@@ -1264,12 +1312,16 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             ":scope > .n-carousel__content"
           );
           let wrapper = getCarousel(carousel);
+          const enteringFullscreen = isFullScreen();
+          
+          // Overlay must stay clickable in fullscreen.
+          if (wrapper && wrapper.classList.contains("n-carousel--overlay")) {
+            clearSlidingLocks(wrapper);
+          }
+          
           // When entering fullscreen, clear data-sliding from parent and remove flag
-          if (wrapper && wrapper.classList.contains("n-carousel--inline") && wrapper.classList.contains("n-carousel--overlay") && isFullScreen()) {
-            // Clear the entering fullscreen flag now that fullscreen is active
+          if (wrapper && wrapper.classList.contains("n-carousel--inline") && wrapper.classList.contains("n-carousel--overlay") && enteringFullscreen) {
             delete wrapper.dataset.enteringFullscreen;
-            // Clear data-sliding from parent carousel to ensure it's clickable
-            // This is needed here because fullscreen entry is async and parent might set it during transition
             let parentContent = wrapper.closest(".n-carousel__content");
             if (parentContent) {
               let parentCarousel = getCarousel(parentContent);
@@ -1278,26 +1330,43 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
               }
             }
           }
-            window.requestAnimationFrame(() => {
-              carousel.dataset.x = carousel.dataset.xx;
-              carousel.dataset.y = carousel.dataset.yy;
-              delete carousel.dataset.xx;
-              delete carousel.dataset.yy;
-              if (
-                carousel.dataset.x !== "undefined" &&
-                carousel.dataset.y !== "undefined"
-              ) {
-                scrollTo(
-                  carousel,
-                  getIndexReal(carousel) *
-                    ceilingWidth(carousel.children[getIndexReal(carousel)]),
-                  getIndexReal(carousel) *
-                    ceilingHeight(carousel.children[getIndexReal(carousel)])
-                );
+          // Restore using the entry snapshot; run after layout settles.
+          window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+            stampOriginalSlideIndices(carousel);
+            if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
+              const activeSlide = carousel.querySelector(":scope > [aria-current]");
+              const snapLogical =
+                activeSlide && Number.isFinite(activeSlide._ncIndex)
+                  ? activeSlide._ncIndex
+                  : getIndexReal(carousel);
+              if (Number.isFinite(snapLogical)) {
+                carousel._fsSnapLogical = snapLogical;
               }
-              delete carousel.togglingFullScreen;
-              updateCarousel(carousel);
-            });
+            }
+
+            const snap = Number.isFinite(carousel._fsSnapLogical) ? carousel._fsSnapLogical : null;
+            const fallback = getIndexReal(carousel);
+            const logicalIndex = Number.isFinite(snap) ? snap : fallback;
+
+            let targetSlide =
+              Number.isFinite(logicalIndex)
+                ? [...carousel.children].find(
+                    (s) =>
+                      s && Number.isFinite(s._ncIndex) && s._ncIndex === logicalIndex
+                  )
+                : null;
+
+            if (!targetSlide && Number.isFinite(logicalIndex)) {
+              targetSlide = carousel.children[logicalIndex];
+            }
+            if (!targetSlide) return;
+            scrollTo(carousel, targetSlide.offsetLeft || 0, targetSlide.offsetTop || 0);
+            updateCarousel(carousel);
+
+            if (!enteringFullscreen) {
+              delete carousel._fsSnapLogical;
+            }
+          }));
         };
         if (isSafari) {
           el.onwebkitfullscreenchange = fullScreenEvent;
