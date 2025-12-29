@@ -326,15 +326,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         }, 0);
       }
     } else {
-      stampOriginalSlideIndices(carousel);
-      const activeSlide = carousel.querySelector(":scope > [aria-current]");
-      const snapLogical =
-        activeSlide && Number.isFinite(activeSlide._ncIndex)
-          ? activeSlide._ncIndex
-          : getIndexReal(carousel);
-      if (Number.isFinite(snapLogical)) {
-        carousel._fsSnapLogical = snapLogical;
-      }
+      snapToProp(carousel, "_fsSnapLogical");
       // Enter full screen
       if (el.classList.contains("n-carousel--inline") && el.classList.contains("n-carousel--overlay")) {
         el.dataset.enteringFullscreen = "true";
@@ -362,6 +354,51 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
   const scrollTo = (el, x, y) => {
     el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y); // Scroll to correct scroll position for LTR and RTL
+  };
+  // Shared mode-transition helpers (fullscreen + overlay):
+  // Save a stable "logical" slide index (works for endless because slides get re-ordered).
+  const snapLogicalIndex = (content) => {
+    if (!content) return null;
+    stampOriginalSlideIndices(content);
+    const active = content.querySelector(":scope > [aria-current]");
+    const logical =
+      active && Number.isFinite(active._ncIndex) ? active._ncIndex : getIndexReal(content);
+    return Number.isFinite(logical) ? logical : null;
+  };
+  const snapToProp = (content, prop) => {
+    if (!content) return null;
+    const snap = snapLogicalIndex(content);
+    if (Number.isFinite(snap)) content[prop] = snap;
+    return snap;
+  };
+  const restoreLogicalAfterLayout = (content, logicalIndex, clearProp) => {
+    if (!content || !Number.isFinite(logicalIndex)) return;
+    // Fullscreen/overlay toggles can change sizes mid-frame. Wait for layout settle.
+    window.requestAnimationFrame(() =>
+      window.requestAnimationFrame(() => {
+        stampOriginalSlideIndices(content);
+        const target =
+          [...content.children].find(
+            (s) => s && Number.isFinite(s._ncIndex) && s._ncIndex === logicalIndex
+          ) || content.children[logicalIndex];
+        if (!target) return;
+        scrollTo(content, target.offsetLeft || 0, target.offsetTop || 0);
+        updateCarousel(content);
+        // Restores are not user slide animations - if a sliding lock gets set during this,
+        // it can make the overlay/fullscreen UI unclickable.
+        const w = getCarousel(content);
+        if (w && (w.classList.contains("n-carousel--overlay") || w === document.fullscreenElement)) {
+          clearSlidingLocks(w);
+        }
+        if (clearProp) delete content[clearProp];
+      })
+    );
+  };
+  const restoreFromPropAfterLayout = (content, prop, clearOnRestore = false) => {
+    if (!content) return;
+    const logicalIndex = Number.isFinite(content[prop]) ? content[prop] : snapLogicalIndex(content);
+    if (!Number.isFinite(logicalIndex)) return;
+    restoreLogicalAfterLayout(content, logicalIndex, clearOnRestore ? prop : null);
   };
   const getScroll = (el) =>
     el === window
@@ -606,6 +643,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         getCarousel(el) === document.webkitFullscreenElement)
     ) {
       el._fsSnapLogical = active_slide._ncIndex;
+    }
+    // While overlay is active, keep a snapshot aligned with the *current* slide.
+    // This lets overlay close restore the currently viewed slide (same principle as fullscreen).
+    if (
+      active_slide && Number.isFinite(active_slide._ncIndex) &&
+      wrapper && wrapper.classList && wrapper.classList.contains("n-carousel--overlay")
+    ) {
+      el._ovSnapLogical = active_slide._ncIndex;
     }
     var active_index_real = (el.dataset.x = el.dataset.y = getIndexReal(el));
     // Endless carousel
@@ -984,7 +1029,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       ) {
         // Opening an inline carousel
         wrapper.nextSlideInstant = true;
-        openModal(carousel);
+        // We intentionally open to a *new* index below, so skip the overlay restore here.
+        openModal(carousel, true);
         // Set new x, y
         window.requestAnimationFrame(() => {
           carousel.dataset.x = carousel.dataset.y = new_index;
@@ -1007,6 +1053,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const closeModalOnBodyClick = (e) => {
     let overlay = document.querySelector(".n-carousel--overlay");
     if (overlay && e.key === "Escape") {
+      // If fullscreen was just exited via Escape, don't also close the overlay.
+      if (
+        Number.isFinite(overlay._suppressOverlayEscapeUntil) &&
+        performance.now() < overlay._suppressOverlayEscapeUntil
+      ) {
+        return;
+      }
       closeModal(overlay);
     }
   };
@@ -1022,6 +1075,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       exitFullscreen();
     }
     if (carousel) {
+      // Snapshot the logical slide before the overlay state changes.
+      snapToProp(carousel, "_ovSnapLogical");
       carousel.parentNode.toggleModal = true; // skip mutation observer
       wrapper.classList.remove("n-carousel--overlay");
       trapFocus(wrapper, true); // Disable focus trap
@@ -1038,19 +1093,27 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           updateCarousel(parentContent, true);
         }
       }
+      // Restore the current logical slide after layout settles (scrollbar/body lock changes can shift snap points).
+      restoreFromPropAfterLayout(carousel, "_ovSnapLogical", true);
     }
     document.body.removeEventListener("keyup", closeModalOnBodyClick);
   };
-  const openModal = (el) => {
+  const openModal = (el, skipRestore = false) => {
     let carousel = closestCarousel(el);
     if (carousel) {
       let wrapper = getCarousel(carousel);
+      // Snapshot the logical slide before the overlay state changes.
+      const snap = snapLogicalIndex(carousel);
       carousel.parentNode.toggleModal = true; // skip mutation observer
       wrapper.classList.add("n-carousel--overlay");
       trapFocus(wrapper);
       setTimeout(() => {
         document.body.addEventListener("keyup", closeModalOnBodyClick);
       }, 100);
+      if (!skipRestore && Number.isFinite(snap)) {
+        carousel._ovSnapLogical = snap;
+        restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
+      }
     }
   };
   const autoHeightObserver = new ResizeObserver((entries) => {
@@ -1317,6 +1380,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           // Overlay must stay clickable in fullscreen.
           if (wrapper && wrapper.classList.contains("n-carousel--overlay")) {
             clearSlidingLocks(wrapper);
+            // Avoid the common "Esc exits fullscreen then also closes overlay" double-action.
+            // Only relevant on EXIT (Esc is a keyup). Use timestamp to avoid timers.
+            if (!enteringFullscreen) {
+              wrapper._suppressOverlayEscapeUntil = performance.now() + 250;
+            }
           }
           
           // When entering fullscreen, clear data-sliding from parent and remove flag
@@ -1330,43 +1398,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
               }
             }
           }
-          // Restore using the entry snapshot; run after layout settles.
-          window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-            stampOriginalSlideIndices(carousel);
-            if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
-              const activeSlide = carousel.querySelector(":scope > [aria-current]");
-              const snapLogical =
-                activeSlide && Number.isFinite(activeSlide._ncIndex)
-                  ? activeSlide._ncIndex
-                  : getIndexReal(carousel);
-              if (Number.isFinite(snapLogical)) {
-                carousel._fsSnapLogical = snapLogical;
-              }
-            }
-
-            const snap = Number.isFinite(carousel._fsSnapLogical) ? carousel._fsSnapLogical : null;
-            const fallback = getIndexReal(carousel);
-            const logicalIndex = Number.isFinite(snap) ? snap : fallback;
-
-            let targetSlide =
-              Number.isFinite(logicalIndex)
-                ? [...carousel.children].find(
-                    (s) =>
-                      s && Number.isFinite(s._ncIndex) && s._ncIndex === logicalIndex
-                  )
-                : null;
-
-            if (!targetSlide && Number.isFinite(logicalIndex)) {
-              targetSlide = carousel.children[logicalIndex];
-            }
-            if (!targetSlide) return;
-            scrollTo(carousel, targetSlide.offsetLeft || 0, targetSlide.offsetTop || 0);
-            updateCarousel(carousel);
-
-            if (!enteringFullscreen) {
-              delete carousel._fsSnapLogical;
-            }
-          }));
+          // Restore using the current snapshot; wait for layout settle.
+          if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
+            snapToProp(carousel, "_fsSnapLogical");
+          }
+          restoreFromPropAfterLayout(carousel, "_fsSnapLogical", !enteringFullscreen);
         };
         if (isSafari) {
           el.onwebkitfullscreenchange = fullScreenEvent;
@@ -1405,7 +1441,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
       if (hashed_slide) {
         if (el.classList.contains("n-carousel--inline")) {
-          openModal(content);
+          // This open is followed by an explicit jump to the hashed slide below.
+          openModal(content, true);
         }
         let index = Array.prototype.indexOf.call(
           hashed_slide.parentNode.children,

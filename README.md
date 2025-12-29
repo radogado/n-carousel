@@ -10,8 +10,9 @@ A carousel component which uses the native scroll snapping functionality with en
 - ♿ **Accessible** - Full keyboard navigation, ARIA support, focus management
 - 📱 **Responsive** - Works on all screen sizes
 - 🌍 **RTL support** - Right-to-left language support
+- ⚛️ **React-friendly** - Render HTML in React and call `window.nCarouselInit()` after updates
 - 🎨 **Highly customizable** - 245,760+ valid option combinations
-- 🪶 **Lightweight** - ~4.2 KB CSS + ~6.0 KB JS (gzipped)
+- 🪶 **Lightweight** - ~4.2 KB CSS + ~6.5 KB JS (gzipped)
 - 🚫 **No dependencies** - Pure vanilla JavaScript and CSS
 - 📘 **TypeScript support** - Full type definitions included
 - 🎭 **Multiple modes** - Horizontal, vertical, tabs, lightbox, inline, endless
@@ -44,7 +45,7 @@ npm install n-carousel
 
 Get the files from the [releases page](https://github.com/radogado/n-carousel/releases) or use the minified versions:
 - `n-carousel.min.css` (~25 KB, ~4.2 KB gzipped)
-- `n-carousel.min.js` (~20 KB, ~6.0 KB gzipped)
+- `n-carousel.min.js` (~23 KB, ~6.5 KB gzipped)
 
 ## Quick Start
 
@@ -179,6 +180,60 @@ window.nCarouselInit(containerElement)
 
 The carousel automatically initializes on page load, but you can manually initialize dynamically added carousels using this function.
 
+## React
+
+`n-carousel` is vanilla JS. In React, you render the HTML structure and then call `window.nCarouselInit()` after render (and after any slide list changes).
+
+### Manual integration (recommended)
+
+1) Install:
+
+```bash
+npm i n-carousel
+```
+
+2) Import the assets once (e.g. in `main.tsx` / `App.tsx`):
+
+```js
+import 'n-carousel/n-carousel.min.css';
+import 'n-carousel/n-carousel.js'; // defines window.nCarouselInit()
+```
+
+3) Initialize after render:
+
+```jsx
+import { useEffect, useRef } from 'react';
+
+export function Gallery({ slides }) {
+  const hostRef = useRef(null);
+
+  useEffect(() => {
+    window.nCarouselInit?.(hostRef.current || document);
+  }, [slides.length]);
+
+  return (
+    <div ref={hostRef} className="n-carousel n-carousel--peek">
+      <ul className="n-carousel__content" style={{ '--peek': '40px' }}>
+        {slides.map((s) => (
+          <li key={s.id}>{s.title}</li>
+        ))}
+      </ul>
+      <div className="n-carousel__previous"><button><span>Previous</span></button></div>
+      <div className="n-carousel__next"><button><span>Next</span></button></div>
+      <div className="n-carousel__index">
+        {slides.map((s, i) => (<button key={s.id}><span>{i + 1}</span></button>))}
+      </div>
+    </div>
+  );
+}
+```
+
+### Optional thin wrapper (this repo)
+
+This repo includes a tiny helper in `react/` (used by the demo) that just calls `window.nCarouselInit()` for you:
+- `import { NCarousel } from 'n-carousel-react'`
+- `import 'n-carousel-react/styles'`
+
 ## CSS Variables
 
 Customize the appearance using CSS variables:
@@ -289,7 +344,7 @@ For tabs, add the class to the index controls:
     <li>
       <figure>
         <picture style="--placeholder: url(thumb.jpg)">
-          <img src="image.jpg" alt="Image" loading="lazy" />
+          <img src="image.jpg" alt="Kaohsiung, Taiwan (photo)" loading="lazy" />
         </picture>
         <figcaption>Caption</figcaption>
       </figure>
@@ -297,8 +352,8 @@ For tabs, add the class to the index controls:
     <!-- more slides -->
   </ul>
   <div class="n-carousel__index">
-    <button><img src="thumb1.jpg" alt="Thumbnail" /></button>
-    <button><img src="thumb2.jpg" alt="Thumbnail" /></button>
+    <button><img src="thumb1.jpg" alt="Slide 1 thumbnail" /></button>
+    <button><img src="thumb2.jpg" alt="Slide 2 thumbnail" /></button>
   </div>
   <div class="n-carousel__controls">
     <div class="n-carousel__full-screen">
@@ -413,10 +468,11 @@ npm run test:visual:update
 - Data attributes and API functionality
 - Integration tests for various use cases
 
-**Visual Regression Tests (7 tests):**
+**Playwright Tests (10 tests):**
 - Basic carousel appearance
 - Vertical, tabs, thumbnails, controls-outside, and peek options
 - Interaction visual tests (button clicks, transitions)
+- Regression tests for fullscreen restore, endless index mapping, and overlay fullscreen clickability
 - Cross-browser visual consistency (Chrome, Firefox, Safari)
 - Mobile viewport testing
 
@@ -465,7 +521,7 @@ Developed by [Radoslav Sharapanov](https://rado.bg) since 2020.
 
 ## Changelog
 
-### 1.2.18
+### 1.2.22
 - Current version
 
 ### 1.1

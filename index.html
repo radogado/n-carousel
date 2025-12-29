@@ -20,10 +20,7 @@
     <script src="demo/prism.js" defer></script>
   </head>
 
-  <body>
-    <div
-      class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--index-align-start n-carousel--controls-outside"
-    >
+  <body class="n-carousel demo n-carousel--tabs n-carousel--vertical n-carousel--index-align-start n-carousel--controls-outside">
       <span class="n-carousel__index">
         <!-- <a href=#><span>Home</span></a> -->
         <button><span>Home</span></button>
@@ -56,6 +53,11 @@
             <a href="//rado.bg/introducing-native-carousel/"
               >Announcement</a
             >.
+          </p>
+          <p style="max-width: 60ch">
+            React: this is a vanilla JS component. In React you render the HTML structure and call
+            <code>window.nCarouselInit()</code> after render (and after you add/remove slides).
+            See the React demo at <a href="demo/react/index.html">demo/react/index.html</a>.
           </p>
           <div class="n-carousel">
             <div class="n-carousel__previous">
@@ -3170,7 +3172,7 @@ picture {
 	&lt;li&gt;
 	  &lt;figure&gt;
 		&lt;picture&gt;
-		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
+		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Kaohsiung, Taiwan (photo)&quot; loading=&quot;lazy&quot; /&gt;
 		&lt;/picture&gt;
 		&lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
 	  &lt;/figure&gt;
@@ -3184,7 +3186,7 @@ picture {
 	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Thumbnail&quot; /&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Kaohsiung, Taiwan thumbnail&quot; /&gt;&lt;/button&gt;
 	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
@@ -3406,7 +3408,7 @@ picture {
 	&lt;li&gt;
 	  &lt;figure&gt;
 		&lt;picture&gt;
-		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
+		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Kaohsiung, Taiwan (photo)&quot; loading=&quot;lazy&quot; /&gt;
 		&lt;/picture&gt;
 		&lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
 	  &lt;/figure&gt;
@@ -3420,7 +3422,7 @@ picture {
 	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Thumbnail&quot; /&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Kaohsiung, Taiwan thumbnail&quot; /&gt;&lt;/button&gt;
 	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
@@ -3561,7 +3563,7 @@ picture {
 	&lt;li&gt;
 	  &lt;figure&gt;
 		&lt;picture&gt;
-		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Demo Image 1&quot; loading=&quot;lazy&quot; /&gt;
+		  &lt;img width=&quot;3840&quot; height=&quot;2560&quot; src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Kaohsiung, Taiwan (photo)&quot; loading=&quot;lazy&quot; /&gt;
 		&lt;/picture&gt;
 		&lt;figcaption&gt;Kaohsiung, Taiwan&lt;/figcaption&gt;
 	  &lt;/figure&gt;
@@ -3575,7 +3577,7 @@ picture {
 	&lt;button&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__index&quot;&gt;
-	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Thumbnail&quot; /&gt;&lt;/button&gt;
+	&lt;button&gt;&lt;img src=&quot;demo/DSC01832.jpg&quot; alt=&quot;Kaohsiung, Taiwan thumbnail&quot; /&gt;&lt;/button&gt;
 	&lt;button&gt;&lt;span&gt;Tab 2&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class=&quot;n-carousel__full-screen&quot;&gt;
@@ -4135,7 +4137,6 @@ picture {
           </div>
         </section>
       </main>
-    </div>
     <script>
       function copyButton(el, target, echo) {
         el.addEventListener("click", (event) => {

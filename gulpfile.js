@@ -22,6 +22,18 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
 
+async function reactDemo() {
+  // Build the React demo if dependencies are installed.
+  // Output goes to demo/react/index.html + demo/react/assets/*
+  const reactDir = path.join(__dirname, 'demo', 'react', 'app');
+  const nm = path.join(reactDir, 'node_modules');
+  if (!fs.existsSync(nm)) {
+    console.log('react demo: skipping (demo/react/app/node_modules not found)');
+    return;
+  }
+  await execAsync('npm run build:static', { cwd: reactDir });
+}
+
 // Helper function to report gzip size and write .size file
 function reportGzipSize(filePath) {
   const content = fs.readFileSync(filePath);
@@ -288,5 +300,6 @@ exports.styles = styles;
 exports.scripts = scripts;
 exports.preload = preloadScripts;
 exports.demo = demoStyles;
+exports.reactDemo = reactDemo;
 exports.watch = watchFiles;
-exports.default = gulp.series(styles, scripts, preloadScripts); 
+exports.default = gulp.series(styles, scripts, preloadScripts, reactDemo);
