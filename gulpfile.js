@@ -115,8 +115,21 @@ function scripts() {
           gulp.src('n-carousel.rollup.js')
             .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(terser({
+              // Rollup output is an ES module; enable module + toplevel for better compression.
+              module: true,
+              toplevel: true,
+              compress: {
+                passes: 2,
+              },
               mangle: {
-                reserved: ['nCarouselInit']
+                toplevel: true,
+                reserved: ['nCarouselInit'],
+                // Only mangle internal/private props (we use leading "_" for JS-only state).
+                // Avoids breaking any DOM APIs / public surface.
+                properties: {
+                  regex: /^_/,
+                  keep_quoted: true,
+                },
               },
               keep_classnames: false,
               keep_fnames: false
