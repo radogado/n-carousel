@@ -1086,7 +1086,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         // Opening an inline carousel
         wrapper.nextSlideInstant = true;
         // We intentionally open to a *new* index below, so skip the overlay restore here.
-        openModal(carousel, true, new_index);
+        openModal(carousel, true, logical_index);
       } else {
         window.requestAnimationFrame(() => {
           slideTo(carousel, new_index);
@@ -1094,6 +1094,209 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
       return false;
     }
+  };
+  const enableLightboxClickToOpen = (wrapper, content) => {
+    if (!wrapper || !content) return;
+    if (!wrapper.classList.contains("n-carousel--lightbox")) return;
+
+    let down = null;
+    const isInteractive = (el) =>
+      !!(el && el.closest && el.closest("a, button, input, select, textarea, label"));
+    const toDirectChild = (el, parent) => {
+      let cur = el;
+      while (cur && cur !== parent && cur.parentNode !== parent) cur = cur.parentNode;
+      return cur && cur.parentNode === parent ? cur : null;
+    };
+    content.addEventListener(
+      "pointerdown",
+      (e) => {
+        const t = e.target;
+        if (!t) return;
+        const img =
+          (t.matches && t.matches("img") && t) ||
+          (t.closest && t.closest("picture") && t.closest("picture").querySelector("img")) ||
+          null;
+        if (!img) return;
+        if (isInteractive(img)) return;
+        down = { x: e.clientX, y: e.clientY };
+      },
+      { passive: true }
+    );
+
+    content.addEventListener("click", (e) => {
+      if (wrapper.classList.contains("n-carousel--overlay")) return;
+      const t = e.target;
+      if (!t) return;
+
+      // Only on images (or picture -> img).
+      const img =
+        (t.matches && t.matches("img") && t) ||
+        (t.closest && t.closest("picture") && t.closest("picture").querySelector("img")) ||
+        null;
+      if (!img) return;
+
+      // Don't hijack clicks on interactive content.
+      if (isInteractive(img)) return;
+
+      // Ignore drag/swipe.
+      if (down) {
+        const dx = Math.abs((down.x || 0) - e.clientX);
+        const dy = Math.abs((down.y || 0) - e.clientY);
+        down = null;
+        if (dx > 6 || dy > 6) return;
+      }
+
+      const slideEl = toDirectChild(img, content);
+      // Endless reorders slides in the DOM, so prefer stable logical index when available.
+      stampOriginalSlideIndices(content);
+      const idxDom = slideEl
+        ? Array.prototype.indexOf.call(content.children, slideEl)
+        : getIndexReal(content);
+      const idxLogical =
+        slideEl && Number.isFinite(slideEl._ncIndex) ? slideEl._ncIndex : idxDom;
+      // Open overlay to the clicked/active slide.
+      openModal(content, true, idxLogical);
+    });
+  };
+  const enableLightboxCrossAxisClose = (wrapper, content) => {
+    if (!wrapper || !content) return;
+    if (!wrapper.classList.contains("n-carousel--lightbox")) return;
+    if (!wrapper.classList.contains("n-carousel--overlay")) return;
+    if (wrapper._ncCrossAxisCloseCleanup) return;
+
+    const CROSS_AXIS_THRESHOLD = 120; // px
+    const INTENT_RATIO = 2; // cross-axis must dominate main-axis by this ratio
+
+    const isScrollableY = (el) => {
+      if (!el || el === document.documentElement || el === document.body) return false;
+      const cs = getComputedStyle(el);
+      const oy = cs.overflowY;
+      return (
+        (oy === "auto" || oy === "scroll") &&
+        el.scrollHeight > el.clientHeight + 1
+      );
+    };
+    const isScrollableX = (el) => {
+      if (!el || el === document.documentElement || el === document.body) return false;
+      const cs = getComputedStyle(el);
+      const ox = cs.overflowX;
+      return (
+        (ox === "auto" || ox === "scroll") &&
+        el.scrollWidth > el.clientWidth + 1
+      );
+    };
+    const closestScrollable = (start, axis) => {
+      let cur = start && start.nodeType === 1 ? start : null;
+      while (cur && cur !== wrapper) {
+        if (axis === "y" ? isScrollableY(cur) : isScrollableX(cur)) return cur;
+        cur = cur.parentElement;
+      }
+      return null;
+    };
+    const atEdge = (el, axis, delta) => {
+      if (!el) return true;
+      if (axis === "y") {
+        const top = el.scrollTop;
+        const max = el.scrollHeight - el.clientHeight;
+        return delta < 0 ? top <= 0 : top >= max - 1;
+      }
+      const left = el.scrollLeft;
+      const max = el.scrollWidth - el.clientWidth;
+      return delta < 0 ? left <= 0 : left >= max - 1;
+    };
+
+    let wheelAcc = 0;
+    let wheelTimer = null;
+    const resetWheel = () => {
+      wheelAcc = 0;
+      if (wheelTimer) clearTimeout(wheelTimer);
+      wheelTimer = null;
+    };
+    const allowCrossAxisClose = (target, axis, cross, main) => {
+      if (!Number.isFinite(cross) || !Number.isFinite(main)) return false;
+      // Require clear cross-axis intent.
+      if (Math.abs(cross) < INTENT_RATIO * Math.abs(main)) return false;
+      // If there's a scrollable element in the cross axis, only close on "overscroll" at its edge.
+      const sc = closestScrollable(target, axis);
+      if (sc && !atEdge(sc, axis, cross)) return false;
+      return true;
+    };
+
+    const wheel = (e) => {
+      if (!wrapper.classList.contains("n-carousel--overlay")) return resetWheel();
+      // Don't close overlay via cross-axis gesture while the overlay is fullscreen.
+      if (fullscreenWrapper && fullscreenWrapper() === wrapper) return resetWheel();
+      // Only for overlays; ignore if fullscreen restore / sliding lock window is active.
+      if (prefersReducedMotion()) return;
+      const vertical = isVertical(content);
+      const cross = vertical ? e.deltaX : e.deltaY;
+      const main = vertical ? e.deltaY : e.deltaX;
+      const axis = vertical ? "x" : "y";
+      if (!allowCrossAxisClose(e.target, axis, cross, main)) return resetWheel();
+
+      wheelAcc += cross;
+      if (!wheelTimer) wheelTimer = setTimeout(resetWheel, 250);
+
+      if (Math.abs(wheelAcc) >= CROSS_AXIS_THRESHOLD) {
+        resetWheel();
+        closeModal(content);
+      }
+    };
+
+    // Touch swipe (mobile).
+    let touchStart = null;
+    const touchstart = (e) => {
+      if (!wrapper.classList.contains("n-carousel--overlay")) return;
+      // Don't close overlay via cross-axis gesture while the overlay is fullscreen.
+      if (fullscreenWrapper && fullscreenWrapper() === wrapper) return;
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      touchStart = { x: t.clientX, y: t.clientY, target: e.target };
+    };
+    const touchmove = (e) => {
+      if (!touchStart) return;
+      if (!wrapper.classList.contains("n-carousel--overlay")) {
+        touchStart = null;
+        return;
+      }
+      if (fullscreenWrapper && fullscreenWrapper() === wrapper) {
+        touchStart = null;
+        return;
+      }
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      const dx = t.clientX - touchStart.x;
+      const dy = t.clientY - touchStart.y;
+      const vertical = isVertical(content);
+      const cross = vertical ? dx : dy;
+      const main = vertical ? dy : dx;
+      const axis = vertical ? "x" : "y";
+      if (!allowCrossAxisClose(touchStart.target, axis, cross, main)) return;
+
+      if (Math.abs(cross) >= CROSS_AXIS_THRESHOLD) {
+        touchStart = null;
+        closeModal(content);
+      }
+    };
+    const touchend = () => {
+      touchStart = null;
+    };
+
+    wrapper.addEventListener("wheel", wheel, { passive: true });
+    wrapper.addEventListener("touchstart", touchstart, { passive: true });
+    wrapper.addEventListener("touchmove", touchmove, { passive: true });
+    wrapper.addEventListener("touchend", touchend, { passive: true });
+    wrapper.addEventListener("touchcancel", touchend, { passive: true });
+
+    wrapper._ncCrossAxisCloseCleanup = () => {
+      resetWheel();
+      wrapper.removeEventListener("wheel", wheel);
+      wrapper.removeEventListener("touchstart", touchstart);
+      wrapper.removeEventListener("touchmove", touchmove);
+      wrapper.removeEventListener("touchend", touchend);
+      wrapper.removeEventListener("touchcancel", touchend);
+      delete wrapper._ncCrossAxisCloseCleanup;
+    };
   };
   const closeModalOnBodyClick = (e) => {
     let overlay = document.querySelector(".n-carousel--overlay");
@@ -1176,6 +1379,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         snapToProp(carousel, "_ovSnapLogical");
         carousel.parentNode.toggleModal = true; // skip mutation observer
         wrapper.classList.remove("n-carousel--overlay");
+        if (wrapper && wrapper._ncCrossAxisCloseCleanup) {
+          wrapper._ncCrossAxisCloseCleanup();
+        }
         trapFocus(wrapper, true); // Disable focus trap
         delete document.body.dataset.frozen;
         // If this overlay was a slide in a parent carousel, clear data-sliding on parent
@@ -1207,20 +1413,18 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       const openNow = () => {
         carousel.parentNode.toggleModal = true; // skip mutation observer
         wrapper.classList.add("n-carousel--overlay");
+        enableLightboxCrossAxisClose(wrapper, carousel);
         trapFocus(wrapper);
         setTimeout(() => {
           document.body.addEventListener("keyup", closeModalOnBodyClick);
         }, 100);
         // Inline lightbox: open to a requested slide (avoid timing/rAF races that can land on slide 0).
         if (Number.isFinite(openIndex) && carousel.children && carousel.children.length) {
-          const target = carousel.children[openIndex];
-          if (target) {
-            target.setAttribute("aria-current", true);
-            carousel.dataset.x = carousel.dataset.y = openIndex;
-            scrollTo(carousel, target.offsetLeft || 0, target.offsetTop || 0);
-            document.body.dataset.frozen = document.body.scrollTop;
-            updateCarousel(carousel, true);
-          }
+          // Treat openIndex as a logical index (especially important for endless mode where DOM reorders).
+          // Use the shared "restore after layout" helper (double rAF) to avoid first-open Safari races.
+          carousel._ovSnapLogical = openIndex;
+          document.body.dataset.frozen = document.body.scrollTop;
+          restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
           return;
         }
         if (!skipRestore && Number.isFinite(snap)) {
@@ -1469,6 +1673,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (!!index) {
         index.onclick = slideIndexEvent;
       }
+      enableLightboxClickToOpen(el, content);
       if (!!close_modal) {
         close_modal.onclick = (e) => {
           let wrapper = getCarousel(e.target);
@@ -1513,8 +1718,16 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           restoreFromPropAfterLayout(carousel, "_fsSnapLogical", !enteringFullscreen);
           if (!enteringFullscreen) window.__nCarouselFsLast = null;
         };
-        document.addEventListener("fullscreenchange", window.__nCarouselFsHandler);
-        document.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler);
+        // Use capture so we also receive events dispatched on wrappers (tests / Safari quirks).
+        document.addEventListener("fullscreenchange", window.__nCarouselFsHandler, true);
+        document.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler, true);
+      }
+      // Also listen on the wrapper itself: our test fullscreen stub dispatches fullscreenchange on the
+      // element, and some browsers can differ in where they dispatch it.
+      if (!el._ncFsListener) {
+        el._ncFsListener = true;
+        el.addEventListener("fullscreenchange", window.__nCarouselFsHandler);
+        el.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler);
       }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
