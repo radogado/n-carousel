@@ -151,6 +151,7 @@ html {
   overflow: auto;
   flex-wrap: nowrap;
   background: var(--nui-control-bg);
+  padding: 0.5rem 0;
 }
 .demo .source {
   display: flex;

@@ -25,6 +25,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const MAX_HEIGHT_FALLBACK = 99999;
   const isSafari =
     navigator.userAgent.match(/Safari/) && !navigator.userAgent.match("Chrome");
+  const isFirefox = /Firefox\//.test(navigator.userAgent);
   const isEndless = (el) =>
     el.children.length > 2 &&
     el.parentElement.classList.contains("n-carousel--endless");
@@ -1095,6 +1096,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const closeModalOnBodyClick = (e) => {
     let overlay = document.querySelector(".n-carousel--overlay");
     if (overlay && e.key === "Escape") {
+      // Avoid double-close when the overlay itself already handled Escape (bubbling).
+      if (e.__nCarouselHandledEscape) {
+        return;
+      }
       // If fullscreen was just exited via Escape, don't also close the overlay.
       if (
         Number.isFinite(overlay._suppressOverlayEscapeUntil) &&
@@ -1105,40 +1110,76 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       closeModal(overlay);
     }
   };
+  function prefersReducedMotion() {
+    return (
+      !!window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+  function activeSlideImage(carousel) {
+    if (!carousel) return null;
+    const active =
+      carousel.querySelector(":scope > [aria-current]") || carousel.children[0];
+    return active ? active.querySelector("img") : null;
+  }
+  function withLightboxViewTransition(wrapper, carousel, mutate, isClosing = false) {
+    if (!wrapper || !carousel || typeof mutate !== "function") return mutate();
+    if (!wrapper.classList.contains("n-carousel--lightbox")) return mutate();
+    if (prefersReducedMotion()) return mutate();
+    // Firefox has a buggy shared-element close transition (offsets drift left).
+    // Keep open animation (looks fine), but skip close animation.
+    if (isFirefox && isClosing) return mutate();
+    if (typeof document.startViewTransition !== "function") return mutate();
+
+    const img = activeSlideImage(carousel);
+    if (!img) return mutate();
+
+    // Unique name per carousel instance to avoid conflicts across the document.
+    const id = wrapper.id || (wrapper._vtId || (wrapper._vtId = (window.__nCarouselVTId = (window.__nCarouselVTId || 0) + 1)));
+    img.style.viewTransitionName = `n-carousel-lightbox-${id}`;
+    const vt = document.startViewTransition(() => mutate());
+    // Cleanup.
+    (vt.finished || Promise.resolve()).finally(() => {
+      img.style.viewTransitionName = "";
+    });
+  }
   const closeModal = (el) => {
     let carousel = closestCarousel(el);
     let wrapper = carousel ? getCarousel(carousel) : null;
-    // For inline carousels, if we're in fullscreen, just exit fullscreen and keep overlay
-    if (wrapper && wrapper.classList.contains("n-carousel--inline") && wrapper.classList.contains("n-carousel--overlay") && isFullScreen()) {
-      exitFullscreen();
-      return; // Don't remove overlay class - keep it in overlay state
-    }
-    if (isFullScreen()) {
-      exitFullscreen();
-    }
-    if (carousel) {
-      // Snapshot the logical slide before the overlay state changes.
-      snapToProp(carousel, "_ovSnapLogical");
-      carousel.parentNode.toggleModal = true; // skip mutation observer
-      wrapper.classList.remove("n-carousel--overlay");
-      trapFocus(wrapper, true); // Disable focus trap
-      delete document.body.dataset.frozen;
-      // If this overlay was a slide in a parent carousel, clear data-sliding on parent
-      // This ensures the parent carousel is clickable after overlay closes
-      let parentContent = wrapper.closest(".n-carousel__content");
-      if (parentContent) {
-        let parentCarousel = getCarousel(parentContent);
-        if (parentCarousel) {
-          clearSliding(parentCarousel);
-          // Update the parent carousel to refresh active slide state
-          // Use forced=true to ensure update happens even if overlay descendant check would skip it
-          updateCarousel(parentContent, true);
-        }
+    const closeNow = () => {
+      // For inline carousels, if we're in fullscreen, just exit fullscreen and keep overlay
+      if (wrapper && wrapper.classList.contains("n-carousel--inline") && wrapper.classList.contains("n-carousel--overlay") && isFullScreen()) {
+        exitFullscreen();
+        return; // Don't remove overlay class - keep it in overlay state
       }
-      // Restore the current logical slide after layout settles (scrollbar/body lock changes can shift snap points).
-      restoreFromPropAfterLayout(carousel, "_ovSnapLogical", true);
-    }
-    document.body.removeEventListener("keyup", closeModalOnBodyClick);
+      if (isFullScreen()) {
+        exitFullscreen();
+      }
+      if (carousel) {
+        // Snapshot the logical slide before the overlay state changes.
+        snapToProp(carousel, "_ovSnapLogical");
+        carousel.parentNode.toggleModal = true; // skip mutation observer
+        wrapper.classList.remove("n-carousel--overlay");
+        trapFocus(wrapper, true); // Disable focus trap
+        delete document.body.dataset.frozen;
+        // If this overlay was a slide in a parent carousel, clear data-sliding on parent
+        // This ensures the parent carousel is clickable after overlay closes
+        let parentContent = wrapper.closest(".n-carousel__content");
+        if (parentContent) {
+          let parentCarousel = getCarousel(parentContent);
+          if (parentCarousel) {
+            clearSliding(parentCarousel);
+            // Update the parent carousel to refresh active slide state
+            // Use forced=true to ensure update happens even if overlay descendant check would skip it
+            updateCarousel(parentContent, true);
+          }
+        }
+        // Restore the current logical slide after layout settles (scrollbar/body lock changes can shift snap points).
+        restoreFromPropAfterLayout(carousel, "_ovSnapLogical", true);
+      }
+      document.body.removeEventListener("keyup", closeModalOnBodyClick);
+    };
+    withLightboxViewTransition(wrapper, carousel, closeNow, true);
   };
   const openModal = (el, skipRestore = false) => {
     let carousel = closestCarousel(el);
@@ -1146,16 +1187,20 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       let wrapper = getCarousel(carousel);
       // Snapshot the logical slide before the overlay state changes.
       const snap = snapLogicalIndex(carousel);
-      carousel.parentNode.toggleModal = true; // skip mutation observer
-      wrapper.classList.add("n-carousel--overlay");
-      trapFocus(wrapper);
-      setTimeout(() => {
-        document.body.addEventListener("keyup", closeModalOnBodyClick);
-      }, 100);
-      if (!skipRestore && Number.isFinite(snap)) {
-        carousel._ovSnapLogical = snap;
-        restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
-      }
+      const openNow = () => {
+        carousel.parentNode.toggleModal = true; // skip mutation observer
+        wrapper.classList.add("n-carousel--overlay");
+        trapFocus(wrapper);
+        setTimeout(() => {
+          document.body.addEventListener("keyup", closeModalOnBodyClick);
+        }, 100);
+        if (!skipRestore && Number.isFinite(snap)) {
+          carousel._ovSnapLogical = snap;
+          restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
+        }
+      };
+      // Lightbox: prefer native shared-element transitions when available.
+      withLightboxViewTransition(wrapper, carousel, openNow, false);
     }
   };
   const autoHeightObserver = new ResizeObserver((entries) => {
@@ -1458,12 +1503,16 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             if (overlay) {
               let overlayContent = overlay.querySelector(":scope > .n-carousel__content");
               if (overlayContent) {
+                e.__nCarouselHandledEscape = true;
+                e.stopPropagation();
                 closeModal(overlayContent);
               }
             }
             return;
           }
           if (el) {
+            e.__nCarouselHandledEscape = true;
+            e.stopPropagation();
             closeModal(el);
           }
         }
