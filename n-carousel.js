@@ -1095,9 +1095,12 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       return false;
     }
   };
-  const enableLightboxClickToOpen = (wrapper, content) => {
+  const enableLightboxClickToOpen = (wrapper, content, hasOverlayToggle) => {
     if (!wrapper || !content) return;
     if (!wrapper.classList.contains("n-carousel--lightbox")) return;
+    // Only enable "click image to open overlay" when there is an explicit overlay toggle button.
+    // Otherwise opening a modal via image click can be confusing/less accessible to close.
+    if (!hasOverlayToggle) return;
 
     let down = null;
     const isInteractive = (el) =>
@@ -1673,7 +1676,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (!!index) {
         index.onclick = slideIndexEvent;
       }
-      enableLightboxClickToOpen(el, content);
+      enableLightboxClickToOpen(el, content, !!close_modal);
       if (!!close_modal) {
         close_modal.onclick = (e) => {
           let wrapper = getCarousel(e.target);
