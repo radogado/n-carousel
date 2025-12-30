@@ -681,6 +681,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
     // active_slide.ariaCurrent = true; // Unsupported by FF
     active_slide.setAttribute("aria-current", true);
+    // Forced updates are used during mode transitions (overlay/fullscreen) and can temporarily leave
+    // multiple slides marked as aria-current. Normalize to exactly one so getIndexReal() and index UI
+    // don't latch onto the first stale match.
+    if (forced) {
+      el.querySelectorAll(":scope > [aria-current]").forEach((n) => {
+        if (n !== active_slide) n.removeAttribute("aria-current");
+      });
+    }
     stampOriginalSlideIndices(el);
     // While fullscreen is active, keep the restore snapshot aligned with the *current* slide.
     // Without this, entering fullscreen on slide N, navigating to M, then exiting would restore N.
@@ -1073,18 +1081,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         // Opening an inline carousel
         wrapper.nextSlideInstant = true;
         // We intentionally open to a *new* index below, so skip the overlay restore here.
-        openModal(carousel, true);
-        // Set new x, y
-        window.requestAnimationFrame(() => {
-          carousel.dataset.x = carousel.dataset.y = new_index;
-          scrollTo(
-            carousel,
-            carousel.offsetWidth * carousel.dataset.x,
-            carousel.offsetHeight * carousel.dataset.y
-          );
-          document.body.dataset.frozen = document.body.scrollTop;
-          updateCarousel(carousel);
-        });
+        openModal(carousel, true, new_index);
       } else {
         window.requestAnimationFrame(() => {
           slideTo(carousel, new_index);
@@ -1181,7 +1178,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     };
     withLightboxViewTransition(wrapper, carousel, closeNow, true);
   };
-  const openModal = (el, skipRestore = false) => {
+  const openModal = (el, skipRestore = false, openIndex = null) => {
     let carousel = closestCarousel(el);
     if (carousel) {
       let wrapper = getCarousel(carousel);
@@ -1194,6 +1191,18 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         setTimeout(() => {
           document.body.addEventListener("keyup", closeModalOnBodyClick);
         }, 100);
+        // Inline lightbox: open to a requested slide (avoid timing/rAF races that can land on slide 0).
+        if (Number.isFinite(openIndex) && carousel.children && carousel.children.length) {
+          const target = carousel.children[openIndex];
+          if (target) {
+            target.setAttribute("aria-current", true);
+            carousel.dataset.x = carousel.dataset.y = openIndex;
+            scrollTo(carousel, target.offsetLeft || 0, target.offsetTop || 0);
+            document.body.dataset.frozen = document.body.scrollTop;
+            updateCarousel(carousel, true);
+          }
+          return;
+        }
         if (!skipRestore && Number.isFinite(snap)) {
           carousel._ovSnapLogical = snap;
           restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
