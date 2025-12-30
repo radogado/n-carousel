@@ -10,7 +10,6 @@ coverage/
 .nyc_output/
 
 # Development files
-*.scss
 *.map
 *.size
 *.rollup.js
@@ -20,11 +19,6 @@ vitest.config.js
 playwright.config.js
 tsconfig.json
 build.sh
-
-# Source files (keep only minified)
-n-carousel.js
-n-carousel.css
-n-carousel-preload.js
 
 # Documentation (keep README, exclude others)
 TYPESCRIPT.md
@@ -44,4 +38,3 @@ Thumbs.db
 # Other
 index.html
 favicon.ico
-scrollyfills.module.js
