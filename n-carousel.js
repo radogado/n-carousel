@@ -44,8 +44,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     return !!(wrapper && fsEl && wrapper !== fsEl && wrapper.contains(fsEl));
   };
   const slidingDurationMs = (wrapper) => {
-    // data-duration is in seconds (demo and docs). Fallback to default_duration (ms).
-    const s = wrapper && wrapper.dataset ? parseFloat(wrapper.dataset.duration) : NaN;
+    // data-duration is in seconds. Fallback to default_duration (ms).
+    const s =
+      wrapper && wrapper.dataset ? parseFloat(wrapper.dataset.duration) : NaN;
     const ms = Number.isFinite(s) ? s * 1000 : default_duration;
     // Small buffer: scrollend timing / resize during transitions can lag slightly.
     return ms + 200;
@@ -54,7 +55,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (!wrapper || !wrapper.dataset) return;
     // If this carousel contains a fullscreen child, never disable pointer events on it.
     if (hasFullscreenDescendant(wrapper)) {
-      delete wrapper.dataset.sliding;
+      clearSliding(wrapper);
       return;
     }
     wrapper.dataset.sliding = true;
@@ -63,10 +64,22 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
     wrapper._slidingTimeout = setTimeout(() => {
       if (wrapper && wrapper.dataset) {
-        delete wrapper.dataset.sliding;
+        clearSliding(wrapper);
       }
-      wrapper._slidingTimeout = null;
     }, slidingDurationMs(wrapper));
+  };
+  const clearSliding = (wrapper) => {
+    if (!wrapper) return;
+    if (wrapper.dataset && wrapper.dataset.sliding !== undefined) {
+      delete wrapper.dataset.sliding;
+    }
+    if (wrapper.sliding !== undefined) {
+      delete wrapper.sliding;
+    }
+    if (wrapper._slidingTimeout) {
+      clearTimeout(wrapper._slidingTimeout);
+      wrapper._slidingTimeout = null;
+    }
   };
   const isModal = (el) => {
     return getCarousel(el)?.classList.contains("n-carousel--overlay");
@@ -76,7 +89,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const isAutoHeight = (el) => {
     const carousel = getCarousel(el);
     if (!carousel) return false;
-    // Disable auto-height behavior in fullscreen/overlay mode - carousel should use full screen height
+    // Disable auto-height in fullscreen/overlay mode - it should use available height.
     if (isFullScreen() || carousel.classList.contains("n-carousel--overlay")) {
       return false;
     }
@@ -88,7 +101,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       ? controls_by_class
       : index.querySelectorAll("a, button");
   };
-  // Endless mode reorders slides in the DOM - keep a stable logical index per slide (JS-only, not a data-* attr).
+  // Endless mode reorders slides in the DOM - keep a stable logical index per slide (JS-only).
   const stampOriginalSlideIndices = (carouselContent) => {
     if (!carouselContent) return;
     [...carouselContent.children].forEach((slide, i) => {
@@ -100,16 +113,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const clearSlidingLocks = (node) => {
     let cur = node;
     while (cur) {
-      if (cur.dataset && cur.dataset.sliding !== undefined) {
-        delete cur.dataset.sliding;
-      }
-      if (cur.sliding !== undefined) {
-        delete cur.sliding;
-      }
-      if (cur._slidingTimeout) {
-        clearTimeout(cur._slidingTimeout);
-        cur._slidingTimeout = null;
-      }
+      clearSliding(cur);
       cur = cur.parentNode;
     }
   };
@@ -189,7 +193,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           new_height = nextSlideHeight(slide);
           // For horizontal auto-height with peeking, use updateCarousel instead of manual animation
           // because scroll snap and variable slide widths make manual calculation unreliable
-          const carouselStyle = getComputedStyle(carousel);
           const hasPeeking = parseFloat(carouselStyle.paddingInlineStart) > 0;
           if (hasPeeking) {
             if (old_height !== new_height) {
@@ -413,7 +416,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         // Restores are not user slide animations - if a sliding lock gets set during this,
         // it can make the overlay/fullscreen UI unclickable.
         const w = getCarousel(content);
-        if (w && (w.classList.contains("n-carousel--overlay") || w === document.fullscreenElement)) {
+        if (
+          w &&
+          (w.classList.contains("n-carousel--overlay") ||
+            w === document.fullscreenElement)
+        ) {
           clearSlidingLocks(w);
         }
         if (clearProp) delete content[clearProp];
@@ -599,6 +606,22 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     // But only skip scroll position calculations, not inert attribute updates
     const shouldSkipScrollCalc = el.dataset.skipUpdate === "true" && !forced;
     observersOff(el);
+    const wrapper = el.parentElement;
+    const fsEl = fullscreenWrapper();
+    const isWrapperFullscreen = !!(wrapper && fsEl && wrapper === fsEl);
+    const isWrapperOverlay = !!(
+      wrapper &&
+      wrapper.classList &&
+      wrapper.classList.contains("n-carousel--overlay")
+    );
+    const firstChild = el.firstElementChild;
+    if (!firstChild) {
+      // Nothing to compute (empty carousel content). Keep observers consistent and bail.
+      observersOn(el);
+      return;
+    }
+    const cw = ceilingWidth(firstChild);
+    const ch = ceilingHeight(firstChild);
     // If we should skip scroll calculations (during fullscreen toggle), use saved values
     let saved_x = el.dataset.x; // On displaced slides and no change
     let saved_y = el.dataset.y;
@@ -607,10 +630,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       // This prevents parent disruption during overlay fullscreen toggle
     } else {
       el.dataset.x = Math.abs(
-        Math.round(scrollStartX(el) / ceilingWidth(el.firstElementChild))
+        Math.round(scrollStartX(el) / cw)
       );
       el.dataset.y = Math.abs(
-        Math.round(el.scrollTop / ceilingHeight(el.firstElementChild))
+        Math.round(el.scrollTop / ch)
       );
     }
     // When inline
@@ -623,8 +646,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     let active_index;
     let active_slide;
     let old_active_slide = el.querySelector(":scope > [aria-current]");
-    let wrapper = el.parentElement;
-    
     if (shouldSkipScrollCalc) {
       // During fullscreen toggle, use the current active slide without recalculating
       // This prevents parent disruption but still allows inert updates
@@ -664,9 +685,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     // Without this, entering fullscreen on slide N, navigating to M, then exiting would restore N.
     if (
       active_slide && Number.isFinite(active_slide._ncIndex) &&
-      getCarousel(el) &&
-      (getCarousel(el) === document.fullscreenElement ||
-        getCarousel(el) === document.webkitFullscreenElement)
+      isWrapperFullscreen
     ) {
       el._fsSnapLogical = active_slide._ncIndex;
     }
@@ -674,7 +693,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     // This lets overlay close restore the currently viewed slide (same principle as fullscreen).
     if (
       active_slide && Number.isFinite(active_slide._ncIndex) &&
-      wrapper && wrapper.classList && wrapper.classList.contains("n-carousel--overlay")
+      isWrapperOverlay
     ) {
       el._ovSnapLogical = active_slide._ncIndex;
     }
@@ -695,14 +714,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     // Only set data-sliding if we're actually changing slides or forced update
     // This prevents flashing when updateCarousel is called multiple times for the same slide
     // Never set data-sliding on overlay carousels that are in fullscreen (they need to be clickable)
-    const isOverlayInFullscreen = wrapper.classList.contains("n-carousel--overlay") && 
-      (wrapper === document.fullscreenElement || wrapper === document.webkitFullscreenElement);
+    const isOverlayInFullscreen = isWrapperOverlay && isWrapperFullscreen;
     const isSlideChange = active_slide !== old_active_slide;
     if (isSlideChange && !isOverlayInFullscreen) {
       setSliding(wrapper);
     } else if (isOverlayInFullscreen || hasFullscreenDescendant(wrapper)) {
       // Ensure data-sliding is cleared for overlay in fullscreen
-      delete wrapper.dataset.sliding;
+      clearSliding(wrapper);
     }
     if (isEndless(el) && !forced) {
       if (active_index === 0) {
@@ -760,8 +778,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
       const updateScroll = () => {
         el.dataset.x = el.dataset.y = active_index_real;
-        let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
-        let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
+        let scroll_x = cw * active_index;
+        let scroll_y = ch * active_index;
         el.scroll_x = scroll_x;
         el.scroll_y = scroll_y;
         scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
@@ -847,9 +865,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       // 4. Slides inside a fullscreen carousel wrapper
       // 5. Slides containing an overlay carousel that is currently in fullscreen
       const isFullscreen = el === document.fullscreenElement || el === document.webkitFullscreenElement;
-      const wrapper = getCarousel(el);
-      const wrapperIsFullscreen = wrapper && (wrapper === document.fullscreenElement || wrapper === document.webkitFullscreenElement);
-      const wrapperIsOverlay = wrapper && wrapper.classList.contains("n-carousel--overlay");
+      const wrapperIsFullscreen = isWrapperFullscreen;
+      const wrapperIsOverlay = isWrapperOverlay;
       const hasOverlayDescendant = el.querySelector && el.querySelector(".n-carousel--overlay") !== null;
       // Check if this slide contains an overlay carousel that is currently in fullscreen
       // The fullscreen element is the wrapper (.n-carousel), not the content
@@ -868,7 +885,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         // Normal slide - set inert based on whether it's active
         el.inert = el === active_slide ? false : true;
       }
-      if (isSafari && el.querySelector(".n-carousel:-webkit-full-screen")) {
+      if (isSafari && fsEl && el.querySelector(".n-carousel:-webkit-full-screen")) {
         // Safari full screen bug: parent scroll resets to 0, first slide becomes active and the full screen child lightbox is inside an inert parent
         let current = el.parentNode.querySelector(
           ':scope > [aria-current="true"]'
@@ -892,7 +909,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     clearTimeout(el.nCarouselTimeout);
     if (!el.parentNode.dataset.sliding) {
       setSliding(el.parentNode);
-      let old_height = el.children[getIndexReal(el)].offsetHeight;
+      const curIndex = getIndexReal(el);
+      let old_height = el.children[curIndex].offsetHeight;
       let new_height = old_height;
       if (isAutoHeight(el)) {
         let old_scroll_left = scrollStartX(el);
@@ -912,9 +930,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         } else {
           new_height = nextSlideHeight(slide);
           let old_height =
-            getIndexReal(el) === index
+            curIndex === index
               ? new_height
-              : nextSlideHeight(el.children[getIndexReal(el)]);
+              : nextSlideHeight(el.children[curIndex]);
           el.parentNode.style.setProperty("--height", `${old_height}px`);
         }
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
@@ -926,7 +944,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       window.requestAnimationFrame(() => {
         if (!el.parentNode.dataset.duration && !isAutoHeight(el)) {
           // Unspecified duration, no height change – using native smooth scroll
-          delete el.parentNode.dataset.sliding;
+          clearSliding(el.parentNode);
           el.dataset.next = index;
           el.scrollTo({
             top: el.scrollTop + offsetY,
@@ -1111,7 +1129,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (parentContent) {
         let parentCarousel = getCarousel(parentContent);
         if (parentCarousel) {
-          delete parentCarousel.dataset.sliding;
+          clearSliding(parentCarousel);
           // Update the parent carousel to refresh active slide state
           // Use forced=true to ensure update happens even if overlay descendant check would skip it
           updateCarousel(parentContent, true);
@@ -1235,8 +1253,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       // Always clear sliding lock when (re)enabling observers.
       // Important: we may early-return below when an overlay descendant exists, but we must still
       // clear data-sliding; otherwise the carousel can remain unclickable (pointer-events: none).
-      delete el.parentNode.dataset.sliding;
-      delete el.parentNode.sliding;
+      clearSliding(el.parentNode);
       // Don't enable observers on parent carousel if there's ANY overlay carousel descendant
       // Overlay carousels need to remain interactive
       const hasOverlayDescendant = el.querySelector(":scope .n-carousel--overlay") !== null;
@@ -1412,7 +1429,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
               if (!enteringFullscreen) window.__nCarouselFsLast = null;
               return;
             }
-          
             // Overlay must stay clickable in fullscreen.
             if (wrapper.classList.contains("n-carousel--overlay")) {
               // Fullscreen entry can trigger scroll/resize observers and set data-sliding on ancestors.
@@ -1422,7 +1438,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
                 wrapper._suppressOverlayEscapeUntil = performance.now() + 250;
               }
             }
-          
             // Restore using the current snapshot; wait for layout settle.
             if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
               snapToProp(carousel, "_fsSnapLogical");
