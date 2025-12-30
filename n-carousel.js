@@ -74,6 +74,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (wrapper.dataset && wrapper.dataset.sliding !== undefined) {
       delete wrapper.dataset.sliding;
     }
+    // Defensive: some code paths (or external code) may set the attribute directly.
+    // Ensure it's gone even if dataset semantics differ.
+    if (wrapper.removeAttribute && wrapper.hasAttribute && wrapper.hasAttribute("data-sliding")) {
+      wrapper.removeAttribute("data-sliding");
+    }
     if (wrapper.sliding !== undefined) {
       delete wrapper.sliding;
     }
@@ -1119,25 +1124,39 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       carousel.querySelector(":scope > [aria-current]") || carousel.children[0];
     return active ? active.querySelector("img") : null;
   }
-  function withLightboxViewTransition(wrapper, carousel, mutate, isClosing = false) {
+  function withOverlayViewTransition(wrapper, carousel, mutate, isClosing = false) {
     if (!wrapper || !carousel || typeof mutate !== "function") return mutate();
-    if (!wrapper.classList.contains("n-carousel--lightbox")) return mutate();
     if (prefersReducedMotion()) return mutate();
     // Firefox has a buggy shared-element close transition (offsets drift left).
     // Keep open animation (looks fine), but skip close animation.
     if (isFirefox && isClosing) return mutate();
     if (typeof document.startViewTransition !== "function") return mutate();
 
-    const img = activeSlideImage(carousel);
-    if (!img) return mutate();
+    // Shared element for the transition:
+    // - Lightbox: prefer image.
+    // - Non-lightbox: prefer the entire active slide so complex layouts (image + text columns)
+    //   move smoothly instead of only cross-fading.
+    const active =
+      carousel.querySelector(":scope > [aria-current]") || carousel.children[0];
+    const shared =
+      wrapper.classList.contains("n-carousel--lightbox") &&
+      active &&
+      active.querySelector
+        ? active.querySelector("img") || active
+        : active;
+    if (!shared) return mutate();
 
     // Unique name per carousel instance to avoid conflicts across the document.
-    const id = wrapper.id || (wrapper._vtId || (wrapper._vtId = (window.__nCarouselVTId = (window.__nCarouselVTId || 0) + 1)));
-    img.style.viewTransitionName = `n-carousel-lightbox-${id}`;
+    const id =
+      wrapper.id ||
+      (wrapper._vtId ||
+        (wrapper._vtId =
+          (window.__nCarouselVTId = (window.__nCarouselVTId || 0) + 1)));
+    shared.style.viewTransitionName = `n-carousel-overlay-${id}`;
     const vt = document.startViewTransition(() => mutate());
     // Cleanup.
     (vt.finished || Promise.resolve()).finally(() => {
-      img.style.viewTransitionName = "";
+      shared.style.viewTransitionName = "";
     });
   }
   const closeModal = (el) => {
@@ -1174,9 +1193,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         // Restore the current logical slide after layout settles (scrollbar/body lock changes can shift snap points).
         restoreFromPropAfterLayout(carousel, "_ovSnapLogical", true);
       }
+      // Only attached in non-dialog mode.
       document.body.removeEventListener("keyup", closeModalOnBodyClick);
     };
-    withLightboxViewTransition(wrapper, carousel, closeNow, true);
+    withOverlayViewTransition(wrapper, carousel, closeNow, true);
   };
   const openModal = (el, skipRestore = false, openIndex = null) => {
     let carousel = closestCarousel(el);
@@ -1208,8 +1228,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
         }
       };
-      // Lightbox: prefer native shared-element transitions when available.
-      withLightboxViewTransition(wrapper, carousel, openNow, false);
+      // Overlay: prefer native shared-element transitions when available.
+      withOverlayViewTransition(wrapper, carousel, openNow, false);
     }
   };
   const autoHeightObserver = new ResizeObserver((entries) => {
@@ -1461,47 +1481,45 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           }
         };
       }
+      // Safari fires fullscreen events on `document` inconsistently.
+      // Install a single global handler, independent of presence of a fullscreen button.
+      if (!window.__nCarouselFsHandler) {
+        window.__nCarouselFsLast = null;
+        window.__nCarouselFsHandler = () => {
+          const enteringFullscreen = isFullScreen();
+          const fsEl = fullscreenWrapper();
+          const wrapper = (enteringFullscreen ? fsEl : window.__nCarouselFsLast) || fsEl;
+          if (enteringFullscreen) window.__nCarouselFsLast = wrapper;
+          if (!wrapper || !wrapper.classList || !wrapper.classList.contains("n-carousel")) {
+            if (!enteringFullscreen) window.__nCarouselFsLast = null;
+            return;
+          }
+          const carousel = wrapper.querySelector(":scope > .n-carousel__content");
+          if (!carousel) {
+            if (!enteringFullscreen) window.__nCarouselFsLast = null;
+            return;
+          }
+          // Fullscreen wrappers must stay clickable - clear any sliding locks immediately.
+          // (This also keeps tests deterministic when they force data-sliding.)
+          clearSlidingLocks(wrapper);
+          // Avoid the common "Esc exits fullscreen then also closes overlay" double-action.
+          if (wrapper.classList.contains("n-carousel--overlay") && !enteringFullscreen) {
+            wrapper._suppressOverlayEscapeUntil = performance.now() + 250;
+          }
+          // Restore using the current snapshot; wait for layout settle.
+          if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
+            snapToProp(carousel, "_fsSnapLogical");
+          }
+          restoreFromPropAfterLayout(carousel, "_fsSnapLogical", !enteringFullscreen);
+          if (!enteringFullscreen) window.__nCarouselFsLast = null;
+        };
+        document.addEventListener("fullscreenchange", window.__nCarouselFsHandler);
+        document.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler);
+      }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
           toggleFullScreen(e.target);
         };
-        // Safari fires fullscreen events on `document` inconsistently.
-        // Make the handler independent of event.target and use document's fullscreen element.
-        if (!window.__nCarouselFsHandler) {
-          window.__nCarouselFsLast = null;
-          window.__nCarouselFsHandler = () => {
-            const enteringFullscreen = isFullScreen();
-            const fsEl = fullscreenWrapper();
-            const wrapper = (enteringFullscreen ? fsEl : window.__nCarouselFsLast) || fsEl;
-            if (enteringFullscreen) window.__nCarouselFsLast = wrapper;
-            if (!wrapper || !wrapper.classList || !wrapper.classList.contains("n-carousel")) {
-              if (!enteringFullscreen) window.__nCarouselFsLast = null;
-              return;
-            }
-            const carousel = wrapper.querySelector(":scope > .n-carousel__content");
-            if (!carousel) {
-              if (!enteringFullscreen) window.__nCarouselFsLast = null;
-              return;
-            }
-            // Overlay must stay clickable in fullscreen.
-            if (wrapper.classList.contains("n-carousel--overlay")) {
-              // Fullscreen entry can trigger scroll/resize observers and set data-sliding on ancestors.
-              clearSlidingLocks(wrapper);
-              // Avoid the common "Esc exits fullscreen then also closes overlay" double-action.
-              if (!enteringFullscreen) {
-                wrapper._suppressOverlayEscapeUntil = performance.now() + 250;
-              }
-            }
-            // Restore using the current snapshot; wait for layout settle.
-            if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
-              snapToProp(carousel, "_fsSnapLogical");
-            }
-            restoreFromPropAfterLayout(carousel, "_fsSnapLogical", !enteringFullscreen);
-            if (!enteringFullscreen) window.__nCarouselFsLast = null;
-          };
-          document.addEventListener("fullscreenchange", window.__nCarouselFsHandler);
-          document.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler);
-        }
       }
       el.addEventListener("keydown", carouselKeys);
       el.addEventListener("keyup", (e) => {
