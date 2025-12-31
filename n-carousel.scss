@@ -1,25 +1,25 @@
-// Note: n-modal integration removed - import separately if needed
+// @import './node_modules/n-modal/n-modal.scss';
 
 body[data-frozen] {
   overflow: hidden;
 }
 
 .n-carousel__content {
+  scrollbar-width: none;
   display: flex;
   will-change: scroll;
   outline: 0;
   box-sizing: border-box;
   overflow-anchor: none; // Prevent Chrome from scrolling parent carousels while animating carousel height
   list-style: none;
-  scrollbar-width: none;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   /* Firefox */
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 
   > * {
@@ -59,7 +59,7 @@ body[data-frozen] {
     }
   }
 
-  &.n-carousel--auto-height {
+  &.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay) {
     &:not(.n-carousel--controls-outside) {
       grid-template: auto/auto;
       grid-template-areas:
@@ -70,7 +70,7 @@ body[data-frozen] {
         "i i i";
     }
 
-    &:not([data-ready]) {
+    &:not(:fullscreen):not(.n-carousel--overlay):not([data-ready]) {
       > .n-carousel__content > :not(:first-child) {
         height: 0;
         overflow: visible;
@@ -145,35 +145,9 @@ body[data-frozen] {
     }
   }
 
-  &:-webkit-full-screen,
-  &.n-carousel--overlay {
-    // Safari 16.3-
-    max-height: 100% !important;
-
-    > .n-carousel__content {
-      height: 100% !important;
-      height: 100dvh !important; // Dynamic viewport height, Safari 15.4
-
-      figure,
-      img,
-      video,
-      iframe {
-        max-height: 100%;
-      }
-    }
-  }
-
-  &:-webkit-full-screen {
-    .n-carousel__close {
-      display: none;
-    }
-  }
+  // Safari 15+ supports `:fullscreen`, so no prefixed fullscreen selectors needed.
 
   &.n-carousel--vertical {
-    --max-height: 75vh;
-    height: var(--max-height, 100%);
-    max-height: 100%;
-
     &.n-carousel--auto-height:not([data-ready]) {
       > .n-carousel__content {
         > :not(:first-child) {
@@ -182,30 +156,14 @@ body[data-frozen] {
       }
     }
 
-    > .n-carousel__content {
-      max-height: 100%;
-      // height: var(--max-height); // Working default – overflows lightbox
-    }
-
-    &:not(.n-carousel--auto-height) {
-      &:-webkit-full-screen {
-        // Safari 16.3-
-        > .n-carousel__content {
-          height: 100% !important;
-        }
-      }
-
-      &:fullscreen {
-        > .n-carousel__content {
-          height: 100% !important;
-        }
-      }
-    }
+    --max-height: 75vh;
+    height: var(--max-height, 100%);
+    max-height: 100%;
 
     > .n-carousel__content {
+      padding: var(--peek, 0) 0;
       overflow-y: auto;
       box-sizing: content-box;
-      padding: var(--peek, 0) 0;
 
       > * {
         width: 100%;
@@ -252,7 +210,7 @@ body[data-frozen] {
       }
     }
 
-    &.n-carousel--auto-height {
+    &.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay) {
       &:not(.n-carousel--overlay) {
         height: auto;
       }
@@ -273,16 +231,20 @@ body[data-frozen] {
     }
   }
 
-  &:not([data-ready]) > * > button {
+  &:not([data-ready]) [class*="n-carousel__"] > button {
     cursor: not-allowed;
   }
 
-  &:not([data-ready]) > .n-carousel--auto-height > :not(:first-child) {
+  &:not(:fullscreen):not(.n-carousel--overlay):not([data-ready])
+    > .n-carousel--auto-height
+    > :not(:first-child) {
     height: 0;
     animation: carousel-css-only 2 0.1s linear 1s forwards;
   }
 
-  &:not([data-ready]) > .n-carousel--auto-height > :first-child {
+  &:not(:fullscreen):not(.n-carousel--overlay):not([data-ready])
+    > .n-carousel--auto-height
+    > :first-child {
     min-height: 100%;
   }
 
@@ -409,9 +371,6 @@ body[data-frozen] {
   > .n-carousel__previous {
     grid-area: prev;
     align-self: center;
-    position: sticky;
-    top: 0;
-
     // justify-self: start;
     // justify-self: center;
   }
@@ -421,8 +380,6 @@ body[data-frozen] {
     align-self: center;
     // justify-self: center;
     justify-self: end;
-    position: sticky;
-    top: 0;
   }
 
   > .n-carousel__index {
@@ -445,7 +402,6 @@ body[data-frozen] {
   &.n-carousel--thumbnails {
     > .n-carousel__index {
       padding: 1px;
-
       > * {
         padding: 0;
         vertical-align: middle;
@@ -505,7 +461,7 @@ body[data-frozen] {
     }
   }
 
-  &.n-carousel--controls-outside {
+  &.n-carousel--controls-outside:not(:fullscreen):not(.n-carousel--overlay) {
     grid-template-areas:
       "f 		f 			f"
       "a1 	content 		a2"
@@ -655,76 +611,67 @@ body[data-frozen] {
     // 		}
   }
 
-  &.n-carousel--vertical.n-carousel--controls-outside {
-    grid-template-areas:
-      "i a1 		prev		a2 		f"
-      "i content 	content   	content f"
-      "i b1 		next 		b2 		f";
-    // grid-template-rows: auto 1fr auto auto;
-    // padding-inline-start: var(--index-width);
-
-    &.n-carousel--index-align-start {
-      > .n-carousel__index {
-        align-self: start;
-      }
-    }
-
-    // 		&.n-carousel--index-align-end {
-    // 			grid-template-columns: auto auto 1fr auto;
-    //
-    // 			> .n-carousel__index {
-    // 				align-self: end;
-    // 			}
-    // 		}
-
-    &.n-carousel--index-end {
+  &.n-carousel--vertical.n-carousel--controls-outside:not(:fullscreen):not(
+      .n-carousel--overlay
+    ) {
       grid-template-areas:
-        "f a1 		prev		a2 		i"
-        "f content 	content   	content i"
-        "f b1 		next 		b2 		i";
-      // grid-template-rows: auto 1fr;
-      // padding-inline-end: var(--index-width);
-      // padding-inline-start: 0;
+        "i a1 		prev		a2 		f"
+        "i content 	content   	content f"
+        "i b1 		next 		b2 		f";
+      // grid-template-rows: auto 1fr auto auto;
+      // padding-inline-start: var(--index-width);
 
-      // &.n-carousel--index-align-start {
-      //   grid-template: auto 1fr / auto auto 1fr auto;
-      // }
-    }
-
-    > .n-carousel__index {
-      max-height: var(--max-height, 100%);
-    }
-
-    &.n-carousel--auto-height:not([data-ready]) {
-      > .n-carousel__index {
-        max-height: 0;
-      }
-    }
-
-    &.n-carousel--auto-height[data-ready] {
-      overflow: hidden;
-
-      &[data-sliding] > .n-carousel__index {
-        max-height: none;
-      }
-
-      // > .n-carousel__index {
-      // 	position: absolute;
-      // 	margin-inline-start: calc(-1 * var(--index-width));
-      // }
-
-      &.n-carousel--index-end {
+      &.n-carousel--index-align-start {
         > .n-carousel__index {
-          margin-inline-start: calc(-1px * var(--index-width) / 2);
+          align-self: start;
         }
       }
-    }
-  }
 
-  &:-webkit-full-screen {
-    // Safari 16.3-
-    background: #000;
-    --max-height: 100vh;
+      // 		&.n-carousel--index-align-end {
+      // 			grid-template-columns: auto auto 1fr auto;
+      //
+      // 			> .n-carousel__index {
+      // 				align-self: end;
+      // 			}
+      // 		}
+
+      &.n-carousel--index-end {
+        grid-template-areas:
+          "f a1 		prev		a2 		i"
+          "f content 	content   	content i"
+          "f b1 		next 		b2 		i";
+      }
+
+      > .n-carousel__index {
+        max-height: var(--max-height, 100%);
+      }
+
+      &.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(
+          [data-ready]
+        ) {
+        > .n-carousel__index {
+          max-height: 0;
+        }
+      }
+
+      &.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay)[data-ready] {
+        overflow: hidden;
+
+        &[data-sliding] > .n-carousel__index {
+          max-height: none;
+        }
+
+        // > .n-carousel__index {
+        // 	position: absolute;
+        // 	margin-inline-start: calc(-1 * var(--index-width));
+        // }
+
+        &.n-carousel--index-end {
+          > .n-carousel__index {
+            margin-inline-start: calc(-1px * var(--index-width) / 2);
+          }
+        }
+      }
   }
 
   &:fullscreen {
@@ -774,30 +721,7 @@ body[data-frozen] {
   }
 }
 
-// Chrome/FF (and now Safari 15) can't scrollTo while scroll snapping is active. Safari can, but it can't toggle snapping programmatically without resetting scroll offset. Fixed in Safari 15
-@supports not (aspect-ratio: 1) {
-  // Safari 14 only
-  _::-webkit-full-page-media,
-  _:future,
-  :root .n-carousel[data-sliding] > .n-carousel__content {
-    scroll-snap-type: both mandatory;
-  }
-}
-
-_::-webkit-full-page-media,
-_:future,
-:root .n-carousel[data-sliding] > .n-carousel__content > * {
-  scroll-snap-align: center;
-}
-
-// Safari-specific hacks (commented out - uncomment if needed for specific Safari versions)
-// _::-webkit-full-page-media,
-// _:future,
-// :root .n-carousel {
-//   overflow-x: hidden; // Safari bug. Subpixel content showing from a neighbouring slide
-//   --peek: 0.0001px; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
-//   --peek: 0; // Safari 14- floors calc(100% - 0) (Fixed in 15 beta?)
-// }
+// Safari 14-only scroll-snap workarounds removed (Safari 15+ baseline).
 
 // Safari not supporting inline end padding on scrollable element
 _::-webkit-full-page-media,
@@ -877,28 +801,24 @@ _:future,
     }
   }
 
-  &.n-carousel--auto-height:not(.n-carousel--vertical):not([data-sliding])
+  &.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay):not(
+      .n-carousel--vertical
+    ):not([data-sliding])
     > .n-carousel__content {
     > :not([aria-current]) {
       overflow: visible;
     }
   }
 
-  // &.n-carousel--auto-height:not(.n-carousel--vertical)[data-sliding]
-  //   > .n-carousel__content {
-  //   > :not([aria-current]) {
-  //     height: auto;
-  //   }
-  // }
-
-  &.n-carousel--auto-height > .n-carousel__content {
+  &.n-carousel--auto-height:not(:fullscreen):not(.n-carousel--overlay)
+    > .n-carousel__content {
     > * {
       overflow: hidden !important;
     }
   }
 }
 
-// LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
+// LTR & RTL chevrons – but what about RTL defined by CSS 'direction' instead of the 'dir' attribute?
 .n-carousel__previous,
 .n-carousel__next,
 .n-carousel__full-screen,
@@ -953,8 +873,6 @@ _:future,
   grid-area: f;
   display: flex;
   justify-self: start;
-  position: sticky;
-  top: 0;
 }
 
 // .n-carousel--controls-outside > .n-carousel__controls {
@@ -1012,6 +930,7 @@ _:future,
     max-height: 100%;
     color: var(--nui-control-color, #333);
     border-radius: var(--nui-border-radius);
+    min-height: max-content;
 
     > * {
       box-sizing: border-box;
@@ -1131,12 +1050,6 @@ _:future,
       max-height: none;
     }
 
-    :not(:-webkit-full-screen):not(.n-carousel--overlay)
-      > .n-carousel__content {
-      // Safari 16.3-
-      max-height: var(--max-height);
-    }
-
     :not(:fullscreen):not(.n-carousel--overlay) > .n-carousel__content {
       max-height: var(--max-height);
     }
@@ -1186,19 +1099,6 @@ _:future,
   &.n-carousel--auto-height {
     img {
       max-height: none;
-    }
-  }
-
-  &:-webkit-full-screen {
-    // Safari 16.3-
-    img {
-      max-height: 100%;
-    }
-
-    &.n-carousel--auto-height {
-      figure {
-        height: 100%;
-      }
     }
   }
 
@@ -1279,34 +1179,8 @@ _:future,
     }
   }
 
-  &:not(.n-carousel--overlay):not(:-webkit-full-screen).n-carousel--aspect {
-    // Safari 16.3-
-    --max-height: 100%;
-
-    > .n-carousel__content {
-      > * {
-        figure {
-          aspect-ratio: var(--ratio, 16/9);
-          position: relative;
-          width: 100%;
-          height: auto;
-        }
-      }
-    }
-
-    &.n-carousel--auto-height img {
-      max-height: 100%;
-    }
-
-    &.n-carousel--vertical {
-      height: var(--height);
-
-      > .n-carousel__content > * {
-        height: auto;
-        flex-grow: initial;
-      }
-    }
-  }
+  // Safari 15+ supports `:fullscreen`, so the aspect/auto-height rules don't need
+  // a separate prefixed fullscreen branch.
 }
 
 // Remove iPad button to exit full screen, because there is a native one

@@ -1,4 +1,3 @@
-// import './node_modules/n-modal/n-modal.js';
 import "./scrollyfills.module.js"; // scrollend event polyfill
 (function () {
   const ceilingWidth = (el) =>
@@ -20,60 +19,131 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           document.documentElement.offsetWidth) /* or $(window).width() */
     );
   }
-  // Animation and timing constants
-  const default_duration = 500; // Default animation duration in milliseconds
-  const default_interval = 4000; // Default auto-slide interval in milliseconds
-  const SCROLL_END_TIMEOUT = 10; // Timeout for scroll end detection in milliseconds
-  const FULLSCREEN_UPDATE_DELAY = 100; // Delay for fullscreen updates in milliseconds
-  const MAX_HEIGHT_FALLBACK = 99999; // Fallback max height value in pixels
-
-  // Sanitize hash value to prevent XSS in querySelector
-  const sanitizeHash = (hash) => {
-    if (!hash) return null;
-    // Remove # and extract only valid CSS identifier characters
-    const cleanHash = hash.replace(/^#/, '').replace(/[^a-zA-Z0-9_-]/g, '');
-    return cleanHash ? `#${cleanHash}` : null;
-  };
-
-  const isChrome = !!navigator.userAgent.match("Chrome");
-  const isSafari = navigator.userAgent.match(/Safari/) && !isChrome;
+  const default_duration = 500;
+  const default_interval = 4000;
+  const SCROLL_END_TIMEOUT = 10;
+  const MAX_HEIGHT_FALLBACK = 99999;
+  const isSafari =
+    navigator.userAgent.match(/Safari/) && !navigator.userAgent.match("Chrome");
+  const isFirefox = /Firefox\//.test(navigator.userAgent);
   const isEndless = (el) =>
     el.children.length > 2 &&
     el.parentElement.classList.contains("n-carousel--endless");
   const isFullScreen = () => {
     return !!(document.webkitFullscreenElement || document.fullscreenElement);
   };
+  const fullscreenWrapper = () =>
+    document.fullscreenElement || document.webkitFullscreenElement;
+  const exitFullscreen = () => {
+    !!document.exitFullscreen
+      ? document.exitFullscreen()
+      : document.webkitExitFullscreen();
+  };
+  const getCarousel = (el) => el.closest(".n-carousel");
+  const hasFullscreenDescendant = (wrapper) => {
+    const fsEl = fullscreenWrapper();
+    return !!(wrapper && fsEl && wrapper !== fsEl && wrapper.contains(fsEl));
+  };
+  const slidingDurationMs = (wrapper) => {
+    // data-duration is in seconds. Fallback to default_duration (ms).
+    const s =
+      wrapper && wrapper.dataset ? parseFloat(wrapper.dataset.duration) : NaN;
+    const ms = Number.isFinite(s) ? s * 1000 : default_duration;
+    // Small buffer: scrollend timing / resize during transitions can lag slightly.
+    return ms + 200;
+  };
+  const setSliding = (wrapper) => {
+    if (!wrapper || !wrapper.dataset) return;
+    // If this carousel contains a fullscreen child, never disable pointer events on it.
+    if (hasFullscreenDescendant(wrapper)) {
+      clearSliding(wrapper);
+      return;
+    }
+    wrapper.dataset.sliding = true;
+    if (wrapper._slidingTimeout) {
+      clearTimeout(wrapper._slidingTimeout);
+    }
+    wrapper._slidingTimeout = setTimeout(() => {
+      if (wrapper && wrapper.dataset) {
+        clearSliding(wrapper);
+      }
+    }, slidingDurationMs(wrapper));
+  };
+  const clearSliding = (wrapper) => {
+    if (!wrapper) return;
+    if (wrapper.dataset && wrapper.dataset.sliding !== undefined) {
+      delete wrapper.dataset.sliding;
+    }
+    // Defensive: some code paths (or external code) may set the attribute directly.
+    // Ensure it's gone even if dataset semantics differ.
+    if (wrapper.removeAttribute && wrapper.hasAttribute && wrapper.hasAttribute("data-sliding")) {
+      wrapper.removeAttribute("data-sliding");
+    }
+    if (wrapper.sliding !== undefined) {
+      delete wrapper.sliding;
+    }
+    if (wrapper._slidingTimeout) {
+      clearTimeout(wrapper._slidingTimeout);
+      wrapper._slidingTimeout = null;
+    }
+  };
   const isModal = (el) => {
-    return el.closest(".n-carousel").classList.contains("n-carousel--overlay");
+    return getCarousel(el)?.classList.contains("n-carousel--overlay");
   };
   const isVertical = (el) =>
-    el.closest(".n-carousel").matches(".n-carousel--vertical");
-  const isAutoHeight = (el) =>
-    el.closest(".n-carousel").matches(".n-carousel--auto-height");
+    getCarousel(el)?.matches(".n-carousel--vertical");
+  const isAutoHeight = (el) => {
+    const carousel = getCarousel(el);
+    if (!carousel) return false;
+    // Disable auto-height in fullscreen/overlay mode - it should use available height.
+    if (isFullScreen() || carousel.classList.contains("n-carousel--overlay")) {
+      return false;
+    }
+    return carousel.matches(".n-carousel--auto-height");
+  };
   const indexControls = (index) => {
     let controls_by_class = index.querySelectorAll(".n-carousel__control");
     return controls_by_class.length > 0
       ? controls_by_class
       : index.querySelectorAll("a, button");
   };
+  // Endless mode reorders slides in the DOM - keep a stable logical index per slide (JS-only).
+  const stampOriginalSlideIndices = (carouselContent) => {
+    if (!carouselContent) return;
+    [...carouselContent.children].forEach((slide, i) => {
+      if (!slide) return;
+      // Internal-only index; avoid data-* since it's not meant for CSS/DOM APIs.
+      if (slide._ncIndex === undefined) slide._ncIndex = i;
+    });
+  };
+  const clearSlidingLocks = (node) => {
+    let cur = node;
+    while (cur) {
+      clearSliding(cur);
+      cur = cur.parentNode;
+    }
+  };
   const scrollEndAction = (carousel) => {
     carousel = carousel.target || carousel;
-    // Cache computed style to avoid multiple calls
-    const computedStyle = getComputedStyle(carousel);
+    const carouselStyle = getComputedStyle(carousel);
+    // Calculate which slide we're on
     let index = Math.abs(
       Math.round(
         isVertical(carousel)
           ? carousel.scrollTop /
               (carousel.offsetHeight -
-                parseFloat(computedStyle.paddingBlockStart) -
-                parseFloat(computedStyle.paddingBlockEnd))
+                parseFloat(carouselStyle.paddingBlockStart) -
+                parseFloat(carouselStyle.paddingBlockEnd))
           : carousel.scrollLeft /
               (carousel.offsetWidth -
-                parseFloat(computedStyle.paddingInlineStart) -
-                parseFloat(computedStyle.paddingInlineEnd)),
+                parseFloat(carouselStyle.paddingInlineStart) -
+                parseFloat(carouselStyle.paddingInlineEnd)),
         2
       )
     );
+    if (index >= carousel.children.length) {
+      index = carousel.children.length - 1;
+    }
     let slide = carousel.children[index];
     if (
       !!carousel.parentNode.sliding ||
@@ -83,36 +153,42 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     ) {
       return;
     }
-    carousel.parentNode.dataset.sliding = true;
-    let timeout = 0;
+    const wrapper = carousel.parentNode;
+    // Also never set data-sliding on an overlay carousel that is currently fullscreen (it must stay clickable).
+    const isOverlayInFullscreen =
+      wrapper &&
+      wrapper.classList &&
+      wrapper.classList.contains("n-carousel--overlay") &&
+      (wrapper === document.fullscreenElement ||
+        wrapper === document.webkitFullscreenElement);
+    if (!isOverlayInFullscreen) {
+      setSliding(wrapper);
+    }
     delete carousel.dataset.next;
     observersOff(carousel);
     let x = carousel.scrollLeft;
     let y = carousel.scrollTop;
     let timeout_function = () => {
       let index = Array.prototype.indexOf.call(carousel.children, slide);
+      const el = carousel; // Alias for clarity
       if (isAutoHeight(carousel)) {
-        // Cache computed styles to avoid repeated calls
-        const carouselStyle = getComputedStyle(carousel);
-        let old_height = parseFloat(carouselStyle.height);
+        let old_height = parseFloat(getComputedStyle(carousel).height);
         let new_height;
+        let offset_x = 0;
         let offset_y = 0;
         let lastScrollX = carousel.scrollLeft;
         let lastScrollY = carousel.scrollTop;
         if (isVertical(carousel)) {
           let scroll_offset = carousel.scrollTop;
           slide.style.height = "auto";
-          let computed_max_height = carouselStyle.maxHeight;
+          let computed_max_height = getComputedStyle(carousel).maxHeight;
           let max_height = computed_max_height.match(/px/)
             ? Math.ceil(parseFloat(computed_max_height))
             : MAX_HEIGHT_FALLBACK;
-          // Cache slide computed style
-          const slideStyle = getComputedStyle(slide);
           new_height = Math.min(
-            Math.ceil(parseFloat(slideStyle.height)),
+            Math.ceil(parseFloat(getComputedStyle(slide).height)),
             max_height
           );
-          // new_height = slide.scrollHeight;
           if (isModal(carousel) || isFullScreen()) {
             old_height = new_height = carousel.offsetHeight;
           }
@@ -120,18 +196,33 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           carousel.scrollTop = scroll_offset;
           offset_y = index * new_height - carousel.scrollTop;
         } else {
-          new_height = nextSlideHeight(slide); // ?
+          new_height = nextSlideHeight(slide);
+          // For horizontal auto-height with peeking, use updateCarousel instead of manual animation
+          // because scroll snap and variable slide widths make manual calculation unreliable
+          const hasPeeking = parseFloat(carouselStyle.paddingInlineStart) > 0;
+          if (hasPeeking) {
+            if (old_height !== new_height) {
+              carousel.parentNode.style.setProperty("--height", `${new_height}px`);
+            }
+            setTimeout(() => updateCarousel(carousel, true), SCROLL_END_TIMEOUT + 200);
+            return;
+          }
+          // Without peeking, use the original manual animation approach
           if (!!lastScrollX) {
             // Because RTL auto height landing on first slide creates an infinite intersection observer loop
             scrollTo(carousel, lastScrollX, lastScrollY);
           }
+          // Calculate the correct horizontal offset to reach the target slide
+          let width = Math.ceil(parseFloat(getComputedStyle(slide).width));
+          offset_x = isRTL(carousel)
+            ? Math.abs(scrollStartX(carousel)) - width * index
+            : width * index - scrollStartX(carousel);
         }
         if (old_height === new_height) {
           new_height = false;
         }
-        // interSecObs.unobserve(slide);
         window.requestAnimationFrame(() => {
-          scrollAnimate(carousel, 0, offset_y, new_height, old_height).then(
+          scrollAnimate(carousel, offset_x, offset_y, new_height, old_height).then(
             () => {}
           );
         });
@@ -141,29 +232,23 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         });
       }
     };
-    timeout = setTimeout(timeout_function, SCROLL_END_TIMEOUT);
+    setTimeout(timeout_function, SCROLL_END_TIMEOUT);
   };
   const hashNavigation = (e) => {
     // Hash navigation support
-    const safeHash = sanitizeHash(location.hash);
-    if (safeHash) {
-      let el = document.querySelector(safeHash);
+    if (!!location.hash) {
+      let el = document.querySelector(location.hash);
       let carousel = el?.parentNode;
       if (
         !!carousel &&
         carousel.classList.contains("n-carousel__content") &&
         !carousel.parentNode.closest(".n-carousel__content")
       ) {
-        // Only query for modal if we might need to close it
-        if (carousel.parentNode.classList.contains("n-carousel--overlay")) {
-          // Current carousel is already a modal, no need to close another
-        } else {
-          let modal_carousel = document.querySelector(
-            ".n-carousel--overlay > .n-carousel__content"
-          );
-          if (modal_carousel && modal_carousel !== carousel) {
-            closeModal(modal_carousel);
-          }
+        let modal_carousel = document.querySelector(
+          ".n-carousel--overlay > .n-carousel__content"
+        );
+        if (modal_carousel && modal_carousel !== carousel) {
+          closeModal(modal_carousel);
         }
         if (carousel.parentNode.classList.contains("n-carousel--inline")) {
           closeModal(carousel);
@@ -176,8 +261,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             carousel.offsetHeight * carousel.dataset.y
           );
         }
-        slideTo(carousel, [...carousel.children].indexOf(el));
-        window.nCarouselNav = [carousel, safeHash];
+        slideTo(carousel, Array.prototype.indexOf.call(carousel.children, el));
+        window.nCarouselNav = [carousel, location.hash];
       }
     } else {
       if (window.nCarouselNav) {
@@ -192,13 +277,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             carousel.offsetHeight * carousel.dataset.y
           );
         }
-        const firstSlideWithoutId = carousel.querySelector(":scope > :not([id])");
-        if (firstSlideWithoutId) {
-          slideTo(
-            carousel,
-            Array.prototype.indexOf.call(carousel.children, firstSlideWithoutId)
-          );
-        }
+        slideTo(
+          carousel,
+          Array.prototype.indexOf.call(
+            carousel.children,
+            carousel.querySelector(":scope > :not([id])")
+          )
+        );
       }
     }
   };
@@ -211,22 +296,22 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
   const getIndexReal = (el) => {
-    if (!el || !el.children) {
-      return 0;
-    }
     let active_slide = el.querySelector(":scope > [aria-current]");
     if (active_slide) {
-      // Use Array.prototype.indexOf for better performance than spread operator
-      return Array.prototype.indexOf.call(el.children, active_slide);
+      return [...el.children].indexOf(active_slide);
     } else {
-      const safeHash = sanitizeHash(location.hash);
-      if (safeHash) {
-        const hashSlide = el.querySelector(`:scope > ${safeHash}`);
-        if (hashSlide) {
-          return Array.prototype.indexOf.call(el.children, hashSlide);
+      let hash_slide = null;
+      if (location.hash && location.hash.length > 1) {
+        try {
+          hash_slide = el.querySelector(`:scope > ${location.hash}`);
+        } catch (e) {
+          // Invalid selector, ignore
         }
       }
-      return 0;
+      let hash_slide_index = hash_slide
+        ? Array.prototype.indexOf.call(el.children, hash_slide)
+        : -1;
+      return hash_slide_index > -1 ? hash_slide_index : 0;
     }
   };
   const scrolledAncestor = (el) => {
@@ -255,7 +340,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const isRTL = (el) => getComputedStyle(el).direction === "rtl";
   const toggleFullScreen = (el) => {
-    el = el.closest(".n-carousel");
+    el = getCarousel(el);
     let carousel = el.querySelector(":scope > .n-carousel__content");
     const restoreScroll = () => {
       if (!isFullScreen()) {
@@ -271,14 +356,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.removeEventListener("webkitfullscreenchange", restoreScroll);
       }
     };
-    carousel.togglingFullScreen = true;
     if (isFullScreen()) {
       // Exit full screen
-      !!document.exitFullscreen
-        ? document.exitFullscreen()
-        : document.webkitExitFullscreen();
+      exitFullscreen();
       if (isSafari) {
-        // When exit finishes, update the carousel because on Safari 14, position is wrong or the slide is invisible
         setTimeout(() => {
           el.style.display = "none";
           window.requestAnimationFrame(() => {
@@ -286,18 +367,12 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           });
         }, 0);
       }
-      if (isVertical(el) && isAutoHeight(el)) {
-        let updateExitFullScreen = (e) => {
-          setTimeout(() => {
-            let carousel = el.querySelector(":scope > .n-carousel__content");
-            slideTo(carousel, parseInt(carousel.dataset.y));
-          }, FULLSCREEN_UPDATE_DELAY);
-          el.removeEventListener("fullscreenchange", updateExitFullScreen);
-        };
-        el.addEventListener("fullscreenchange", updateExitFullScreen);
-      }
     } else {
-      // Enter full screen
+      snapToProp(carousel, "_fsSnapLogical");
+      if (el.classList.contains("n-carousel--overlay")) {
+        // Ensure overlays and any ancestor carousels remain interactive.
+        clearSlidingLocks(el);
+      }
       if (isSafari) {
         el.nuiAncestors = scrolledAncestors(el);
         el.nuiAncestors.forEach((el) => {
@@ -314,6 +389,55 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const scrollStartX = (el) => el.scrollLeft; // Get correct start scroll position for LTR and RTL
   const scrollTo = (el, x, y) => {
     el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y); // Scroll to correct scroll position for LTR and RTL
+  };
+  // Shared mode-transition helpers (fullscreen + overlay):
+  // Save a stable "logical" slide index (works for endless because slides get re-ordered).
+  const snapLogicalIndex = (content) => {
+    if (!content) return null;
+    stampOriginalSlideIndices(content);
+    const active = content.querySelector(":scope > [aria-current]");
+    const logical =
+      active && Number.isFinite(active._ncIndex) ? active._ncIndex : getIndexReal(content);
+    return Number.isFinite(logical) ? logical : null;
+  };
+  const snapToProp = (content, prop) => {
+    if (!content) return null;
+    const snap = snapLogicalIndex(content);
+    if (Number.isFinite(snap)) content[prop] = snap;
+    return snap;
+  };
+  const restoreLogicalAfterLayout = (content, logicalIndex, clearProp) => {
+    if (!content || !Number.isFinite(logicalIndex)) return;
+    // Fullscreen/overlay toggles can change sizes mid-frame. Wait for layout settle.
+    window.requestAnimationFrame(() =>
+      window.requestAnimationFrame(() => {
+        stampOriginalSlideIndices(content);
+        const target =
+          [...content.children].find(
+            (s) => s && Number.isFinite(s._ncIndex) && s._ncIndex === logicalIndex
+          ) || content.children[logicalIndex];
+        if (!target) return;
+        scrollTo(content, target.offsetLeft || 0, target.offsetTop || 0);
+        updateCarousel(content);
+        // Restores are not user slide animations - if a sliding lock gets set during this,
+        // it can make the overlay/fullscreen UI unclickable.
+        const w = getCarousel(content);
+        if (
+          w &&
+          (w.classList.contains("n-carousel--overlay") ||
+            w === document.fullscreenElement)
+        ) {
+          clearSlidingLocks(w);
+        }
+        if (clearProp) delete content[clearProp];
+      })
+    );
+  };
+  const restoreFromPropAfterLayout = (content, prop, clearOnRestore = false) => {
+    if (!content) return;
+    const logicalIndex = Number.isFinite(content[prop]) ? content[prop] : snapLogicalIndex(content);
+    if (!Number.isFinite(logicalIndex)) return;
+    restoreLogicalAfterLayout(content, logicalIndex, clearOnRestore ? prop : null);
   };
   const getScroll = (el) =>
     el === window
@@ -382,22 +506,13 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const closestCarousel = (el) => {
-    if (!el) {
-      return null;
-    }
-    const carouselWrapper = el.closest('[class*="n-carousel"]');
-    if (!carouselWrapper) {
-      return null;
-    }
-    var related_by_id = carouselWrapper.dataset.for;
+    var related_by_id = el.closest('[class*="n-carousel"]').dataset.for;
     if (!!related_by_id) {
-      const targetElement = document.getElementById(related_by_id);
-      return targetElement
-        ? targetElement.querySelector(".n-carousel__content")
-        : null;
+      return document
+        .getElementById(related_by_id)
+        .querySelector(".n-carousel__content");
     } else {
-      const nCarousel = el.closest(".n-carousel");
-      return nCarousel ? nCarousel.querySelector(".n-carousel__content") : null;
+      return el.closest(".n-carousel").querySelector(".n-carousel__content");
     }
   };
   const scrollAnimate = (
@@ -409,7 +524,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   ) =>
     new Promise((resolve) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
-      let wrapper = el.closest(".n-carousel");
+      let wrapper = getCarousel(el);
       if (
         !!wrapper.nextSlideInstant ||
         !wrapper.dataset.ready ||
@@ -483,23 +598,50 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const updateCarousel = (el, forced = false) => {
     // Forced means never skip unnecessary update
     // Called on init and scroll end
-    if (el.togglingFullScreen) {
+    // Skip update entirely if there's ANY overlay carousel descendant
+    // Overlay carousels need to remain interactive and shouldn't be managed by parent
+    // But if forced, allow update (e.g., when overlay is being closed and we need to refresh parent)
+    const hasOverlayDescendant = el.querySelector(":scope .n-carousel--overlay") !== null;
+    if (hasOverlayDescendant && !forced) {
+      // Don't update parent carousel when an overlay descendant exists anywhere
+      // This prevents parent from setting inert on overlay carousels
+      // But allow forced updates (e.g., when closing overlay)
       return;
     }
+    // Skip update if explicitly marked to skip (e.g., during brief fullscreen toggle moment)
+    // But only skip scroll position calculations, not inert attribute updates
+    const shouldSkipScrollCalc = el.dataset.skipUpdate === "true" && !forced;
     observersOff(el);
-    let saved_x = el.dataset.x; // On displaced slides and no change
-    let saved_y = el.dataset.y;
+    const wrapper = el.parentElement;
+    const fsEl = fullscreenWrapper();
+    const isWrapperFullscreen = !!(wrapper && fsEl && wrapper === fsEl);
+    const isWrapperOverlay = !!(
+      wrapper &&
+      wrapper.classList &&
+      wrapper.classList.contains("n-carousel--overlay")
+    );
     const firstChild = el.firstElementChild;
     if (!firstChild) {
+      // Nothing to compute (empty carousel content). Keep observers consistent and bail.
       observersOn(el);
       return;
     }
-    el.dataset.x = Math.abs(
-      Math.round(scrollStartX(el) / ceilingWidth(firstChild))
-    );
-    el.dataset.y = Math.abs(
-      Math.round(el.scrollTop / ceilingHeight(firstChild))
-    );
+    const cw = ceilingWidth(firstChild);
+    const ch = ceilingHeight(firstChild);
+    // If we should skip scroll calculations (during fullscreen toggle), use saved values
+    let saved_x = el.dataset.x; // On displaced slides and no change
+    let saved_y = el.dataset.y;
+    if (shouldSkipScrollCalc) {
+      // Keep existing values, don't recalculate scroll positions
+      // This prevents parent disruption during overlay fullscreen toggle
+    } else {
+      el.dataset.x = Math.abs(
+        Math.round(scrollStartX(el) / cw)
+      );
+      el.dataset.y = Math.abs(
+        Math.round(el.scrollTop / ch)
+      );
+    }
     // When inline
     if (el.dataset.x === "NaN") {
       el.dataset.x = 0;
@@ -507,20 +649,26 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (el.dataset.y === "NaN") {
       el.dataset.y = 0;
     }
-    let active_index = getIndex(el);
-    if (active_index >= el.children.length) {
-      active_index = el.children.length - 1;
-    }
+    let active_index;
+    let active_slide;
     let old_active_slide = el.querySelector(":scope > [aria-current]");
-    let wrapper = el.parentElement;
-    if (!isAutoHeight(wrapper)) {
-      // Dynamic change from auto height to normal
-      el.style.height = "";
-    }
-    let active_slide = el.children[active_index];
-    if (!active_slide) {
-      observersOn(el);
-      return;
+    if (shouldSkipScrollCalc) {
+      // During fullscreen toggle, use the current active slide without recalculating
+      // This prevents parent disruption but still allows inert updates
+      active_slide = old_active_slide || el.children[0];
+      active_index = active_slide ? Array.prototype.indexOf.call(el.children, active_slide) : 0;
+      if (active_index < 0) active_index = 0;
+      if (active_index >= el.children.length) active_index = el.children.length - 1;
+    } else {
+      active_index = getIndex(el);
+      if (active_index >= el.children.length) {
+        active_index = el.children.length - 1;
+      }
+      if (!isAutoHeight(wrapper)) {
+        // Dynamic change from auto height to normal
+        el.style.height = "";
+      }
+      active_slide = el.children[active_index];
     }
     if (old_active_slide && !forced) {
       if (active_slide === old_active_slide) {
@@ -538,6 +686,31 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
     // active_slide.ariaCurrent = true; // Unsupported by FF
     active_slide.setAttribute("aria-current", true);
+    // Forced updates are used during mode transitions (overlay/fullscreen) and can temporarily leave
+    // multiple slides marked as aria-current. Normalize to exactly one so getIndexReal() and index UI
+    // don't latch onto the first stale match.
+    if (forced) {
+      el.querySelectorAll(":scope > [aria-current]").forEach((n) => {
+        if (n !== active_slide) n.removeAttribute("aria-current");
+      });
+    }
+    stampOriginalSlideIndices(el);
+    // While fullscreen is active, keep the restore snapshot aligned with the *current* slide.
+    // Without this, entering fullscreen on slide N, navigating to M, then exiting would restore N.
+    if (
+      active_slide && Number.isFinite(active_slide._ncIndex) &&
+      isWrapperFullscreen
+    ) {
+      el._fsSnapLogical = active_slide._ncIndex;
+    }
+    // While overlay is active, keep a snapshot aligned with the *current* slide.
+    // This lets overlay close restore the currently viewed slide (same principle as fullscreen).
+    if (
+      active_slide && Number.isFinite(active_slide._ncIndex) &&
+      isWrapperOverlay
+    ) {
+      el._ovSnapLogical = active_slide._ncIndex;
+    }
     var active_index_real = (el.dataset.x = el.dataset.y = getIndexReal(el));
     // Endless carousel
     const restoreDisplacedSlides = (el) => {
@@ -552,7 +725,17 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         active_index++;
       });
     };
-    wrapper.dataset.sliding = true;
+    // Only set data-sliding if we're actually changing slides or forced update
+    // This prevents flashing when updateCarousel is called multiple times for the same slide
+    // Never set data-sliding on overlay carousels that are in fullscreen (they need to be clickable)
+    const isOverlayInFullscreen = isWrapperOverlay && isWrapperFullscreen;
+    const isSlideChange = active_slide !== old_active_slide;
+    if (isSlideChange && !isOverlayInFullscreen) {
+      setSliding(wrapper);
+    } else if (isOverlayInFullscreen || hasFullscreenDescendant(wrapper)) {
+      // Ensure data-sliding is cleared for overlay in fullscreen
+      clearSliding(wrapper);
+    }
     if (isEndless(el) && !forced) {
       if (active_index === 0) {
         if (!active_slide.dataset.first) {
@@ -598,19 +781,19 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         } else {
           // Middle slide
           restoreDisplacedSlides(el);
-          active_index_real = Math.max(
-            0,
-            Array.prototype.indexOf.call(
-              el.children,
-              el.querySelector(":scope > [aria-current]")
-            )
-          ); // Fixes position when sliding to/from first slide; max because of FF returning -1
+          let activeSlide = el.querySelector(":scope > [aria-current]");
+          active_index_real = activeSlide
+            ? Math.max(
+                0,
+                Array.prototype.indexOf.call(el.children, activeSlide)
+              )
+            : 0; // Fixes position when sliding to/from first slide; max because of FF returning -1
         }
       }
       const updateScroll = () => {
         el.dataset.x = el.dataset.y = active_index_real;
-        let scroll_x = ceilingWidth(el.firstElementChild) * active_index;
-        let scroll_y = ceilingHeight(el.firstElementChild) * active_index;
+        let scroll_x = cw * active_index;
+        let scroll_y = ch * active_index;
         el.scroll_x = scroll_x;
         el.scroll_y = scroll_y;
         scrollTo(el, scroll_x, scroll_y); // First element size, because when Peeking, it differs from carousel size
@@ -628,13 +811,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     } else {
       // Check and restore dynamically disabled endless option
       restoreDisplacedSlides(el);
-      active_index_real = Math.max(
-        0,
-        Array.prototype.indexOf.call(
-          el.children,
-          el.querySelector(":scope > [aria-current]")
-        )
-      ); // Fixes position when sliding to/from first slide; max because of FF returning -1
+      let activeSlide = el.querySelector(":scope > [aria-current]");
+      active_index_real = activeSlide
+        ? Math.max(0, Array.prototype.indexOf.call(el.children, activeSlide))
+        : 0; // Fixes position when sliding to/from first slide; max because of FF returning -1
     }
     active_slide.style.height = "";
     wrapper.style.setProperty(
@@ -656,19 +836,17 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     if (getComputedStyle(el).visibility !== "hidden") {
       let previously_active = document.activeElement;
       let hash = active_slide.id;
-      // Sanitize hash before setting to prevent XSS
-      const safeHash = hash ? sanitizeHash(`#${hash}`) : null;
       if (
         !!el.parentNode.dataset.ready &&
-        safeHash &&
+        !!hash &&
         !el.parentNode.closest(".n-carousel__content")
       ) {
         // Hash works only with top-level carousel
-        location.hash = safeHash;
+        location.hash = `#${hash}`;
       }
       if (
         !!el.parentNode.dataset.ready &&
-        !safeHash &&
+        !hash &&
         !el.parentNode.closest(".n-carousel__content") &&
         window.nCarouselNav
       ) {
@@ -678,21 +856,50 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       previously_active.focus();
     }
     // Fix buttons
-    let index = getControl(el.closest(".n-carousel"), ".n-carousel__index");
+    let index = getControl(getCarousel(el), ".n-carousel__index");
     if (!!index) {
       index.querySelector("[aria-current]")?.removeAttribute("aria-current");
       // index.children[active_index_real].ariaCurrent = true; // Unsupported by FF
-      indexControls(index)[active_index_real].setAttribute(
-        "aria-current",
-        true
-      );
+      const controls = indexControls(index);
+      const rawIdx = Number.isFinite(active_index_real) ? active_index_real : 0;
+      const safeIdx =
+        controls.length > 0
+          ? Math.max(0, Math.min(controls.length - 1, rawIdx))
+          : 0;
+      controls[safeIdx]?.setAttribute("aria-current", true);
     }
     // Disable focus on children of non-active slides
     // Active slides of nested carousels should also have disabled focus
     [...el.children].forEach((el) => {
       // Native "inert" attribute to replace the below "focusDisabled" loops from June 2022.
-      el.inert = el === active_slide ? false : true;
-      if (isSafari && el.querySelector(".n-carousel:-webkit-full-screen")) {
+      // NEVER set inert on:
+      // 1. Fullscreen elements (they need to be interactive)
+      // 2. Slides inside overlay carousels (they need to be interactive)
+      // 3. Slides containing overlay carousel descendants
+      // 4. Slides inside a fullscreen carousel wrapper
+      // 5. Slides containing an overlay carousel that is currently in fullscreen
+      const isFullscreen = el === document.fullscreenElement || el === document.webkitFullscreenElement;
+      const wrapperIsFullscreen = isWrapperFullscreen;
+      const wrapperIsOverlay = isWrapperOverlay;
+      const hasOverlayDescendant = el.querySelector && el.querySelector(".n-carousel--overlay") !== null;
+      // Check if this slide contains an overlay carousel that is currently in fullscreen
+      // The fullscreen element is the wrapper (.n-carousel), not the content
+      let overlayInFullscreen = false;
+      if (hasOverlayDescendant) {
+        const overlayWrapper = el.querySelector(".n-carousel--overlay");
+        if (overlayWrapper && (overlayWrapper === document.fullscreenElement || overlayWrapper === document.webkitFullscreenElement)) {
+          overlayInFullscreen = true;
+        }
+      }
+      if (isFullscreen || wrapperIsFullscreen || wrapperIsOverlay || hasOverlayDescendant || overlayInFullscreen) {
+        // These should never be inert - always remove it
+        el.inert = false;
+        el.removeAttribute('inert');
+      } else {
+        // Normal slide - set inert based on whether it's active
+        el.inert = el === active_slide ? false : true;
+      }
+      if (isSafari && fsEl && el.querySelector(".n-carousel:-webkit-full-screen")) {
         // Safari full screen bug: parent scroll resets to 0, first slide becomes active and the full screen child lightbox is inside an inert parent
         let current = el.parentNode.querySelector(
           ':scope > [aria-current="true"]'
@@ -703,10 +910,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.setAttribute("aria-current", true);
       }
     });
-    // Note: Focus management is handled by the native "inert" attribute
-    // Previous manual focus disabling code has been removed (obsoleted June 2022)
     if (/--vertical.*--auto-height/.test(wrapper.classList)) {
       // Undo jump to wrong slide when sliding to the last one
+      // Note: In fullscreen/overlay mode, isAutoHeight returns false, so this won't execute
       el.scrollTop = el.offsetHeight * active_index_real;
     }
     window.requestAnimationFrame(() => {
@@ -716,8 +922,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     if (!el.parentNode.dataset.sliding) {
-      el.parentNode.dataset.sliding = true;
-      let old_height = el.children[getIndexReal(el)].offsetHeight;
+      setSliding(el.parentNode);
+      const curIndex = getIndexReal(el);
+      let old_height = el.children[curIndex].offsetHeight;
       let new_height = old_height;
       if (isAutoHeight(el)) {
         let old_scroll_left = scrollStartX(el);
@@ -725,40 +932,33 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         let slide = el.children[index];
         if (isVertical(el)) {
           slide.style.height = "auto";
-          // Cache computed styles
-          const elStyle = getComputedStyle(el);
-          const slideStyle = getComputedStyle(slide);
-          let computed_max_height = elStyle.maxHeight;
+          let computed_max_height = getComputedStyle(el).maxHeight;
           let max_height = computed_max_height.match(/px/)
             ? Math.ceil(parseFloat(computed_max_height))
             : MAX_HEIGHT_FALLBACK;
           new_height = Math.min(
-            Math.ceil(parseFloat(slideStyle.height)),
+            Math.ceil(parseFloat(getComputedStyle(slide).height)),
             max_height
           );
-          // new_height = slide.scrollHeight;
           slide.style.height = "";
         } else {
           new_height = nextSlideHeight(slide);
           let old_height =
-            getIndexReal(el) === index
+            curIndex === index
               ? new_height
-              : nextSlideHeight(el.children[getIndexReal(el)]);
+              : nextSlideHeight(el.children[curIndex]);
           el.parentNode.style.setProperty("--height", `${old_height}px`);
         }
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
       }
       if (isVertical(el)) {
-        if ((isModal(el) || isFullScreen()) && isAutoHeight(el)) {
-          old_height = new_height = el.offsetHeight;
-        }
         offsetY = offsetY - index * old_height + index * new_height;
       }
       window.requestAnimationFrame(() => {
         if (!el.parentNode.dataset.duration && !isAutoHeight(el)) {
           // Unspecified duration, no height change – using native smooth scroll
-          delete el.parentNode.dataset.sliding;
+          clearSliding(el.parentNode);
           el.dataset.next = index;
           el.scrollTo({
             top: el.scrollTop + offsetY,
@@ -781,27 +981,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const slideNext = (el) => {
-    if (!el || !el.children || el.children.length === 0) {
-      console.warn("Invalid element in slideNext");
-      return;
-    }
     let index = getIndexReal(el);
     slideTo(el, index >= el.children.length - 1 ? 0 : index + 1);
   };
   const slidePrevious = (el) => {
-    if (!el || !el.children || el.children.length === 0) {
-      console.warn("Invalid element in slidePrevious");
-      return;
-    }
     let index = getIndexReal(el);
     slideTo(el, index === 0 ? el.children.length - 1 : index - 1);
   };
   const slideTo = (el, index) => {
-    if (!el || !el.children || !el.children[index]) {
-      console.warn("Invalid element or index in slideTo");
-      return;
-    }
-
     if (isVertical(el)) {
       slide(
         el,
@@ -810,13 +997,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         index
       );
     } else {
-      const targetElement = el.children[index];
-      if (!targetElement || !targetElement.offsetParent) {
-        console.warn("Target element not ready for measurement");
-        return;
-      }
-
-      let width = Math.ceil(parseFloat(getComputedStyle(targetElement).width));
+      let width = Math.ceil(
+        parseFloat(getComputedStyle(el.children[index]).width)
+      );
       let new_offset = isRTL(el)
         ? Math.abs(scrollStartX(el)) - width * index
         : width * index - scrollStartX(el);
@@ -834,14 +1017,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       "Home",
       "End",
     ];
-    const carousel = e.target.closest(".n-carousel");
-    if (!carousel) {
-      return;
-    }
-    let el = carousel.querySelector(":scope > .n-carousel__content");
-    if (!el) {
-      return;
-    }
+    let el = getCarousel(e.target)
+      .querySelector(":scope > .n-carousel__content");
     if (keys.includes(e.key)) {
       // Capture relevant keys
       // e.preventDefault();
@@ -875,18 +1052,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
     }
   };
-  const slidePreviousEvent = (e) => {
-    const carousel = closestCarousel(e.target.closest('[class*="n-carousel"]'));
-    if (carousel) {
-      slidePrevious(carousel);
-    }
-  };
-  const slideNextEvent = (e) => {
-    const carousel = closestCarousel(e.target.closest('[class*="n-carousel"]'));
-    if (carousel) {
-      slideNext(carousel);
-    }
-  };
+  const slidePreviousEvent = (e) =>
+    slidePrevious(closestCarousel(e.target.closest('[class*="n-carousel"]')));
+  const slideNextEvent = (e) =>
+    slideNext(closestCarousel(e.target.closest('[class*="n-carousel"]')));
   const slideIndexEvent = (e) => {
     let el = e.target.closest("a, button");
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
@@ -894,22 +1063,20 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) ||
         el.closest(".n-carousel");
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
-      let new_index = [...indexControls(el.parentNode)].indexOf(el);
+      const logical_index = Array.prototype.indexOf.call(
+        indexControls(el.parentNode),
+        el
+      );
+      let new_index = logical_index;
       if (isEndless(carousel)) {
-        var old_index = getIndex(carousel);
-        if (old_index === 0) {
-          if (new_index === carousel.children.length - 1) {
-            new_index = 0;
-          } else {
-            new_index++;
-          }
-        }
-        if (old_index === carousel.children.length - 1) {
-          if (new_index === 0) {
-            new_index = carousel.children.length - 1;
-          } else {
-            new_index--;
-          }
+        // Map logical index button -> current DOM index of that original slide.
+        // This avoids off-by-one errors near the edges when slides are displaced.
+        stampOriginalSlideIndices(carousel);
+        const targetSlide = [...carousel.children].find(
+          (s) => s && Number.isFinite(s._ncIndex) && s._ncIndex === logical_index
+        );
+        if (targetSlide) {
+          new_index = Array.prototype.indexOf.call(carousel.children, targetSlide);
         }
       }
       if (
@@ -918,18 +1085,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       ) {
         // Opening an inline carousel
         wrapper.nextSlideInstant = true;
-        openModal(carousel);
-        // Set new x, y
-        window.requestAnimationFrame(() => {
-          carousel.dataset.x = carousel.dataset.y = new_index;
-          scrollTo(
-            carousel,
-            carousel.offsetWidth * carousel.dataset.x,
-            carousel.offsetHeight * carousel.dataset.y
-          );
-          document.body.dataset.frozen = document.body.scrollTop;
-          updateCarousel(carousel);
-        });
+        // We intentionally open to a *new* index below, so skip the overlay restore here.
+        openModal(carousel, true, logical_index);
       } else {
         window.requestAnimationFrame(() => {
           slideTo(carousel, new_index);
@@ -938,70 +1095,385 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       return false;
     }
   };
+  const enableLightboxClickToOpen = (wrapper, content, hasOverlayToggle) => {
+    if (!wrapper || !content) return;
+    if (!wrapper.classList.contains("n-carousel--lightbox")) return;
+    // Only enable "click image to open overlay" when there is an explicit overlay toggle button.
+    // Otherwise opening a modal via image click can be confusing/less accessible to close.
+    if (!hasOverlayToggle) return;
+
+    let down = null;
+    const isInteractive = (el) =>
+      !!(el && el.closest && el.closest("a, button, input, select, textarea, label"));
+    const toDirectChild = (el, parent) => {
+      let cur = el;
+      while (cur && cur !== parent && cur.parentNode !== parent) cur = cur.parentNode;
+      return cur && cur.parentNode === parent ? cur : null;
+    };
+    content.addEventListener(
+      "pointerdown",
+      (e) => {
+        const t = e.target;
+        if (!t) return;
+        const img =
+          (t.matches && t.matches("img") && t) ||
+          (t.closest && t.closest("picture") && t.closest("picture").querySelector("img")) ||
+          null;
+        if (!img) return;
+        if (isInteractive(img)) return;
+        down = { x: e.clientX, y: e.clientY };
+      },
+      { passive: true }
+    );
+
+    content.addEventListener("click", (e) => {
+      if (wrapper.classList.contains("n-carousel--overlay")) return;
+      const t = e.target;
+      if (!t) return;
+
+      // Only on images (or picture -> img).
+      const img =
+        (t.matches && t.matches("img") && t) ||
+        (t.closest && t.closest("picture") && t.closest("picture").querySelector("img")) ||
+        null;
+      if (!img) return;
+
+      // Don't hijack clicks on interactive content.
+      if (isInteractive(img)) return;
+
+      // Ignore drag/swipe.
+      if (down) {
+        const dx = Math.abs((down.x || 0) - e.clientX);
+        const dy = Math.abs((down.y || 0) - e.clientY);
+        down = null;
+        if (dx > 6 || dy > 6) return;
+      }
+
+      const slideEl = toDirectChild(img, content);
+      // Endless reorders slides in the DOM, so prefer stable logical index when available.
+      stampOriginalSlideIndices(content);
+      const idxDom = slideEl
+        ? Array.prototype.indexOf.call(content.children, slideEl)
+        : getIndexReal(content);
+      const idxLogical =
+        slideEl && Number.isFinite(slideEl._ncIndex) ? slideEl._ncIndex : idxDom;
+      // Open overlay to the clicked/active slide.
+      openModal(content, true, idxLogical);
+    });
+  };
+  const enableLightboxCrossAxisClose = (wrapper, content) => {
+    if (!wrapper || !content) return;
+    if (!wrapper.classList.contains("n-carousel--lightbox")) return;
+    if (!wrapper.classList.contains("n-carousel--overlay")) return;
+    if (wrapper._ncCrossAxisCloseCleanup) return;
+
+    const CROSS_AXIS_THRESHOLD = 120; // px
+    const INTENT_RATIO = 2; // cross-axis must dominate main-axis by this ratio
+
+    const isScrollableY = (el) => {
+      if (!el || el === document.documentElement || el === document.body) return false;
+      const cs = getComputedStyle(el);
+      const oy = cs.overflowY;
+      return (
+        (oy === "auto" || oy === "scroll") &&
+        el.scrollHeight > el.clientHeight + 1
+      );
+    };
+    const isScrollableX = (el) => {
+      if (!el || el === document.documentElement || el === document.body) return false;
+      const cs = getComputedStyle(el);
+      const ox = cs.overflowX;
+      return (
+        (ox === "auto" || ox === "scroll") &&
+        el.scrollWidth > el.clientWidth + 1
+      );
+    };
+    const closestScrollable = (start, axis) => {
+      let cur = start && start.nodeType === 1 ? start : null;
+      while (cur && cur !== wrapper) {
+        if (axis === "y" ? isScrollableY(cur) : isScrollableX(cur)) return cur;
+        cur = cur.parentElement;
+      }
+      return null;
+    };
+    const atEdge = (el, axis, delta) => {
+      if (!el) return true;
+      if (axis === "y") {
+        const top = el.scrollTop;
+        const max = el.scrollHeight - el.clientHeight;
+        return delta < 0 ? top <= 0 : top >= max - 1;
+      }
+      const left = el.scrollLeft;
+      const max = el.scrollWidth - el.clientWidth;
+      return delta < 0 ? left <= 0 : left >= max - 1;
+    };
+
+    let wheelAcc = 0;
+    let wheelTimer = null;
+    const resetWheel = () => {
+      wheelAcc = 0;
+      if (wheelTimer) clearTimeout(wheelTimer);
+      wheelTimer = null;
+    };
+    const allowCrossAxisClose = (target, axis, cross, main) => {
+      if (!Number.isFinite(cross) || !Number.isFinite(main)) return false;
+      // Require clear cross-axis intent.
+      if (Math.abs(cross) < INTENT_RATIO * Math.abs(main)) return false;
+      // If there's a scrollable element in the cross axis, only close on "overscroll" at its edge.
+      const sc = closestScrollable(target, axis);
+      if (sc && !atEdge(sc, axis, cross)) return false;
+      return true;
+    };
+
+    const wheel = (e) => {
+      if (!wrapper.classList.contains("n-carousel--overlay")) return resetWheel();
+      // Don't close overlay via cross-axis gesture while the overlay is fullscreen.
+      if (fullscreenWrapper && fullscreenWrapper() === wrapper) return resetWheel();
+      // Only for overlays; ignore if fullscreen restore / sliding lock window is active.
+      if (prefersReducedMotion()) return;
+      const vertical = isVertical(content);
+      const cross = vertical ? e.deltaX : e.deltaY;
+      const main = vertical ? e.deltaY : e.deltaX;
+      const axis = vertical ? "x" : "y";
+      if (!allowCrossAxisClose(e.target, axis, cross, main)) return resetWheel();
+
+      wheelAcc += cross;
+      if (!wheelTimer) wheelTimer = setTimeout(resetWheel, 250);
+
+      if (Math.abs(wheelAcc) >= CROSS_AXIS_THRESHOLD) {
+        resetWheel();
+        closeModal(content);
+      }
+    };
+
+    // Touch swipe (mobile).
+    let touchStart = null;
+    const touchstart = (e) => {
+      if (!wrapper.classList.contains("n-carousel--overlay")) return;
+      // Don't close overlay via cross-axis gesture while the overlay is fullscreen.
+      if (fullscreenWrapper && fullscreenWrapper() === wrapper) return;
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      touchStart = { x: t.clientX, y: t.clientY, target: e.target };
+    };
+    const touchmove = (e) => {
+      if (!touchStart) return;
+      if (!wrapper.classList.contains("n-carousel--overlay")) {
+        touchStart = null;
+        return;
+      }
+      if (fullscreenWrapper && fullscreenWrapper() === wrapper) {
+        touchStart = null;
+        return;
+      }
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      const dx = t.clientX - touchStart.x;
+      const dy = t.clientY - touchStart.y;
+      const vertical = isVertical(content);
+      const cross = vertical ? dx : dy;
+      const main = vertical ? dy : dx;
+      const axis = vertical ? "x" : "y";
+      if (!allowCrossAxisClose(touchStart.target, axis, cross, main)) return;
+
+      if (Math.abs(cross) >= CROSS_AXIS_THRESHOLD) {
+        touchStart = null;
+        closeModal(content);
+      }
+    };
+    const touchend = () => {
+      touchStart = null;
+    };
+
+    wrapper.addEventListener("wheel", wheel, { passive: true });
+    wrapper.addEventListener("touchstart", touchstart, { passive: true });
+    wrapper.addEventListener("touchmove", touchmove, { passive: true });
+    wrapper.addEventListener("touchend", touchend, { passive: true });
+    wrapper.addEventListener("touchcancel", touchend, { passive: true });
+
+    wrapper._ncCrossAxisCloseCleanup = () => {
+      resetWheel();
+      wrapper.removeEventListener("wheel", wheel);
+      wrapper.removeEventListener("touchstart", touchstart);
+      wrapper.removeEventListener("touchmove", touchmove);
+      wrapper.removeEventListener("touchend", touchend);
+      wrapper.removeEventListener("touchcancel", touchend);
+      delete wrapper._ncCrossAxisCloseCleanup;
+    };
+  };
   const closeModalOnBodyClick = (e) => {
     let overlay = document.querySelector(".n-carousel--overlay");
     if (overlay && e.key === "Escape") {
+      // Avoid double-close when the overlay itself already handled Escape (bubbling).
+      if (e.__nCarouselHandledEscape) {
+        return;
+      }
+      // If fullscreen was just exited via Escape, don't also close the overlay.
+      if (
+        Number.isFinite(overlay._suppressOverlayEscapeUntil) &&
+        performance.now() < overlay._suppressOverlayEscapeUntil
+      ) {
+        return;
+      }
       closeModal(overlay);
     }
   };
+  function prefersReducedMotion() {
+    return (
+      !!window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+  function activeSlideImage(carousel) {
+    if (!carousel) return null;
+    const active =
+      carousel.querySelector(":scope > [aria-current]") || carousel.children[0];
+    return active ? active.querySelector("img") : null;
+  }
+  function withOverlayViewTransition(wrapper, carousel, mutate, isClosing = false) {
+    if (!wrapper || !carousel || typeof mutate !== "function") return mutate();
+    if (prefersReducedMotion()) return mutate();
+    // Firefox has a buggy shared-element close transition (offsets drift left).
+    // Keep open animation (looks fine), but skip close animation.
+    if (isFirefox && isClosing) return mutate();
+    if (typeof document.startViewTransition !== "function") return mutate();
+
+    // Shared element for the transition:
+    // - Lightbox: prefer image.
+    // - Non-lightbox: prefer the entire active slide so complex layouts (image + text columns)
+    //   move smoothly instead of only cross-fading.
+    const active =
+      carousel.querySelector(":scope > [aria-current]") || carousel.children[0];
+    const shared =
+      wrapper.classList.contains("n-carousel--lightbox") &&
+      active &&
+      active.querySelector
+        ? active.querySelector("img") || active
+        : active;
+    if (!shared) return mutate();
+
+    // Unique name per carousel instance to avoid conflicts across the document.
+    const id =
+      wrapper.id ||
+      (wrapper._vtId ||
+        (wrapper._vtId =
+          (window.__nCarouselVTId = (window.__nCarouselVTId || 0) + 1)));
+    shared.style.viewTransitionName = `n-carousel-overlay-${id}`;
+    const vt = document.startViewTransition(() => mutate());
+    // Cleanup.
+    (vt.finished || Promise.resolve()).finally(() => {
+      shared.style.viewTransitionName = "";
+    });
+  }
   const closeModal = (el) => {
-    if (isFullScreen()) {
-      !!document.exitFullscreen
-        ? document.exitFullscreen()
-        : document.webkitExitFullscreen();
-    }
     let carousel = closestCarousel(el);
-    if (carousel) {
-      let wrapper = carousel.closest(".n-carousel");
-      wrapper.toggleModal = true; // skip mutation observer
-      wrapper.classList.remove("n-carousel--overlay");
-      trapFocus(wrapper, true); // Disable focus trap
-      if (
-        wrapper.nextElementSibling &&
-        wrapper.nextElementSibling.classList.contains(
-          "n-carousel__overlay-placeholder"
-        )
-      ) {
-        wrapper.nextElementSibling.remove();
+    let wrapper = carousel ? getCarousel(carousel) : null;
+    const closeNow = () => {
+      // For inline carousels, if we're in fullscreen, just exit fullscreen and keep overlay
+      if (wrapper && wrapper.classList.contains("n-carousel--inline") && wrapper.classList.contains("n-carousel--overlay") && isFullScreen()) {
+        exitFullscreen();
+        return; // Don't remove overlay class - keep it in overlay state
       }
-      delete document.body.dataset.frozen;
-    }
-    document.body.removeEventListener("keyup", closeModalOnBodyClick);
+      if (isFullScreen()) {
+        exitFullscreen();
+      }
+      if (carousel) {
+        // Snapshot the logical slide before the overlay state changes.
+        snapToProp(carousel, "_ovSnapLogical");
+        carousel.parentNode.toggleModal = true; // skip mutation observer
+        wrapper.classList.remove("n-carousel--overlay");
+        if (wrapper && wrapper._ncCrossAxisCloseCleanup) {
+          wrapper._ncCrossAxisCloseCleanup();
+        }
+        trapFocus(wrapper, true); // Disable focus trap
+        delete document.body.dataset.frozen;
+        // If this overlay was a slide in a parent carousel, clear data-sliding on parent
+        // This ensures the parent carousel is clickable after overlay closes
+        let parentContent = wrapper.closest(".n-carousel__content");
+        if (parentContent) {
+          let parentCarousel = getCarousel(parentContent);
+          if (parentCarousel) {
+            clearSliding(parentCarousel);
+            // Update the parent carousel to refresh active slide state
+            // Use forced=true to ensure update happens even if overlay descendant check would skip it
+            updateCarousel(parentContent, true);
+          }
+        }
+        // Restore the current logical slide after layout settles (scrollbar/body lock changes can shift snap points).
+        restoreFromPropAfterLayout(carousel, "_ovSnapLogical", true);
+      }
+      // Only attached in non-dialog mode.
+      document.body.removeEventListener("keyup", closeModalOnBodyClick);
+    };
+    withOverlayViewTransition(wrapper, carousel, closeNow, true);
   };
-  const openModal = (el) => {
+  const openModal = (el, skipRestore = false, openIndex = null) => {
     let carousel = closestCarousel(el);
     if (carousel) {
-      let wrapper = carousel.closest(".n-carousel");
-      wrapper.toggleModal = true; // skip mutation observer
-      wrapper.insertAdjacentHTML(
-        "afterend",
-        `<div class=n-carousel__overlay-placeholder style="aspect-ratio: ${
-          wrapper.getBoundingClientRect().width /
-          wrapper.getBoundingClientRect().height
-        }"></div>`
-      );
-      wrapper.classList.add("n-carousel--overlay");
-      trapFocus(wrapper);
-      setTimeout(() => {
-        document.body.addEventListener("keyup", closeModalOnBodyClick);
-      }, FULLSCREEN_UPDATE_DELAY);
+      let wrapper = getCarousel(carousel);
+      // Snapshot the logical slide before the overlay state changes.
+      const snap = snapLogicalIndex(carousel);
+      const openNow = () => {
+        carousel.parentNode.toggleModal = true; // skip mutation observer
+        wrapper.classList.add("n-carousel--overlay");
+        enableLightboxCrossAxisClose(wrapper, carousel);
+        trapFocus(wrapper);
+        setTimeout(() => {
+          document.body.addEventListener("keyup", closeModalOnBodyClick);
+        }, 100);
+        // Inline lightbox: open to a requested slide (avoid timing/rAF races that can land on slide 0).
+        if (Number.isFinite(openIndex) && carousel.children && carousel.children.length) {
+          // Treat openIndex as a logical index (especially important for endless mode where DOM reorders).
+          // Use the shared "restore after layout" helper (double rAF) to avoid first-open Safari races.
+          carousel._ovSnapLogical = openIndex;
+          document.body.dataset.frozen = document.body.scrollTop;
+          restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
+          return;
+        }
+        if (!skipRestore && Number.isFinite(snap)) {
+          carousel._ovSnapLogical = snap;
+          restoreFromPropAfterLayout(carousel, "_ovSnapLogical", false);
+        }
+      };
+      // Overlay: prefer native shared-element transitions when available.
+      withOverlayViewTransition(wrapper, carousel, openNow, false);
     }
   };
   const autoHeightObserver = new ResizeObserver((entries) => {
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         let slide = e.target.querySelector(":scope > [aria-current]");
+        if (!slide) return;
         let el = slide.closest(".n-carousel__content");
-        if (!el.parentElement.dataset.sliding) {
+        if (!el) return;
+        let carousel = getCarousel(el);
+        // Skip if there's any overlay descendant
+        if (el.querySelector(":scope .n-carousel--overlay") !== null) {
+          return;
+        }
+        // Skip if already sliding to prevent update loops
+        if (el.parentElement.dataset.sliding) {
+          return;
+        }
+        // Prevent infinite loops by checking if height actually changed
+        let currentHeight = parseFloat(getComputedStyle(el).height);
+        let newHeight;
+        if (isVertical(el)) {
+          slide.style.height = "auto";
+          newHeight = slide.scrollHeight;
+          slide.style.height = "";
+        } else {
+          newHeight = nextSlideHeight(slide);
+        }
+        // Only update if height actually changed (with small tolerance for subpixel differences)
+        if (Math.abs(currentHeight - newHeight) > 1) {
           el.parentNode.style.removeProperty("--height");
           if (isVertical(el)) {
-            slide.style.height = "auto";
-            el.style.height = `${slide.scrollHeight}px`;
-            slide.style.height = "";
+            el.style.height = `${newHeight}px`;
             updateCarousel(el);
           } else {
             el.style.height = "";
-            el.style.height = `${slide.scrollHeight}px`;
+            el.style.height = `${newHeight}px`;
             updateCarousel(el, true);
           }
         }
@@ -1014,13 +1486,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       let carousel = el;
       carousel.style.padding = ""; // Subpixel peeking fix
       carousel.style.removeProperty("--peek-int");
-      // Cache computed style to avoid multiple calls
-      const carouselStyle = getComputedStyle(carousel);
-      const paddingBlockStart = parseInt(carouselStyle.paddingBlockStart);
-      const paddingInlineStart = parseInt(carouselStyle.paddingInlineStart);
       carousel.style.padding = isVertical(carousel)
-        ? `${paddingBlockStart}px 0`
-        : `0 ${paddingInlineStart}px`;
+        ? `${parseInt(getComputedStyle(carousel).paddingBlockStart)}px 0`
+        : `0 ${parseInt(getComputedStyle(carousel).paddingInlineStart)}px`;
       if (carousel.style.padding === "0px") {
         carousel.style.padding = "";
       } else {
@@ -1028,45 +1496,66 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         carousel.style.setProperty(
           "--peek-int",
           isVertical(carousel)
-            ? `${paddingBlockStart}px 0 0 0`
-            : `0 ${paddingInlineStart}px 0 0`
+            ? `${parseInt(
+                getComputedStyle(carousel).paddingBlockStart
+              )}px 0 0 0`
+            : `0 ${parseInt(
+                getComputedStyle(carousel).paddingInlineStart
+              )}px 0 0`
         );
       }
       window.requestAnimationFrame(() => {
-        const rect = carousel.getBoundingClientRect();
         if (isVertical(el)) {
           carousel.style.setProperty(
             "--subpixel-compensation",
-            Math.ceil(rect.height) - rect.height
+            Math.ceil(carousel.getBoundingClientRect().height) -
+              carousel.getBoundingClientRect().height
           );
         } else {
           carousel.style.setProperty(
             "--subpixel-compensation",
-            Math.ceil(rect.width) - rect.width
+            Math.ceil(carousel.getBoundingClientRect().width) -
+              carousel.getBoundingClientRect().width
           );
         }
-        let offset = getIndexReal(carousel); // Real offset including displaced first/last slides
-        scrollTo(
-          carousel,
-          offset * ceilingWidth(carousel.firstElementChild),
-          offset * ceilingHeight(carousel.firstElementChild)
-        );
+        let offset = getIndexReal(carousel);
+        if (carousel.firstElementChild) {
+          scrollTo(
+            carousel,
+            offset * ceilingWidth(carousel.firstElementChild),
+            offset * ceilingHeight(carousel.firstElementChild)
+          );
+        }
       });
     }
   };
   const observersOn = (el) => {
     window.requestAnimationFrame(() => {
+      // Always clear sliding lock when (re)enabling observers.
+      // Important: we may early-return below when an overlay descendant exists, but we must still
+      // clear data-sliding; otherwise the carousel can remain unclickable (pointer-events: none).
+      clearSliding(el.parentNode);
+      // Don't enable observers on parent carousel if there's ANY overlay carousel descendant
+      // Overlay carousels need to remain interactive
+      const hasOverlayDescendant = el.querySelector(":scope .n-carousel--overlay") !== null;
+      if (hasOverlayDescendant) {
+        // Skip observer setup for parent when overlay descendant exists anywhere
+        return;
+      }
       if (el.scroll_x && el.scroll_y) {
         scrollTo(el, el.scroll_x, el.scroll_y);
       }
-      if (
-        el.parentNode.matches(
-          ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
-        )
-      ) {
-        height_minus_index.observe(el.parentNode);
-      } else {
-        height_minus_index.unobserve(el.parentNode);
+      // Skip auto-height observer setup in fullscreen/overlay mode
+      if (!isModal(el.parentNode) && !isFullScreen()) {
+        if (
+          el.parentNode.matches(
+            ".n-carousel--vertical.n-carousel--controls-outside.n-carousel--auto-height"
+          )
+        ) {
+          height_minus_index.observe(el.parentNode);
+        } else {
+          height_minus_index.unobserve(el.parentNode);
+        }
       }
       subpixel_observer.observe(el);
       mutation_observer.observe(el.parentNode, {
@@ -1074,9 +1563,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         attributeFilter: ["class"],
       });
       el.addEventListener("scrollend", scrollEndAction);
-      // setTimeout(() => {
-      delete el.parentNode.dataset.sliding;
-      // }, 50); // Because intersection observer fires again
       if (!("onscrollend" in window) && isEndless(el)) {
         // Fix for browsers without scrollend event (Safari) losing parts of the edge slide
         scrollTo(
@@ -1094,17 +1580,19 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     el.removeEventListener("scrollend", scrollEndAction);
   };
   const updateObserver = (el) => {
+    // Skip if there's any overlay descendant
+    if (el.querySelector(":scope .n-carousel--overlay") !== null) {
+      return;
+    }
     observersOff(el);
     const doUpdate = (el) => {
       updateSubpixels(el);
       window.requestAnimationFrame(() => {
-        const activeSlide = el.querySelector(":scope > [aria-current]");
-        if (activeSlide) {
-          let current_height = activeSlide.scrollHeight + "px";
-          let previous_height = getComputedStyle(el).getPropertyValue("--height");
-          if (current_height !== previous_height) {
-            el.parentNode.style.setProperty("--height", current_height);
-          }
+        let current_height =
+          el.querySelector(":scope > [aria-current]").scrollHeight + "px";
+        let previous_height = getComputedStyle(el).getPropertyValue("--height");
+        if (current_height !== previous_height) {
+          el.parentNode.style.setProperty("--height", current_height);
         }
         observersOn(el);
       });
@@ -1116,7 +1604,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     window.requestAnimationFrame(() => {
       entries.forEach((e) => {
         let el = e.target;
-        if (el.observerStarted) {
+        if (!!el.observerStarted) {
           el.observerStarted = false;
           return;
         }
@@ -1131,14 +1619,11 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         !mutation.target.nextSlideInstant &&
         !mutation.target.toggleModal
       ) {
-        // Early return if target is not a carousel wrapper
-        if (!mutation.target.classList || !mutation.target.classList.contains("n-carousel")) {
-          continue;
-        }
         let carousel = mutation.target.querySelector(
           ":scope > .n-carousel__content"
         );
-        if (carousel) {
+        // Skip if there's any overlay descendant
+        if (carousel && carousel.querySelector(":scope .n-carousel--overlay") === null) {
           updateObserver(carousel);
           updateCarousel(carousel, true);
         }
@@ -1152,9 +1637,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       el.style.removeProperty("--height-minus-index");
       index.style.position = "absolute";
       el.style.setProperty("--height-minus-index", `${el.offsetHeight}px`);
-      // Cache computed style instead of querying again
-      const indexStyle = getComputedStyle(index);
-      el.style.setProperty("--index-width", indexStyle.width);
+      el.style.setProperty(
+        "--index-width",
+        getComputedStyle(el.querySelector(":scope > .n-carousel__index")).width
+      );
       index.style.position = "";
     }
   };
@@ -1179,6 +1665,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (!content) {
         return;
       }
+      // Stamp original indices before any endless-mode DOM shuffling can occur.
+      stampOriginalSlideIndices(content);
       if (!!previous) {
         previous.onclick = slidePreviousEvent;
       }
@@ -1188,12 +1676,12 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (!!index) {
         index.onclick = slideIndexEvent;
       }
+      enableLightboxClickToOpen(el, content, !!close_modal);
       if (!!close_modal) {
         close_modal.onclick = (e) => {
+          let wrapper = getCarousel(e.target);
           if (
-            e.target
-              .closest(".n-carousel")
-              .classList.contains("n-carousel--overlay")
+            wrapper.classList.contains("n-carousel--overlay")
           ) {
             closeModal(e.target);
           } else {
@@ -1201,85 +1689,116 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           }
         };
       }
+      // Safari fires fullscreen events on `document` inconsistently.
+      // Install a single global handler, independent of presence of a fullscreen button.
+      if (!window.__nCarouselFsHandler) {
+        window.__nCarouselFsLast = null;
+        window.__nCarouselFsHandler = () => {
+          const enteringFullscreen = isFullScreen();
+          const fsEl = fullscreenWrapper();
+          const wrapper = (enteringFullscreen ? fsEl : window.__nCarouselFsLast) || fsEl;
+          if (enteringFullscreen) window.__nCarouselFsLast = wrapper;
+          if (!wrapper || !wrapper.classList || !wrapper.classList.contains("n-carousel")) {
+            if (!enteringFullscreen) window.__nCarouselFsLast = null;
+            return;
+          }
+          const carousel = wrapper.querySelector(":scope > .n-carousel__content");
+          if (!carousel) {
+            if (!enteringFullscreen) window.__nCarouselFsLast = null;
+            return;
+          }
+          // Fullscreen wrappers must stay clickable - clear any sliding locks immediately.
+          // (This also keeps tests deterministic when they force data-sliding.)
+          clearSlidingLocks(wrapper);
+          // Avoid the common "Esc exits fullscreen then also closes overlay" double-action.
+          if (wrapper.classList.contains("n-carousel--overlay") && !enteringFullscreen) {
+            wrapper._suppressOverlayEscapeUntil = performance.now() + 250;
+          }
+          // Restore using the current snapshot; wait for layout settle.
+          if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
+            snapToProp(carousel, "_fsSnapLogical");
+          }
+          restoreFromPropAfterLayout(carousel, "_fsSnapLogical", !enteringFullscreen);
+          if (!enteringFullscreen) window.__nCarouselFsLast = null;
+        };
+        // Use capture so we also receive events dispatched on wrappers (tests / Safari quirks).
+        document.addEventListener("fullscreenchange", window.__nCarouselFsHandler, true);
+        document.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler, true);
+      }
+      // Also listen on the wrapper itself: our test fullscreen stub dispatches fullscreenchange on the
+      // element, and some browsers can differ in where they dispatch it.
+      if (!el._ncFsListener) {
+        el._ncFsListener = true;
+        el.addEventListener("fullscreenchange", window.__nCarouselFsHandler);
+        el.addEventListener("webkitfullscreenchange", window.__nCarouselFsHandler);
+      }
       if (!!full_screen) {
         full_screen.onclick = (e) => {
-          let carousel = e.target
-            .closest(".n-carousel")
-            .querySelector(":scope > .n-carousel__content");
-          carousel.dataset.xx = carousel.dataset.x;
-          carousel.dataset.yy = carousel.dataset.y;
           toggleFullScreen(e.target);
         };
-        const fullScreenEvent = (e) => {
-          let carousel = e.target.querySelector(
-            ":scope > .n-carousel__content"
-          );
-          window.requestAnimationFrame(() => {
-            carousel.dataset.x = carousel.dataset.xx || carousel.dataset.x;
-            carousel.dataset.y = carousel.dataset.yy || carousel.dataset.y;
-            delete carousel.dataset.xx;
-            delete carousel.dataset.yy;
-            if (
-              carousel.dataset.x !== "undefined" &&
-              carousel.dataset.y !== "undefined"
-            ) {
-              scrollTo(
-                carousel,
-                getIndexReal(carousel) *
-                  ceilingWidth(carousel.children[getIndexReal(carousel)]),
-                getIndexReal(carousel) *
-                  ceilingHeight(carousel.children[getIndexReal(carousel)])
-              );
-            }
-            delete carousel.togglingFullScreen;
-            updateCarousel(carousel);
-          });
-        };
-        if (isSafari) {
-          el.onwebkitfullscreenchange = fullScreenEvent;
-        } else {
-          el.onfullscreenchange = fullScreenEvent;
-        }
       }
       el.addEventListener("keydown", carouselKeys);
       el.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
           let el = e.target;
           if (!el.closest(".n-carousel--overlay")) {
-            el = document.querySelector(".n-carousel--overlay");
+            let overlay = document.querySelector(".n-carousel--overlay");
+            if (overlay) {
+              let overlayContent = overlay.querySelector(":scope > .n-carousel__content");
+              if (overlayContent) {
+                e.__nCarouselHandledEscape = true;
+                e.stopPropagation();
+                closeModal(overlayContent);
+              }
+            }
+            return;
           }
           if (el) {
+            e.__nCarouselHandledEscape = true;
+            e.stopPropagation();
             closeModal(el);
           }
         }
       });
       updateSubpixels(content);
       content.observerStarted = true;
-      const safeHash = sanitizeHash(location.hash);
-      let hashed_slide = safeHash
-        ? content.querySelector(":scope > " + safeHash)
-        : false;
+      let hashed_slide = false;
+      if (location.hash && location.hash.length > 1) {
+        try {
+          hashed_slide = content.querySelector(":scope > " + location.hash);
+        } catch (e) {
+          // Invalid selector, ignore
+        }
+      }
       if (hashed_slide) {
         if (el.classList.contains("n-carousel--inline")) {
-          openModal(content);
+          // This open is followed by an explicit jump to the hashed slide below.
+          openModal(content, true);
         }
-        let index = [...hashed_slide.parentNode.children].indexOf(hashed_slide);
+        let index = Array.prototype.indexOf.call(
+          hashed_slide.parentNode.children,
+          hashed_slide
+        );
         if (isVertical(content)) {
           content.dataset.y = index;
         } else {
           content.dataset.x = index;
         }
-        window.nCarouselNav = [content, safeHash];
+        // slideTo(content, index); // This slides to the wrong slide
+        window.nCarouselNav = [content, location.hash];
       }
-      if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
-        content.style.height = "";
-        content.style.height = getComputedStyle(content).height;
-        el.dataset.ready = true;
-        content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
-      }
-      if (isAutoHeight(el)) {
-        // Auto has a specified height which needs update on resize
-        autoHeightObserver.observe(content);
+      // Skip auto-height setup in fullscreen/overlay mode
+      if (!isModal(el) && !isFullScreen()) {
+        if (el.matches(".n-carousel--vertical.n-carousel--auto-height")) {
+          content.style.height = "";
+          content.style.height = getComputedStyle(content).height;
+          el.dataset.ready = true;
+          content.scrollTop = 0; // Should be a different value if the initial active slide is other than the first one (unless updateCarousel() takes care of it)
+        }
+        if (isAutoHeight(el)) {
+          // Auto has a specified height which needs update on resize
+          autoHeightObserver.observe(content);
+        }
       }
       window.requestAnimationFrame(() => {
         observersOn(content);
@@ -1313,7 +1832,6 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
       });
       content.nCarouselUpdate = updateCarousel;
-      // Note: scrollend event is provided by scrollyfills polyfill
       if (el.matches(".n-carousel--lightbox")) {
         let loaded = (img) => {
           img.closest("picture").dataset.loaded = true;
@@ -1343,3 +1861,4 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     document.addEventListener("DOMContentLoaded", doInit);
   }
 })();
+

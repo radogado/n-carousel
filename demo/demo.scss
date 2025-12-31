@@ -1,3 +1,5 @@
+@use "aspect-ratio";
+
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
@@ -18,7 +20,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: darkcyan;
+  background: #007171;
   height: 100%;
   line-height: 1.333;
   color: white;
@@ -27,8 +29,8 @@ body {
 .n-carousel {
   text-align: center;
   --nui-control-bg: rgb(255, 158, 158);
-  --nui-control-color: #670d5b;
-  --nui-control-active-color: white;
+  --nui-control-color: #17436f;
+  --nui-control-active-color: #670d5b;
 }
 
 .n-carousel__content {
@@ -50,6 +52,7 @@ pre {
   > :not(.n-carousel--overlay) {
   margin: 1rem;
   max-width: calc(100% - 2rem);
+  width: 100%;
   // box-sizing: border-box;
 }
 
@@ -80,14 +83,12 @@ html {
 .demo .n-carousel .n-carousel__content {
   > * {
     background: var(--nui-carousel-bg, aliceblue);
-    color: var(--nui-carousel-color, #027b7b);
-    // min-height: 100%;
-    // box-sizing: border-box;
-    // display: flex; // Very slow in Safari
+    color: var(--nui-carousel-color, #026464);
+    align-content: center;
   }
 
   a[href] {
-    color: #4d64bd;
+    color: #3a4c90;
   }
 
   @media (min-width: 900px) {
@@ -112,11 +113,6 @@ html {
     background: none;
   }
 }
-
-// .n-carousel--lightbox > .n-carousel__content > * {
-// 	padding: 0;
-// 	margin: 0;
-// }
 
 @media (min-width: 600px) {
   .demo-grid {
@@ -152,10 +148,7 @@ html {
     flex-wrap: nowrap;
     // padding: 1ch 0;
     background: var(--nui-control-bg);
-
-    button {
-      // max-width: 25vw;
-    }
+    padding: .5rem 0;
   }
 
   .source {
@@ -172,7 +165,7 @@ html {
   }
 
   a[href] {
-    color: #cecfd6;
+    color: white;
   }
 
   a[href]:visited {
@@ -207,7 +200,7 @@ code[class*="language-"] {
     margin: 0;
     -webkit-appearance: none;
     appearance: none;
-    background: lightcoral;
+    background: #b15d5d;
     border: none;
     cursor: pointer;
     color: #fff;
@@ -290,8 +283,8 @@ _:future,
 
 .demo-grid-3 {
   align-self: center;
+  justify-self: flex-start;
   max-width: 100%;
-
   gap: 1em;
   padding: 2em;
   box-sizing: border-box;
@@ -300,10 +293,12 @@ _:future,
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
+
   > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    justify-self: flex-start;
   }
 
   > .n-aspect {

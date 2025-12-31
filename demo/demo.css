@@ -1,3 +1,44 @@
+@charset "UTF-8";
+/* Image aspect ratio – don't shift the page after loading the image */
+@supports (--a: 1) {
+  .n-aspect {
+    flex-direction: row;
+    align-items: flex-start;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    vertical-align: top;
+    width: calc(1px * var(--width, 100%));
+    max-width: 100%;
+    text-align: start;
+  }
+  .n-aspect > img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+  .n-aspect:before {
+    content: "";
+    padding-top: calc(100% / (var(--width) / var(--height)));
+  }
+  .n-aspect[style*="--ratio"], .n-aspect.n-aspect--ratio {
+    width: calc(1px * var(--width, 10000));
+    max-width: 100%;
+  }
+  .n-aspect[style*="--ratio"]:before, .n-aspect.n-aspect--ratio:before {
+    padding-top: calc(100% / var(--ratio, 1.7778));
+  }
+  .n-aspect.n-bottom > * {
+    align-self: flex-end;
+    vertical-align: bottom;
+  }
+  .n-aspect.n-middle > * {
+    align-self: center;
+    vertical-align: middle;
+  }
+}
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
@@ -16,7 +57,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: darkcyan;
+  background: #007171;
   height: 100%;
   line-height: 1.333;
   color: white;
@@ -25,8 +66,8 @@ body {
 .n-carousel {
   text-align: center;
   --nui-control-bg: rgb(255, 158, 158);
-  --nui-control-color: #670d5b;
-  --nui-control-active-color: white;
+  --nui-control-color: #17436f;
+  --nui-control-active-color: #670d5b;
 }
 
 .n-carousel__content {
@@ -44,6 +85,7 @@ pre {
 .n-carousel:not(.n-carousel--lightbox) > .n-carousel__content > * > :not(.n-carousel--overlay) {
   margin: 1rem;
   max-width: calc(100% - 2rem);
+  width: 100%;
 }
 
 .demo .n-carousel:not(.n-carousel--auto-height):not(.n-carousel--lightbox) > .n-carousel__content > *,
@@ -59,10 +101,11 @@ html {
 
 .demo .n-carousel .n-carousel__content > * {
   background: var(--nui-carousel-bg, aliceblue);
-  color: var(--nui-carousel-color, #027b7b);
+  color: var(--nui-carousel-color, #026464);
+  align-content: center;
 }
 .demo .n-carousel .n-carousel__content a[href] {
-  color: #4d64bd;
+  color: #3a4c90;
 }
 @media (min-width: 900px) {
   .demo .n-carousel .n-carousel__content p {
@@ -108,6 +151,7 @@ html {
   overflow: auto;
   flex-wrap: nowrap;
   background: var(--nui-control-bg);
+  padding: 0.5rem 0;
 }
 .demo .source {
   display: flex;
@@ -120,7 +164,7 @@ html {
   font: inherit;
 }
 .demo a[href] {
-  color: #cecfd6;
+  color: white;
 }
 .demo a[href]:visited {
   text-decoration: none;
@@ -152,7 +196,7 @@ code[class*=language-] {
   margin: 0;
   -webkit-appearance: none;
   appearance: none;
-  background: lightcoral;
+  background: #b15d5d;
   border: none;
   cursor: pointer;
   color: #fff;
@@ -223,6 +267,7 @@ _:future,
 
 .demo-grid-3 {
   align-self: center;
+  justify-self: flex-start;
   max-width: 100%;
   gap: 1em;
   padding: 2em;
@@ -238,6 +283,7 @@ _:future,
   display: flex;
   flex-direction: column;
   justify-content: center;
+  justify-self: flex-start;
 }
 .demo-grid-3 > .n-aspect {
   margin: auto;
@@ -287,3 +333,4 @@ _:future,
   border: 3px solid var(--nui-control-bg);
   box-sizing: border-box;
 }
+/*# sourceMappingURL=demo.css.map */

@@ -1,75 +1,47 @@
 {
   "name": "n-carousel",
-  "version": "1.2.21",
+  "version": "1.2.26",
   "description": "Carousel",
-  "main": "n-carousel.js",
-  "files": [
-    "n-carousel.js",
-    "n-carousel.min.js",
-    "n-carousel.min.js.map",
-    "n-carousel.css",
-    "n-carousel.min.css",
-    "n-carousel.css.map",
-    "n-carousel.scss",
-    "n-carousel-preload.js",
-    "n-carousel-preload.min.js",
-    "n-carousel-preload.min.js.map",
-    "scrollyfills.module.js",
-    "react/NCarousel.jsx",
-    "react/example.jsx",
-    "LICENSE",
-    "README.md"
-  ],
+  "main": "index.js",
+  "types": "n-carousel.d.ts",
   "scripts": {
-    "test": "jest",
-    "build": "./build.sh",
-    "watch": "./watch.sh"
+    "build": "gulp",
+    "watch": "gulp watch",
+    "dev": "gulp watch",
+    "serve": "serve . -p 3000",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:visual": "playwright test",
+    "test:visual:ui": "playwright test --ui",
+    "test:visual:update": "playwright test --update-snapshots"
   },
-  "keywords": [
-    "carousel",
-    "slider",
-    "gallery",
-    "lightbox",
-    "responsive",
-    "react",
-    "react-component"
-  ],
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/radogado/n-carousel.git"
-  },
-  "bugs": {
-    "url": "https://github.com/radogado/n-carousel/issues"
-  },
-  "homepage": "https://github.com/radogado/n-carousel#readme",
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
-  },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.24.0",
-    "@babel/preset-react": "^7.23.3",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/user-event": "^14.5.2",
-    "babel-jest": "^29.7.0",
+    "@playwright/test": "^1.57.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
     "clean-css-cli": "^4.3.0",
+    "gulp": "^5.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^6.0.1",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.1.0",
     "gzip-size": "^6.0.0",
     "gzip-size-cli": "^4.0.0",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^27.4.0",
     "n-modal": "^1.0.3",
-    "pa11y": "^9.0.0",
+    "playwright": "^1.57.0",
     "rollup": "^2.79.0",
-    "sass": "^1.49.7",
+    "sass": "^1.89.0",
     "scrollyfills": "^1.0.0",
-    "terser": "^5.4.0"
-  },
-  "overrides": {
-    "glob": "^9.0.0"
+    "serve": "^14.2.5",
+    "terser": "^5.4.0",
+    "vitest": "^4.0.16"
   }
 }
