@@ -1333,9 +1333,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   function withOverlayViewTransition(wrapper, carousel, mutate, isClosing = false) {
     if (!wrapper || !carousel || typeof mutate !== "function") return mutate();
     if (prefersReducedMotion()) return mutate();
-    // Firefox has a buggy shared-element close transition (offsets drift left).
-    // Keep open animation (looks fine), but skip close animation.
-    if (isFirefox && isClosing) return mutate();
+    // Firefox has buggy shared-element transitions for our overlays (open/close can drift).
+    // Disable view transitions on Firefox for now.
+    if (isFirefox) return mutate();
     if (typeof document.startViewTransition !== "function") return mutate();
 
     // Shared element for the transition:
