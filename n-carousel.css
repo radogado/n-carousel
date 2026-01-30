@@ -401,6 +401,9 @@ body[data-frozen] {
   }
 }
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) {
+  display: flex;
+}
+.n-carousel.n-carousel--inline:not(.n-carousel--overlay).n-carousel--vertical {
   display: block;
 }
 .n-carousel.n-carousel--inline:not(.n-carousel--overlay) > .n-carousel__index > [aria-current] {

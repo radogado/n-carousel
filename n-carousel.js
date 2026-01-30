@@ -123,6 +123,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       cur = cur.parentNode;
     }
   };
+  const hasOverlayDescendant = (el) =>
+    !!(el && el.querySelector(":scope .n-carousel--overlay") !== null);
   const scrollEndAction = (carousel) => {
     carousel = carousel.target || carousel;
     const carouselStyle = getComputedStyle(carousel);
@@ -174,6 +176,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       if (isAutoHeight(carousel)) {
         const now = performance.now();
         if (carousel._autoHeightLockUntil && now < carousel._autoHeightLockUntil) {
+          observersOn(carousel);
+          clearSliding(wrapper);
           return;
         }
         let old_height = Math.round(parseFloat(getComputedStyle(carousel).height));
@@ -209,6 +213,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             if (old_height !== new_height) {
               carousel.parentNode.style.setProperty("--height", `${new_height}px`);
             }
+            carousel._autoHeightLockUntil = now + AUTO_HEIGHT_STABLE_MS;
             setTimeout(() => updateCarousel(carousel, true), SCROLL_END_TIMEOUT + 200);
             return;
           }
@@ -227,14 +232,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         const targetHeight = heightChanged ? new_height : false;
         carousel._autoHeightLockUntil = now + AUTO_HEIGHT_STABLE_MS;
         window.requestAnimationFrame(() => {
-          scrollAnimate(carousel, offset_x, offset_y, false, old_height).then(
-            () => {
-              if (heightChanged) {
-                carousel.style.height = `${targetHeight}px`;
-                updateCarousel(carousel, true);
-              }
-            }
-          );
+          scrollAnimate(carousel, offset_x, offset_y, targetHeight, old_height);
         });
       } else {
         window.requestAnimationFrame(() => {
@@ -298,6 +296,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const nextSlideHeight = (el) => {
+    if (!el) return 0;
     el.style.height = 0;
     el.style.overflow = "auto";
     const height = el.scrollHeight; // Ceiling when subpixel
@@ -542,7 +541,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         wrapper.matches(".n-carousel--instant")
       ) {
         scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
-        el.style.height = `${new_height}px`;
+        if (new_height !== false && new_height !== null && new_height !== undefined) {
+          el.style.height = `${new_height}px`;
+        }
         delete wrapper.nextSlideInstant;
         updateCarousel(el);
         resolve(el);
@@ -567,8 +568,9 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       }
       var startx = getScroll(el).x;
       var starty = getScroll(el).y;
-    var starth = parseInt(el.style.height);
-    var distanceH = shouldAdjustHeight ? new_height - starth : 0;
+      var starth = parseInt(el.style.height);
+      if (!Number.isFinite(starth)) starth = 0;
+      var distanceH = shouldAdjustHeight ? new_height - starth : 0;
       var duration =
         parseFloat(el.parentNode.dataset.duration) * 1000 || default_duration;
       var start = null;
@@ -613,8 +615,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     // Skip update entirely if there's ANY overlay carousel descendant
     // Overlay carousels need to remain interactive and shouldn't be managed by parent
     // But if forced, allow update (e.g., when overlay is being closed and we need to refresh parent)
-    const hasOverlayDescendant = el.querySelector(":scope .n-carousel--overlay") !== null;
-    if (hasOverlayDescendant && !forced) {
+    const overlayDescendant = hasOverlayDescendant(el);
+    if (overlayDescendant && !forced) {
       // Don't update parent carousel when an overlay descendant exists anywhere
       // This prevents parent from setting inert on overlay carousels
       // But allow forced updates (e.g., when closing overlay)
@@ -1500,7 +1502,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           return;
         }
         // Skip if there's any overlay descendant
-        if (el.querySelector(":scope .n-carousel--overlay") !== null) {
+        if (hasOverlayDescendant(el)) {
           return;
         }
         // Skip if already sliding to prevent update loops
@@ -1649,8 +1651,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       clearSliding(el.parentNode);
       // Don't enable observers on parent carousel if there's ANY overlay carousel descendant
       // Overlay carousels need to remain interactive
-      const hasOverlayDescendant = el.querySelector(":scope .n-carousel--overlay") !== null;
-      if (hasOverlayDescendant) {
+      const overlayDescendant = hasOverlayDescendant(el);
+      if (overlayDescendant) {
         // Skip observer setup for parent when overlay descendant exists anywhere
         return;
       }
@@ -1693,7 +1695,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const updateObserver = (el) => {
     // Skip if there's any overlay descendant
-    if (el.querySelector(":scope .n-carousel--overlay") !== null) {
+    if (hasOverlayDescendant(el)) {
       return;
     }
     observersOff(el);
@@ -1749,7 +1751,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           ":scope > .n-carousel__content"
         );
         // Skip if there's any overlay descendant
-        if (carousel && carousel.querySelector(":scope .n-carousel--overlay") === null) {
+        if (carousel && !hasOverlayDescendant(carousel)) {
           updateObserver(carousel);
           updateCarousel(carousel, true);
         }
