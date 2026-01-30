@@ -12,8 +12,8 @@ A carousel component which uses the native scroll snapping functionality with en
 - 🌍 **RTL support** - Right-to-left language support
 - ⚛️ **React-friendly** - Render HTML in React and call `window.nCarouselInit()` after updates
 - 🎨 **Highly customizable** - 245,760+ valid option combinations
-- 🪶 **Lightweight** - ~4.2 KB CSS + ~6.5 KB JS (gzipped)
-- 🚫 **No dependencies** - Pure vanilla JavaScript and CSS
+- 🪶 **Lightweight** - ~4.1 KB CSS + ~8.7 KB JS (gzipped)
+- 🚫 **No dependencies** - Pure vanilla JavaScript and CSS (polyfills bundled)
 - 📘 **TypeScript support** - Full type definitions included
 - 🎭 **Multiple modes** - Horizontal, vertical, tabs, lightbox, inline, endless
 - 🖼️ **Auto height** - Automatically adjusts to content height
@@ -44,8 +44,8 @@ npm install n-carousel
 ### Download
 
 Get the files from the [releases page](https://github.com/radogado/n-carousel/releases) or use the minified versions:
-- `n-carousel.min.css` (~25 KB, ~4.2 KB gzipped)
-- `n-carousel.min.js` (~23 KB, ~6.5 KB gzipped)
+- `n-carousel.min.css` (~4.1 KB gzipped)
+- `n-carousel.min.js` (~8.7 KB gzipped)
 
 ## Quick Start
 
@@ -105,6 +105,8 @@ Add modifier classes to customize your carousel:
 - `n-carousel--endless` - Infinite loop carousel
 - `n-carousel--auto-slide` - Automatically advance slides
 - `n-carousel--instant` - Instant transitions (no animation)
+
+**Auto height notes:** Height updates are debounced briefly after slide changes to prevent jitter, then re-measured via `ResizeObserver` (including on resize). Scroll-settled navigation still animates height, matching button navigation.
 
 ### Display Modes
 
@@ -399,7 +401,7 @@ The specified minimum versions (Chrome 90+, Firefox 88+, Safari 14.1+) fully sup
 
 Uses native scroll snapping with a polyfill for the `scrollend` event where needed.
 
-**Note:** Safari added native support for the `scrollend` event in Safari 26.2+ (2025). The polyfill (`scrollyfills`) is still included and will automatically be used for older Safari versions (14.1-26.1) when native support is not available. The polyfill uses feature detection (`"onscrollend" in window`) to determine whether to activate.
+**Note:** Safari includes native `scrollend` support in newer versions. The polyfill (`scrollyfills`) is bundled and uses feature detection (`"onscrollend" in window`) to activate only when needed.
 
 ## Development
 
@@ -468,7 +470,7 @@ npm run test:visual:update
 - Data attributes and API functionality
 - Integration tests for various use cases
 
-**Playwright Tests (10 tests):**
+**Playwright Tests (11 tests):**
 - Basic carousel appearance
 - Vertical, tabs, thumbnails, controls-outside, and peek options
 - Interaction visual tests (button clicks, transitions)
@@ -521,7 +523,7 @@ Developed by [Radoslav Sharapanov](https://rado.bg) since 2020.
 
 ## Changelog
 
-### 1.2.22
+### 1.2.27
 - Current version
 
 ### 1.1
