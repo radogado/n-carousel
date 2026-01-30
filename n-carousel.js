@@ -1419,6 +1419,18 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         }
         // Restore the current logical slide after layout settles (scrollbar/body lock changes can shift snap points).
         restoreFromPropAfterLayout(carousel, "_ovSnapLogical", true);
+        if (isAutoHeight(carousel)) {
+          // Overlay close can leave a stale auto-height; re-lock after layout settles.
+          window.requestAnimationFrame(() =>
+            window.requestAnimationFrame(() => {
+              const active =
+                carousel.querySelector(":scope > [aria-current]") || carousel.children[0];
+              clearAutoHeightLock(carousel);
+              lockAutoHeight(carousel, active);
+              updateCarousel(carousel, true);
+            })
+          );
+        }
       }
       // Only attached in non-dialog mode.
       document.body.removeEventListener("keyup", closeModalOnBodyClick);
