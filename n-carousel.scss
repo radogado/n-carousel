@@ -1071,7 +1071,7 @@ _:future,
         // grid-template: 1fr auto/auto;
         >figcaption {
           // grid-row: 2/3;
-          margin-top: none;
+          margin-top: 0;
           margin-bottom: 3em;
         }
       }

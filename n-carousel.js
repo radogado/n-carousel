@@ -139,8 +139,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
           : carousel.scrollLeft /
               (carousel.offsetWidth -
                 parseFloat(carouselStyle.paddingInlineStart) -
-                parseFloat(carouselStyle.paddingInlineEnd)),
-        2
+                parseFloat(carouselStyle.paddingInlineEnd))
       )
     );
     if (index >= carousel.children.length) {
@@ -462,7 +461,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   let focusableContent = null;
   let lastFocusableElement = null;
   const focusHandler = (e) => {
-    let isTabPressed = e.key === "Tab" || e.keyCode === 9;
+    let isTabPressed = e.key === "Tab";
     if (!isTabPressed) {
       return;
     }
@@ -515,14 +514,14 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     }
   };
   const closestCarousel = (el) => {
-    var related_by_id = el.closest('[class*="n-carousel"]').dataset.for;
-    if (!!related_by_id) {
-      return document
-        .getElementById(related_by_id)
-        .querySelector(".n-carousel__content");
-    } else {
-      return el.closest(".n-carousel").querySelector(".n-carousel__content");
+    if (!el) return null;
+    const wrapper = el.closest('[class*="n-carousel"]');
+    if (!wrapper) return null;
+    const related_by_id = wrapper.dataset.for;
+    if (related_by_id) {
+      return document.getElementById(related_by_id)?.querySelector(".n-carousel__content") ?? null;
     }
+    return el.closest(".n-carousel")?.querySelector(".n-carousel__content") ?? null;
   };
   const scrollAnimate = (
     el,
@@ -1965,8 +1964,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
             carouselTimeout,
             parseFloat(el.dataset.interval) * 1000 || default_interval
           );
-          content.addEventListener("pointerenter", (e) =>
-            clearTimeout(e.target.nCarouselTimeout)
+          content.addEventListener("pointerenter", () =>
+            clearTimeout(content.nCarouselTimeout)
           );
         }
         el.dataset.platform = navigator.platform; // iPhone doesn't support full screen, Windows scroll works differently
