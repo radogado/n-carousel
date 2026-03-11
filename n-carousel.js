@@ -416,19 +416,34 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   };
   const restoreLogicalAfterLayout = (content, logicalIndex, clearProp) => {
     if (!content || !Number.isFinite(logicalIndex)) return;
-    // Fullscreen/overlay toggles can change sizes mid-frame. Wait for layout settle.
+    // Fullscreen/overlay toggles can change sizes mid-frame. Wait for layout to settle.
     window.requestAnimationFrame(() =>
       window.requestAnimationFrame(() => {
+        // Restore any endless-mode displaced slides FIRST so offsetLeft is computed against
+        // the final stable DOM. This prevents an off-by-one when the active slide was at an
+        // edge (e.g. last slide) and slide 0 was displaced as a data-last clone — if we
+        // scrolled to that displaced offset Safari's snap engine would latch onto the wrong
+        // slide via observersOn's no-scrollend polyfill path.
+        content.querySelectorAll(":scope > [data-first]").forEach((el2) => {
+          content.append(content.firstElementChild);
+          delete el2.dataset.first;
+        });
+        content.querySelectorAll(":scope > [data-last]").forEach((el2) => {
+          content.prepend(content.lastElementChild);
+          delete el2.dataset.last;
+        });
         stampOriginalSlideIndices(content);
         const target =
           [...content.children].find(
             (s) => s && Number.isFinite(s._ncIndex) && s._ncIndex === logicalIndex
           ) || content.children[logicalIndex];
         if (!target) return;
-        scrollTo(content, target.offsetLeft || 0, target.offsetTop || 0);
-        updateCarousel(content);
-        // Restores are not user slide animations - if a sliding lock gets set during this,
-        // it can make the overlay/fullscreen UI unclickable.
+        // x is now a valid snap point in the restored DOM — no need to disable scroll-snap.
+        content.scrollLeft = target.offsetLeft || 0;
+        content.scrollTop = target.offsetTop || 0;
+        // forced=true: bypasses the early-return guard (same aria-current slide) and skips
+        // the endless-mode scrollTo since displacement is already resolved above.
+        updateCarousel(content, true);
         const w = getCarousel(content);
         if (
           w &&

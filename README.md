@@ -523,8 +523,11 @@ Developed by [Radoslav Sharapanov](https://rado.bg) since 2020.
 
 ## Changelog
 
+### 1.2.28
+- fix: restore scroll position after overlay close in Safari (endless mode)
+
 ### 1.2.27
-- Current version
+- Fix bugs and clean up code
 
 ### 1.1
 - Endless option
