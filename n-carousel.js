@@ -1091,14 +1091,22 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
   const slideIndexEvent = (e) => {
     let el = e.target.closest("a, button");
     if (el && !(el.href && (e.ctrlKey || e.metaKey))) {
+      // Thumbnails may be wrapped (e.g. per-item divs); indexControls(el.parentNode) would
+      // then only see one control and logical_index would always be 0.
+      const indexParent = el.closest(".n-carousel__index");
+      if (!indexParent) return;
       const wrapper =
-        document.querySelector(`.n-carousel#${el.parentNode.dataset.for}`) ||
+        (indexParent.dataset.for &&
+          document.querySelector(`.n-carousel#${indexParent.dataset.for}`)) ||
         el.closest(".n-carousel");
+      if (!wrapper) return;
       const carousel = wrapper.querySelector(":scope > .n-carousel__content");
+      if (!carousel) return;
       const logical_index = Array.prototype.indexOf.call(
-        indexControls(el.parentNode),
+        indexControls(indexParent),
         el
       );
+      if (logical_index < 0) return;
       let new_index = logical_index;
       if (isEndless(carousel)) {
         // Map logical index button -> current DOM index of that original slide.
