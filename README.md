@@ -407,9 +407,9 @@ The codebase uses modern JavaScript features that require:
 
 The specified minimum versions (Chrome 90+, Firefox 88+, Safari 14.1+) fully support all required features. The code includes Safari-specific workarounds for known scroll snap and fullscreen API quirks.
 
-Uses native scroll snapping with a polyfill for the `scrollend` event where needed.
+Uses native scroll snapping. On modern browsers (Chrome 114+, Firefox 109+, Safari 16.4+), slide sync uses the native `scrollend` event. On older browsers, a lightweight per-carousel scroll debounce fallback keeps swipe navigation working; prev/next, thumbnails, and keyboard controls always work without it.
 
-**Note:** Safari includes native `scrollend` support in newer versions. The polyfill (`scrollyfills`) is bundled and uses feature detection (`"onscrollend" in window`) to activate only when needed.
+See **Browser support** above for full vs degraded tiers.
 
 ## Development
 

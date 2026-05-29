@@ -14,10 +14,6 @@ export default defineConfig({
       }
     },
     logHeapUsage: false,
-    // Improve ES module handling
-    deps: {
-      inline: ['scrollyfills'],
-    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -29,7 +25,6 @@ export default defineConfig({
         'demo/',
         'safari-16.2/',
         'dist/',
-        'scrollyfills.module.js',
       ],
     },
   },
