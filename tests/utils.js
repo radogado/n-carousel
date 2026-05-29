@@ -148,3 +148,33 @@ export function getActiveSlideIndex(carousel) {
   return Math.round(scrollLeft / slideWidth);
 }
 
+/**
+ * Mocks layout metrics for horizontal carousel scrolling in jsdom.
+ */
+export function mockCarouselLayout(content) {
+  content.scrollTo = (x, y) => {
+    if (typeof x === 'object') {
+      content.scrollLeft = x.left ?? content.scrollLeft;
+      content.scrollTop = x.top ?? content.scrollTop;
+    } else {
+      content.scrollLeft = x;
+      content.scrollTop = y;
+    }
+  };
+  Object.defineProperty(content, 'offsetWidth', { value: 500, writable: true });
+  Object.defineProperty(content, 'offsetHeight', { value: 300, writable: true });
+  Object.defineProperty(content, 'scrollWidth', { value: 1500, writable: true });
+  Object.defineProperty(content, 'scrollHeight', { value: 300, writable: true });
+  Object.defineProperty(content, 'scrollLeft', { value: 0, writable: true });
+  Object.defineProperty(content, 'scrollTop', { value: 0, writable: true });
+  [...content.children].forEach((slide, slideIndex) => {
+    Object.defineProperty(slide, 'offsetWidth', { value: 500, writable: true });
+    Object.defineProperty(slide, 'offsetHeight', { value: 300, writable: true });
+    Object.defineProperty(slide, 'offsetLeft', {
+      get() {
+        return slideIndex * 500;
+      },
+    });
+  });
+}
+
