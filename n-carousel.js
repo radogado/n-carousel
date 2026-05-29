@@ -1095,6 +1095,8 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       // then only see one control and logical_index would always be 0.
       const indexParent = el.closest(".n-carousel__index");
       if (!indexParent) return;
+      // Gallery thumbs are often <a href="…">; block navigation once we know this is index UI.
+      e.preventDefault();
       const wrapper =
         (indexParent.dataset.for &&
           document.querySelector(`.n-carousel#${indexParent.dataset.for}`)) ||
