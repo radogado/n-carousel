@@ -1818,6 +1818,23 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       });
     });
   });
+  const tuneLightboxSlideImagePriority = (wrapper, content) => {
+    if (!wrapper?.matches(".n-carousel--lightbox") || !content) return;
+    const inlineHidden =
+      wrapper.classList.contains("n-carousel--inline") &&
+      !wrapper.classList.contains("n-carousel--overlay");
+    content.querySelectorAll(":scope > li img").forEach((img, index) => {
+      if (inlineHidden || index > 0) {
+        img.setAttribute("fetchpriority", "low");
+        if (!img.hasAttribute("loading")) {
+          img.setAttribute("loading", "lazy");
+        }
+      } else {
+        img.setAttribute("fetchpriority", "high");
+        img.removeAttribute("loading");
+      }
+    });
+  };
   const init = (host = document) => {
     host.querySelectorAll(".n-carousel:not([data-ready])").forEach((el) => {
       const previous = getControl(el, ".n-carousel__previous");
@@ -1997,6 +2014,7 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
       });
       content.nCarouselUpdate = updateCarousel;
       if (el.matches(".n-carousel--lightbox")) {
+        tuneLightboxSlideImagePriority(el, content);
         let loaded = (img) => {
           img.closest("picture").dataset.loaded = true;
         };

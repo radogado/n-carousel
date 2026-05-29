@@ -677,6 +677,7 @@ body[data-frozen] {
 
   &.n-carousel--overlay {
     --max-height: 100vh;
+    color-scheme: light dark;
     position: fixed;
     top: 0;
     left: 0;
@@ -758,6 +759,11 @@ _:future,
     align-items: center;
     padding: 0 1ch;
     cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--nui-control-highlight, currentColor);
+      outline-offset: 2px;
+    }
 
     span {
       color: var(--nui-control-color, #333);
@@ -934,7 +940,7 @@ _:future,
       min-width: 1.5em;
       min-inline-size: min-content;
 
-      &:focus {
+      &:focus-visible {
         z-index: 0;
       }
     }
