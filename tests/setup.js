@@ -90,25 +90,3 @@ global.requestAnimationFrame = (callback) => {
 global.cancelAnimationFrame = (id) => {
   clearTimeout(id);
 };
-
-// Mock scrollend event if not available
-if (typeof window !== 'undefined' && !('onscrollend' in window)) {
-  // The scrollyfills polyfill will handle this, but for tests we can mock it
-  const originalAddEventListener = EventTarget.prototype.addEventListener;
-  EventTarget.prototype.addEventListener = function(type, listener, options) {
-    if (type === 'scrollend' && !('onscrollend' in window)) {
-      // Simulate scrollend with a timeout after scroll
-      const wrappedListener = function(e) {
-        if (e.type === 'scroll') {
-          setTimeout(() => {
-            const scrollEndEvent = new Event('scrollend', { bubbles: true });
-            this.dispatchEvent(scrollEndEvent);
-          }, 100);
-        }
-        if (listener) listener.call(this, e);
-      };
-      return originalAddEventListener.call(this, 'scroll', wrappedListener, options);
-    }
-    return originalAddEventListener.call(this, type, listener, options);
-  };
-}

@@ -12,8 +12,8 @@ A carousel component which uses the native scroll snapping functionality with en
 - 🌍 **RTL support** - Right-to-left language support
 - ⚛️ **React-friendly** - Render HTML in React and call `window.nCarouselInit()` after updates
 - 🎨 **Highly customizable** - 245,760+ valid option combinations
-- 🪶 **Lightweight** - ~4.1 KB CSS + ~8.7 KB JS (gzipped)
-- 🚫 **No dependencies** - Pure vanilla JavaScript and CSS (polyfills bundled)
+- 🪶 **Lightweight** - ~4.1 KB CSS + ~7.9 KB JS (gzipped)
+- 🚫 **No dependencies** - Pure vanilla JavaScript and CSS
 - 📘 **TypeScript support** - Full type definitions included
 - 🎭 **Multiple modes** - Horizontal, vertical, tabs, lightbox, inline, endless
 - 🖼️ **Auto height** - Automatically adjusts to content height
@@ -45,9 +45,17 @@ npm install n-carousel
 
 Get the files from the [releases page](https://github.com/radogado/n-carousel/releases) or use the minified versions:
 - `n-carousel.min.css` (~4.1 KB gzipped)
-- `n-carousel.min.js` (~8.7 KB gzipped)
+- `n-carousel.min.js` (~7.9 KB gzipped)
 
-## Quick Start
+## Browser support
+
+| Tier | Browsers | Experience |
+|------|----------|------------|
+| **Full** | Chrome 114+, Firefox 109+, Safari 16.4+ (~2023+) | Native `scrollend` for swipe sync |
+| **Degraded** | ~5+ years old (e.g. Safari 14–15, Chrome 90–113) | Scroll-snap swipe works; slide/index sync uses a lightweight scroll debounce fallback; prev/next, thumbnails, and keyboard always work |
+| **Not supported** | No scroll-snap | Not a target |
+
+No extra script files are required — one CSS and one JS bundle.
 
 ### Basic Setup
 

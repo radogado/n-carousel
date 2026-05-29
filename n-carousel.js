@@ -1,5 +1,23 @@
-import "./scrollyfills.module.js"; // scrollend event polyfill
 (function () {
+  const SCROLL_END_FALLBACK_MS = 100;
+
+  function bindScrollEnd(el, handler) {
+    if ("onscrollend" in window) {
+      el.addEventListener("scrollend", handler);
+      return () => el.removeEventListener("scrollend", handler);
+    }
+    let timer = 0;
+    const onScroll = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => handler({ target: el }), SCROLL_END_FALLBACK_MS);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      el.removeEventListener("scroll", onScroll);
+    };
+  }
+
   const ceilingWidth = (el) =>
     Math.ceil(parseFloat(getComputedStyle(el).width));
   const ceilingHeight = (el) =>
@@ -1712,7 +1730,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
         attributes: true,
         attributeFilter: ["class"],
       });
-      el.addEventListener("scrollend", scrollEndAction);
+      if (el._ncScrollEndUnbind) {
+        el._ncScrollEndUnbind();
+      }
+      el._ncScrollEndUnbind = bindScrollEnd(el, scrollEndAction);
       if (!("onscrollend" in window) && isEndless(el)) {
         // Fix for browsers without scrollend event (Safari) losing parts of the edge slide
         scrollTo(
@@ -1727,7 +1748,10 @@ import "./scrollyfills.module.js"; // scrollend event polyfill
     height_minus_index.unobserve(el.parentNode);
     subpixel_observer.unobserve(el);
     el.observerStarted = true;
-    el.removeEventListener("scrollend", scrollEndAction);
+    if (el._ncScrollEndUnbind) {
+      el._ncScrollEndUnbind();
+      el._ncScrollEndUnbind = null;
+    }
   };
   const updateObserver = (el) => {
     // Skip if there's any overlay descendant

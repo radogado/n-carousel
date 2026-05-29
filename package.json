@@ -42,7 +42,6 @@
     "playwright": "^1.57.0",
     "rollup": "^2.80.0",
     "sass": "^1.89.0",
-    "scrollyfills": "^1.0.0",
     "serve": "^14.2.5",
     "terser": "^5.4.0",
     "vitest": "^4.0.16"
