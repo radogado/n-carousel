@@ -19,6 +19,9 @@
   },
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
   "license": "MIT",
+  "overrides": {
+    "postcss": "^8.5.15"
+  },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "@testing-library/dom": "^10.4.1",
@@ -37,7 +40,7 @@
     "jsdom": "^27.4.0",
     "n-modal": "^1.0.3",
     "playwright": "^1.57.0",
-    "rollup": "^2.79.0",
+    "rollup": "^2.80.0",
     "sass": "^1.89.0",
     "scrollyfills": "^1.0.0",
     "serve": "^14.2.5",
