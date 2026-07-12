@@ -275,6 +275,10 @@ body[data-frozen] {
     // Separate 'y', because 'both' crashes Safari 16.2
 
     scroll-snap-type: y mandatory;
+
+    >* {
+      scroll-snap-align: start;
+    }
   }
 
   display: grid;

@@ -39,7 +39,9 @@
   }
   const default_duration = 500;
   const default_interval = 4000;
-  const SCROLL_END_TIMEOUT = 10;
+  const SCROLL_END_ACTION_DELAY_MS = 10;
+  const SLIDE_TRANSITION_BUFFER_MS = 200;
+  const OVERLAY_GESTURE_DEBOUNCE_MS = 250;
   const MAX_HEIGHT_FALLBACK = 99999;
   const isSafari =
     navigator.userAgent.match(/Safari/) && !navigator.userAgent.match("Chrome");
@@ -68,7 +70,7 @@
       wrapper && wrapper.dataset ? parseFloat(wrapper.dataset.duration) : NaN;
     const ms = Number.isFinite(s) ? s * 1000 : default_duration;
     // Small buffer: scrollend timing / resize during transitions can lag slightly.
-    return ms + 200;
+    return ms + SLIDE_TRANSITION_BUFFER_MS;
   };
   const setSliding = (wrapper) => {
     if (!wrapper || !wrapper.dataset) return;
@@ -119,11 +121,21 @@
     }
     return carousel.matches(".n-carousel--auto-height");
   };
+  const isFixedHeightVertical = (el) => isVertical(el) && !isAutoHeight(el);
   const indexControls = (index) => {
     let controls_by_class = index.querySelectorAll(".n-carousel__control");
     return controls_by_class.length > 0
       ? controls_by_class
       : index.querySelectorAll("a, button");
+  };
+  const setIndexControlActive = (indexParent, activeIndex) => {
+    indexControls(indexParent).forEach((control, i) => {
+      if (i === activeIndex) {
+        control.setAttribute("aria-current", true);
+      } else {
+        control.removeAttribute("aria-current");
+      }
+    });
   };
   // Endless mode reorders slides in the DOM - keep a stable logical index per slide (JS-only).
   const stampOriginalSlideIndices = (carouselContent) => {
@@ -147,22 +159,7 @@
     carousel = carousel.target || carousel;
     const carouselStyle = getComputedStyle(carousel);
     // Calculate which slide we're on
-    let index = Math.abs(
-      Math.round(
-        isVertical(carousel)
-          ? carousel.scrollTop /
-              (carousel.offsetHeight -
-                parseFloat(carouselStyle.paddingBlockStart) -
-                parseFloat(carouselStyle.paddingBlockEnd))
-          : carousel.scrollLeft /
-              (carousel.offsetWidth -
-                parseFloat(carouselStyle.paddingInlineStart) -
-                parseFloat(carouselStyle.paddingInlineEnd))
-      )
-    );
-    if (index >= carousel.children.length) {
-      index = carousel.children.length - 1;
-    }
+    let index = getScrollEndSlideIndex(carousel, carouselStyle);
     let slide = carousel.children[index];
     if (
       !!carousel.parentNode.sliding ||
@@ -204,21 +201,14 @@
         let lastScrollX = carousel.scrollLeft;
         let lastScrollY = carousel.scrollTop;
         if (isVertical(carousel)) {
-          let scroll_offset = carousel.scrollTop;
-          slide.style.height = "auto";
-          let computed_max_height = getComputedStyle(carousel).maxHeight;
-          let max_height = computed_max_height.match(/px/)
-            ? Math.ceil(parseFloat(computed_max_height))
-            : MAX_HEIGHT_FALLBACK;
-          new_height = Math.min(
-            Math.ceil(parseFloat(getComputedStyle(slide).height)),
-            max_height
-          );
-          new_height = Math.round(new_height);
+          const scroll_offset = carousel.scrollTop;
+          const measured = getAutoHeightTarget(carousel, slide);
+          new_height = Number.isFinite(measured)
+            ? Math.round(measured)
+            : old_height;
           if (isModal(carousel) || isFullScreen()) {
             old_height = new_height = carousel.offsetHeight;
           }
-          slide.style.height = "";
           carousel.scrollTop = scroll_offset;
           offset_y = index * new_height - carousel.scrollTop;
         } else {
@@ -231,7 +221,10 @@
               carousel.parentNode.style.setProperty("--height", `${new_height}px`);
             }
             carousel._autoHeightLockUntil = now + AUTO_HEIGHT_STABLE_MS;
-            setTimeout(() => updateCarousel(carousel, true), SCROLL_END_TIMEOUT + 200);
+            setTimeout(
+              () => updateCarousel(carousel, true),
+              SCROLL_END_ACTION_DELAY_MS + SLIDE_TRANSITION_BUFFER_MS
+            );
             return;
           }
           // Without peeking, use the original manual animation approach
@@ -257,7 +250,7 @@
         });
       }
     };
-    setTimeout(timeout_function, SCROLL_END_TIMEOUT);
+    setTimeout(timeout_function, SCROLL_END_ACTION_DELAY_MS);
   };
   const hashNavigation = (e) => {
     // Hash navigation support
@@ -319,6 +312,20 @@
     const height = el.scrollHeight; // Ceiling when subpixel
     el.style.height = el.style.overflow = "";
     return height;
+  };
+  const getAutoHeightTarget = (content, slide) => {
+    if (!content || !slide) return null;
+    if (isVertical(content)) {
+      slide.style.height = "auto";
+      const computed_max_height = getComputedStyle(content).maxHeight;
+      const max_height = computed_max_height.match(/px/)
+        ? Math.ceil(parseFloat(computed_max_height))
+        : MAX_HEIGHT_FALLBACK;
+      const measured = Math.ceil(parseFloat(getComputedStyle(slide).height));
+      slide.style.height = "";
+      return Math.min(measured, max_height);
+    }
+    return Math.round(nextSlideHeight(slide));
   };
   const getIndex = (el) => 1 * (isVertical(el) ? el.dataset.y : el.dataset.x);
   const getIndexReal = (el) => {
@@ -416,6 +423,59 @@
   const scrollTo = (el, x, y) => {
     el.scrollTo(isRTL(el) ? -1 * Math.abs(x) : x, y); // Scroll to correct scroll position for LTR and RTL
   };
+  const verticalScrollTarget = (content, slide) => {
+    if (!content || !slide) return 0;
+    const align = getComputedStyle(slide).scrollSnapAlign;
+    if (align === "center") {
+      return Math.max(
+        0,
+        slide.offsetTop + slide.offsetHeight / 2 - content.clientHeight / 2
+      );
+    }
+    return slide.offsetTop;
+  };
+  const getVerticalIndexFromScroll = (content) => {
+    let index = 0;
+    let nearest = Infinity;
+    [...content.children].forEach((child, i) => {
+      const dist = Math.abs(content.scrollTop - child.offsetTop);
+      if (dist < nearest) {
+        nearest = dist;
+        index = i;
+      }
+    });
+    return index;
+  };
+  const getScrollEndSlideIndex = (carousel, carouselStyle) => {
+    let index;
+    if (isVertical(carousel)) {
+      if (isAutoHeight(carousel)) {
+        index = Math.abs(
+          Math.round(
+            carousel.scrollTop /
+              (carousel.offsetHeight -
+                parseFloat(carouselStyle.paddingBlockStart) -
+                parseFloat(carouselStyle.paddingBlockEnd))
+          )
+        );
+      } else {
+        index = getVerticalIndexFromScroll(carousel);
+      }
+    } else {
+      index = Math.abs(
+        Math.round(
+          carousel.scrollLeft /
+            (carousel.offsetWidth -
+              parseFloat(carouselStyle.paddingInlineStart) -
+              parseFloat(carouselStyle.paddingInlineEnd))
+        )
+      );
+    }
+    if (index >= carousel.children.length) {
+      index = carousel.children.length - 1;
+    }
+    return index;
+  };
   // Shared mode-transition helpers (fullscreen + overlay):
   // Save a stable "logical" slide index (works for endless because slides get re-ordered).
   const snapLogicalIndex = (content) => {
@@ -440,8 +500,8 @@
         // Restore any endless-mode displaced slides FIRST so offsetLeft is computed against
         // the final stable DOM. This prevents an off-by-one when the active slide was at an
         // edge (e.g. last slide) and slide 0 was displaced as a data-last clone — if we
-        // scrolled to that displaced offset Safari's snap engine would latch onto the wrong
-        // slide via observersOn's no-scrollend polyfill path.
+        // scrolled to that displaced offset, scroll-snap can latch onto the wrong
+        // slide on browsers without native scrollend (scroll debounce fallback path).
         content.querySelectorAll(":scope > [data-first]").forEach((el2) => {
           content.append(content.firstElementChild);
           delete el2.dataset.first;
@@ -458,7 +518,7 @@
         if (!target) return;
         // x is now a valid snap point in the restored DOM — no need to disable scroll-snap.
         content.scrollLeft = target.offsetLeft || 0;
-        content.scrollTop = target.offsetTop || 0;
+        content.scrollTop = verticalScrollTarget(content, target);
         // forced=true: bypasses the early-return guard (same aria-current slide) and skips
         // the endless-mode scrollTo since displacement is already resolved above.
         updateCarousel(content, true);
@@ -566,14 +626,16 @@
     new Promise((resolve) => {
       // Thanks https://stackoverflow.com/posts/46604409/revisions
       let wrapper = getCarousel(el);
+      const shouldAdjustHeight =
+        new_height !== false && new_height !== null && new_height !== undefined;
       if (
         !!wrapper.nextSlideInstant ||
         !wrapper.dataset.ready ||
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        prefersReducedMotion() ||
         wrapper.matches(".n-carousel--instant")
       ) {
         scrollTo(el, getScroll(el).x + distanceX, getScroll(el).y + distanceY);
-        if (new_height !== false && new_height !== null && new_height !== undefined) {
+        if (shouldAdjustHeight) {
           el.style.height = `${new_height}px`;
         }
         delete wrapper.nextSlideInstant;
@@ -586,8 +648,6 @@
       if (distanceX === 0 && distanceY === 0) {
         scroll_changing = false;
       }
-    const shouldAdjustHeight =
-      new_height !== false && new_height !== null && new_height !== undefined;
     if (shouldAdjustHeight) {
         el.style.height = `${old_height}px`;
         if (isVertical(el) && isAutoHeight(el)) {
@@ -685,7 +745,9 @@
         Math.round(scrollStartX(el) / cw)
       );
       el.dataset.y = Math.abs(
-        Math.round(el.scrollTop / ch)
+        isFixedHeightVertical(el)
+          ? getVerticalIndexFromScroll(el)
+          : Math.round(el.scrollTop / ch)
       );
     }
     // When inline
@@ -969,6 +1031,30 @@
       observersOn(el);
     });
   };
+  const finishVerticalProgrammaticScroll = (el, snap) => {
+    el.style.scrollSnapType = snap || "";
+    delete el.dataset.next;
+    updateCarousel(el);
+    clearSliding(el.parentNode);
+  };
+  const scrollVerticalProgrammaticTo = (el, y, smooth) => {
+    const snap = el.style.scrollSnapType;
+    el.style.scrollSnapType = "none";
+    if (!smooth) {
+      scrollTo(el, el.scrollLeft, y);
+      finishVerticalProgrammaticScroll(el, snap);
+      return;
+    }
+    const unbind = bindScrollEnd(el, () => {
+      unbind();
+      finishVerticalProgrammaticScroll(el, snap);
+    });
+    el.scrollTo({
+      top: y,
+      left: el.scrollLeft,
+      behavior: "smooth",
+    });
+  };
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
     if (!el.parentNode.dataset.sliding) {
@@ -976,48 +1062,61 @@
       const curIndex = getIndexReal(el);
       let old_height = el.children[curIndex].offsetHeight;
       let new_height = old_height;
+
+      // Auto-height uses viewport-relative scroll math (index × height, scrollAnimate).
+      // Do not route through verticalScrollTarget / dataset.next — that is fixed-height only.
       if (isAutoHeight(el)) {
         let old_scroll_left = scrollStartX(el);
         let old_scroll_top = el.scrollTop;
-        let slide = el.children[index];
+        let targetSlide = el.children[index];
         if (isVertical(el)) {
-          slide.style.height = "auto";
-          let computed_max_height = getComputedStyle(el).maxHeight;
-          let max_height = computed_max_height.match(/px/)
-            ? Math.ceil(parseFloat(computed_max_height))
-            : MAX_HEIGHT_FALLBACK;
-          new_height = Math.min(
-            Math.ceil(parseFloat(getComputedStyle(slide).height)),
-            max_height
-          );
-          slide.style.height = "";
+          const measured = getAutoHeightTarget(el, targetSlide);
+          new_height = Number.isFinite(measured) ? measured : old_height;
         } else {
-          new_height = nextSlideHeight(slide);
-          let old_height =
+          new_height = nextSlideHeight(targetSlide);
+          let prior_height =
             curIndex === index
               ? new_height
               : nextSlideHeight(el.children[curIndex]);
-          el.parentNode.style.setProperty("--height", `${old_height}px`);
+          el.parentNode.style.setProperty("--height", `${prior_height}px`);
         }
         scrollTo(el, old_scroll_left + paddingX(el) / 2, old_scroll_top); // iPad bug
         scrollTo(el, old_scroll_left, old_scroll_top);
+        if (isVertical(el)) {
+          offsetY = offsetY - index * old_height + index * new_height;
+        }
+        window.requestAnimationFrame(() => {
+          scrollAnimate(
+            el,
+            offsetX,
+            offsetY,
+            new_height === old_height ? false : new_height,
+            old_height
+          );
+        });
+        return;
       }
-      if (isVertical(el)) {
-        offsetY = offsetY - index * old_height + index * new_height;
-      }
+
+      observersOff(el);
       window.requestAnimationFrame(() => {
-        if (!el.parentNode.dataset.duration && !isAutoHeight(el)) {
-          // Unspecified duration, no height change – using native smooth scroll
-          clearSliding(el.parentNode);
-          el.dataset.next = index;
-          el.scrollTo({
-            top: el.scrollTop + offsetY,
-            left: el.scrollLeft + offsetX,
-            behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
-              .matches
-              ? "auto"
-              : "smooth",
-          });
+        if (!el.parentNode.dataset.duration) {
+          const target = el.children[index];
+          const smooth = !prefersReducedMotion();
+          if (isFixedHeightVertical(el)) {
+            el.dataset.next = index;
+            scrollVerticalProgrammaticTo(
+              el,
+              verticalScrollTarget(el, target),
+              smooth
+            );
+          } else {
+            clearSliding(el.parentNode);
+            el.scrollTo({
+              top: el.scrollTop + offsetY,
+              left: el.scrollLeft + offsetX,
+              behavior: smooth ? "smooth" : "auto",
+            });
+          }
         } else {
           scrollAnimate(
             el,
@@ -1025,7 +1124,7 @@
             offsetY,
             new_height === old_height ? false : new_height,
             old_height
-          ); // Vertical version will need ceiling value
+          );
         }
       });
     }
@@ -1040,10 +1139,14 @@
   };
   const slideTo = (el, index) => {
     if (isVertical(el)) {
+      const target = el.children[index];
+      if (!target) return;
       slide(
         el,
         0,
-        ceilingHeight(el.children[index]) * index - el.scrollTop,
+        isFixedHeightVertical(el)
+          ? verticalScrollTarget(el, target) - el.scrollTop
+          : ceilingHeight(target) * index - el.scrollTop,
         index
       );
     } else {
@@ -1148,6 +1251,7 @@
         // We intentionally open to a *new* index below, so skip the overlay restore here.
         openModal(carousel, true, logical_index);
       } else {
+        setIndexControlActive(indexParent, logical_index);
         window.requestAnimationFrame(() => {
           slideTo(carousel, new_index);
         });
@@ -1298,7 +1402,9 @@
       if (!allowCrossAxisClose(e.target, axis, cross, main)) return resetWheel();
 
       wheelAcc += cross;
-      if (!wheelTimer) wheelTimer = setTimeout(resetWheel, 250);
+      if (!wheelTimer) {
+        wheelTimer = setTimeout(resetWheel, OVERLAY_GESTURE_DEBOUNCE_MS);
+      }
 
       if (Math.abs(wheelAcc) >= CROSS_AXIS_THRESHOLD) {
         resetWheel();
@@ -1513,20 +1619,6 @@
   };
   const AUTO_HEIGHT_EPSILON = 2;
   const AUTO_HEIGHT_STABLE_MS = 200;
-  const getAutoHeightTarget = (content, slide) => {
-    if (!content || !slide) return null;
-    if (isVertical(content)) {
-      slide.style.height = "auto";
-      const computed_max_height = getComputedStyle(content).maxHeight;
-      const max_height = computed_max_height.match(/px/)
-        ? Math.ceil(parseFloat(computed_max_height))
-        : MAX_HEIGHT_FALLBACK;
-      const measured = Math.ceil(parseFloat(getComputedStyle(slide).height));
-      slide.style.height = "";
-      return Math.min(measured, max_height);
-    }
-    return Math.round(nextSlideHeight(slide));
-  };
   const lockAutoHeight = (content, slide) => {
     if (!content || !slide) return;
     const target = getAutoHeightTarget(content, slide);
@@ -1735,7 +1827,7 @@
       }
       el._ncScrollEndUnbind = bindScrollEnd(el, scrollEndAction);
       if (!("onscrollend" in window) && isEndless(el)) {
-        // Fix for browsers without scrollend event (Safari) losing parts of the edge slide
+        // Fix for browsers without native scrollend losing parts of the edge slide
         scrollTo(
           el,
           el.offsetWidth * getIndexReal(el),
@@ -1917,7 +2009,8 @@
           clearSlidingLocks(wrapper);
           // Avoid the common "Esc exits fullscreen then also closes overlay" double-action.
           if (wrapper.classList.contains("n-carousel--overlay") && !enteringFullscreen) {
-            wrapper._suppressOverlayEscapeUntil = performance.now() + 250;
+            wrapper._suppressOverlayEscapeUntil =
+              performance.now() + OVERLAY_GESTURE_DEBOUNCE_MS;
           }
           // Restore using the current snapshot; wait for layout settle.
           if (enteringFullscreen && carousel._fsSnapLogical === undefined) {
