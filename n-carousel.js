@@ -107,6 +107,10 @@
       wrapper._slidingTimeout = null;
     }
   };
+  const isSliding = (wrapper) =>
+    !!wrapper &&
+    ((wrapper.dataset && wrapper.dataset.sliding !== undefined) ||
+      wrapper.sliding === true);
   const isModal = (el) => {
     return getCarousel(el)?.classList.contains("n-carousel--overlay");
   };
@@ -162,7 +166,7 @@
     let index = getScrollEndSlideIndex(carousel, carouselStyle);
     let slide = carousel.children[index];
     if (
-      !!carousel.parentNode.sliding ||
+      isSliding(carousel.parentNode) ||
       (carousel.dataset.next &&
         parseInt(carousel.dataset.next) !==
           Array.prototype.indexOf.call(carousel.children, slide))
@@ -780,7 +784,16 @@
     }
     if (old_active_slide && !forced) {
       if (active_slide === old_active_slide) {
-        // Scroll snapping back to the same slide. Nothing to do here.
+        // Scroll snapping back to the same slide must also undo any optimistic
+        // index-button state set before the scroll started.
+        const index = getControl(getCarousel(el), ".n-carousel__index");
+        if (index) {
+          const logicalIndex =
+            isEndless(el) && Number.isFinite(active_slide._ncIndex)
+              ? active_slide._ncIndex
+              : active_index;
+          setIndexControlActive(index, logicalIndex);
+        }
         el.dataset.x = saved_x;
         el.dataset.y = saved_y;
         observersOn(el);
@@ -1055,9 +1068,52 @@
       behavior: "smooth",
     });
   };
+  const clearHorizontalProgrammaticScroll = (el) => {
+    if (el._ncProgrammaticScrollUnbind) {
+      el._ncProgrammaticScrollUnbind();
+      el._ncProgrammaticScrollUnbind = null;
+    }
+    if (el._ncProgrammaticScrollTimer) {
+      clearTimeout(el._ncProgrammaticScrollTimer);
+      el._ncProgrammaticScrollTimer = null;
+    }
+    if (el._ncProgrammaticScrollFrame) {
+      cancelAnimationFrame(el._ncProgrammaticScrollFrame);
+      el._ncProgrammaticScrollFrame = null;
+    }
+  };
+  const finishHorizontalProgrammaticScroll = (el) => {
+    clearHorizontalProgrammaticScroll(el);
+    if (!el.parentNode) return;
+    updateCarousel(el);
+    clearSliding(el.parentNode);
+  };
+  const scrollHorizontalProgrammaticTo = (el, x, y, smooth) => {
+    clearHorizontalProgrammaticScroll(el);
+    if (!smooth || (el.scrollLeft === x && el.scrollTop === y)) {
+      el.scrollTo({ top: y, left: x, behavior: "auto" });
+      el._ncProgrammaticScrollFrame = window.requestAnimationFrame(() => {
+        el._ncProgrammaticScrollFrame = null;
+        finishHorizontalProgrammaticScroll(el);
+      });
+      return;
+    }
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      finishHorizontalProgrammaticScroll(el);
+    };
+    el._ncProgrammaticScrollUnbind = bindScrollEnd(el, finish);
+    el._ncProgrammaticScrollTimer = setTimeout(
+      finish,
+      slidingDurationMs(el.parentNode)
+    );
+    el.scrollTo({ top: y, left: x, behavior: "smooth" });
+  };
   const slide = (el, offsetX = 0, offsetY = 0, index) => {
     clearTimeout(el.nCarouselTimeout);
-    if (!el.parentNode.dataset.sliding) {
+    if (!isSliding(el.parentNode)) {
       setSliding(el.parentNode);
       const curIndex = getIndexReal(el);
       let old_height = el.children[curIndex].offsetHeight;
@@ -1110,12 +1166,12 @@
               smooth
             );
           } else {
-            clearSliding(el.parentNode);
-            el.scrollTo({
-              top: el.scrollTop + offsetY,
-              left: el.scrollLeft + offsetX,
-              behavior: smooth ? "smooth" : "auto",
-            });
+            scrollHorizontalProgrammaticTo(
+              el,
+              el.scrollLeft + offsetX,
+              el.scrollTop + offsetY,
+              smooth
+            );
           }
         } else {
           scrollAnimate(
@@ -1652,7 +1708,7 @@
           return;
         }
         // Skip if already sliding to prevent update loops
-        if (el.parentElement.dataset.sliding) {
+        if (isSliding(el.parentElement)) {
           return;
         }
         const now = performance.now();
@@ -1700,7 +1756,7 @@
     });
   });
   const updateSubpixels = (el) => {
-    if (!el.parentNode.dataset.sliding) {
+    if (!isSliding(el.parentNode)) {
       // Round down the padding, because sub pixel padding + scrolling is a problem
       let carousel = el;
       carousel.style.padding = ""; // Subpixel peeking fix
@@ -1840,6 +1896,7 @@
     height_minus_index.unobserve(el.parentNode);
     subpixel_observer.unobserve(el);
     el.observerStarted = true;
+    clearHorizontalProgrammaticScroll(el);
     if (el._ncScrollEndUnbind) {
       el._ncScrollEndUnbind();
       el._ncScrollEndUnbind = null;
@@ -1913,7 +1970,7 @@
   });
   const setIndexWidth = (el) => {
     let index = el.querySelector(":scope > .n-carousel__index");
-    if (index && !el.dataset.sliding) {
+    if (index && !isSliding(el)) {
       el.style.removeProperty("--height-minus-index");
       index.style.position = "absolute";
       el.style.setProperty("--height-minus-index", `${el.offsetHeight}px`);
